@@ -405,10 +405,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         }
         Integer startMonth = 0;
         Integer endMonth = 0;
-        LocalDate s = Utils.tranTime(dto.getStartTime());
-        startMonth = s.getMonthValue();
-        LocalDate e = Utils.tranTime(dto.getEndTime());
-        endMonth = e.getMonthValue();
+//        LocalDate s = Utils.tranTime(dto.getStartTime());
+//        startMonth = s.getMonthValue();
+//        LocalDate e = Utils.tranTime(dto.getEndTime());
+//        endMonth = e.getMonthValue();
+        String s = dto.getStartTime();
+        String e = dto.getEndTime();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
         if ((list != null) && (!list.isEmpty())) {
 //            Form form = null;
@@ -425,8 +427,8 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                 } else if (AccessRules.DEBIT.equals(f.getAccessRules())) {
                     tar = true;
                 }
-                SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, DateUtil.dateToString(s), DateUtil.dateToString(e), tar);
-                subjectCollectBO.setCurrentAmount(voucherGenerateAPI.getCurrent(subjectCollectDTO, DateUtil.dateToString(s), DateUtil.dateToString(e), tar));
+                SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, s, e, tar);
+                subjectCollectBO.setCurrentAmount(voucherGenerateAPI.getCurrent(subjectCollectDTO, s, e, tar));
                 FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                 if ("1".equals(f.getType1())) {
                     bo.setOperation("+");

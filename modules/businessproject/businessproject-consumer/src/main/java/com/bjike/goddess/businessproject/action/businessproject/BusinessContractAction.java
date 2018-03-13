@@ -7,13 +7,13 @@ import com.bjike.goddess.businessproject.bo.BusinessContractADetailBO;
 import com.bjike.goddess.businessproject.bo.BusinessContractsBO;
 import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.dto.BusinessContractDTOV2;
 import com.bjike.goddess.businessproject.excel.BusinessContractExcel;
-import com.bjike.goddess.businessproject.to.BusinessContractTO;
-import com.bjike.goddess.businessproject.to.CollectUpdateTO;
-import com.bjike.goddess.businessproject.to.GuidePermissionTO;
-import com.bjike.goddess.businessproject.to.PersonTO;
+import com.bjike.goddess.businessproject.to.*;
 import com.bjike.goddess.businessproject.vo.BusinessContractVO;
 import com.bjike.goddess.common.api.constant.RpcCommon;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -24,6 +24,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
@@ -31,6 +32,7 @@ import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +65,8 @@ public class BusinessContractAction extends BaseFileAction {
     private ModuleAPI moduleAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 功能导航权限
@@ -95,10 +100,29 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(BusinessContractDTO dto) throws ActException {
+    public Result count(BusinessContractDTOV2 dto) throws ActException {
         try {
-            Long count = businessContractAPI.count(dto);
+            Long count = businessContractAPI.countV2(dto);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 商务项目合同列表
+     *
+     * @param dto 项目商务项目合同dto
+     * @return class BusinessContractVO
+     * @des 获取所有项目商务项目合同
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(BusinessContractDTOV2 dto, HttpServletRequest request) throws ActException {
+        try {
+            List<BusinessContractVO> contractVOS = BeanTransform.copyProperties(
+                    businessContractAPI.listV2(dto), BusinessContractVO.class, request);
+            return ActResult.initialize(contractVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -124,44 +148,118 @@ public class BusinessContractAction extends BaseFileAction {
     }
 
     /**
-     * 商务项目合同列表
-     *
-     * @param dto 项目商务项目合同dto
-     * @return class BusinessContractVO
-     * @des 获取所有项目商务项目合同
-     * @version v1
-     */
-    @GetMapping("v1/list")
-    public Result list(BusinessContractDTO dto, HttpServletRequest request) throws ActException {
-        try {
-            List<BusinessContractVO> contractVOS = BeanTransform.copyProperties(
-                    businessContractAPI.list(dto), BusinessContractVO.class, request);
-            return ActResult.initialize(contractVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-
-    /**
      * 添加商务项目合同
      *
      * @param to 商务项目合同数据to
-     * @return class BusinessContractVO
+     * @return class BusinessContractTOV2
      * @des 添加商务项目合同
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(BusinessContractTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) BusinessContractTOV2 to, BindingResult bindingResult) throws ActException {
         try {
-            BusinessContractsBO bo = businessContractAPI.add(to);
+            BusinessContractsBO bo = businessContractAPI.addV2(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 合同基本信息
+     *
+     * @param to to
+     * @return class BusinessContractTOV2
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/baseInfo")
+    public Result baseInfo(@Validated(ADD.class) BusinessContractTOV2 to, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
+            BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 合同明细
+     *
+     * @param to to
+     * @return class BusinessContractDetailsTO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/contractDetails")
+    public Result contractDetails(@Validated(EDIT.class)BusinessContractDetailsTO to, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
+            BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 合同金额信息
+     *
+     * @param to to
+     * @return class BusinessContractMoneyTO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/contractMoney")
+    public Result contractMoney(@Validated(EDIT.class)BusinessContractMoneyTO to, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
+            BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 合同实施过程信息
+     *
+     * @param to to
+     * @return class BusinessContractImplTO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/contractImpl")
+    public Result contractImpl(@Validated(EDIT.class)BusinessContractImplTO to, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
+            BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 合同结算过程信息
+     *
+     * @param to to
+     * @return class BusinessContractAccountTO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/contractAccount")
+    public Result contractAccount(@Validated(EDIT.class)BusinessContractAccountTO to, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
+            BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 编辑商务项目合同
@@ -346,7 +444,7 @@ public class BusinessContractAction extends BaseFileAction {
     /**
      * 商务合同管理明细汇总
      *
-     * @return class BusinessContractADetailVO
+     * @return class BusinessContractADetailBO
      * @des 商务合同管理明细汇总
      * @version v1
      */
@@ -366,7 +464,7 @@ public class BusinessContractAction extends BaseFileAction {
     /**
      * 编辑商务合同管理明细汇总
      *
-     * @return class BusinessContractADetailVO
+     * @return class BusinessContractADetailBO
      * @des 编辑商务合同管理明细汇总
      * @version v1
      */
@@ -387,7 +485,7 @@ public class BusinessContractAction extends BaseFileAction {
      * @return class AreaVO
      * @version v1
      */
-    @GetMapping("v1/findArea")
+    @GetMapping("v1/area")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
@@ -396,7 +494,11 @@ public class BusinessContractAction extends BaseFileAction {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 list = departmentDetailAPI.findArea();
             }
-            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            Set set = new HashSet();
+            for (AreaBO bo : list) {
+                set.add(bo.getArea());
+            }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -417,18 +519,18 @@ public class BusinessContractAction extends BaseFileAction {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 list = departmentDetailAPI.findStatus();
             }
-            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            Set set = new HashSet();
+            for (DepartmentDetailBO bo : list) {
+                set.add(bo.getDepartment());
+            }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 获取所有地区
-     *
-     * @version v1
-     */
-    @GetMapping("v1/areas")
+
+    /*@GetMapping("v1/areas")
     public Result areas() throws ActException {
         try {
             Set<String> areas = businessContractAPI.areas();
@@ -436,7 +538,7 @@ public class BusinessContractAction extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }
+    }*/
 
     /**
      * 导入Excel
@@ -760,6 +862,25 @@ public class BusinessContractAction extends BaseFileAction {
             CollectDataTO collectDataTO = BeanTransform.copyProperties(to, CollectDataTO.class);
             CollectDataVO vo = taskNodeAPI.personProjectCollect(collectDataTO);
             return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有员工
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allStaff")
+    public Result listAllStaff() throws ActException {
+        try {
+            List<UserBO> list = positionDetailUserAPI.findUserList();
+            Set<String> sets = new HashSet<>();
+            for (UserBO bo : list) {
+                sets.add(bo.getUsername());
+            }
+            return ActResult.initialize(sets);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

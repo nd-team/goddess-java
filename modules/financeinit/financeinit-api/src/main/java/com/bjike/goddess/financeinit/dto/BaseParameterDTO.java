@@ -17,11 +17,32 @@ public class BaseParameterDTO extends BaseDTO {
      */
     private String companyName;
 
+    /**
+     * 公司编号
+     */
+    private String systemId;
+
+    public BaseParameterDTO() {
+    }
+
+    public BaseParameterDTO(String companyName, String systemId) {
+        this.companyName = companyName;
+        this.systemId = systemId;
+    }
+
     public String getCompanyName() {
         return companyName;
     }
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
     }
 }

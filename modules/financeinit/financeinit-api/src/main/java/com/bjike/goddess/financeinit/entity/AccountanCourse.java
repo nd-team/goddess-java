@@ -64,6 +64,20 @@ public class AccountanCourse extends BaseEntity {
     @Column(name = "balanceDirection", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '余额方向'")
     private BalanceDirection balanceDirection;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     public String getCode() {
         return code;
     }

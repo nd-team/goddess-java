@@ -9,7 +9,13 @@ package com.bjike.goddess.rotation.vo;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CurrentPositionVO {
+public class CurrentPositionVO{
+
+    /**
+     * id
+     */
+    private String id;
+
     /**
      * 姓名
      */
@@ -85,6 +91,14 @@ public class CurrentPositionVO {
      * 轮岗次数
      */
     private Integer rotationTimes;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

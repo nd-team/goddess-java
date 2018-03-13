@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.dto;
 
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
@@ -54,6 +56,59 @@ public class BusinessContractDTO extends BaseDTO {
      * 内部合同编号
      */
     private String internalContractNum;
+
+
+    /**
+     * 业务方向科目
+     */
+    private String businessSubject;
+
+    /**
+     * 合同状态
+     */
+    private MakeContract contractStatus;
+
+    /**
+     * 派工状态
+     */
+    private TaskContract taskStatus;
+
+    /**
+     * 测算分类
+     */
+    private String measureClassify;
+
+    public String getBusinessSubject() {
+        return businessSubject;
+    }
+
+    public void setBusinessSubject(String businessSubject) {
+        this.businessSubject = businessSubject;
+    }
+
+    public MakeContract getContractStatus() {
+        return contractStatus;
+    }
+
+    public void setContractStatus(MakeContract contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
+    public TaskContract getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskContract taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
+    public String getMeasureClassify() {
+        return measureClassify;
+    }
+
+    public void setMeasureClassify(String measureClassify) {
+        this.measureClassify = measureClassify;
+    }
 
     public String getInternalContractNum() {
         return internalContractNum;
@@ -134,4 +189,14 @@ public class BusinessContractDTO extends BaseDTO {
     public void setProjectCharge(String projectCharge) {
         this.projectCharge = projectCharge;
     }
+
+   /* public Integer getPage() {
+        return this.page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }*/
+
+
 }

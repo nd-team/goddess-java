@@ -505,6 +505,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<DispatchCarInfoSetExcel> tos = ExcelUtil.excelToClazz(is, DispatchCarInfoSetExcel.class, excel);
+
             dispatchCarInfoAPI.leadExcel(tos);
             return new ActResult("导入成功");
         } catch (SerException e) {

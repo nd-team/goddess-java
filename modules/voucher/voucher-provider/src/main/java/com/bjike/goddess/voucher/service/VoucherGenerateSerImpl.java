@@ -520,22 +520,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             sql.append(" and voucherDate BETWEEN '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
         }
         if (StringUtils.isNotBlank(dto.getFirstSubject())) {
-            sql.append(" and firstSubject = '"+ dto.getFirstSubject() +"'");
+            sql.append(" and firstSubject = '" + dto.getFirstSubject() + "'");
         }
         if (StringUtils.isNotBlank(dto.getSecondSubject())) {
-            sql.append(" and secondSubject = '"+ dto.getSecondSubject() +"'");
+            sql.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
         }
         if (StringUtils.isNotBlank(dto.getThirdSubject())) {
-            sql.append(" and thirdSubject = '"+ dto.getThirdSubject() +"'");
+            sql.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
         }
         if (StringUtils.isNotBlank(dto.getArea())) {
-            sql.append(" and area = '"+ dto.getArea() +"'");
+            sql.append(" and area = '" + dto.getArea() + "'");
         }
         if (StringUtils.isNotBlank(dto.getProjectName())) {
-            sql.append(" and projectName = '"+ dto.getProjectName() +"'");
+            sql.append(" and projectName = '" + dto.getProjectName() + "'");
         }
         if (StringUtils.isNotBlank(dto.getProjectGroup())) {
-            sql.append(" and projectGroup = '"+ dto.getProjectGroup() +"'");
+            sql.append(" and projectGroup = '" + dto.getProjectGroup() + "'");
         }
         sql.append(" order by voucherDate desc");
         List<HistogramBO> bos = super.findBySql(sql.toString(), HistogramBO.class, fields);
@@ -553,7 +553,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     if (i != j) {
                         bos.remove(j);
                         len = len - 1;
-                        j --;
+                        j--;
                     }
                 }
             }
@@ -561,7 +561,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         for (HistogramBO bo : bos) {
             bo.setMonth(bo.getVoucherDate().getYear() +
-                    (bo.getVoucherDate().getMonthValue() > 9 ?  "-" + bo.getVoucherDate().getMonthValue() : "-0" + bo.getVoucherDate().getMonthValue()));
+                    (bo.getVoucherDate().getMonthValue() > 9 ? "-" + bo.getVoucherDate().getMonthValue() : "-0" + bo.getVoucherDate().getMonthValue()));
         }
 
         String text_1 = "借方金额和贷方金额汇总";
@@ -666,8 +666,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         VoucherGenerateDTO dto12 = new VoucherGenerateDTO();
         if (DateUtil.parseDate(sTime).getMonthValue() != 1) {
             String beginStartTime = DateUtil.parseDate(sTime).getYear() + "-01-01";
-            String beginEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue() - 1,
-                    DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue() - 1)));
+            String beginEndTime = DateUtil.parseDate(sTime).with(TemporalAdjusters.lastDayOfMonth()).toString();
+//            DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue(),
+//                    DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue())));
             String[] times4 = new String[]{beginStartTime, beginEndTime};
             dto12.getConditions().add(Restrict.eq("firstSubject", firstSubject));
             dto12.getConditions().add(Restrict.between("voucherDate", times4));
@@ -769,11 +770,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double yearAmount = 0d;
         SubjectCollectBO subjectCollectBO = findCurrent(2, firstSubject, startTime, endTime);
         SubjectCollectBO subjectCollectBO1 = findCurrent(1, firstSubject, startTime.substring(0, 4) + "-01-01", endTime);
-        if(null !=subjectCollectBO ){
+        if (null != subjectCollectBO) {
             currentAmount = subjectCollectBO.getCurrentAmount();
             currentAmount = currentAmount == null ? 0d : currentAmount;
         }
-        if(null !=subjectCollectBO1 ){
+        if (null != subjectCollectBO1) {
             yearAmount = subjectCollectBO1.getCurrentAmount();
             yearAmount = yearAmount == null ? 0d : yearAmount;
         }
@@ -811,10 +812,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (null != list && list.size() > 0) {
             if ("营业收入".equals(firstSubject)) {
                 SubjectCollectBO subjectCollectBO1 = getCurrent(i, "主营业务收入", startTime, endTime, false);
-                SubjectCollectBO subjectCollectBO2 =getCurrent(i, "其他业务收入", startTime, endTime, false);
-                debitAmount = subjectCollectBO1.getIssueDebitAmount()+subjectCollectBO2.getIssueDebitAmount();
-                creditAmount = subjectCollectBO1.getIssueCreditAmount()+subjectCollectBO2.getIssueCreditAmount();
-                current = subjectCollectBO1.getCurrentAmount()+subjectCollectBO2.getCurrentAmount();
+                SubjectCollectBO subjectCollectBO2 = getCurrent(i, "其他业务收入", startTime, endTime, false);
+                debitAmount = subjectCollectBO1.getIssueDebitAmount() + subjectCollectBO2.getIssueDebitAmount();
+                creditAmount = subjectCollectBO1.getIssueCreditAmount() + subjectCollectBO2.getIssueCreditAmount();
+                current = subjectCollectBO1.getCurrentAmount() + subjectCollectBO2.getCurrentAmount();
 
                 subjectCollectBO.setIssueDebitAmount(debitAmount);
                 subjectCollectBO.setIssueCreditAmount(creditAmount);
@@ -822,11 +823,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
             } else if ("营业成本".equals(firstSubject)) {
                 SubjectCollectBO subjectCollectBO1 = getCurrent(i, "主营业务成本", startTime, endTime, true);
-                SubjectCollectBO subjectCollectBO2 =getCurrent(i, "其他业务成本", startTime, endTime, true);
+                SubjectCollectBO subjectCollectBO2 = getCurrent(i, "其他业务成本", startTime, endTime, true);
 
-                debitAmount = subjectCollectBO1.getIssueDebitAmount()+subjectCollectBO2.getIssueDebitAmount();
-                creditAmount = subjectCollectBO1.getIssueCreditAmount()+subjectCollectBO2.getIssueCreditAmount();
-                current = subjectCollectBO1.getCurrentAmount()+subjectCollectBO2.getCurrentAmount();
+                debitAmount = subjectCollectBO1.getIssueDebitAmount() + subjectCollectBO2.getIssueDebitAmount();
+                creditAmount = subjectCollectBO1.getIssueCreditAmount() + subjectCollectBO2.getIssueCreditAmount();
+                current = subjectCollectBO1.getCurrentAmount() + subjectCollectBO2.getCurrentAmount();
 
                 subjectCollectBO.setIssueDebitAmount(debitAmount);
                 subjectCollectBO.setIssueCreditAmount(creditAmount);
@@ -1151,7 +1152,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("转作资本（或股本）的普通股股利".equals(firstSubject)) {
                 current = getCurrentBySumary(2, "转作资本（或股本）的普通股股利", subjectCollectDTO, true);
             } else if ("以前年度损益调整".equals(firstSubject)) {
-                current = getCurrent(i, "以前年度损益",subjectCollectDTO, true);
+                current = getCurrent(i, "以前年度损益", subjectCollectDTO, true);
             } else if ("未分配利润".equals(firstSubject)) {
                 current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业成本", subjectCollectDTO, true) -
@@ -1264,7 +1265,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
             dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
         }
-        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
             dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
         }
         dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
@@ -1279,7 +1280,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                 dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
             }
-            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                 dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
             }
             dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
@@ -1293,7 +1294,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                     dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
                 }
-                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                     dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
                 }
                 dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
@@ -1331,7 +1332,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         return current;
     }
-
 
 
     //获取年初未分配利润科目(1月)的数据
@@ -1404,7 +1404,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
             dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
         }
-        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
             dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
         }
         dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
@@ -1419,7 +1419,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                 dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
             }
-            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                 dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
             }
             dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
@@ -1433,7 +1433,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                     dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
                 }
-                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                     dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
                 }
                 dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
@@ -1531,7 +1531,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
             dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
         }
-        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
             dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
         }
         dto.getConditions().add(Restrict.eq("sumary", sumary));
@@ -1549,7 +1549,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                 dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
             }
-            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                 dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
             }
             dto1.getConditions().add(Restrict.eq("sumary", sumary));
@@ -1566,7 +1566,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
                     dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
                 }
-                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectName())) {
                     dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
                 }
                 dto2.getConditions().add(Restrict.eq("sumary", sumary));
@@ -1586,7 +1586,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return current;
     }
-
 
 
     //柱状图数据
@@ -2097,7 +2096,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
                 ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
                 "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, firstSubjectCode, secondSubjectCode, thirdSubjectCode";
-        sql.append("select "+ colums +" from voucher_vouchergenerate a  where a.uId in ");
+        sql.append("select " + colums + " from voucher_vouchergenerate a  where a.uId in ");
         sql.append("(select * from (select uId from voucher_vouchergenerate where 1 = 1 ");
         switch (type) {
             case "1":
@@ -2198,7 +2197,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     if (i != j) {
                         bos.remove(j);
                         len = len - 1;
-                        j --;
+                        j--;
 //                        continue;
                     }
                 }
@@ -2206,8 +2205,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             bos.get(i).setDetails(details);
         }
 
-        for (int i = 0; i < len - 1; i ++) {
-            for (int j = 0; j < len - 1 - i; j ++) {
+        for (int i = 0; i < len - 1; i++) {
+            for (int j = 0; j < len - 1 - i; j++) {
                 LocalDate voucherDate = LocalDate.parse(bos.get(j).getVoucherDate());
                 LocalDate voucherDate1 = LocalDate.parse(bos.get(j + 1).getVoucherDate());
                 Double voucherNum = bos.get(j).getVoucherNum();
@@ -2368,14 +2367,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (StringUtils.isNotBlank(temp.getThirdSubject())) {
                 String code3 = accountanCourseAPI.findByCourseName(temp.getThirdSubject());
                 String arr3[] = code3.split(":");
-                if(arr3.length > 0) {
+                if (arr3.length > 0) {
                     temp.setThirdSubjectCode(arr3[0]);
                 }
             }
-            if(arr1.length > 0) {
+            if (arr1.length > 0) {
                 temp.setFirstSubjectCode(arr1[0]);
             }
-            if(arr2.length > 0) {
+            if (arr2.length > 0) {
                 temp.setSecondSubjectCode(arr2[0]);
             }
             list.add(temp);
@@ -2435,14 +2434,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (StringUtils.isNotBlank(entity.getThirdSubject())) {
                 String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
                 String arr3[] = code3.split(":");
-                if(arr3.length > 0) {
+                if (arr3.length > 0) {
                     entity.setThirdSubjectCode(arr3[0]);
                 }
             }
-            if(arr1.length > 0) {
+            if (arr1.length > 0) {
                 entity.setFirstSubjectCode(arr1[0]);
             }
-            if(arr2.length > 0) {
+            if (arr2.length > 0) {
                 entity.setSecondSubjectCode(arr2[0]);
             }
             entities.add(entity);
@@ -4351,7 +4350,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
         List<String> seconds = new ArrayList<>();
         String code = accountanCourseAPI.findByCourseName(firstSub);
-        if(StringUtils.isBlank(code)) {
+        if (StringUtils.isBlank(code)) {
             return null;
         }
         String arr[] = code.split(":");

@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -407,7 +408,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 //        double countCurrent = 0;
         double countEnd = 0;       //总资产
         int num = 1;
-        for (Asset asset : list) {
+        /*for (Asset asset : list) {
             List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
             if (AssetType.AFLOW.equals(asset.getAssetType()) && b1) {
                 AssetBO assetBO = new AssetBO();
@@ -415,53 +416,62 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 boList.add(assetBO);
                 b1 = false;
             } else if (AssetType.BLONG.equals(asset.getAssetType()) && b2) {
-                AssetBO sumBO = new AssetBO();
-                sumBO.setAsset("流动资产合计");
-                sumBO.setBeginAsset(beginSum);
+                if ("长期股权投资".equals(asset.getAsset()) || "长期债券投资".equals(asset.getAsset())) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("流动资产合计");
+                    sumBO.setBeginAsset(beginSum);
 //                sumBO.setCurrent(currentSum);
-                sumBO.setEndAsset(endSum);
-                sumBO.setAssetNum(num);
-                num++;
-                boList.add(sumBO);
-                beginSum = 0;
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
 //                currentSum = 0;
-                endSum = 0;    //置为0
-                AssetBO assetBO = new AssetBO();
-                assetBO.setAsset("长期资产：");
-                boList.add(assetBO);
-                b2 = false;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("长期资产：");
+                    boList.add(assetBO);
+                    b2 = false;
+                }
+
             } else if (AssetType.CFIX.equals(asset.getAssetType()) && b3) {
-                AssetBO sumBO = new AssetBO();
-                sumBO.setAsset("长期资产合计");
-                sumBO.setBeginAsset(beginSum);
+                if ("固定资产净额".equals(asset.getAsset()) || "在建工程".equals(asset.getAsset()) ||
+                        "工程物资".equals(asset.getAsset()) || "固定资产清理".equals(asset.getAsset())) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("长期投资合计");
+                    sumBO.setBeginAsset(beginSum);
 //                sumBO.setCurrent(currentSum);
-                sumBO.setEndAsset(endSum);
-                sumBO.setAssetNum(num);
-                num++;
-                boList.add(sumBO);
-                beginSum = 0;
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
 //                currentSum = 0;
-                endSum = 0;    //置为0
-                AssetBO assetBO = new AssetBO();
-                assetBO.setAsset("固定资产：");
-                boList.add(assetBO);
-                b3 = false;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("固定资产：");
+                    boList.add(assetBO);
+                    b3 = false;
+                }
+
             } else if (AssetType.DINVISIBLE.equals(asset.getAssetType()) && b4) {
-                AssetBO sumBO = new AssetBO();
-                sumBO.setAsset("固定资产合计");
-                sumBO.setBeginAsset(beginSum);
+
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("固定资产合计");
+                    sumBO.setBeginAsset(beginSum);
 //                sumBO.setCurrent(currentSum);
-                sumBO.setEndAsset(endSum);
-                sumBO.setAssetNum(num);
-                num++;
-                boList.add(sumBO);
-                beginSum = 0;
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
 //                currentSum = 0;
-                endSum = 0;    //置为0
-                AssetBO assetBO = new AssetBO();
-                assetBO.setAsset("无形资产及其他资产：");
-                boList.add(assetBO);
-                b4 = false;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("无形资产及其他资产：");
+                    boList.add(assetBO);
+                    b4 = false;
+
             } else if (AssetType.ETAX.equals(asset.getAssetType()) && b5) {
                 AssetBO sumBO = new AssetBO();
                 sumBO.setAsset("无形资产及其他资产合计");
@@ -487,6 +497,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 bo.setEndAsset(formulaBO.getEnd());
                 if (Type.ADD.equals(asset.getType())) {
                     if (!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
+
                         beginSum += bo.getBeginAsset();
 //                    currentSum += bo.getCurrent();
                         endSum += bo.getEndAsset();
@@ -505,6 +516,16 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                         countEnd = countEnd - bo.getEndAsset();
                     }
                 }
+
+                if ("流动资产合计".equals(bo.getAsset()) || "长期投资合计".equals(bo.getAsset()) || "固定资产合计".equals(bo.getAsset())
+                        || "无形资产及其他资产合计".equals(bo.getAsset()) || "递延税款借项".equals(bo.getAsset())) {
+                    beginSum += bo.getBeginAsset();
+//                    currentSum += bo.getCurrent();
+                    endSum += bo.getEndAsset();
+                    countBegin += bo.getBeginAsset();
+//                    countCurrent += bo.getCurrent();
+                    countEnd += bo.getEndAsset();
+                }
                 bo.setAssetNum(num);
                 num++;
                 boList.add(bo);
@@ -514,9 +535,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 num++;
                 boList.add(bo);
             }
-        }
+        }*/
 
-        DebtDTO debtDTO = new DebtDTO();
+        /*DebtDTO debtDTO = new DebtDTO();
         BeanUtils.copyProperties(dto, debtDTO, "sorts");
         Long size = debtSer.count(debtDTO);
 
@@ -525,9 +546,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 AssetBO assetBO = new AssetBO();
                 boList.add(assetBO);
             }
-        }
+        }*/
 
-        AssetBO lastBO = new AssetBO();
+        /*AssetBO lastBO = new AssetBO();
         lastBO.setAsset("资产总计");
         lastBO.setBeginAsset(countBegin);
 //        lastBO.setCurrent(countCurrent);
@@ -539,8 +560,358 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         boList.stream().forEach(obj -> {
             obj.setStartTime(dto.getStartTime());
             obj.setEndTime(dto.getEndTime());
-        });
-        return boList;
+        });*/
+
+        Double beginSum1 = 0.0;
+        Double beginSum2 = 0.0;
+        Double beginSum3 = 0.0;
+        Double beginSum4 = 0.0;
+        Double beginSum5 = 0.0;
+        Double endSum1 = 0.0;
+        Double endSum2 = 0.0;
+        Double endSum3 = 0.0;
+        Double endSum4 = 0.0;
+        Double endSum5 = 0.0;
+        for (Asset asset : list) {
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
+            if ((formulaBOs == null) || (formulaBOs.isEmpty())) {
+                continue;
+            }
+            FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
+            AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
+            bo.setBeginAsset(formulaBO.getBegin());
+            bo.setCurrent(formulaBO.getCurrent());
+            bo.setEndAsset(formulaBO.getEnd());
+            bo.setAssetNum(num);
+            boList.add(bo);
+            num++;
+        }
+        for (AssetBO bo : boList) {
+            /*List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
+            if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
+                continue;
+            }
+            FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
+            AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
+            bo.setBeginAsset(formulaBO.getBegin());
+            bo.setCurrent(formulaBO.getCurrent());
+            bo.setEndAsset(formulaBO.getEnd());
+            bo.setAssetNum(num);
+            num++;
+            boList.add(bo);*/
+            if (Type.ADD.equals(bo.getType())) {
+                if (AssetType.AFLOW.equals(bo.getAssetType())) {
+                    beginSum1 += bo.getBeginAsset();
+                    endSum1 += bo.getEndAsset();
+                }
+                if (AssetType.BLONG.equals(bo.getAssetType())) {
+                    beginSum2 += bo.getBeginAsset();
+                    endSum2 += bo.getEndAsset();
+                }
+                if (AssetType.CFIX.equals(bo.getAssetType())) {
+                    if ("固定资产净额".equals(bo.getAsset()) || "在建工程".equals(bo.getAsset()) ||
+                            "工程物资".equals(bo.getAsset()) || "固定资产清理".equals(bo.getAsset())) {
+                        beginSum3 += bo.getBeginAsset();
+                        endSum3 += bo.getEndAsset();
+                    }
+
+                }
+                if (AssetType.DINVISIBLE.equals(bo.getAssetType())) {
+                    beginSum4 += bo.getBeginAsset();
+                    endSum4 += bo.getEndAsset();
+                }
+                if (AssetType.ETAX.equals(bo.getAssetType())) {
+                    beginSum5 += bo.getBeginAsset();
+                    endSum5 += bo.getEndAsset();
+                }
+            } else if (Type.REMOVE.equals(bo.getType())) {
+                if (AssetType.AFLOW.equals(bo.getAssetType())) {
+                    beginSum1 -= bo.getBeginAsset();
+                    endSum1 += bo.getEndAsset();
+                }
+                if (AssetType.BLONG.equals(bo.getAssetType())) {
+                    beginSum2 -= bo.getBeginAsset();
+                    endSum2 += bo.getEndAsset();
+                }
+                if (AssetType.CFIX.equals(bo.getAssetType())) {
+                    if ("固定资产净额".equals(bo.getAsset()) || "在建工程".equals(bo.getAsset()) ||
+                            "工程物资".equals(bo.getAsset()) || "固定资产清理".equals(bo.getAsset())) {
+                        beginSum3 -= bo.getBeginAsset();
+                        endSum3 += bo.getEndAsset();
+                    }
+
+                }
+                if (AssetType.DINVISIBLE.equals(bo.getAssetType())) {
+                    beginSum4 -= bo.getBeginAsset();
+                    endSum4 += bo.getEndAsset();
+                }
+                if (AssetType.ETAX.equals(bo.getAssetType())) {
+                    beginSum5 -= bo.getBeginAsset();
+                    endSum5 += bo.getEndAsset();
+                }
+            }
+
+        }
+        AssetBO assetBO1 = new AssetBO();
+        assetBO1.setAsset("流动资产：");
+        boList.add(assetBO1);
+        AssetBO assetBO2 = new AssetBO();
+        assetBO2.setAsset("流动资产合计");
+        assetBO2.setBeginAsset(beginSum1);
+        assetBO2.setEndAsset(endSum1);
+        assetBO2.setAssetNum(num);
+        boList.add(assetBO2);
+        num ++;
+        AssetBO assetBO3 = new AssetBO();
+        assetBO3.setAsset("长期资产：");
+        boList.add(assetBO3);
+        AssetBO assetBO4 = new AssetBO();
+        assetBO4.setAsset("长期投资合计");
+        assetBO4.setBeginAsset(beginSum2);
+        assetBO4.setEndAsset(endSum2);
+        assetBO4.setAssetNum(num);
+        boList.add(assetBO4);
+        num ++;
+        AssetBO assetBO5 = new AssetBO();
+        assetBO5.setAsset("固定资产：");
+        boList.add(assetBO5);
+        AssetBO assetBO6 = new AssetBO();
+        assetBO6.setAsset("固定资产合计");
+        assetBO6.setBeginAsset(beginSum3);
+        assetBO6.setEndAsset(endSum3);
+        assetBO6.setAssetNum(num);
+        boList.add(assetBO6);
+        num ++;
+        AssetBO assetBO7 = new AssetBO();
+        assetBO7.setAsset("无形资产及其他资产：");
+        boList.add(assetBO7);
+        AssetBO assetBO8 = new AssetBO();
+        assetBO8.setAsset("无形资产及其他资产合计");
+        assetBO8.setBeginAsset(beginSum3);
+        assetBO8.setEndAsset(endSum3);
+        assetBO8.setAssetNum(num);
+        boList.add(assetBO8);
+        num ++;
+        AssetBO assetBO9 = new AssetBO();
+        assetBO9.setAsset("递延税款：");
+        boList.add(assetBO9);
+        AssetBO assetBO10 = new AssetBO();
+        assetBO10.setAsset("资产总计");
+        assetBO10.setBeginAsset(beginSum1 + beginSum2 + beginSum3 + beginSum4 + beginSum5);
+        assetBO10.setEndAsset(endSum1 + endSum2 + endSum3 + endSum4 + endSum5);
+        assetBO10.setAssetNum(num);
+        boList.add(assetBO10);
+
+        return this.convertAsset(boList);
+    }
+
+    /**
+     * 对返回结果进行排序
+     * @param list
+     * @return
+     */
+    List<AssetBO> convertAsset(List<AssetBO> list){
+        List<AssetBO> bos = new ArrayList<>();
+        AssetBO bo1 = new AssetBO();
+        AssetBO bo2 = new AssetBO();
+        AssetBO bo3 = new AssetBO();
+        AssetBO bo4 = new AssetBO();
+        AssetBO bo5 = new AssetBO();
+        AssetBO bo6 = new AssetBO();
+        AssetBO bo7 = new AssetBO();
+        AssetBO bo8 = new AssetBO();
+        AssetBO bo9 = new AssetBO();
+        AssetBO bo10 = new AssetBO();
+        AssetBO bo11 = new AssetBO();
+        AssetBO bo12 = new AssetBO();
+        AssetBO bo13 = new AssetBO();
+        AssetBO bo14 = new AssetBO();
+        AssetBO bo15 = new AssetBO();
+        AssetBO bo16 = new AssetBO();
+        AssetBO bo17 = new AssetBO();
+        AssetBO bo18 = new AssetBO();
+        AssetBO bo19 = new AssetBO();
+        AssetBO bo20 = new AssetBO();
+        AssetBO bo21 = new AssetBO();
+        AssetBO bo22 = new AssetBO();
+        AssetBO bo23 = new AssetBO();
+        AssetBO bo24 = new AssetBO();
+        AssetBO bo25 = new AssetBO();
+        AssetBO bo26 = new AssetBO();
+        AssetBO bo27 = new AssetBO();
+        AssetBO bo28 = new AssetBO();
+        AssetBO bo29 = new AssetBO();
+        AssetBO bo30 = new AssetBO();
+        AssetBO bo31 = new AssetBO();
+        AssetBO bo32 = new AssetBO();
+        AssetBO bo33 = new AssetBO();
+        AssetBO bo34 = new AssetBO();
+        AssetBO bo35 = new AssetBO();
+        AssetBO bo36 = new AssetBO();
+        AssetBO bo37 = new AssetBO();
+        AssetBO bo38 = new AssetBO();
+        for (AssetBO bo : list) {
+            if (null != bo.getBeginAsset()) {
+                bo.setBeginAsset(new BigDecimal(bo.getBeginAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+            }
+            if (null != bo.getEndAsset()) {
+                bo.setEndAsset(new BigDecimal(bo.getEndAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+            }
+            if ("流动资产：".equals(bo.getAsset()) || "流动资产:".equals(bo.getAsset())) {
+                bo1 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+
+            }
+            if ("货币资金".equals(bo.getAsset())) {
+                bo2 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("短期投资".equals(bo.getAsset())) {
+                bo3 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("应收票据".equals(bo.getAsset())) {
+                bo4 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("应收股利".equals(bo.getAsset())) {
+                bo5 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("应收利息".equals(bo.getAsset())) {
+                bo6 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("应收账款".equals(bo.getAsset())) {
+                bo7 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("其他应收款".equals(bo.getAsset())) {
+                bo8 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("预付账款".equals(bo.getAsset())) {
+                bo9 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("应收补贴款".equals(bo.getAsset())) {
+                bo10 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("存货".equals(bo.getAsset())) {
+                bo11 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("待摊费用".equals(bo.getAsset())) {
+                bo12 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("一年内到期的长期债券投资".equals(bo.getAsset())) {
+                bo13 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("其他流动资产".equals(bo.getAsset())) {
+                bo14 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("流动资产合计".equals(bo.getAsset())) {
+                bo15 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("长期资产：".equals(bo.getAsset()) || "长期资产:".equals(bo.getAsset())) {
+                bo16 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("长期股权投资".equals(bo.getAsset())) {
+                bo17 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("长期债券投资".equals(bo.getAsset())) {
+                bo18 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("长期投资合计".equals(bo.getAsset())) {
+                bo19 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产：".equals(bo.getAsset()) || "固定资产:".equals(bo.getAsset())) {
+                bo20 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产原价".equals(bo.getAsset())) {
+                bo21 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("减：累计折旧".equals(bo.getAsset()) || "减:累计折旧".equals(bo.getAsset())) {
+                bo22 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产净值".equals(bo.getAsset())) {
+                bo23 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("减：固定资产减值准备".equals(bo.getAsset()) || "减:固定资产减值准备".equals(bo.getAsset())) {
+                bo24 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产净额".equals(bo.getAsset()) || "固定资产净额:".equals(bo.getAsset())) {
+                bo25 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("工程物资".equals(bo.getAsset())) {
+                bo26 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("在建工程".equals(bo.getAsset())) {
+                bo27 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产清理".equals(bo.getAsset())) {
+                bo28 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("固定资产合计".equals(bo.getAsset())) {
+                bo29 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("无形资产及其他资产：".equals(bo.getAsset()) || "无形资产及其他资产:".equals(bo.getAsset())) {
+                bo30 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("无形资产".equals(bo.getAsset())) {
+                bo31 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("长期待摊费用".equals(bo.getAsset())) {
+                bo32 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("其他长期资产".equals(bo.getAsset())) {
+                bo33 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("无形资产及其他资产合计".equals(bo.getAsset())) {
+                bo34 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo35 = new AssetBO();
+
+            }
+            if ("递延税款：".equals(bo.getAsset()) || "递延税款:".equals(bo.getAsset())) {
+                bo36 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("递延税款借项".equals(bo.getAsset())) {
+                bo37 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+            if ("资产总计".equals(bo.getAsset())) {
+                bo38 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+            }
+        }
+        bos.add(bo1);
+        bos.add(bo2);
+        bos.add(bo3);
+        bos.add(bo4);
+        bos.add(bo5);
+        bos.add(bo6);
+        bos.add(bo7);
+        bos.add(bo8);
+        bos.add(bo9);
+        bos.add(bo10);
+        bos.add(bo11);
+        bos.add(bo12);
+        bos.add(bo13);
+        bos.add(bo14);
+        bos.add(bo15);
+        bos.add(bo16);
+        bos.add(bo17);
+        bos.add(bo18);
+        bos.add(bo19);
+        bos.add(bo20);
+        bos.add(bo21);
+        bos.add(bo22);
+        bos.add(bo23);
+        bos.add(bo24);
+        bos.add(bo25);
+        bos.add(bo26);
+        bos.add(bo27);
+        bos.add(bo28);
+        bos.add(bo29);
+        bos.add(bo30);
+        bos.add(bo31);
+        bos.add(bo32);
+        bos.add(bo33);
+        bos.add(bo34);
+        bos.add(bo35);
+        bos.add(bo36);
+        bos.add(bo37);
+        bos.add(bo38);
+
+        return bos;
     }
 
 

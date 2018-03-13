@@ -88,7 +88,7 @@ public class CurrentPositionImport {
      * 延后次数
      */
     @ExcelHeader(name = "延后次数")
-    private Double delayTimes;
+    private Integer delayTimes;
 
     /**
      * 延后的在岗时长
@@ -204,11 +204,11 @@ public class CurrentPositionImport {
         this.delay = delay;
     }
 
-    public Double getDelayTimes() {
+    public Integer getDelayTimes() {
         return delayTimes;
     }
 
-    public void setDelayTimes(Double delayTimes) {
+    public void setDelayTimes(Integer delayTimes) {
         this.delayTimes = delayTimes;
     }
 

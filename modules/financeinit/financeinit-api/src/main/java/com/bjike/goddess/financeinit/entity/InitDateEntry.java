@@ -63,6 +63,20 @@ public class InitDateEntry extends BaseEntity {
     @Column(name = "yearProfitLossNum", nullable = false,insertable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0  COMMENT '本年损益类累计数'")
     private Double yearProfitLossNum;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
 
     public String getCode() {
         return code;

@@ -69,6 +69,7 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
             throw new SerException("更新实体不存在");
         }
         CurrentPosition entity = BeanTransform.copyProperties(to, CurrentPosition.class);
+        entity.setCreateTime(oldEntity.getCreateTime());
         entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
     }
@@ -79,6 +80,7 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
         if (null == oldEntity) {
             throw new SerException("更新实体不存在");
         }
+
         oldEntity.setArrangement(arrangement);
         oldEntity.setModifyTime(LocalDateTime.now());
         super.update(oldEntity);

@@ -539,11 +539,11 @@ public class DispatchCarInfoVO {
      */
     private FindType findType;
 
-//    /**
-//     * 油耗
-//     */
-//    private Double oilWear;
-//
+    /**
+     * 油耗
+     */
+    private Double oilWear;
+
 //    /**
 //     * 油费
 //     */
@@ -1333,5 +1333,13 @@ public class DispatchCarInfoVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Double getOilWear() {
+        return oilWear;
+    }
+
+    public void setOilWear(Double oilWear) {
+        this.oilWear = oilWear;
     }
 }

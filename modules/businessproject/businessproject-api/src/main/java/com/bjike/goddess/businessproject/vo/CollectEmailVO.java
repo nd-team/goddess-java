@@ -106,28 +106,28 @@ public class CollectEmailVO {
     /**
      * 业务类型汇总集合
      */
-    private List<Map<String, String>> busTypeMap;
+    private Object busTypeMap;
 
     /**
      * 合作方式汇总集合
      */
-    private List<Map<String, String>> cooperWaysMap;
+    private Object cooperWaysMap;
 
 
     /**
      * 合同属性汇总集合
      */
-    private List<Map<String, String>> contractPropertyMap;
+    private Object contractPropertyMap;
 
     /**
      * 立项情况汇总集合
      */
-    private List<Map<String, String>> makeProjectMap;
+    private Object makeProjectMap;
 
     /**
      * 合同签订情况汇总集合
      */
-    private List<Map<String, String>> signMap;
+    private Object signMap;
 
     /**
      * 派工单个数
@@ -288,43 +288,43 @@ public class CollectEmailVO {
         this.enumConvert = enumConvert;
     }
 
-    public List<Map<String, String>> getBusTypeMap() {
+    public Object getBusTypeMap() {
         return busTypeMap;
     }
 
-    public void setBusTypeMap(List<Map<String, String>> busTypeMap) {
+    public void setBusTypeMap(Object busTypeMap) {
         this.busTypeMap = busTypeMap;
     }
 
-    public List<Map<String, String>> getCooperWaysMap() {
+    public Object getCooperWaysMap() {
         return cooperWaysMap;
     }
 
-    public void setCooperWaysMap(List<Map<String, String>> cooperWaysMap) {
+    public void setCooperWaysMap(Object cooperWaysMap) {
         this.cooperWaysMap = cooperWaysMap;
     }
 
-    public List<Map<String, String>> getContractPropertyMap() {
+    public Object getContractPropertyMap() {
         return contractPropertyMap;
     }
 
-    public void setContractPropertyMap(List<Map<String, String>> contractPropertyMap) {
+    public void setContractPropertyMap(Object contractPropertyMap) {
         this.contractPropertyMap = contractPropertyMap;
     }
 
-    public List<Map<String, String>> getMakeProjectMap() {
+    public Object getMakeProjectMap() {
         return makeProjectMap;
     }
 
-    public void setMakeProjectMap(List<Map<String, String>> makeProjectMap) {
+    public void setMakeProjectMap(Object makeProjectMap) {
         this.makeProjectMap = makeProjectMap;
     }
 
-    public List<Map<String, String>> getSignMap() {
+    public Object getSignMap() {
         return signMap;
     }
 
-    public void setSignMap(List<Map<String, String>> signMap) {
+    public void setSignMap(Object signMap) {
         this.signMap = signMap;
     }
 
@@ -351,4 +351,6 @@ public class CollectEmailVO {
     public void setNotComplete(Integer notComplete) {
         this.notComplete = notComplete;
     }
+    
+    
 }

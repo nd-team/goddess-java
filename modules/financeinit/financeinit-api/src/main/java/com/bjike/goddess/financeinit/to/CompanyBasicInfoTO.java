@@ -66,6 +66,18 @@ public class CompanyBasicInfoTO extends BaseTO {
      */
     private String remark;
 
+    /**
+     * systemId
+     */
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     public String getCompanyName() {
         return companyName;

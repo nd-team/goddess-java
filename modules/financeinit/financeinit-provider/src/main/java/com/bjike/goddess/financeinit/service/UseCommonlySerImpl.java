@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -159,8 +160,10 @@ public class UseCommonlySerImpl extends ServiceImpl<UseCommonly, UseCommonlyDTO>
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countUse(UseCommonlyDTO useCommonlyDTO) throws SerException {
+        useCommonlyDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         Long count = super.count(useCommonlyDTO);
         return count;
     }
@@ -168,28 +171,53 @@ public class UseCommonlySerImpl extends ServiceImpl<UseCommonly, UseCommonlyDTO>
     @Override
     public UseCommonlyBO getOneById(String id) throws SerException {
         UseCommonly useCommonly = super.findById(id);
-        return BeanTransform.copyProperties(useCommonly,UseCommonlyBO.class);
+        return BeanTransform.copyProperties(useCommonly, UseCommonlyBO.class);
     }
 
     @Override
     public List<UseCommonlyBO> listUse(UseCommonlyDTO useCommonlyDTO) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
+        useCommonlyDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<UseCommonly> useCommonlies = super.findByCis(useCommonlyDTO);
-        return BeanTransform.copyProperties(useCommonlies,UseCommonlyBO.class);
+        return BeanTransform.copyProperties(useCommonlies, UseCommonlyBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public UseCommonlyBO addUse(UseCommonlyTO useCommonlyTO) throws SerException {
         checkAddIdentity();
-        UseCommonly useCommonly = BeanTransform.copyProperties(useCommonlyTO,UseCommonly.class,true);
+        String systemId = getSystemId();
+        UseCommonlyDTO useCommonlyDTO = new UseCommonlyDTO();
+        useCommonlyDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        useCommonlyDTO.getConditions().add(Restrict.eq("useComm", useCommonlyTO.getUseComm()));
+        List<UseCommonly> useCommonlies = super.findByCis(useCommonlyDTO);
+        if (useCommonlies != null && useCommonlies.size() > 0) {
+            throw new SerException("'" + useCommonlyTO.getUseComm() + "'已存在，不可重复添加");
+        }
+        UseCommonly useCommonly = BeanTransform.copyProperties(useCommonlyTO, UseCommonly.class, true);
         useCommonly.setCreateTime(LocalDateTime.now());
+        useCommonly.setSystemId(systemId);
         super.save(useCommonly);
-        return BeanTransform.copyProperties(useCommonly,UseCommonlyBO.class);
+        return BeanTransform.copyProperties(useCommonly, UseCommonlyBO.class);
     }
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

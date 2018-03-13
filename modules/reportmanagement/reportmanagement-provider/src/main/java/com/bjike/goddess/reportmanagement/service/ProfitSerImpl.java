@@ -37,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.loader.custom.Return;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -725,8 +726,177 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             num++;
             boList.add(lastBO);
         }
-        return boList;
+        return this.convertProfit(boList);
     }
+
+    List<ProfitBO> convertProfit(List<ProfitBO> list) {
+        List<ProfitBO> bos = new ArrayList<>();
+        ProfitBO bo1 = new ProfitBO();
+        ProfitBO bo2 = new ProfitBO();
+        ProfitBO bo3 = new ProfitBO();
+        ProfitBO bo4 = new ProfitBO();
+        ProfitBO bo5 = new ProfitBO();
+        ProfitBO bo6 = new ProfitBO();
+        ProfitBO bo7 = new ProfitBO();
+        ProfitBO bo8 = new ProfitBO();
+        ProfitBO bo9 = new ProfitBO();
+        ProfitBO bo10 = new ProfitBO();
+        ProfitBO bo11 = new ProfitBO();
+        ProfitBO bo12 = new ProfitBO();
+        ProfitBO bo13 = new ProfitBO();
+        ProfitBO bo14 = new ProfitBO();
+        ProfitBO bo15 = new ProfitBO();
+        ProfitBO bo16 = new ProfitBO();
+        ProfitBO bo17 = new ProfitBO();
+        ProfitBO bo18 = new ProfitBO();
+        ProfitBO bo19 = new ProfitBO();
+        ProfitBO bo20 = new ProfitBO();
+        ProfitBO bo21 = new ProfitBO();
+        ProfitBO bo22 = new ProfitBO();
+        ProfitBO bo23 = new ProfitBO();
+        ProfitBO bo24 = new ProfitBO();
+        ProfitBO bo25 = new ProfitBO();
+        ProfitBO bo26 = new ProfitBO();
+        ProfitBO bo27 = new ProfitBO();
+        ProfitBO bo28 = new ProfitBO();
+        ProfitBO bo29 = new ProfitBO();
+        ProfitBO bo30 = new ProfitBO();
+
+        for (ProfitBO bo : list) {
+            if ("一、营业收入".equals(bo.getProject())) {
+                bo1 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("减：营业成本".equals(bo.getProject()) || "减:营业成本".equals(bo.getProject())) {
+                bo2 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("营业税金及附加".equals(bo.getProject())) {
+                bo3 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+
+            if ("销售费用".equals(bo.getProject())) {
+                bo4 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("管理费用".equals(bo.getProject())) {
+                bo5 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("财务费用".equals(bo.getProject())) {
+                bo6 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("资产减值损益".equals(bo.getProject())) {
+                bo7 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("加：投资收益(亏损以“-”号填列)".equals(bo.getProject()) || "加:投资收益(亏损以“-”号填列)".equals(bo.getProject())
+            || "加：投资收益（亏损以“-”号填列）".equals(bo.getProject())) {
+                bo8 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+
+            if ("二、营业利润".equals(bo.getProject())) {
+                bo9 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("加：营业外收入".equals(bo.getProject()) || "加:营业外收入".equals(bo.getProject())) {
+                bo10 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("减：营业外支出".equals(bo.getProject()) || "减:营业外支出".equals(bo.getProject())) {
+                bo11 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("三、利润总额".equals(bo.getProject())) {
+                bo12 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("减：所得税".equals(bo.getProject()) || "减:所得税".equals(bo.getProject())) {
+                bo13 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("四、净利润".equals(bo.getProject())) {
+                bo14 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("加：年初未分配利润".equals(bo.getProject()) || "加:年初未分配利润".equals(bo.getProject())) {
+                bo15 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("其他转入".equals(bo.getProject())) {
+                bo16 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("五、可供分配的利润".equals(bo.getProject())) {
+                bo17 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("减：提取法定盈余公积".equals(bo.getProject()) || "减:提取法定盈余公积".equals(bo.getProject())) {
+                bo18 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+
+            if ("提取法定公益金".equals(bo.getProject())) {
+                bo19 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("提取职工奖励及福利基金".equals(bo.getProject())) {
+                bo20 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("提取储备基金".equals(bo.getProject())) {
+                bo21 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("提取企业发展基金".equals(bo.getProject())) {
+                bo22 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("利润归还投资".equals(bo.getProject())) {
+                bo23 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+
+            if ("六、可供投资者分配的利润".equals(bo.getProject())) {
+                bo24 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("减：应付优先股股利".equals(bo.getProject()) || "减:应付优先股股利".equals(bo.getProject())) {
+                bo25 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("提取任意盈余公积".equals(bo.getProject())) {
+                bo26 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("应付普通股股利".equals(bo.getProject())) {
+                bo27 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("转作资本（或股本）的普通股股利".equals(bo.getProject()) || "转作资本(或股本)的普通股股利".equals(bo.getProject())) {
+                bo28 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+
+            if ("七、以前年度损益调整".equals(bo.getProject())) {
+                bo29 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+            if ("八、未分配利润".equals(bo.getProject())) {
+                bo30 = new ProfitBO(bo.getId(), bo.getProject(), bo.getNum(), bo.getCurrentMonthAmount(), bo.getCurrentYearAmount(), bo.getProjectType(), bo.getProfitType(), bo.getType());
+            }
+        }
+
+        bos.add(bo1);
+        bos.add(bo2);
+        bos.add(bo3);
+        bos.add(bo4);
+        bos.add(bo5);
+        bos.add(bo6);
+        bos.add(bo7);
+        bos.add(bo8);
+        bos.add(bo9);
+        bos.add(bo10);
+        bos.add(bo11);
+        bos.add(bo12);
+        bos.add(bo13);
+        bos.add(bo14);
+        bos.add(bo15);
+        bos.add(bo16);
+        bos.add(bo17);
+        bos.add(bo18);
+        bos.add(bo19);
+        bos.add(bo20);
+        bos.add(bo21);
+        bos.add(bo22);
+        bos.add(bo23);
+        bos.add(bo24);
+        bos.add(bo25);
+        bos.add(bo26);
+        bos.add(bo27);
+        bos.add(bo28);
+        bos.add(bo29);
+        bos.add(bo30);
+
+
+        return bos;
+
+    }
+
 
     public String joingTogether(String firstSubject, String projectType) throws SerException {
         return projectType == null ? firstSubject : (projectType + ":" + firstSubject);

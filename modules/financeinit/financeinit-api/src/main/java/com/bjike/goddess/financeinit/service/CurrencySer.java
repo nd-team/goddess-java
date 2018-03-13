@@ -86,4 +86,5 @@ public interface CurrencySer extends Ser<Currency, CurrencyDTO> {
     default void deleteCurren(String id) throws SerException {
         return;
     }
+
 }

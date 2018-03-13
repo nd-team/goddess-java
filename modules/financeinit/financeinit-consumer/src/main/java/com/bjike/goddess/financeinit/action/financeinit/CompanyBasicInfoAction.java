@@ -183,15 +183,13 @@ public class CompanyBasicInfoAction extends BaseFileAction{
      */
     @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport( HttpServletResponse response) throws ActException {
+    public Result exportReport(HttpServletResponse response) throws ActException {
         try {
             String fileName = LocalDate.now()+"公司基本信息.xlsx";
             super.writeOutFile(response, companyBasicInfoAPI.exportExcel(), fileName);
             return new ActResult("导出成功");
-        } catch (SerException e) {
+        } catch (SerException | IOException e) {
             throw new ActException(e.getMessage());
-        } catch (IOException e1) {
-            throw new ActException(e1.getMessage());
         }
     }
 }

@@ -107,7 +107,20 @@ public class BaseParameter extends BaseEntity {
 //     */
 //    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
 //    private String remark;
+//
+   /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     public String getCompanyName() {
         return companyName;

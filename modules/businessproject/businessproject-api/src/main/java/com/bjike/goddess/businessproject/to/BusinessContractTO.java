@@ -422,6 +422,32 @@ public class BusinessContractTO extends BaseTO {
      */
     private String content;
 
+    /**
+     * 进场状态
+     */
+    private String approachStatus;
+
+    /**
+     * 工作状态
+     */
+    private String workStatus;
+
+    public String getApproachStatus() {
+        return approachStatus;
+    }
+
+    public void setApproachStatus(String approachStatus) {
+        this.approachStatus = approachStatus;
+    }
+
+    public String getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(String workStatus) {
+        this.workStatus = workStatus;
+    }
+
     public String getContent() {
         return content;
     }

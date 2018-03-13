@@ -230,6 +230,8 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
 
     @Override
     public Long countBasicInfo(CompanyBasicInfoDTO companyBasicInfoDTO) throws SerException {
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+
         Long count = super.count(companyBasicInfoDTO);
         return count;
     }
@@ -249,10 +251,9 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        //TODO: 由于还不知道怎么获取当前用户属于那个公司,所以这里先固定当前用户为"北京艾佳天城信息技术有限公司"
-        String companyName = "北京艾佳天城信息技术有限公司";
-        Boolean bool = checkExist(companyName);
+        Boolean bool = checkExist();
         if(!bool){
+            //todo "IKE009999"为测试数据，后续根据组织结构获取“财务主管”帐号进行判断
             if("IKE009999".equalsIgnoreCase(userBO.getEmployeeNumber()) || "admin".equals(userBO.getUsername())){
                 throw new SerException("公司的基本信息未完善，请财务主管进行完善");
             }else{
@@ -260,30 +261,32 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
             }
         }
 
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<CompanyBasicInfo> list = super.findByCis(companyBasicInfoDTO, true);
         return BeanTransform.copyProperties(list, CompanyBasicInfoBO.class);
     }
 
-    private Boolean checkExist(String companyName)throws SerException{
-        Boolean bool = false;
-        if(StringUtils.isNotBlank(companyName)){
-            CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
-            companyBasicInfoDTO.getConditions().add(Restrict.eq("companyName",companyName));
-            CompanyBasicInfo companyBasicInfo = super.findOne(companyBasicInfoDTO);
-            if(null != companyBasicInfo){
-               bool = true;
-            }
-        }
-        return bool;
+    private Boolean checkExist()throws SerException{
+        long count = countBasicInfo(new CompanyBasicInfoDTO());
+        return count >= 1;
     }
 
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public CompanyBasicInfoBO addBaseInfo(CompanyBasicInfoTO companyBasicInfoTO) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        companyBasicInfoTO.setSystemId(userAPI.currentSysNO());
+        RpcTransmit.transmitUserToken(token);
         checkFinanDepartSup();
+        //判断是否超过一条
+        long count = countBasicInfo(new CompanyBasicInfoDTO());
+        if (count > 1) {
+            throw new SerException("公司基本信息条数不可超过一条");
+        }
         CompanyBasicInfo companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO, CompanyBasicInfo.class, true);
         companyBasicInfo.setCreateTime(LocalDateTime.now());
+        companyBasicInfo.setSystemId(getSystemId());
         super.save(companyBasicInfo);
         return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
@@ -336,7 +339,11 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     @Override
     public byte[] exportExcel() throws SerException {
         checkAddIdentity();
-        List<CompanyBasicInfo> list = super.findAll();
+        CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        List<CompanyBasicInfo> list = super.findByCis(companyBasicInfoDTO);
+
+//        List<CompanyBasicInfo> list = super.findAll();
         List<CompanyBasicInfoExport> companyBasicInfoExports = new ArrayList<>();
 
         for (CompanyBasicInfo companyBasicInfo : list) {
@@ -350,7 +357,10 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
 
     @Override
     public List<String> findCompanyName() throws SerException {
-        List<CompanyBasicInfo> companyBasicInfos = super.findAll();
+        CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        List<CompanyBasicInfo> companyBasicInfos = super.findByCis(companyBasicInfoDTO);
+//        List<CompanyBasicInfo> companyBasicInfos = super.findAll();
         List<String> CompanyNames = new ArrayList<>();
         if (companyBasicInfos != null && companyBasicInfos.size() > 0) {
             for (CompanyBasicInfo companyBasicInfo : companyBasicInfos) {
@@ -368,4 +378,10 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
 
+    String getSystemId() throws SerException{
+        String token = RpcTransmit.getUserToken();
+        String systemId= userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
+    }
 }

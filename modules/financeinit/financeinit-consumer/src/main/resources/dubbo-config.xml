@@ -29,6 +29,7 @@
 	<dubbo:reference  validation="true" id="withUnitApiImpl" interface="com.bjike.goddess.financeinit.api.WithUnitAPI" />
 	<dubbo:reference  validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
 	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
+	<dubbo:reference  validation="true" id="userServiceApiImpl" interface="com.bjike.goddess.financeinit.api.UserServiceAPI" />
 
 
 

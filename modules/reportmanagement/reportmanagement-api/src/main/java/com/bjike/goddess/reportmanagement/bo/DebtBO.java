@@ -59,6 +59,22 @@ public class DebtBO extends BaseBO {
      */
     private Double endDebt;
 
+    public DebtBO() {
+    }
+
+    public DebtBO(String id, String startTime, String endTime, String debt, DebtType debtType, Type type, Integer debtNum, Double beginDebt, Double current, Double endDebt) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.debt = debt;
+        this.debtType = debtType;
+        this.type = type;
+        this.debtNum = debtNum;
+        this.beginDebt = beginDebt;
+        this.current = current;
+        this.endDebt = endDebt;
+    }
+
     public Type getType() {
         return type;
     }

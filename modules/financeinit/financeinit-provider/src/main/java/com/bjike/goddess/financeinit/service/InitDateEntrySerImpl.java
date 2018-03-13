@@ -168,6 +168,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
 
     @Override
     public Long countInit(InitDateEntryDTO initDateEntryDTO) throws SerException {
+        initDateEntryDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         Long count = super.count(initDateEntryDTO);
         return count;
     }
@@ -181,6 +182,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     @Override
     public List<InitDateEntryBO> listInit(InitDateEntryDTO initDateEntryDTO) throws SerException {
         checkSeeIdentity();
+        initDateEntryDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         initDateEntryDTO.getSorts().add("code=asc");
         List<InitDateEntry> initDateEntries = super.findByCis(initDateEntryDTO, true);
         return BeanTransform.copyProperties(initDateEntries, InitDateEntryBO.class);
@@ -230,6 +232,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     public InitDateEntryBO findByName(String name) throws SerException {
         InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
         initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", name));
+        initDateEntryDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
         return BeanTransform.copyProperties(initDateEntry, InitDateEntryBO.class);
     }
@@ -239,6 +242,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         Double yearProfitLoss = 0d;
          InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
         initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", name));
+        initDateEntryDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<InitDateEntry> initDateEntrys = super.findByCis(initDateEntryDTO);
         if(initDateEntrys!=null && initDateEntrys.size()>0){
             yearProfitLoss = initDateEntrys.get(0).getYearProfitLossNum();
@@ -252,6 +256,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         }
         InitDateEntryDTO dto = new InitDateEntryDTO();
         dto.getConditions().add(Restrict.eq("accountanName", firstSubject));
+        dto.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<InitDateEntry> list = super.findByCis(dto);
         List<InitDateEntryBO> bos = BeanTransform.copyProperties(list, InitDateEntryBO.class, false);
         if (null != bos && bos.size() > 0) {
@@ -262,7 +267,10 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
 
     @Override
     public byte[] exportExcel() throws SerException {
-        List<InitDateEntry> list = super.findAll();
+//        List<InitDateEntry> list = super.findAll();
+        InitDateEntryDTO dto = new InitDateEntryDTO();
+        dto.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        List<InitDateEntry> list = super.findByCis(dto);
         List<InitDateEntryImport> initDateEntryImports = new ArrayList<>();
 
         for (InitDateEntry initDateEntry : list) {
@@ -277,12 +285,14 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     @Override
     public void importExcel(List<InitDateEntryTO> initDateEntryTOS) throws SerException {
         checkAddIdentity();
+        String systemId = getSystemId();
         if (initDateEntryTOS != null && initDateEntryTOS.size() > 0) {
             List<InitDateEntry> initDateEntryList = new ArrayList<>();
             for (InitDateEntryTO str : initDateEntryTOS) {
                 InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
                 initDateEntryDTO.getConditions().add(Restrict.eq("code", str.getCode()));
                 initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", str.getAccountanName()));
+                initDateEntryDTO.getConditions().add(Restrict.eq("systemId", systemId));
                 InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
                 if (initDateEntry != null) {
                     initDateEntry.setModifyTime(LocalDateTime.now());
@@ -290,6 +300,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
                     initDateEntry.setYearLenderNum(str.getYearLenderNum());
                     initDateEntry.setBegingBalance(str.getBegingBalance());
                     initDateEntry.setYearProfitLossNum(str.getYearProfitLossNum());
+                    initDateEntry.setSystemId(systemId);
                     initDateEntryList.add(initDateEntry);
                 } else {
                     throw new SerException("代码为:" + str.getCode() + "会计科目为:" + str.getAccountanName() + "匹配不到此条数据,请重新修改");
@@ -297,5 +308,19 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
             }
             super.update(initDateEntryList);
         }
+    }
+
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

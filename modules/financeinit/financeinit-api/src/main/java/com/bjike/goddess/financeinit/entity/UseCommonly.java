@@ -27,6 +27,20 @@ public class UseCommonly extends BaseEntity {
     @Column(name = "useComm", nullable = false,unique = true, columnDefinition = "TINYINT(2)   COMMENT '常用摘要'")
     private UseComm useComm;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
 
     public UseComm getUseComm() {
         return useComm;

@@ -2,10 +2,8 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
-import com.bjike.goddess.businessproject.to.BusinessContractTO;
-import com.bjike.goddess.businessproject.to.CollectUpdateTO;
-import com.bjike.goddess.businessproject.to.GuidePermissionTO;
-import com.bjike.goddess.businessproject.to.PersonTO;
+import com.bjike.goddess.businessproject.dto.BusinessContractDTOV2;
+import com.bjike.goddess.businessproject.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -42,15 +40,9 @@ public interface BusinessContractAPI {
         return null;
     }
 
-    /**
-     * 根据id获取商务项目合同
-     *
-     * @return class BusinessContractsBO
-     */
-    default BusinessContractsBO getOneById(String id) throws SerException {
+    default Long countV2(BusinessContractDTOV2 dto) throws SerException {
         return null;
     }
-
 
     /**
      * 商务项目合同列表
@@ -61,6 +53,22 @@ public interface BusinessContractAPI {
         return null;
     }
 
+    default List<BusinessContractsBO> listV2(BusinessContractDTOV2 dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取商务项目合同
+     *
+     * @return class BusinessContractsBO
+     */
+    default BusinessContractsBO getOneById(String id) throws SerException {
+        return null;
+    }
+
+
+
+
     /**
      * 添加商务项目合同
      *
@@ -68,6 +76,10 @@ public interface BusinessContractAPI {
      * @return class BusinessContractsBO
      */
     default BusinessContractsBO add(BusinessContractTO to) throws SerException {
+        return null;
+    }
+
+    default BusinessContractsBO addV2(BusinessContractTOV2 to) throws SerException {
         return null;
     }
 

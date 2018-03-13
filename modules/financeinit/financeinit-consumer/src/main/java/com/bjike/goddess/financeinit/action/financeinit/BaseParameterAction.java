@@ -10,12 +10,13 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.BaseParameterAPI;
 import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
+import com.bjike.goddess.financeinit.api.UserServiceAPI;
 import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
-import com.bjike.goddess.financeinit.entity.BaseParameter;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.vo.BaseParameterVO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +42,11 @@ public class BaseParameterAction {
     private BaseParameterAPI baseParameterAPI;
     @Autowired
     private CompanyBasicInfoAPI companyBasicInfoAPI;
+    @Autowired
+    private UserServiceAPI userServiceAPI;
+
+    String systemId = null;
+
     /**
      * 功能导航权限
      *
@@ -63,6 +69,7 @@ public class BaseParameterAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 列表总条数
      *
@@ -174,4 +181,28 @@ public class BaseParameterAction {
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
+    /**
+     * 判断财务基本参数
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/isNull")
+    public Result baseParameterIsNull() throws ActException {
+        try {
+//            systemId = userAPI.currentSysNO();
+//            systemId = userServiceAPI.getSystemId();
+            List list = baseParameterAPI.listBasicPara(new BaseParameterDTO(null, systemId));
+            if (list == null || list.size() == 0) {
+                return ActResult.initialize(true);
+            }
+            return ActResult.initialize(false);
+        } catch (SerException e) {
+            throw new ActException("判断财务基本参数失败");
+        }
+    }
+
+
+
 }

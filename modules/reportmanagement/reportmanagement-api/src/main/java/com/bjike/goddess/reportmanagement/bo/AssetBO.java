@@ -59,6 +59,22 @@ public class AssetBO extends BaseBO {
      */
     private Double endAsset;
 
+    public AssetBO() {
+    }
+
+    public AssetBO(String id, String startTime, String endTime, String asset, AssetType assetType, Type type, Integer assetNum, Double beginAsset, Double current, Double endAsset) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.asset = asset;
+        this.assetType = assetType;
+        this.type = type;
+        this.assetNum = assetNum;
+        this.beginAsset = beginAsset;
+        this.current = current;
+        this.endAsset = endAsset;
+    }
+
     public Type getType() {
         return type;
     }
