@@ -33,11 +33,12 @@ import com.bjike.goddess.voucher.excel.*;
 import com.bjike.goddess.voucher.to.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -797,6 +796,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+
         SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
         if (StringUtils.isBlank(firstSubject)) {
             return null;
@@ -808,8 +808,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.between("voucherDate", times));
-        List<VoucherGenerate> list = super.findByCis(dto);
-        if (null != list && list.size() > 0) {
+//        List<VoucherGenerate> list = super.findByCis(dto);
+        Long count = super.count(dto);
+        if (null != count && count > 0) {
             if ("营业收入".equals(firstSubject)) {
                 SubjectCollectBO subjectCollectBO1 = getCurrent(i, "主营业务收入", startTime, endTime, false);
                 SubjectCollectBO subjectCollectBO2 = getCurrent(i, "其他业务收入", startTime, endTime, false);
@@ -861,8 +862,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 subjectCollectBO = getCurrent(i, "营业外支出", startTime, endTime, false);
                 current = subjectCollectBO.getCurrentAmount();
             } else if ("营业利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -872,8 +875,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount();
             } else if ("利润总额".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -881,13 +886,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
-                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() /*-
+                        getCurrent(i, "销售费用", startTime, endTime, true).getCurrentAmount()*/ +
                         getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
                         getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
                         getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount();
             } else if ("净利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -895,7 +903,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
-                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() /*-
+                        getCurrent(i, "销售费用", startTime, endTime, true).getCurrentAmount()*/ +
                         getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
                         getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
                         getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
@@ -907,8 +916,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 subjectCollectBO = getCurrentBySumary(1, "其他转入", startTime, endTime, false);
                 current = subjectCollectBO.getCurrentAmount();
             } else if ("可供分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -916,7 +927,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
-                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() /*-
+                        getCurrent(i, "销售费用", startTime, endTime, true).getCurrentAmount()*/ +
                         getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
                         getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
                         getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
@@ -942,8 +954,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 subjectCollectBO = getCurrent(i, "归还投资", startTime, endTime, false);
                 current = subjectCollectBO.getCurrentAmount();
             } else if ("可供投资者分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -951,7 +965,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
-                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() /*-
+                        getCurrent(i, "销售费用", startTime, endTime, true).getCurrentAmount()*/ +
                         getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
                         getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
                         getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
@@ -980,8 +995,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 subjectCollectBO = getCurrent(i, "以前年度损益", startTime, endTime, false);
                 current = subjectCollectBO.getCurrentAmount();
             } else if ("未分配利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
-                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                Double currentAmount1 = getCurrent(i, "主营业务收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount();
+                current = currentAmount1 -
+                        getCurrent(i, "主营业务成本", startTime, endTime, true).getCurrentAmount() -
                         (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
                                 getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
@@ -989,7 +1006,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
                         getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
-                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() /*-
+                        getCurrent(i, "销售费用", startTime, endTime, true).getCurrentAmount()*/ +
                         getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
                         getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
                         getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
@@ -1048,8 +1066,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("营业外支出".equals(firstSubject)) {
                 current = getCurrent(i, "营业外支出", subjectCollectDTO, false);
             } else if ("营业利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1057,10 +1075,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true);
+                        getCurrent(i, "财务费用", subjectCollectDTO, true)/* -
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/;
             } else if ("利润总额".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1068,13 +1087,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) /*-
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/ +
                         getCurrent(i, "补贴收入", subjectCollectDTO, true) +
                         getCurrent(i, "营业外收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业外支出", subjectCollectDTO, true);
             } else if ("净利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1082,7 +1102,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) /*-
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/ +
                         getCurrent(i, "补贴收入", subjectCollectDTO, true) +
                         getCurrent(i, "营业外收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业外支出", subjectCollectDTO, true) -
@@ -1092,8 +1113,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("其他转入".equals(firstSubject)) {
                 current = getCurrentBySumary(1, "其他转入", subjectCollectDTO, true);
             } else if ("可供分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1101,7 +1122,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) /*-
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/  +
                         getCurrent(i, "补贴收入", subjectCollectDTO, true) +
                         getCurrent(i, "营业外收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业外支出", subjectCollectDTO, true) -
@@ -1121,8 +1143,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("利润归还投资".equals(firstSubject)) {
                 current = getCurrent(i, "归还投资", subjectCollectDTO, true);
             } else if ("可供投资者分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1130,7 +1152,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) /*-
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/ +
                         getCurrent(i, "补贴收入", subjectCollectDTO, true) +
                         getCurrent(i, "营业外收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业外支出", subjectCollectDTO, true) -
@@ -1154,8 +1177,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("以前年度损益调整".equals(firstSubject)) {
                 current = getCurrent(i, "以前年度损益", subjectCollectDTO, true);
             } else if ("未分配利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
-                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "主营业务成本", subjectCollectDTO, true) -
                         (getCurrent(i, "城建税", subjectCollectDTO, true) +
                                 getCurrent(i, "教育附加", subjectCollectDTO, true) +
                                 getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
@@ -1163,7 +1186,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
                         getCurrent(i, "营业费用", subjectCollectDTO, true) -
                         getCurrent(i, "管理费用", subjectCollectDTO, true) -
-                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) /*-
+                        getCurrent(i, "销售费用", subjectCollectDTO, true)*/ +
                         getCurrent(i, "补贴收入", subjectCollectDTO, true) +
                         getCurrent(i, "营业外收入", subjectCollectDTO, true) -
                         getCurrent(i, "营业外支出", subjectCollectDTO, true) -
@@ -1203,7 +1227,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
 //        dto.getConditions().add(Restrict.like("sumary", "结转"));
         List<VoucherGenerate> list = super.findByCis(dto);
-        if (null == list || list.size() < 1) {
+        /*if (null == list || list.size() < 1) {
             VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
             dto1.getConditions().add(Restrict.between("voucherDate", times));
             dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
@@ -1214,7 +1238,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
                 list = super.findByCis(dto2);
             }
-        }
+        }*/
 
         if (null != list && list.size() > 0) {
             List<VoucherGenerate> voucherGenerateList = new ArrayList<>();
@@ -2323,12 +2347,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        List<Double> borrs = borrow.stream().filter(b->b!=null).collect(Collectors.toList());
 //        List<Double> los = loan.stream().filter(b->b!=null).collect(Collectors.toList());
 
-        Double borrowSum = borrow.stream().filter(b -> b != null).mapToDouble(b -> b).sum();
-        Double loanSum = loan.stream().filter(l -> l != null).mapToDouble(l -> l).sum();
+        //精度丢失问题
+//        Double borrowSum = borrow.stream().filter(b -> b != null).mapToDouble(b -> b).sum();
+//        Double loanSum = loan.stream().filter(l -> l != null).mapToDouble(l -> l).sum();
+        BigDecimal borrowSum = new BigDecimal(0);
+        BigDecimal loanSum = new BigDecimal(0);
+        for (Double b : borrow) {
+            borrowSum.add(new BigDecimal(String.valueOf(b)));
+        }
+        for (Double l : loan) {
+            loanSum.add(new BigDecimal(String.valueOf(l)));
+        }
+
         if (!borrowSum.equals(loanSum)) {
             throw new SerException("借方和贷方金额不相等，不能添加");
         }
-        Double totalMoney = borrowSum;
+        Double totalMoney = borrowSum.doubleValue();
         VoucherTotal vt = new VoucherTotal();
         vt.setMoney(totalMoney);
         vt.setCreateTime(LocalDateTime.now());
@@ -2403,11 +2437,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
         }
-        Double borrowSum1 = voucherGenerateTO.getDetails().stream().mapToDouble(VoucherGenerateChildTO::getBorrowMoney).sum();
-        Double loanSum1 = voucherGenerateTO.getDetails().stream().mapToDouble(VoucherGenerateChildTO::getLoanMoney).sum();
-        if (!borrowSum1.equals(loanSum1)) {
-            throw new SerException("借方和贷方金额不相等，不能编辑");
+        //精度丢失问题
+//        Double borrowSum = borrow.stream().filter(b -> b != null).mapToDouble(b -> b).sum();
+//        Double loanSum = loan.stream().filter(l -> l != null).mapToDouble(l -> l).sum();
+        BigDecimal borrowSum = new BigDecimal(0);
+        BigDecimal loanSum = new BigDecimal(0);
+        for (Double b : voucherGenerateTO.getBorrowMoneys()) {
+            borrowSum.add(new BigDecimal(String.valueOf(b)));
         }
+        for (Double l : voucherGenerateTO.getLoanMoneys()) {
+            loanSum.add(new BigDecimal(String.valueOf(l)));
+        }
+
+        if (!borrowSum.equals(loanSum)) {
+            throw new SerException("借方和贷方金额不相等，不能添加");
+        }
+        Double totalMoney = borrowSum.doubleValue();
 
         List<VoucherGenerate> entities = new ArrayList<>();
 
@@ -2449,7 +2494,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         super.update(entities);
 
         VoucherTotal vt = voucherTotalSer.findById(voucherGenerateTO.getTotalId());
-        vt.setMoney(borrowSum1);
+        vt.setMoney(borrowSum.doubleValue());
         vt.setModifyTime(LocalDateTime.now());
         voucherTotalSer.update(vt);
         return null;
@@ -4929,7 +4974,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException {
         VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+        /*if (StringUtils.isNotBlank(dto.getFirstSubject())) {
             voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", dto.getFirstSubject()));
         }
         if (StringUtils.isNotBlank(dto.getSecondSubject())) {
@@ -4969,32 +5014,89 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         voucherGenerateDTO.getSorts().add("voucherDate=desc");
         voucherGenerateDTO.getSorts().add("voucherNum=desc");
-        voucherGenerateDTO.getSorts().add("borrowMoney=desc");
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
-        System.out.println(JSON.toJSON(list));
+        voucherGenerateDTO.getSorts().add("borrowMoney=desc");*/
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
+//        System.out.println(JSON.toJSON(list));
+        StringBuffer paramsSql = new StringBuffer();
+        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+            paramsSql.append(" and firstSubject = '"+ dto.getFirstSubject() +"' ");
+        }
+        if (StringUtils.isNotBlank(dto.getSecondSubject())) {
+            paramsSql.append(" and secondSubject = '"+ dto.getSecondSubject() +"' ");
+        }
+        if (StringUtils.isNotBlank(dto.getThirdSubject())) {
+            paramsSql.append(" and thirdSubject = '"+ dto.getThirdSubject() +"' ");
+        }
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            paramsSql.append(" and area = '"+ dto.getArea() +"' ");
+        }
+        if (StringUtils.isNotBlank(dto.getProjectName())) {
+            paramsSql.append(" and projectName = '"+ dto.getProjectName() +"' ");
+        }
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            paramsSql.append(" and (voucherDate between '"+ dto.getStartTime() +"' and '"+ dto.getEndTime() +"') ");
+        }
+        ExportStatus exportStatus = dto.getExportStatus();
+        switch (exportStatus) {
+            case NONE:
+                paramsSql.append(" and auditStatus = 0 ");
+                break;
+            case AUDIT:
+                paramsSql.append(" and auditStatus = 1 ");
+                break;
+            case TRANS:
+                paramsSql.append(" and transferStatus = 1 ");
+                break;
+            case CHECK:
+                paramsSql.append(" and checkStatus = 1 ");
+                break;
+            case RECORD:
+                break;
+            default:
+                throw new SerException("请输入正确的数据状态");
+        }
 
-        List<VoucherExportExcel> firstSubjectExports = BeanTransform.copyProperties(list, VoucherExportExcel.class);
-        XSSFWorkbook wb = null;//创建一个Excel文件
-        if (firstSubjectExports != null && firstSubjectExports.size() > 0) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT vg.voucherWord, vg.voucherNum, vg.voucherDate, vg.firstSubject, vg.secondSubject, vg.thirdSubject, vg.borrowMoney, vg.loanMoney, " +
+                "vg.sumary, vg.source, vg.area, vg.projectName, vg.projectGroup, vg.ticketer, vg.ticketNum, vg.extraFile, vg.auditor, vg.auditStatus, vg" +
+                ".transferStatus, vg.checkStatus, vg.totalId as totalId, vt.money as moneyTotal " +
+                "FROM voucher_vouchergenerate vg LEFT JOIN  voucher_vouchertotal vt ON vg.totalId = vt.id where 1 = 1 ");
+        sql.append(paramsSql);
+        sql.append(" order by voucherDate desc, voucherNum desc, borrowMoney desc");
+
+        String[] fields = new String[]{"voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
+                "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer",
+                "ticketNum", "extraFile", "auditor", "auditStatus", "transferStatus", "checkStatus", "totalId", "moneyTotal"};
+        List<VoucherExportExcel> firstSubjectExports = super.findBySql(sql.toString(), VoucherExportExcel.class, fields);
+//        List<Object> list = super.findBySql(sql);
+//
+//        List<VoucherExportExcel> firstSubjectExports = new ArrayList<>();
+//        for(Object object : list) {
+//            firstSubjectExports.add((VoucherExportExcel) object);
+//        }
+
+//         = BeanTransform.copyProperties(list, VoucherExportExcel.class);
+        SXSSFWorkbook wb = null;//创建一个Excel文件
+        /*if (firstSubjectExports != null && firstSubjectExports.size() > 0) {
             for (VoucherExportExcel str : firstSubjectExports) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
                 str.setMoneyTotal(vt.getMoney());
 
             }
-        }
+        }*/
         Excel excel = new Excel(0, 2);
         String tempString = excel.getSheetName();
-        wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet(tempString);//创建报销明细工作薄
+        wb = new SXSSFWorkbook();
+        SXSSFSheet sheet = wb.createSheet(tempString);//创建报销明细工作薄
         sheet.setDefaultRowHeight((short) 300);//设置默认行高
         // 设置execl工作簿中的列名
         String[] excelHeader = EXCELHEAD;//Excel表头
-        XSSFCellStyle contentStyle = getStyle(wb, excel.getContentBGColor()); // 设置标题样式
-        XSSFRow row = sheet.createRow(0);//创建第一行
+        CellStyle contentStyle = getStyle(wb, excel.getContentBGColor()); // 设置标题样式
+        SXSSFRow row = sheet.createRow(0);//创建第一行
         row.setHeight((short) 400);//设置第一行单元格的高度
 
         for (int i = 0, length = excelHeader.length; i < length; i++) {
-            XSSFCell cell = row.createCell(i);
+            SXSSFCell cell = row.createCell(i);
             if (i == 0 || i == 4 || i == 8) {
                 sheet.setColumnWidth(i, 2000); //设置单元格的宽
             } else if (i == 18) {
@@ -5022,6 +5124,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //            return null;
 //        }
 
+
     }
 
     /**
@@ -5030,7 +5133,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
      * @param sheet Excel表单
      * @description 创建数据行
      */
-    public void createRowDetail(List<VoucherExportExcel> list, XSSFRow row, XSSFSheet sheet) {
+    public void createRowDetail(List<VoucherExportExcel> list, SXSSFRow row, SXSSFSheet sheet) {
 
         int firstRow = 0;
         int lastRow = 0;
@@ -5045,6 +5148,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         int index = 0;
         int showFlag = 0;
+        System.out.println("start:" + new Date().toString());
         for (VoucherExportExcel exportEntity : list) {
             lastRow = index;
 
@@ -5104,9 +5208,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
         }
+        System.out.println("end:" + new Date().toString());
     }
 
-    private XSSFSheet assiableMergeData(XSSFSheet sheet, int firstRow, int lastRow) {
+    private SXSSFSheet assiableMergeData(SXSSFSheet sheet, int firstRow, int lastRow) {
         CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 0, 0);
         sheet.addMergedRegion(cellRangeAddress);
         cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 1, 1);
@@ -5148,6 +5253,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
      * @param color
      * @return
      */
+    private static CellStyle getStyle(SXSSFWorkbook wb, short color) {
+        // 内容的样式
+        CellStyle style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        if (color != IndexedColors.WHITE.getIndex()) {
+            style.setFillForegroundColor(color);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
+            style.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
+            style.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
+            style.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
+            style.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
+        }
+        return style;
+    }
+
     private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
@@ -5305,7 +5425,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         sheet.setDefaultRowHeight((short) 300);//设置默认行高
         // 设置execl工作簿中的列名
         String[] excelHeader = EXCELHEAD2;//Excel表头
-        XSSFCellStyle contentStyle = getStyle(wb, exceltemp.getContentBGColor()); // 设置标题样式
+        CellStyle contentStyle = getStyle(wb, exceltemp.getContentBGColor()); // 设置标题样式
         XSSFRow row = sheet.createRow(0);//创建第一行
         row.setHeight((short) 400);//设置第一行单元格的高度
 
@@ -5446,12 +5566,33 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         for (VoucherGenerateTO str : voucherGenerateTOs) {
             addVoucherGenerate(str);
+
+//            Thread thread = new Thread(new MutImport(str));
+//            thread.start();
         }
 
-        VoucherGenerateBO voucherGenerateBO = BeanTransform.copyProperties(new VoucherGenerate(), VoucherGenerateBO.class);
-        return voucherGenerateBO;
+//        VoucherGenerateBO voucherGenerateBO = BeanTransform.copyProperties(new VoucherGenerate(), VoucherGenerateBO.class);
+        return null;
     }
 
+    /** 开启多线程 */
+   /* class MutImport implements Runnable{
+
+        VoucherGenerateTO to;
+
+        MutImport(VoucherGenerateTO to){
+            this.to = to;
+        }
+
+        @Override
+        public void run() {
+            try {
+                addVoucherGenerate(to);
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
     //获取某一个月的最后一天
     private String findEndDayOfMonth(String month) throws SerException {
         Date date = null;
