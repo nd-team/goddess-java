@@ -11,7 +11,7 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:consumer check="false" timeout="30000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->

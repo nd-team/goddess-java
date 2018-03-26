@@ -300,6 +300,9 @@ public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implemen
         String sql = "SELECT max(code) AS code FROM financeinit_currency";
         List<Currency> objectList = super.findBySql(sql, Currency.class, new String[] {"code"});
         if (objectList != null && objectList.size() > 0) {
+            if (objectList.get(0).getCode() == null) {
+                return code;
+            }
             Integer maxCode = Integer.parseInt(String.valueOf(objectList.get(0).getCode()));
             code = (maxCode + 1) < 10 ? ("0" + (maxCode + 1)) : (maxCode + 1) + "";
         }
