@@ -24,12 +24,14 @@ public interface UseCommonlyAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 常用摘要列表总条数
      */
@@ -65,12 +67,22 @@ public interface UseCommonlyAPI {
     default UseCommonlyBO addUse(UseCommonlyTO useCommonlyTO) throws SerException {
         return null;
     }
+
     /**
      * 删除
      *
      * @param id 常用摘要id
      */
     default void delete(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to 常用摘要
+     */
+    default void update(UseCommonlyTO to) throws SerException {
         return;
     }
 }

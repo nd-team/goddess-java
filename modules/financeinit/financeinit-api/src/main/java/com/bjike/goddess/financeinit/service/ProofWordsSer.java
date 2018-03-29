@@ -75,4 +75,13 @@ public interface ProofWordsSer extends Ser<ProofWords, ProofWordsDTO> {
     default void delete(String id) throws SerException {
         return;
     }
+
+    /**
+     * 编辑
+     *
+     * @param to 常用摘要
+     */
+    default void update(ProofWordsTO to) throws SerException {
+        return;
+    }
 }

@@ -117,4 +117,13 @@ public interface CashFlowProjectSer extends Ser<CashFlowProject, CashFlowProject
         return null;
     }
 
+    /**
+     * 定时任务
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void cashFlowProjectTask() throws SerException;
+
 }

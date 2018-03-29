@@ -60,4 +60,9 @@ public class ProofWordsApiImpl implements ProofWordsAPI {
     public void delete(String id) throws SerException {
         proofWordsSer.delete(id);
     }
+
+    @Override
+    public void update(ProofWordsTO to) throws SerException {
+        proofWordsSer.update(to);
+    }
 }

@@ -5150,6 +5150,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         int showFlag = 0;
         System.out.println("start:" + new Date().toString());
         for (VoucherExportExcel exportEntity : list) {
+
+
             lastRow = index;
 
 //            String ss = exportEntity.getTotalId();
@@ -5166,9 +5168,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
                     sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
 
+                   /* AssiableMergeDataDTO assiableMergeDataDTO = new AssiableMergeDataDTO(false);
+                    Thread thread = new Thread(new assiableMergeDataThread(sheet, row, lastRow + 1 - showFlag, lastRow + 1, index, exportEntity, assiableMergeDataDTO));
+                    thread.start();
+                    while (!assiableMergeDataDTO.isSuccess()) {
+                        sleep(thread,1);
+                    }*/
                 }
                 if (index == list.size() - 1) {
-                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+//                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+                    new Thread(new assiableMergeDataThread(sheet, row, lastRow + 1 - showFlag, lastRow + 1,index, exportEntity, null)).start();
                 }
                 firstRow++;
                 totalId = exportEntity.getTotalId();
@@ -5181,6 +5190,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
 
             ++index;
+
             row = sheet.createRow(index);    // 每循环一次创建一行
             int callIndex = 0;
 //            row.createCell(callIndex++).setCellValue(index);//设置行的索引
@@ -5208,7 +5218,55 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
         }
+
+
         System.out.println("end:" + new Date().toString());
+    }
+
+    void sleep(Thread thread, int time) {
+        try {
+            if (thread == null) {
+                Thread.sleep(time);
+                return;
+            }
+            thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    class assiableMergeDataThread implements Runnable {
+
+        SXSSFSheet sheet;
+
+        SXSSFRow row;
+
+        int firstRow;
+
+        int lastRow;
+
+        int index;
+
+        VoucherExportExcel exportEntity;
+
+        AssiableMergeDataDTO assiableMergeDataDTO;
+
+        public assiableMergeDataThread(SXSSFSheet sheet, SXSSFRow row, int firstRow, int lastRow, int index, VoucherExportExcel exportEntity, AssiableMergeDataDTO assiableMergeDataDTO) {
+            this.sheet = sheet;
+            this.row = row;
+            this.firstRow = firstRow;
+            this.lastRow = lastRow;
+            this.index = index;
+            this.exportEntity = exportEntity;
+            this.assiableMergeDataDTO = assiableMergeDataDTO;
+        }
+
+        @Override
+        public void run() {
+            this.sheet = assiableMergeData(sheet, firstRow, lastRow);
+            this.assiableMergeDataDTO.setSuccess(true);
+
+        }
     }
 
     private SXSSFSheet assiableMergeData(SXSSFSheet sheet, int firstRow, int lastRow) {
@@ -5242,6 +5300,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        sheet.addMergedRegion(cellRangeAddress);
         cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 19, 19);
         sheet.addMergedRegion(cellRangeAddress);
+
 
         return sheet;
     }

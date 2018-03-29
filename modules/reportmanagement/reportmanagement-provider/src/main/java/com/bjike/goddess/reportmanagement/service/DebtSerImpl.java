@@ -1,20 +1,24 @@
 package com.bjike.goddess.reportmanagement.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
+import com.bjike.goddess.reportmanagement.entity.AssetData;
+import com.bjike.goddess.reportmanagement.entity.AssetDebtData;
 import com.bjike.goddess.reportmanagement.entity.Debt;
-import com.bjike.goddess.reportmanagement.enums.*;
+import com.bjike.goddess.reportmanagement.enums.DebtType;
+import com.bjike.goddess.reportmanagement.enums.Form;
+import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
+import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
-import com.bjike.goddess.reportmanagement.utils.Static;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,6 +58,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     private UserAPI userAPI;
     @Autowired
     private AssetSer assetSer;
+    @Autowired
+    private AssetDebtDataSer assetDebtDataSer;
 
 
     /**
@@ -204,16 +213,45 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Override
     public List<DebtBO> list(DebtDTO dto) throws SerException {
 //        checkSeeIdentity();
+        List<DebtBO> boList = new ArrayList<DebtBO>();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
             dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
         }
+
+        if (!dto.isLastest()) {
+            //判断是否已有存储
+            DebtDTO profitDTO = new DebtDTO();
+            profitDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
+            profitDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
+            List<AssetDebtData> cashFlows = assetDebtDataSer.findByCis(profitDTO);
+            if (null != cashFlows && cashFlows.size() > 0) {
+                for (AssetDebtData data : cashFlows) {
+                    DebtBO bo = new DebtBO();
+                    bo.setEndDebt(data.getEndAsset().doubleValue());
+                    bo.setBeginDebt(data.getBeginAsset().doubleValue());
+                    bo.setDebtNum(data.getNum());
+                    bo.setDebt(data.getProject());
+                    bo.setCurrent(null);
+                    bo.setType(null);
+                    bo.setDebtType(null);
+                    bo.setStartTime(data.getStartTime().toString());
+                    bo.setEndTime(data.getEndTime().toString());
+                    bo.setId(data.getProjectId());
+                    boList.add(bo);
+                }
+                return convertDebt(boList);
+            }
+        }
+
+
+
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
         dto.getSorts().add("createTime=ASC");
         List<Debt> list = super.findByCis(dto);
-        List<DebtBO> boList = new ArrayList<DebtBO>();
+        /*List<DebtBO> boList = new ArrayList<DebtBO>();*/
        /* boolean b1 = true;
         boolean b2 = true;
         boolean b3 = true;
@@ -518,8 +556,46 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         boList.add(debtBO8);
         num ++;
 
+        //存储数据
+        List<AssetDebtData> profitDataList = new ArrayList<>();
+        for (DebtBO bo : boList) {
+            AssetDebtData data = new AssetDebtData();
+            data.setProject(bo.getDebt());
+            data.setNum(bo.getDebtNum());
+            data.setEndAsset(bo.getEndDebt() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getEndDebt()));
+            data.setBeginAsset(bo.getBeginDebt() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getBeginDebt()));
+            data.setStartTime(LocalDate.parse(dto.getStartTime()));
+            data.setEndTime(LocalDate.parse(dto.getEndTime()));
+            data.setProjectId(bo.getId());
+            data.setSystemId(null);
+            profitDataList.add(data);
+        }
+        new Thread(new saveAssetDebtDataThread(profitDataList)).start();
+
 
         return this.convertDebt(boList);
+    }
+
+    /**
+     * 存储利润表的查询结果
+     *
+     */
+    public class saveAssetDebtDataThread implements Runnable {
+
+        private List<AssetDebtData> list;
+
+        public saveAssetDebtDataThread(List<AssetDebtData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public void run() {
+            try {
+                assetDebtDataSer.save(list);
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     List<DebtBO> convertDebt(List<DebtBO> list) {
@@ -969,5 +1045,61 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         checkSeeIdentity();
         List<Debt> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, DebtBO.class);
+    }
+
+    @Override
+    public void assetDebtTask() throws SerException {
+        int year = 10;  //获取最近10年数据
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
+                LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
+                LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
+
+                DebtDTO dto = new DebtDTO();
+                dto.setStartTime(start.toString());
+                dto.setEndTime(end.toString());
+                dto.setLastest(true);
+                List<DebtBO> bos = this.list(dto);
+//                List<ProfitBO> bos = new ArrayList<>();
+//                bos.add(new ProfitBO("1", null,null,0.0,0.0,null,null,null));
+                if (bos == null || bos.size() < 1) {
+                    continue;
+                }
+                List<AssetDebtData> profitDataList = new ArrayList<>();
+                for (DebtBO bo : bos) {
+                    AssetDebtData data = new AssetDebtData();
+                    data.setStartTime(start);
+                    data.setEndTime(end);
+                    data.setBeginAsset(bo.getBeginDebt() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getBeginDebt()));
+                    data.setEndAsset(bo.getEndDebt() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getEndDebt()));
+                    data.setNum(bo.getDebtNum());
+                    data.setProject(bo.getDebt());
+                    data.setProjectId(bo.getId());
+                    data.setSystemId(null);   //公司id，预留字段 todo
+                    if (data == null) {
+                        continue;
+                    }
+                    profitDataList.add(data);
+                }
+                //保存到本模块
+                if (profitDataList != null && profitDataList.size() > 0) {
+
+                    assetDebtDataSer.save(profitDataList);
+                }
+            }
+            year--;
+            before = now.minusYears(year);
+        }
     }
 }

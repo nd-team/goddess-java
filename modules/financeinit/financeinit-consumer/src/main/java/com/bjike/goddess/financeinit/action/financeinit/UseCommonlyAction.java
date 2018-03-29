@@ -36,6 +36,7 @@ import java.util.List;
 public class UseCommonlyAction {
     @Autowired
     private UseCommonlyAPI useCommonlyAPI;
+
     /**
      * 功能导航权限
      *
@@ -58,6 +59,7 @@ public class UseCommonlyAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 列表总条数
      *
@@ -131,6 +133,7 @@ public class UseCommonlyAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 删除
      *
@@ -146,6 +149,24 @@ public class UseCommonlyAction {
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to to
+     * @des 编辑
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/update")
+    public Result updateAccount(@Validated(value = ADD.class) UseCommonlyTO to, BindingResult bindingResult) throws ActException {
+        try {
+            useCommonlyAPI.update(to);
+            return new ActResult("update success!");
+        } catch (SerException e) {
+            throw new ActException("编辑失败：" + e.getMessage());
         }
     }
 }

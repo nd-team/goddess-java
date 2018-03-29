@@ -43,6 +43,11 @@ public class AssetDTO extends BaseDTO {
      */
     private String[] areas;
 
+    /**
+     * 是否获取最新
+     */
+    private boolean lastest;
+
     public String[] getDeparts() {
         return departs;
     }
@@ -81,5 +86,13 @@ public class AssetDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isLastest() {
+        return lastest;
+    }
+
+    public void setLastest(boolean lastest) {
+        this.lastest = lastest;
     }
 }

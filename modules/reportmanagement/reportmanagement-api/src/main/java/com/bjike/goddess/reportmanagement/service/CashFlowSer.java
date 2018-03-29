@@ -6,6 +6,8 @@ import com.bjike.goddess.reportmanagement.dto.CashFlowDTO;
 import com.bjike.goddess.reportmanagement.entity.CashFlow;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 
+import java.util.List;
+
 /**
 * 现金流量表业务接口
 * @Author:			[ zhuangkaiqin ]
@@ -27,6 +29,10 @@ public interface CashFlowSer extends Ser<CashFlow, CashFlowDTO> {
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    default CashFlow save(List<CashFlow> cashFlows) throws SerException{
         return null;
     }
 }

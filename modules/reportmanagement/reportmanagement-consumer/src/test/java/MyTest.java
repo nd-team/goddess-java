@@ -2,6 +2,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 
 /**
  * @Author: [caiwenxian]
@@ -34,6 +37,9 @@ public class MyTest {
         LocalDate localDate = LocalDate.now();
         System.out.println(DateUtil.dateToString(localDate));
         System.out.println(DateUtil.parseDate("2018-03-30").getMonthValue() - 1);
+        test();
+        System.out.println(new Date());
+        System.out.println(LocalDateTime.now());
     }
 
     public static void pritNoBug(){
@@ -58,6 +64,30 @@ public class MyTest {
         System.out.println("                       ‘=---=’                      ");
         System.out.println("                                                    ");
         System.out.println("....................佛祖开光 ,永无BUG...................");
+    }
+
+    static void test() {
+        int year = 10;
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i ++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println(first.with(TemporalAdjusters.lastDayOfMonth()) + " - " + first.with(TemporalAdjusters.firstDayOfMonth()));
+            }
+
+            year --;
+
+            before = now.minusYears(year);
+        }
+
     }
 
 

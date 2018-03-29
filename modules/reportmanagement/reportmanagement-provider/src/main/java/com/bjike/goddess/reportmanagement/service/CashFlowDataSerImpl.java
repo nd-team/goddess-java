@@ -9,10 +9,7 @@ import com.bjike.goddess.reportmanagement.bo.CashFlowDataBO;
 import com.bjike.goddess.reportmanagement.bo.CashFlowProjectBO;
 import com.bjike.goddess.reportmanagement.bo.CashFormulaDataBO;
 import com.bjike.goddess.reportmanagement.bo.ReturnCashDataBO;
-import com.bjike.goddess.reportmanagement.dto.CashFlowDataDTO;
-import com.bjike.goddess.reportmanagement.dto.CashFlowDatumDTO;
-import com.bjike.goddess.reportmanagement.dto.CashFormulaDataDTO;
-import com.bjike.goddess.reportmanagement.dto.DataDTO;
+import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.*;
 import com.bjike.goddess.reportmanagement.enums.DataType;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
@@ -23,8 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,20 +60,23 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
             dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
         }
-        //判断是否已有存储
-        CashFlowDatumDTO cashFlowDatumDTO = new CashFlowDatumDTO();
-        cashFlowDatumDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
-        cashFlowDatumDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
-        cashFlowDatumDTO.getSorts().add("seqNum=asc");
-        List<CashFlowDatum> cashFlowDatumList = cashFlowDatumSer.findByCis(cashFlowDatumDTO);
-        if (null != cashFlowDatumList && cashFlowDatumList.size() > 0) {
-            for (CashFlowDatum cashFlowDatum : cashFlowDatumList) {
-                CashFlowDataBO cashFlowDataBO = BeanTransform.copyProperties(cashFlowDatum, CashFlowDataBO.class);
-                cashFlowDataBO.setId(cashFlowDatum.getDataId());
-                bos.add(cashFlowDataBO);
+        if (!dto.isLastest()) {
+            //判断是否已有存储
+            CashFlowDatumDTO cashFlowDatumDTO = new CashFlowDatumDTO();
+            cashFlowDatumDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
+            cashFlowDatumDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
+            cashFlowDatumDTO.getSorts().add("seqNum=asc");
+            List<CashFlowDatum> cashFlowDatumList = cashFlowDatumSer.findByCis(cashFlowDatumDTO);
+            if (null != cashFlowDatumList && cashFlowDatumList.size() > 0) {
+                for (CashFlowDatum cashFlowDatum : cashFlowDatumList) {
+                    CashFlowDataBO cashFlowDataBO = BeanTransform.copyProperties(cashFlowDatum, CashFlowDataBO.class);
+                    cashFlowDataBO.setId(cashFlowDatum.getDataId());
+                    bos.add(cashFlowDataBO);
+                }
+                return convertCashFlowData(bos);
             }
-            return convertCashFlowData(bos);
         }
+
 
         DataDTO dataDTO = new DataDTO();
         dataDTO.getSorts().add("dataType=asc");
@@ -94,7 +97,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                     bo.setStartTime(dto.getStartTime());
                     bo.setEndTime(dto.getEndTime());
                     bos.add(bo);
-                    num ++;
+                    num++;
                     b1 = false;
                 } else if (DataType.NOTINVOLVE.equals(data.getDataType()) && b2) {
                     CashFlowDataBO bo = new CashFlowDataBO();
@@ -103,7 +106,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                     bo.setStartTime(dto.getStartTime());
                     bo.setEndTime(dto.getEndTime());
                     bos.add(bo);
-                    num ++;
+                    num++;
                     b2 = false;
                 } else if (DataType.CASH.equals(data.getDataType()) && b3) {
                     CashFlowDataBO bo = new CashFlowDataBO();
@@ -112,20 +115,29 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                     bo.setStartTime(dto.getStartTime());
                     bo.setEndTime(dto.getEndTime());
                     bos.add(bo);
-                    num ++;
+                    num++;
                     b3 = false;
                 }
                 CashFlowDataBO bo = new CashFlowDataBO();
                 bo.setData(data.getData());
                 bo.setId(data.getId());
 
-                bo.setMoney(findCashByData(data.getData(), dto));
+//                bo.setMoney(findCashByData(data.getData(), dto));
                 bo.setStartTime(dto.getStartTime());
                 bo.setEndTime(dto.getEndTime());
                 bo.setNum(num++);
+
                 bos.add(bo);
             }
+
+            /*多线程获取*/
+            for (CashFlowDataBO bo : bos) {
+                new Thread(new CashFlowDataThread(bo, dto)).start();
+            }
+
+            /*存储数据*/
             int seqNum = 1;
+            List<CashFlowDatum> cashFlowDatumList1 = new ArrayList<>();
             for (CashFlowDataBO bo : bos) {
                 CashFlowDatum cashFlowDatum = new CashFlowDatum();
                 cashFlowDatum.setData(bo.getData());
@@ -135,10 +147,33 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                 cashFlowDatum.setStartTime(bo.getStartTime());
                 cashFlowDatum.setEndTime(bo.getEndTime());
                 cashFlowDatum.setMoney(bo.getMoney());
-                cashFlowDatumSer.save(cashFlowDatum);
+                cashFlowDatumList1.add(cashFlowDatum);
             }
+            cashFlowDatumSer.save(cashFlowDatumList1);
         }
         return convertCashFlowData(bos);
+    }
+
+    /** 从记账凭证获取数据 */
+    public class CashFlowDataThread implements Runnable{
+
+        CashFlowDataBO cashFlowDataBO;
+
+        CashFlowDataDTO dto;
+
+        public CashFlowDataThread(CashFlowDataBO cashFlowDataBO, CashFlowDataDTO dto) {
+            this.cashFlowDataBO = cashFlowDataBO;
+            this.dto = dto;
+        }
+
+        @Override
+        public void run() {
+            try {
+                this.cashFlowDataBO.setMoney(findCashByData(this.cashFlowDataBO.getData(), dto));
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private List<CashFlowDataBO> convertCashFlowData(List<CashFlowDataBO> list) {
@@ -192,132 +227,132 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         CashFlowDataBO bo32 = new CashFlowDataBO();
         CashFlowDataBO bo33 = new CashFlowDataBO();
         CashFlowDataBO bo34 = new CashFlowDataBO();
-            for (CashFlowDataBO cashFlowProjectBO : list) {
-                if ("1、将净利润调节为经营活动现金流量".equals(cashFlowProjectBO.getData())) {
-                    bo1 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("净利润".equals(cashFlowProjectBO.getData())) {
-                    bo2 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("加：计提的资产减值准备".equals(cashFlowProjectBO.getData())) {
-                    bo3 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("固定资产折旧".equals(cashFlowProjectBO.getData())) {
-                    bo4 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("无形资产摊销".equals(cashFlowProjectBO.getData())) {
-                    bo5 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("长期待摊费用摊销".equals(cashFlowProjectBO.getData())) {
-                    bo6 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("待摊费用减少（减：增加）".equals(cashFlowProjectBO.getData())) {
-                    bo7 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("预提费用增加（减：减少）".equals(cashFlowProjectBO.getData())) {
-                    bo8 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("处置固定资产、无形资产和其他长期资产的损失（减：收益）".equals(cashFlowProjectBO.getData())) {
-                    bo9 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("固定资产报废损失".equals(cashFlowProjectBO.getData())) {
-                    bo10 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("财务费用".equals(cashFlowProjectBO.getData())) {
-                    bo11 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("投资损失（减：收益）".equals(cashFlowProjectBO.getData())) {
-                    bo12 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("递延税款贷项（减：借项）".equals(cashFlowProjectBO.getData())) {
-                    bo13 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("存货的减少（减：增加）".equals(cashFlowProjectBO.getData())) {
-                    bo14 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("经营性应收项目的减少（减：增加）".equals(cashFlowProjectBO.getData())) {
-                    bo15 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("经营性应付项目的增加（减：减少）".equals(cashFlowProjectBO.getData())) {
-                    bo16 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("其他".equals(cashFlowProjectBO.getData())) {
-                    bo17 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("经营活动产生的现金流量净额".equals(cashFlowProjectBO.getData())) {
-                    bo18 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                    bo19 = new CashFlowDataBO(null, null, null, null);
-                    bo20 = new CashFlowDataBO(null, null, null, null);
-                    bo21 = new CashFlowDataBO(null, null, null, null);
-                }
-                if ("2、不涉及现金收支的投资和筹资活动".equals(cashFlowProjectBO.getData())) {
-                    bo22 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("债务转为资本".equals(cashFlowProjectBO.getData())) {
-                    bo23 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("一年内到期的可转换公司债券".equals(cashFlowProjectBO.getData())) {
-                    bo24 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("融资租入固定资产".equals(cashFlowProjectBO.getData())) {
-                    bo25 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                    bo26 = new CashFlowDataBO(null, null, null, null);
-                    bo27 = new CashFlowDataBO(null, null, null, null);
-                    bo28 = new CashFlowDataBO(null, null, null, null);
-                }
-                if ("3、现金及现金等价物净增加情况".equals(cashFlowProjectBO.getData())) {
-                    bo29 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("现金的期末余额".equals(cashFlowProjectBO.getData())) {
-                    bo30 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("减：现金的期初余额".equals(cashFlowProjectBO.getData())) {
-                    bo31 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("加：现金等价物的期末余额".equals(cashFlowProjectBO.getData())) {
-                    bo32 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("减：现金等价物的期初余额".equals(cashFlowProjectBO.getData())) {
-                    bo33 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
-                if ("现金及现金等价物净增加额".equals(cashFlowProjectBO.getData())) {
-                    bo34 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
-                }
+        for (CashFlowDataBO cashFlowProjectBO : list) {
+            if ("1、将净利润调节为经营活动现金流量".equals(cashFlowProjectBO.getData())) {
+                bo1 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
-                bos.add(bo1);
-                bos.add(bo2);
-                bos.add(bo3);
-                bos.add(bo4);
-                bos.add(bo5);
-                bos.add(bo6);
-                bos.add(bo7);
-                bos.add(bo8);
-                bos.add(bo9);
-                bos.add(bo10);
-                bos.add(bo11);
-                bos.add(bo12);
-                bos.add(bo13);
-                bos.add(bo14);
-                bos.add(bo15);
-                bos.add(bo16);
-                bos.add(bo17);
-                bos.add(bo18);
-                bos.add(bo19);
-                bos.add(bo20);
-                bos.add(bo21);
-                bos.add(bo22);
-                bos.add(bo23);
-                bos.add(bo24);
-                bos.add(bo25);
-                bos.add(bo26);
-                bos.add(bo27);
-                bos.add(bo28);
-                bos.add(bo29);
-                bos.add(bo30);
-                bos.add(bo31);
-                bos.add(bo32);
-                bos.add(bo33);
-                bos.add(bo34);
+            if ("净利润".equals(cashFlowProjectBO.getData())) {
+                bo2 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("加：计提的资产减值准备".equals(cashFlowProjectBO.getData())) {
+                bo3 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("固定资产折旧".equals(cashFlowProjectBO.getData())) {
+                bo4 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("无形资产摊销".equals(cashFlowProjectBO.getData())) {
+                bo5 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("长期待摊费用摊销".equals(cashFlowProjectBO.getData())) {
+                bo6 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("待摊费用减少（减：增加）".equals(cashFlowProjectBO.getData())) {
+                bo7 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("预提费用增加（减：减少）".equals(cashFlowProjectBO.getData())) {
+                bo8 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("处置固定资产、无形资产和其他长期资产的损失（减：收益）".equals(cashFlowProjectBO.getData())) {
+                bo9 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("固定资产报废损失".equals(cashFlowProjectBO.getData())) {
+                bo10 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("财务费用".equals(cashFlowProjectBO.getData())) {
+                bo11 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("投资损失（减：收益）".equals(cashFlowProjectBO.getData())) {
+                bo12 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("递延税款贷项（减：借项）".equals(cashFlowProjectBO.getData())) {
+                bo13 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("存货的减少（减：增加）".equals(cashFlowProjectBO.getData())) {
+                bo14 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("经营性应收项目的减少（减：增加）".equals(cashFlowProjectBO.getData())) {
+                bo15 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("经营性应付项目的增加（减：减少）".equals(cashFlowProjectBO.getData())) {
+                bo16 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("其他".equals(cashFlowProjectBO.getData())) {
+                bo17 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("经营活动产生的现金流量净额".equals(cashFlowProjectBO.getData())) {
+                bo18 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo19 = new CashFlowDataBO(null, null, null, null);
+                bo20 = new CashFlowDataBO(null, null, null, null);
+                bo21 = new CashFlowDataBO(null, null, null, null);
+            }
+            if ("2、不涉及现金收支的投资和筹资活动".equals(cashFlowProjectBO.getData())) {
+                bo22 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("债务转为资本".equals(cashFlowProjectBO.getData())) {
+                bo23 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("一年内到期的可转换公司债券".equals(cashFlowProjectBO.getData())) {
+                bo24 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("融资租入固定资产".equals(cashFlowProjectBO.getData())) {
+                bo25 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo26 = new CashFlowDataBO(null, null, null, null);
+                bo27 = new CashFlowDataBO(null, null, null, null);
+                bo28 = new CashFlowDataBO(null, null, null, null);
+            }
+            if ("3、现金及现金等价物净增加情况".equals(cashFlowProjectBO.getData())) {
+                bo29 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("现金的期末余额".equals(cashFlowProjectBO.getData())) {
+                bo30 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("减：现金的期初余额".equals(cashFlowProjectBO.getData())) {
+                bo31 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("加：现金等价物的期末余额".equals(cashFlowProjectBO.getData())) {
+                bo32 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("减：现金等价物的期初余额".equals(cashFlowProjectBO.getData())) {
+                bo33 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+            if ("现金及现金等价物净增加额".equals(cashFlowProjectBO.getData())) {
+                bo34 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+            }
+        }
+        bos.add(bo1);
+        bos.add(bo2);
+        bos.add(bo3);
+        bos.add(bo4);
+        bos.add(bo5);
+        bos.add(bo6);
+        bos.add(bo7);
+        bos.add(bo8);
+        bos.add(bo9);
+        bos.add(bo10);
+        bos.add(bo11);
+        bos.add(bo12);
+        bos.add(bo13);
+        bos.add(bo14);
+        bos.add(bo15);
+        bos.add(bo16);
+        bos.add(bo17);
+        bos.add(bo18);
+        bos.add(bo19);
+        bos.add(bo20);
+        bos.add(bo21);
+        bos.add(bo22);
+        bos.add(bo23);
+        bos.add(bo24);
+        bos.add(bo25);
+        bos.add(bo26);
+        bos.add(bo27);
+        bos.add(bo28);
+        bos.add(bo29);
+        bos.add(bo30);
+        bos.add(bo31);
+        bos.add(bo32);
+        bos.add(bo33);
+        bos.add(bo34);
 
         return bos;
     }
@@ -374,7 +409,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         cashFlowDataDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         CashFlowDatum cashFlowData = cashFlowDatumSer.findOne(cashFlowDataDTO);
-            if(cashFlowData != null) {
+        if (cashFlowData != null) {
             cashFlowData.setMoney(dto.getMoney());
             cashFlowData.setModifyTime(LocalDateTime.now());
             cashFlowDatumSer.update(cashFlowData);
@@ -801,7 +836,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, endTime, true);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
@@ -817,7 +852,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, endTime, false);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
@@ -848,6 +883,62 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                 cashFormulaData.setForm(formula);
                 cashFormulaDataSer.save(cashFormulaData);
             }
+        }
+    }
+
+    @Override
+    public void cashFlowDataTask() throws SerException {
+        int year = 10;  //获取最近10年数据
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
+                LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
+                LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
+
+                CashFlowDataDTO dto = new CashFlowDataDTO();
+                dto.setStartTime(start.toString());
+                dto.setEndTime(end.toString());
+                dto.setLastest(true);
+                List<CashFlowDataBO> bos = this.list(dto);
+//                List<ProfitBO> bos = new ArrayList<>();
+//                bos.add(new ProfitBO("1", null,null,0.0,0.0,null,null,null));
+                if (bos == null || bos.size() < 1) {
+                    continue;
+                }
+                List<CashFlowDatum> profitDataList = new ArrayList<>();
+                for (CashFlowDataBO bo : bos) {
+                    CashFlowDatum data = new CashFlowDatum();
+                    data.setStartTime(start.toString());
+                    data.setEndTime(end.toString());
+                    data.setMoney((bo.getMoney()));
+                    data.setNum(bo.getNum());
+                    data.setData(bo.getData());
+                    data.setDataId(bo.getId());
+                    data.setSeqNum(null);
+                    data.setSystemId(null);   //公司id，预留字段 todo
+                    if (data == null) {
+                        continue;
+                    }
+                    profitDataList.add(data);
+                }
+                //保存到本模块
+                if (profitDataList != null && profitDataList.size() > 0) {
+
+                    cashFlowDatumSer.save(profitDataList);
+                }
+            }
+            year--;
+            before = now.minusYears(year);
         }
     }
 

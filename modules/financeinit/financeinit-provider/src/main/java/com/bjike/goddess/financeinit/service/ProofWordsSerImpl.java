@@ -213,6 +213,17 @@ public class ProofWordsSerImpl extends ServiceImpl<ProofWords, ProofWordsDTO> im
         super.remove(id);
     }
 
+    @Override
+    public void update(ProofWordsTO to) throws SerException {
+        ProofWords entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("指定实体不存在");
+        }
+        entity.setProofCharacter(to.getProofCharacter());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
     /**
      * 获取公司编号
      *

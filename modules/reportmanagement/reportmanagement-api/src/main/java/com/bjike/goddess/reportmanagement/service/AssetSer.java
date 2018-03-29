@@ -168,4 +168,13 @@ public interface AssetSer extends Ser<Asset, AssetDTO> {
     default List<String> allProjectNames() throws SerException {
         return null;
     }
+
+    /**
+     * 定时任务
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    default void assetTask() throws SerException{}
 }

@@ -208,6 +208,18 @@ public class UseCommonlySerImpl extends ServiceImpl<UseCommonly, UseCommonlyDTO>
         super.remove(id);
     }
 
+    @Override
+    public void update(UseCommonlyTO to) throws SerException {
+        checkAddIdentity();
+        UseCommonly entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("指定实体不存在");
+        }
+        entity.setUseComm(to.getUseComm());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
     /**
      * 获取公司编号
      *

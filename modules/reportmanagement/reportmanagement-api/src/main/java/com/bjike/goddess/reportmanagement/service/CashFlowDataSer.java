@@ -11,13 +11,14 @@ import com.bjike.goddess.reportmanagement.entity.CashFlowData;
 import java.util.List;
 
 /**
-* 现金流量资料表业务接口
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-11-20 03:02 ]
-* @Description:	[ 现金流量资料表业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 现金流量资料表业务接口
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-11-20 03:02 ]
+ * @Description: [ 现金流量资料表业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 public interface CashFlowDataSer extends Ser<CashFlowData, CashFlowDataDTO> {
 
     /**
@@ -71,4 +72,13 @@ public interface CashFlowDataSer extends Ser<CashFlowData, CashFlowDataDTO> {
     default void editMoney(CashFlowDataDTO dto) throws SerException {
         return;
     }
+
+    /**
+     * 定时任务
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void cashFlowDataTask() throws SerException;
 }

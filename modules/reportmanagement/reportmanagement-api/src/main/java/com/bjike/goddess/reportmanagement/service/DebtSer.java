@@ -115,4 +115,13 @@ public interface DebtSer extends Ser<Debt, DebtDTO> {
      * @throws SerException
      */
     List<DebtBO> list1(DebtDTO dto) throws SerException;
+
+    /**
+     * 定时任务
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void assetDebtTask() throws SerException;
 }

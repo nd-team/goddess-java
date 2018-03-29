@@ -62,6 +62,8 @@ public class CashFlowDatum extends BaseEntity {
     @Column(name = "endTime", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '结束时间'")
     private String endTime;
 
+    private String systemId;
+
 
     public Integer getSeqNum() {
         return seqNum;
@@ -117,5 +119,13 @@ public class CashFlowDatum extends BaseEntity {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
     }
 }
