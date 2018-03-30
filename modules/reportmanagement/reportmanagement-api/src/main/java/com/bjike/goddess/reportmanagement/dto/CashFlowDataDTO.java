@@ -41,6 +41,11 @@ public class CashFlowDataDTO extends BaseDTO {
     @NotNull(message = "金额不能为空", groups = {EDIT.class})
     private Double money;
 
+    /**
+     * 是否获取最新
+     */
+    private boolean lastest;
+
     public String getStartTime() {
         return startTime;
     }
@@ -71,5 +76,13 @@ public class CashFlowDataDTO extends BaseDTO {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public boolean isLastest() {
+        return lastest;
+    }
+
+    public void setLastest(boolean lastest) {
+        this.lastest = lastest;
     }
 }

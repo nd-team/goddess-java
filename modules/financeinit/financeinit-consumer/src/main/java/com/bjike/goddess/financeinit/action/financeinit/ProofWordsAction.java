@@ -149,4 +149,22 @@ public class ProofWordsAction {
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
+    /**
+     * 编辑
+     *
+     * @param to to
+     * @des 编辑
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/update")
+    public Result deleteAccount(@Validated(value= ADD.class) ProofWordsTO to) throws ActException {
+        try {
+            proofWordsAPI.update(to);
+            return new ActResult("update success!");
+        } catch (SerException e) {
+            throw new ActException("编辑失败：" + e.getMessage());
+        }
+    }
 }

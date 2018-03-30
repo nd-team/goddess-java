@@ -14,6 +14,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Profit;
+import com.bjike.goddess.reportmanagement.entity.ProfitData;
 import com.bjike.goddess.reportmanagement.entity.ProfitFormula;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
@@ -52,6 +53,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,6 +98,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Autowired
     private CompanyBasicInfoAPI companyBasicInfoAPI;
+
+    @Autowired
+    private ProfitDataSer profitDataSer;
 
 
     /**
@@ -580,6 +585,13 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 //        return boList;
 //    }
 
+    /**
+     * 查询使用的线程类
+     *
+     * @param
+     * @version v1
+     * @return class
+     */
     class profitThread implements Runnable {
 
         Profit profit;
@@ -602,10 +614,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         public void run() {
             SubjectCollectBO subjectCollectBO = null;
             try {
-                Date oldDate = new Date();
                 subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), start, end);
-                Date newDate = new Date();
-                System.out.println("project: " + profit.getProject() + "  date: " + (newDate.getSeconds() - oldDate.getSeconds()));
             } catch (SerException e) {
                 e.printStackTrace();
             }
@@ -624,17 +633,40 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         }
     }
 
-    void sleep() {
 
-    }
     @Override
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
         Date time1 = new Date();
+        List<ProfitBO> boList = new ArrayList<ProfitBO>();
 //        checkSeeIdentity();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
             dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
         }
+
+        if (!dto.isLastest()) {
+            //判断是否已有存储
+            ProfitDataDTO profitDTO = new ProfitDataDTO();
+            profitDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
+            profitDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
+            List<ProfitData> cashFlows = profitDataSer.findByCis(profitDTO);
+            if (null != cashFlows && cashFlows.size() > 0) {
+                for (ProfitData data : cashFlows) {
+                    ProfitBO bo = new ProfitBO();
+                    bo.setCurrentMonthAmount(data.getMonthMoney().doubleValue());
+                    bo.setCurrentYearAmount(data.getYearMoney().doubleValue());
+                    bo.setProject(data.getProject());
+                    bo.setProjectType(data.getProjectType());
+                    bo.setProfitType(data.getProfitType());
+                    bo.setType(data.getType());
+                    bo.setNum(data.getNum());
+                    bo.setId(data.getProjectId());
+                    boList.add(bo);
+                }
+                return convertProfit(boList);
+            }
+        }
+
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
@@ -644,7 +676,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         dto.getSorts().add("profitType=ASC");
         dto.getSorts().add("createTime=ASC");
         List<Profit> list = super.findByCis(dto);
-        List<ProfitBO> boList = new ArrayList<ProfitBO>();
+
         boolean b = true;
         boolean b1 = true;
         boolean b2 = true;
@@ -715,7 +747,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             Date oldDate = new Date();
             SubjectCollectBO subjectCollectBO1_1 = voucherGenerateAPI.findCurrentAndYear("营业收入", startTime, endTime);
             Date newDate = new Date();
-            System.out.println("project: 营业收入" + "  date: " + (newDate.getSeconds() - oldDate.getSeconds()));
+            System.out.println("project: 营业收入" + "  date: " + (newDate.getSeconds() - oldDate.getSeconds()) + "  month：" + subjectCollectBO1_1.getCurrentAmount());
             if (null != subjectCollectBO1_1) {
                 monthAmount1 = subjectCollectBO1_1.getCurrentAmount();
                 yearAmount1 = subjectCollectBO1_1.getYearAmount();
@@ -733,6 +765,13 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     yearAmount2 = yearAmount2 + bo.getCurrentYearAmount();
                 }
                 if ("营业外支出".equals(bo.getProject())) {
+                    //查出来的值可能为负值（负值代表支付，需要转为正值）
+                    if (bo.getCurrentMonthAmount() != null) {
+                        bo.setCurrentMonthAmount(Math.abs(bo.getCurrentMonthAmount()));
+                    }
+                    if (bo.getCurrentYearAmount() != null) {
+                        bo.setCurrentYearAmount(Math.abs(bo.getCurrentYearAmount()));
+                    }
                     monthAmount3 = monthAmount3 - bo.getCurrentMonthAmount();
                     yearAmount3 = yearAmount3 - bo.getCurrentYearAmount();
                 }
@@ -857,7 +896,49 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         }
         Date time2 = new Date();
         System.out.println("time：" + (time2.getSeconds() - time1.getSeconds()));
+
+        //存储数据
+        List<ProfitData> profitDataList = new ArrayList<>();
+        for (ProfitBO bo : boList) {
+            ProfitData data = new ProfitData();
+            data.setProjectType(bo.getProjectType());
+            data.setProject(bo.getProject());
+            data.setProfitType(bo.getProfitType());
+            data.setType(bo.getType());
+            data.setNum(bo.getNum());
+            data.setYearMoney(new BigDecimal(bo.getCurrentYearAmount()));
+            data.setMonthMoney(new BigDecimal(bo.getCurrentMonthAmount()));
+            data.setStartTime(LocalDate.parse(dto.getStartTime()));
+            data.setEndTime(LocalDate.parse(dto.getEndTime()));
+            data.setProjectId(bo.getId());
+            data.setSystemId(null);
+            profitDataList.add(data);
+        }
+        new Thread(new saveProfitDataThread(profitDataList)).start();
+
         return this.convertProfit(boList);
+    }
+
+    /**
+     * 存储利润表的查询结果
+     *
+     */
+    public class saveProfitDataThread implements Runnable {
+
+        private List<ProfitData> list;
+
+        public saveProfitDataThread(List<ProfitData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public void run() {
+            try {
+                profitDataSer.save(list);
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     List<ProfitBO> convertProfit(List<ProfitBO> list) {
@@ -1874,5 +1955,80 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         return os.toByteArray();
     }
 
+    public String test() throws SerException {
+
+        profitDataSer.save(new ProfitData());
+        return "success";
+    }
+
+    /**
+     * 从记账凭证获取数据并存储到本模块（供定时任务使用）
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    @Override
+    public void profitTask() throws SerException {
+
+        int year = 10;  //获取最近10年数据
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
+                LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
+                LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
+
+                ProfitDTO dto = new ProfitDTO();
+                dto.setStartTime(start.toString());
+                dto.setEndTime(end.toString());
+                dto.setLastest(true);
+                List<ProfitBO> bos = this.list(dto);
+//                List<ProfitBO> bos = new ArrayList<>();
+//                bos.add(new ProfitBO("1", null,null,0.0,0.0,null,null,null));
+                if (bos == null || bos.size() < 1) {
+                    continue;
+                }
+                List<ProfitData> profitDataList = new ArrayList<>();
+                for (ProfitBO bo : bos) {
+                    ProfitData profitData = new ProfitData();
+                    profitData.setStartTime(start);
+                    profitData.setEndTime(end);
+                    profitData.setMonthMoney(new BigDecimal(bo.getCurrentMonthAmount()));
+                    profitData.setYearMoney(new BigDecimal(bo.getCurrentYearAmount()));
+                    profitData.setNum(bo.getNum());
+                    profitData.setProject(bo.getProject());
+                    profitData.setType(bo.getType());
+                    profitData.setProfitType(bo.getProfitType());
+                    profitData.setProjectType(bo.getProjectType());
+                    profitData.setProjectId(bo.getId());
+                    profitData.setSystemId(null);   //公司id，预留字段 todo
+                    if (profitData == null) {
+                        continue;
+                    }
+                    profitDataList.add(profitData);
+                }
+                //保存到本模块
+                if (profitDataList != null && profitDataList.size() > 0) {
+                    profitDataSer.save(profitDataList);
+                }
+
+            }
+
+            year--;
+            before = now.minusYears(year);
+        }
+
+
+    }
 
 }

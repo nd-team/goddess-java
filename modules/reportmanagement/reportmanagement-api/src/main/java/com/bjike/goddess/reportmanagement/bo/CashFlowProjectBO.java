@@ -48,6 +48,14 @@ public class CashFlowProjectBO extends BaseBO {
         this.id = id;
     }
 
+    public CashFlowProjectBO(String startTime, String endTime, String projectName, Integer num, Double money) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.projectName = projectName;
+        this.num = num;
+        this.money = money;
+    }
+
     public String getStartTime() {
         return startTime;
     }

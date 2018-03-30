@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -14,6 +15,8 @@ import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
+import com.bjike.goddess.reportmanagement.entity.AssetData;
+import com.bjike.goddess.reportmanagement.entity.ProfitData;
 import com.bjike.goddess.reportmanagement.enums.AssetType;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
@@ -45,8 +48,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,6 +98,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private CashFlowSer cashFlowSer;
     @Autowired
     private CompanyBasicInfoAPI companyBasicInfoAPI;
+    @Autowired
+    private AssetDataSer assetDataSer;
 
 
     /**
@@ -386,16 +394,44 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public List<AssetBO> list(AssetDTO dto) throws SerException {
 //        checkSeeIdentity();
+        List<AssetBO> boList = new ArrayList<AssetBO>();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
             dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
         }
+
+        if (!dto.isLastest()) {
+            //判断是否已有存储
+            AssetDTO profitDTO = new AssetDTO();
+            profitDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
+            profitDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
+            List<AssetData> cashFlows = assetDataSer.findByCis(profitDTO);
+            if (null != cashFlows && cashFlows.size() > 0) {
+                for (AssetData data : cashFlows) {
+                    AssetBO bo = new AssetBO();
+                    bo.setEndAsset(data.getEndAsset().doubleValue());
+                    bo.setBeginAsset(data.getBeginAsset().doubleValue());
+                    bo.setAsset(data.getProject());
+                    bo.setAssetNum(data.getNum());
+                    bo.setCurrent(null);
+                    bo.setAssetType(data.getAssetType());
+                    bo.setType(data.getType());
+                    bo.setStartTime(data.getStartTime().toString());
+                    bo.setEndTime(data.getEndTime().toString());
+                    bo.setId(data.getProjectId());
+                    boList.add(bo);
+                }
+                return convertAsset(boList);
+            }
+        }
+
+
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
         dto.getSorts().add("createTime=asc");
         List<Asset> list = super.findByCis(dto);
-        List<AssetBO> boList = new ArrayList<AssetBO>();
+//        List<AssetBO> boList = new ArrayList<AssetBO>();
         boolean b1 = true;
         boolean b2 = true;
         boolean b3 = true;
@@ -583,6 +619,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             bo.setCurrent(formulaBO.getCurrent());
             bo.setEndAsset(formulaBO.getEnd());
             bo.setAssetNum(num);
+            bo.setAsset(asset.getAsset());
             boList.add(bo);
             num++;
         }
@@ -661,7 +698,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         assetBO2.setEndAsset(endSum1);
         assetBO2.setAssetNum(num);
         boList.add(assetBO2);
-        num ++;
+        num++;
         AssetBO assetBO3 = new AssetBO();
         assetBO3.setAsset("长期资产：");
         boList.add(assetBO3);
@@ -671,7 +708,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         assetBO4.setEndAsset(endSum2);
         assetBO4.setAssetNum(num);
         boList.add(assetBO4);
-        num ++;
+        num++;
         AssetBO assetBO5 = new AssetBO();
         assetBO5.setAsset("固定资产：");
         boList.add(assetBO5);
@@ -681,17 +718,17 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         assetBO6.setEndAsset(endSum3);
         assetBO6.setAssetNum(num);
         boList.add(assetBO6);
-        num ++;
+        num++;
         AssetBO assetBO7 = new AssetBO();
         assetBO7.setAsset("无形资产及其他资产：");
         boList.add(assetBO7);
         AssetBO assetBO8 = new AssetBO();
         assetBO8.setAsset("无形资产及其他资产合计");
-        assetBO8.setBeginAsset(beginSum3);
-        assetBO8.setEndAsset(endSum3);
+        assetBO8.setBeginAsset(beginSum4);
+        assetBO8.setEndAsset(endSum4);
         assetBO8.setAssetNum(num);
         boList.add(assetBO8);
-        num ++;
+        num++;
         AssetBO assetBO9 = new AssetBO();
         assetBO9.setAsset("递延税款：");
         boList.add(assetBO9);
@@ -702,15 +739,55 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         assetBO10.setAssetNum(num);
         boList.add(assetBO10);
 
+        //存储数据
+        List<AssetData> profitDataList = new ArrayList<>();
+        for (AssetBO bo : boList) {
+            AssetData data = new AssetData();
+            data.setType(bo.getType());
+            data.setProject(bo.getAsset());
+            data.setNum(bo.getAssetNum());
+            data.setEndAsset(bo.getEndAsset() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getEndAsset()));
+            data.setBeginAsset(bo.getBeginAsset() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getBeginAsset()));
+            data.setAssetType(bo.getAssetType());
+            data.setStartTime(LocalDate.parse(dto.getStartTime()));
+            data.setEndTime(LocalDate.parse(dto.getEndTime()));
+            data.setProjectId(bo.getId());
+            data.setSystemId(null);
+            profitDataList.add(data);
+        }
+        new Thread(new saveAssetDataThread(profitDataList)).start();
+
         return this.convertAsset(boList);
     }
 
     /**
+     * 存储利润表的查询结果
+     */
+    public class saveAssetDataThread implements Runnable {
+
+        private List<AssetData> list;
+
+        public saveAssetDataThread(List<AssetData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public void run() {
+            try {
+                assetDataSer.save(list);
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 对返回结果进行排序
+     *
      * @param list
      * @return
      */
-    List<AssetBO> convertAsset(List<AssetBO> list){
+    List<AssetBO> convertAsset(List<AssetBO> list) {
         List<AssetBO> bos = new ArrayList<>();
         AssetBO bo1 = new AssetBO();
         AssetBO bo2 = new AssetBO();
@@ -752,10 +829,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         AssetBO bo38 = new AssetBO();
         for (AssetBO bo : list) {
             if (null != bo.getBeginAsset()) {
-                bo.setBeginAsset(new BigDecimal(bo.getBeginAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                bo.setBeginAsset(new BigDecimal(bo.getBeginAsset()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             }
             if (null != bo.getEndAsset()) {
-                bo.setEndAsset(new BigDecimal(bo.getEndAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                bo.setEndAsset(new BigDecimal(bo.getEndAsset()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             }
             if ("流动资产：".equals(bo.getAsset()) || "流动资产:".equals(bo.getAsset())) {
                 bo1 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
@@ -1599,5 +1676,63 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public Long count(AssetDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public void assetTask() throws SerException {
+        int year = 10;  //获取最近10年数据
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
+                LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
+                LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
+
+                AssetDTO dto = new AssetDTO();
+                dto.setStartTime(start.toString());
+                dto.setEndTime(end.toString());
+                dto.setLastest(true);
+                List<AssetBO> bos = this.list(dto);
+//                List<ProfitBO> bos = new ArrayList<>();
+//                bos.add(new ProfitBO("1", null,null,0.0,0.0,null,null,null));
+                if (bos == null || bos.size() < 1) {
+                    continue;
+                }
+                List<AssetData> profitDataList = new ArrayList<>();
+                for (AssetBO bo : bos) {
+                    AssetData data = new AssetData();
+                    data.setStartTime(start);
+                    data.setEndTime(end);
+                    data.setBeginAsset(bo.getBeginAsset() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getBeginAsset()));
+                    data.setEndAsset(bo.getEndAsset() == null ? new BigDecimal(0.0) : new BigDecimal(bo.getEndAsset()));
+                    data.setNum(bo.getAssetNum());
+                    data.setAssetType(bo.getAssetType());
+                    data.setProject(bo.getAsset());
+                    data.setType(bo.getType());
+                    data.setProjectId(bo.getId());
+                    data.setSystemId(null);   //公司id，预留字段 todo
+                    if (data == null) {
+                        continue;
+                    }
+                    profitDataList.add(data);
+                }
+                //保存到本模块
+                if (profitDataList != null && profitDataList.size() > 0) {
+
+                    assetDataSer.save(profitDataList);
+                }
+            }
+            year--;
+            before = now.minusYears(year);
+        }
     }
 }

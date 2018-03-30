@@ -1,5 +1,6 @@
 package com.bjike.goddess.reportmanagement.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -12,6 +13,9 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 现金流量表业务实现
@@ -157,5 +161,34 @@ public class CashFlowSerImpl extends ServiceImpl<CashFlow, CashFlowDTO> implemen
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+
+    @Override
+    public CashFlow save(List<CashFlow> cashFlows) throws SerException{
+
+        for (CashFlow cashFlow : cashFlows) {
+            if (null == cashFlow.getProjectName()) {
+                continue;
+            }
+            CashFlowDTO dto = new CashFlowDTO();
+            dto.getConditions().add(Restrict.eq("startTime", cashFlow.getStartTime()));
+            dto.getConditions().add(Restrict.eq("endTime", cashFlow.getEndTime()));
+            dto.getConditions().add(Restrict.eq("projectName", cashFlow.getProjectName()));
+            List<CashFlow> list = super.findByCis(dto);
+            if (list == null || list.size() < 1) {
+                super.save(cashFlow);
+                continue;
+            }
+            CashFlow entity = list.get(0);
+            if (entity.getMoney().equals(cashFlow.getMoney())) {
+                continue;
+            }
+            entity.setMoney(cashFlow.getMoney());
+            entity.setModifyTime(LocalDateTime.now());
+            super.update(entity);
+
+        }
+        return null;
     }
 }

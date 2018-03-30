@@ -10,10 +10,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
 import com.bjike.goddess.reportmanagement.api.ProfitAPI;
+import com.bjike.goddess.reportmanagement.api.ProfitDataAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitFormulaDTO;
+import com.bjike.goddess.reportmanagement.entity.CashFlowDatum;
+import com.bjike.goddess.reportmanagement.entity.ProfitData;
+import com.bjike.goddess.reportmanagement.service.CashFlowDataSer;
+import com.bjike.goddess.reportmanagement.service.CashFlowDatumSer;
+import com.bjike.goddess.reportmanagement.service.CashFlowSer;
+import com.bjike.goddess.reportmanagement.service.ProfitDataSer;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
@@ -425,6 +432,21 @@ public class ProfitAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+
+//    @Autowired
+//    ProfitDataSer profitDataSer;
+    @Autowired
+    ProfitDataAPI profitDataAPI;
+
+    @GetMapping("v1/get")
+    public Result get() throws ActException {
+        try {
+            profitDataAPI.save(new ProfitData());
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

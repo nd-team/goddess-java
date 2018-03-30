@@ -35,6 +35,8 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.DataAPI" id="dataApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowAPI" id="cashFlowApiImpl"/>
 
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.ProfitDataAPI" id="profitDataApiImpl"/>
+
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>

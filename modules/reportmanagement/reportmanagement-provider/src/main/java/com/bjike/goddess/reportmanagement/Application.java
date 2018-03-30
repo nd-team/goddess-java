@@ -3,6 +3,7 @@ package com.bjike.goddess.reportmanagement;
 
 import com.bjike.goddess.reportmanagement.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@EnableScheduling
 public class Application {
 
     static AnnotationConfigApplicationContext context = null;

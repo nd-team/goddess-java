@@ -37,8 +37,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,21 +84,23 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
             dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
         }
-        //判断是否已有存储
-        CashFlowDTO cashFlowDTO = new CashFlowDTO();
-        cashFlowDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
-        cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
-        cashFlowDTO.getSorts().add("num=asc");
+        if (!dto.isLastest()) { //是否获取最新数据
+            //判断是否已有存储
+            CashFlowDTO cashFlowDTO = new CashFlowDTO();
+            cashFlowDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
+            cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
+            cashFlowDTO.getSorts().add("num=asc");
 //        cashFlowDTO.getSorts().add("seqNum=asc");
 //        List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO,true);
-        List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO);
-        if (null != cashFlows && cashFlows.size() > 0) {
-            for (CashFlow cashFlow : cashFlows) {
-                CashFlowProjectBO cashFlowProjectBO = BeanTransform.copyProperties(cashFlow, CashFlowProjectBO.class);
-                cashFlowProjectBO.setId(cashFlow.getProjectId());
-                bos.add(cashFlowProjectBO);
+            List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO);
+            if (null != cashFlows && cashFlows.size() > 0) {
+                for (CashFlow cashFlow : cashFlows) {
+                    CashFlowProjectBO cashFlowProjectBO = BeanTransform.copyProperties(cashFlow, CashFlowProjectBO.class);
+                    cashFlowProjectBO.setId(cashFlow.getProjectId());
+                    bos.add(cashFlowProjectBO);
+                }
+                return convertCashFlowProject(bos);
             }
-            return convertCashFlowProject(bos);
         }
 
 
@@ -165,23 +171,164 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                         project.setProjectName("三、现金流出小计");
                     }
                 }
-                bo.setMoney(findCashByProject(project.getProjectName(), dto));
+//                bo.setMoney(findCashByProject(project.getProjectName(), dto));
                 bo.setStartTime(dto.getStartTime());
                 bo.setEndTime(dto.getEndTime());
                 bo.setNum(num++);
                 bos.add(bo);
             }
-//            //判断是否存储
-//            Boolean tar = false;
-//            String startTime = findFirstDay(dto.getStartTime());
-//            String startTime1 = findFirstDay(dto.getEndTime());
-//            String endTime = findLastDay(dto.getEndTime());
-//            if (findResult(dto.getEndTime(), DateUtil.dateToString(LocalDate.now())) && startTime == dto.getStartTime()
-//                    && endTime == findLastDay(dto.getEndTime()) && startTime == startTime1) {
-//                tar = true;
-//            }
 
+            for (CashFlowProjectBO bo : bos) {
+                if ("一、现金流入小计".equals(bo.getProjectName())) {
+                    saveFormula("一、现金流入小计", ProjectType.MANAGEMENT, "销售商品、提供劳务收到的现金 + 收到的税费返还 + 收到的其他与经营活动有关的现金");
+                     continue;
+                }
+                if ("一、现金流出小计".equals(bo.getProjectName())) {
+                    saveFormula("一、现金流出小计", ProjectType.MANAGEMENT, "购买商品、接受劳务支付的现金 + 支付给职工以及为职工支付的现金 + 支付的各项税费 + 支付的其他与经营活动有关的现金");
+                    continue;
+                }
+                if ("经营活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    saveFormula("经营活动产生的现金流量净额", ProjectType.MANAGEMENT, "现金流入小计 - 现金流出小计");
+                    continue;
+                }
+                if ("二、现金流入小计".equals(bo.getProjectName())) {
+                    saveFormula("二、现金流入小计", ProjectType.INVESTMENT, " 收回投资所收到的现金 +  取得投资收益所收到的现金 + 处置固定资产、无形资产和其他长期资产所收回的现金净额 + 收到的其他与投资活动有关的现金");
+                    continue;
+                }
+                if ("二、现金流出小计".equals(bo.getProjectName())) {
+                    saveFormula("二、现金流出小计", ProjectType.INVESTMENT, " 购建固定资产、无形资产和其他长期资产所支付的现金 + 投资所支付的现金 + 支付的其他与投资活动有关的现金");
+                    continue;
+                }
+                if ("投资活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    saveFormula("投资活动产生的现金流量净额", ProjectType.INVESTMENT, "现金流入小计 - 现金流出小计");
+                    continue;
+                }
+                if ("三、现金流入小计".equals(bo.getProjectName())) {
+                    saveFormula("三、现金流入小计", ProjectType.FINANCING, "吸收投资所收到的现金 + 借款所收到的现金 + 收到的其他与筹资活动有关的现金");
+                    continue;
+                }
+                if ("三、现金流出小计".equals(bo.getProjectName())) {
+                    saveFormula("三、现金流出小计", ProjectType.FINANCING, "偿还债务所支付的现金 + 分配股利、利润或偿付利息所支付的现金 + 支付的其他与筹资活动有关的现金");
+                    continue;
+                }
+                if ("筹资活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    saveFormula("筹资活动产生的现金流量净额", ProjectType.FINANCING, "现金流入小计 - 现金流出小计");
+                    continue;
+                }
+                if ("五、现金及现金等价物净增加额".equals(bo.getProjectName())) {
+                    saveFormula("五、现金及现金等价物净增加额", ProjectType.CASH, "经营活动产生的现金流量净额 + 投资活动产生的现金流量净额 + 筹资活动产生的现金流量净额 + 汇率变动对现金的影响 ");
+                    continue;
+                }
+
+                new Thread(new CashFlowThread(bo, dto)).start();
+//                bo.setMoney(findCashByProject(bo.getProjectName(), dto));
+            }
+
+            double money1 = 0.0;
+            double money2 = 0.0;
+            double money3 = 0.0;
+            double money4 = 0.0;
+            double money5 = 0.0;
+            double money6 = 0.0;
+
+            for (CashFlowProjectBO bo : bos) {
+
+                if ("销售商品、提供劳务收到的现金".equals(bo.getProjectName()) ||
+                        "收到的税费返还".equals(bo.getProjectName()) ||
+                        "收到的其他与经营活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money1 += bo.getMoney();
+                }
+
+                if ("购买商品接受劳务支付的现金".equals(bo.getProjectName()) ||
+                        "支付给职工以及为职工支付的现金".equals(bo.getProjectName()) ||
+                        "支付的各项税费".equals(bo.getProjectName()) ||
+                        "支付的其他与经营活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money2 += bo.getMoney();
+                }
+
+                if ("收回投资所收到的现金".equals(bo.getProjectName()) ||
+                        "取得投资收益所收到的现金".equals(bo.getProjectName()) ||
+                        "处置固定资产、无形资产和其他长期资产所收回的现金净额".equals(bo.getProjectName()) ||
+                        "收到的其他与投资活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money3 += bo.getMoney();
+                }
+
+                if ("购建固定资产、无形资产和其他长期资产所支付的现金".equals(bo.getProjectName()) ||
+                        "投资所支付的现金".equals(bo.getProjectName()) ||
+                        "支付的其他与投资活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money4 += bo.getMoney();
+                }
+
+                if ("吸收投资所收到的现金".equals(bo.getProjectName()) ||
+                        "借款所收到的现金".equals(bo.getProjectName()) ||
+                        "收到的其他与筹资活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money5 += bo.getMoney();
+                }
+
+                if ("偿还债务所支付的现金".equals(bo.getProjectName()) ||
+                        "分配股利、利润或偿付利息所支付的现金".equals(bo.getProjectName()) ||
+                        "支付的其他与筹资活动有关的现金".equals(bo.getProjectName())) {
+                    while (bo.getMoney() == null) {
+                        sleep();
+                    }
+                    money6 += bo.getMoney();
+                }
+            }
+
+
+            for (CashFlowProjectBO bo : bos) {
+                if ("一、现金流入小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money1);
+                }
+                if ("一、现金流出小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money2);
+                }
+                if ("经营活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    bo.setMoney(money1 - money2);
+                }
+                if ("二、现金流入小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money3);
+                }
+                if ("二、现金流出小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money4);
+                }
+                if ("投资活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    bo.setMoney(money3 - money4);
+                }
+                if ("三、现金流入小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money5);
+                }
+                if ("三、现金流出小计".equals(bo.getProjectName())) {
+                    bo.setMoney(money6);
+                }
+                if ("筹资活动产生的现金流量净额".equals(bo.getProjectName())) {
+                    bo.setMoney(money5 - money6);
+                }
+
+                if ("五、现金及现金等价物净增加额".equals(bo.getProjectName())) {
+                    bo.setMoney(money1 - money2 + money3 - money4 + money5 - money6);
+                }
+
+            }
+
+            //存储数据
             int seqNum = 1;
+            List<CashFlow> cashFlowList = new ArrayList<>();
             for (CashFlowProjectBO bo : bos) {
                 CashFlow cashFlow = new CashFlow();
                 cashFlow.setProjectName(bo.getProjectName());
@@ -191,21 +338,45 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 cashFlow.setStartTime(bo.getStartTime());
                 cashFlow.setEndTime(bo.getEndTime());
                 cashFlow.setMoney(bo.getMoney());
-                cashFlowSer.save(cashFlow);
+                cashFlowList.add(cashFlow);
             }
+            cashFlowSer.save(cashFlowList);
         }
 
-//        boolean first = false;
-//        for (CashFlowProjectBO bo : bos) {
-//            if ("一、现金流入小计".equals(bo.getProjectName())) {
-//                first = true;
-//            }
-//        }
-//        if (!first) {
-//
-//
-//        }
+
         return convertCashFlowProject(bos);
+    }
+
+    void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** 从记账凭证获取现金表数据 */
+    public class CashFlowThread implements Runnable {
+
+        CashFlowProjectBO cashFlowProjectBOS;
+
+        CashFlowProjectDTO dto;
+
+        public CashFlowThread(CashFlowProjectBO cashFlowProjectBOS, CashFlowProjectDTO dto) {
+            this.cashFlowProjectBOS = cashFlowProjectBOS;
+            this.dto = dto;
+        }
+
+        @Override
+        public void run() {
+            try {
+                this.cashFlowProjectBOS.setMoney(findCashByProject(this.cashFlowProjectBOS.getProjectName(), dto));
+            } catch (SerException e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 
     private List<CashFlowProjectBO> convertCashFlowProject(List<CashFlowProjectBO> list) {
@@ -1808,6 +1979,70 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
         }
         return list;
+    }
+
+    @Override
+    public void cashFlowProjectTask() throws SerException {
+        int year = 10;  //获取最近10年数据
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusYears(year);
+        now = now.minusYears(-1);
+        while (!now.isEqual(before)) {
+
+            for (int i = 1; i <= 12; i++) {
+
+                LocalDate first = before.withMonth(i);
+                if (now.getYear() - 1 == before.getYear() && first.getMonthValue() > before.getMonthValue()) {
+                    continue;
+                }
+
+                System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
+                LocalDateTime date1 =LocalDateTime.now();
+
+                LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
+                LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
+
+                CashFlowProjectDTO dto = new CashFlowProjectDTO();
+                dto.setStartTime(start.toString());
+                dto.setEndTime(end.toString());
+                dto.setLastest(true);
+                List<CashFlowProjectBO> bos = this.list(dto);
+//                List<CashFlowProjectBO> bos = new ArrayList<>();
+//                bos.add(new CashFlowProjectBO(null, null, "1", 0, 0.0));
+                if (bos == null || bos.size() < 1) {
+                    continue;
+                }
+                List<CashFlow> profitDataList = new ArrayList<>();
+                for (CashFlowProjectBO bo : bos) {
+                    CashFlow data = new CashFlow();
+                    data.setStartTime(start.toString());
+                    data.setEndTime(end.toString());
+                    data.setMoney((bo.getMoney()));
+                    data.setNum(bo.getNum());
+                    data.setProjectId(bo.getId());
+                    data.setProjectName(bo.getProjectName());
+                    data.setSystemId(null);   //公司id，预留字段 todo
+                    if (data == null) {
+                        continue;
+                    }
+                    profitDataList.add(data);
+                }
+                LocalDateTime date2 =LocalDateTime.now();
+                System.out.println("耗时：" + "分钟：" + (date2.getMinute() - date1.getMinute()) + ", 秒：" + (date2.getSecond() - date1.getSecond()));
+                //保存到本模块
+                if (profitDataList != null && profitDataList.size() > 0) {
+
+                    cashFlowSer.save(profitDataList);
+                }
+                LocalDateTime date3 =LocalDateTime.now();
+                System.out.println("耗时：" + "分钟：" + (date3.getMinute() - date2.getMinute()) + ", 秒：" + (date3.getSecond() - date2.getSecond()));
+
+
+
+            }
+            year--;
+            before = now.minusYears(year);
+        }
     }
 
 }

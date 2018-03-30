@@ -250,4 +250,7 @@ public interface ProfitSer extends Ser<Profit, ProfitDTO> {
     default byte[] exportExcel(ProfitDTO dto) throws SerException {
         return null;
     }
+
+
+    default void profitTask() throws SerException{}
 }
