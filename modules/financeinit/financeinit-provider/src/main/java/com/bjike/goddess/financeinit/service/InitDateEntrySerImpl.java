@@ -266,6 +266,22 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     }
 
     @Override
+    public InitDateEntryBO findBySubject(String firstSubject, String systemId) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        InitDateEntryDTO dto = new InitDateEntryDTO();
+        dto.getConditions().add(Restrict.eq("accountanName", firstSubject));
+        dto.getConditions().add(Restrict.eq("systemId", systemId));
+        List<InitDateEntry> list = super.findByCis(dto);
+        List<InitDateEntryBO> bos = BeanTransform.copyProperties(list, InitDateEntryBO.class, false);
+        if (null != bos && bos.size() > 0) {
+            return bos.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public byte[] exportExcel() throws SerException {
 //        List<InitDateEntry> list = super.findAll();
         InitDateEntryDTO dto = new InitDateEntryDTO();

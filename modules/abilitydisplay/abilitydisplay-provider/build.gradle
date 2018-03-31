@@ -31,5 +31,6 @@ dependencies {
     compile project(":modules:abilitydisplay:abilitydisplay-api")
 //    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '1.5.2.RELEASE'
     compile project(":common:common-utils")
+    compile group: 'com.belerweb', name: 'pinyin4j', version: '2.5.1'
 }
 
