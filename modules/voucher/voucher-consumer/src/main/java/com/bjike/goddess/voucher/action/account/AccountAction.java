@@ -1,5 +1,7 @@
 package com.bjike.goddess.voucher.action.account;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +13,7 @@ import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
@@ -134,14 +137,14 @@ public class AccountAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/account")
-    public Result account(VoucherGenerateDTO dto) throws ActException {
+    public Result account(VoucherGenerateDTO dto,HttpServletRequest request) throws ActException {
         try {
             List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto), AccountInfoVO.class);
             for (AccountInfoVO accountInfoVO : accountInfoVOS) {
                 accountInfoVO.setId(UUID.randomUUID().toString());
             }
             return ActResult.initialize(accountInfoVOS);
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

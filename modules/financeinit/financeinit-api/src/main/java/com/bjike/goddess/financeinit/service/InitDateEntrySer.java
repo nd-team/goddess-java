@@ -97,6 +97,12 @@ public interface InitDateEntrySer extends Ser<InitDateEntry, InitDateEntryDTO> {
         return null;
     }
     /**
+     * 根据科目获取期初数
+     */
+    default InitDateEntryBO findBySubject(String firstSubject,String systemId) throws SerException {
+        return null;
+    }
+    /**
      * 导出Excel
      *
      * @throws SerException

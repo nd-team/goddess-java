@@ -30,4 +30,8 @@ public enum CusPermissionType {
     public int getCode() {
         return this.code;
     }
+
+    public static void main(String[] args) {
+        new Son();
+    }
 }

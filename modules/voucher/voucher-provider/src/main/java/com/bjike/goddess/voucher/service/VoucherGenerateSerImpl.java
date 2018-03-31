@@ -4446,6 +4446,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         List<AccountInfoBO> boList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT voucherDate AS voucherDate,voucherWord AS voucherWord,voucherNum AS voucherNum, ");
@@ -4477,7 +4478,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
 //            财务初始化中根据会计科目名称获取方向
-            InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(accountInfoBO.getFirstSubject());
+            InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(accountInfoBO.getFirstSubject(),userToken);
 //            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
 //            String[] field = new String[]{"direction", "balance"};
 //            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
