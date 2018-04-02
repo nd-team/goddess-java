@@ -24,9 +24,9 @@ import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
-import com.bjike.goddess.problemhandle.api.ProjectProblemAccAPI;
-import com.bjike.goddess.problemhandle.bo.ProjectProblemAccBO;
-import com.bjike.goddess.problemhandle.dto.ProjectProblemAccDTO;
+//import com.bjike.goddess.problemhandle.api.ProjectProblemAccAPI;
+//import com.bjike.goddess.problemhandle.bo.ProjectProblemAccBO;
+//import com.bjike.goddess.problemhandle.dto.ProjectProblemAccDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -58,8 +58,8 @@ public class BusinessNegotiationAction extends BaseFileAction{
 
     @Autowired
     UserSetPermissionAPI userSetPermissionAPI;
-    @Autowired
-    ProjectProblemAccAPI projectProblemAccAPI;
+//    @Autowired
+//    ProjectProblemAccAPI projectProblemAccAPI;
     @Autowired
     DepartmentDetailAPI departmentDetailAPI;
 
@@ -472,20 +472,20 @@ public class BusinessNegotiationAction extends BaseFileAction{
      *
      * @version v1
      */
-    @GetMapping("v1/problemNum")
-    public Result problemNum() throws ActException {
-        try {
-            List<ProjectProblemAccBO> bos = projectProblemAccAPI.findListProjectProblem(new ProjectProblemAccDTO());
-            if (null == bos) {
-                return ActResult.initialize(null);
-            }
-            Set<String> set = new HashSet<>();
-            for (ProjectProblemAccBO bo : bos) {
-                set.add(bo.getProblemAcceptanceNum());
-            }
-            return ActResult.initialize(set);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/problemNum")
+//    public Result problemNum() throws ActException {
+//        try {
+//            List<ProjectProblemAccBO> bos = projectProblemAccAPI.findListProjectProblem(new ProjectProblemAccDTO());
+//            if (null == bos) {
+//                return ActResult.initialize(null);
+//            }
+//            Set<String> set = new HashSet<>();
+//            for (ProjectProblemAccBO bo : bos) {
+//                set.add(bo.getProblemAcceptanceNum());
+//            }
+//            return ActResult.initialize(set);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 }

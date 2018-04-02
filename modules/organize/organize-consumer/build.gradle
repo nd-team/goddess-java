@@ -40,5 +40,7 @@ dependencies {
     compile project(":modules:organize:organize-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile('net.sourceforge.nekohtml:nekohtml:1.9.22')
 }
 

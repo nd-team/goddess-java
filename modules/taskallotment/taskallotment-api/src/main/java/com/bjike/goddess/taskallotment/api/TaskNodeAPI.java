@@ -136,6 +136,13 @@ public interface TaskNodeAPI {
     void initiateTask(TaskNodeTO to) throws SerException;
 
     /**
+     * 增长时长
+     * @param to
+     * @throws SerException
+     */
+    void increase(TaskNodeTO to) throws SerException;
+
+    /**
      * 添加小任务
      *
      * @param to

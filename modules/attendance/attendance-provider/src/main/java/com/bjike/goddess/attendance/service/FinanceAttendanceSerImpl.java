@@ -34,6 +34,9 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
@@ -1347,6 +1350,9 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
             throw new SerException("文件写入错误");
         }
         return os;
+
+
+
     }
 
     /**
@@ -1558,7 +1564,7 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
 
 
         cell = titleRow1.createCell(sum + 5);
-        cell.setCellValue("2018-01-27前剩余加班天数");
+        cell.setCellValue( LocalDate.now() + "前剩余加班天数");
         cell.setCellStyle(titleStyle);
         sheet.setColumnWidth(sum + 5, (short) (10 * 256));
 
@@ -1596,16 +1602,16 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         contentStyle.setWrapText(true);
         XSSFFont contentFont = workBook.createFont();
         contentFont.setFontName("宋体");
-//        contentStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-//        contentFont.setFontHeightInPoints((short) 10);
-//        contentStyle.setFont(contentFont);
-//        contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 居中
-//
-//        //---设置边框:
-//        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-//        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-//        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-//        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        contentStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+        contentFont.setFontHeightInPoints((short) 10);
+        contentStyle.setFont(contentFont);
+        contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 居中
+
+        //---设置边框:
+        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
 
         return contentStyle;
     }
@@ -1618,21 +1624,22 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
      */
     private XSSFCellStyle createTitleSytle(XSSFWorkbook workBook) {
         XSSFCellStyle titleStyle = workBook.createCellStyle();
+
         XSSFFont titlefont = workBook.createFont();
-//        titlefont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
-//        titlefont.setFontName("宋体");
-//        titleStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-//        titleStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-//        titleStyle.setWrapText(true);
-//        titlefont.setFontHeightInPoints((short) 11);
-//        titleStyle.setFont(titlefont);
-//        titleStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-//        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-//        //---设置边框:
-//        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-//        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-//        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-//        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        titlefont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+        titlefont.setFontName("宋体");
+        titleStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+        titleStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+        titleStyle.setWrapText(true);
+        titlefont.setFontHeightInPoints((short) 11);
+        titleStyle.setFont(titlefont);
+        titleStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        //---设置边框:
+        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
 
         return titleStyle;
     }

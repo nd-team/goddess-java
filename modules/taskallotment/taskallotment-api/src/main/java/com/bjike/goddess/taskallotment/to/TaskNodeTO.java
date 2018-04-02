@@ -47,7 +47,8 @@ public class TaskNodeTO extends BaseTO {
 
     public interface INITIATE {
     }
-
+    public interface INCREASE {
+    }
     public interface ADDTASK {
     }
 
@@ -203,7 +204,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 任务是否拆分
      */
-    @NotNull(groups = {TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class}, message = "任务是否拆分不能为空")
+    @NotNull(groups = {TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class,TaskNodeTO.INCREASE.class}, message = "任务是否拆分不能为空")
     private Boolean split;
 
     /**
@@ -350,6 +351,40 @@ public class TaskNodeTO extends BaseTO {
      */
     private List<CustomTitleTO> customTitles;
 
+    /**
+     * 增加天数
+     */
+    @NotNull(groups = {TaskNodeTO.INCREASE.class}, message = "增加天数不能为空")
+    private Double increase;
+
+
+    private String initiate;
+
+    private String innerProject;
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
+
+    public String getInitiate() {
+        return initiate;
+    }
+
+    public void setInitiate(String initiate) {
+        this.initiate = initiate;
+    }
+
+    public Double getIncrease() {
+        return increase;
+    }
+
+    public void setIncrease(Double increase) {
+        this.increase = increase;
+    }
 
     public String getReason() {
         return reason;

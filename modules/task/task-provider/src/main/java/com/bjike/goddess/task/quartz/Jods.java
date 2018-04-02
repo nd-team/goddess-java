@@ -38,7 +38,7 @@ public class Jods {
     public void fixedDelayJob() throws MalformedURLException, URISyntaxException, SerException {
 //        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+" >>fixedDelay执行....");
         String localDateTimestr = DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now());
-        System.out.println(localDateTimestr + " >>fixedDelay执行....");
+//        System.out.println(localDateTimestr + " >>fixedDelay执行....");
         List<CustomizeBO> customizeBOS = customizeAPI.findAll();
         List<CustomizeBO> list = customizeBOS.stream().filter( n -> n.getSendTime() != null && n.getEnable()).distinct().collect(Collectors.toList());
         for (CustomizeBO bo : list){
@@ -55,7 +55,7 @@ public class Jods {
 //        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+" >>fixedRate执行....");
 
         String localDateTimestr = DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now());
-        System.out.println(localDateTimestr + " >>fixedRate执行....");
+//        System.out.println(localDateTimestr + " >>fixedRate执行....");
         List<CollectSchemeBO> customizeBOS = collectSchemeAPI.findAll();
         List<CollectSchemeBO> list = customizeBOS.stream().filter( n -> n.getSendTime() != null && n.getEnable()).distinct().collect(Collectors.toList());
         for (CollectSchemeBO bo : list){
