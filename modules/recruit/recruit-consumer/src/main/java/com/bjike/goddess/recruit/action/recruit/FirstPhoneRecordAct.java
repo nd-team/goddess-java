@@ -226,6 +226,11 @@ public class FirstPhoneRecordAct extends BaseFileAction {
     @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) FirstPhoneRecordTO to, BindingResult result, HttpServletRequest request) throws ActException, IOException, SerException {
+
+
+        myWebSocket.sendMsg1("计划简历筛选量", "初试官您好，人事小姐姐已经在茫茫人才海中，努力筛选出了30份优秀的简历啦。\n" +
+                "预计需要花费您15min，筛选确认20份邀约面试的简历。下一步工作是人事小姐姐要进行电访了，要尽快完成不要让我们与优秀的人才失之交臂哦，辛苦啦 详情信息如下：（对应下载的所有简历库）\n" +
+                "            “" + to.getProjectGroup() + "”+“" + to.getPosition() + "”");
         if (to.getWhetherFirstInterview()) {
             myWebSocket.sendMsg1("是否初试", "亲，有一份公司面试待安排哦：详情信息如下：\n" +
                     "“应聘地区”+“应聘部门”+“应聘者姓名”+“邀约初试时间”+“初试地点”");

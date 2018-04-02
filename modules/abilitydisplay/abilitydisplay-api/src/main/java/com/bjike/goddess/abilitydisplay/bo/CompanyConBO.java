@@ -130,4 +130,19 @@ public class CompanyConBO extends BaseBO {
     public void setCharacterEVA(String characterEVA) {
         this.characterEVA = characterEVA;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyConBO{" +
+                "name='" + name + '\'' +
+                ", area='" + area + '\'' +
+                ", phone='" + phone + '\'' +
+                ", post='" + post + '\'' +
+                ", placeORI='" + placeORI + '\'' +
+                ", workEXP='" + workEXP + '\'' +
+                ", learnEXP='" + learnEXP + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", characterEVA='" + characterEVA + '\'' +
+                '}';
+    }
 }

@@ -188,7 +188,7 @@ public class CostDetailAction {
     @PostMapping("v1/update")
     public Result updateCostDetail(String data) throws SerException, IOException {
         System.out.println(data);
-        costDetailAPI.update(WanyJackson.batman(data, CostDetail.class));
+//        costDetailAPI.update(WanyJackson.batman(data, CostDetail.class));
 //        costDetailAPI.update(costDetails);
         return new ActResult("success");
     }

@@ -40,6 +40,10 @@
 	<dubbo:service  ref="ajoaReimApiImpl" interface="com.bjike.goddess.lendreimbursement.api.olddata.AjoaReimAPI" />
 	<dubbo:service  ref="ajoaSubjectApiImpl" interface="com.bjike.goddess.lendreimbursement.api.olddata.AjoaSubjectAPI" />
 	<dubbo:service  ref="ajoaUserApiImpl" interface="com.bjike.goddess.lendreimbursement.api.olddata.AjoaUserAPI" />
+	<dubbo:service  ref="loanApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LoanAPI" />
+	<dubbo:service  ref="auditingApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AuditingAPI" />
+	<dubbo:service  ref="mailingApiImpl" interface="com.bjike.goddess.lendreimbursement.api.MailingAPI" />
+	<dubbo:service  ref="reimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimbursementAPI" />
 
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.

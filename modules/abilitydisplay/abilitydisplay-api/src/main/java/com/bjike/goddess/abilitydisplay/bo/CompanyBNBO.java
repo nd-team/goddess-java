@@ -27,7 +27,7 @@ public class CompanyBNBO extends BaseBO {
     /**
      * 公司参与项目
      */
-    private ComProject project;
+    private ComProjectBO projectBO;
 
 
     public String getIntroduction() {
@@ -46,11 +46,20 @@ public class CompanyBNBO extends BaseBO {
         this.type = type;
     }
 
-    public ComProject getProject() {
-        return project;
+    public ComProjectBO getProjectBO() {
+        return projectBO;
     }
 
-    public void setProject(ComProject project) {
-        this.project = project;
+    public void setProjectBO(ComProjectBO projectBO) {
+        this.projectBO = projectBO;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyBNBO{" +
+                "introduction='" + introduction + '\'' +
+                ", type='" + type + '\'' +
+                ", projectBO=" + projectBO +
+                '}';
     }
 }

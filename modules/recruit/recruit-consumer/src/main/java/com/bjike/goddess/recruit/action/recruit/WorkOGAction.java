@@ -1,20 +1,23 @@
 package com.bjike.goddess.recruit.action.recruit;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.WanyJackson;
 import com.bjike.goddess.recruit.api.WorkOGAPI;
 import com.bjike.goddess.recruit.entity.WorkOG;
-import com.sun.org.apache.regexp.internal.RE;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.websocket.Session;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 工作对赌
@@ -38,11 +41,11 @@ public class WorkOGAction {
 
     @GetMapping("v1/get")
     public Result getWork(String id) throws SerException {
-        return new ActResult("success",workOGAPI.getWorkOG(id));
+        return new ActResult("success", workOGAPI.getWorkOG(id));
     }
 
     @GetMapping("test")
-    public ModelAndView test(){
+    public ModelAndView test() {
 
         return new ModelAndView("hello");
 
@@ -84,11 +87,12 @@ public class WorkOGAction {
 //            System.out.println("ha");
             myWebSocket.dataMsg(data);
         }
-        return new ActResult("success",data);
+        return new ActResult("success", data);
     }
 
     /**
      * 智能消息
+     *
      * @param name
      * @return
      * @throws SerException
@@ -98,6 +102,7 @@ public class WorkOGAction {
         return new ActResult("success", workOGAPI.getRemind(name));
     }
 
+    //对赌消息
     @GetMapping("v1/remid")
     public Result getRemid(String name) throws SerException {
         return new ActResult("success", workOGAPI.getWorkMsg(name));
@@ -108,8 +113,23 @@ public class WorkOGAction {
         return new ActResult("success", workOGAPI.getWorkScore(name));
     }
 
-    
+    @PostMapping("v1/send")
+    public void sendMsg(String msg, String user) throws IOException {
+        myWebSocket.sendMsg(msg, user);
+//        System.out.println(msg + "---" + user);
+    }
 
-
-
+    @PostMapping("v1/getOnline")
+    public String getMap() throws JsonProcessingException {
+        System.out.println(MyWebSocket.onlineMap);
+        Iterator<Map.Entry<String, Session>> iterator = MyWebSocket.onlineMap.entrySet().iterator();
+        List<String> list = new ArrayList<String>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next().getKey());
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String map = objectMapper.writeValueAsString(list);
+        System.out.println(map);
+        return map;
+    }
 }

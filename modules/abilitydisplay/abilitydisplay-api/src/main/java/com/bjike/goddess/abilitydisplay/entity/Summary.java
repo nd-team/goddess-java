@@ -47,7 +47,7 @@ public class Summary extends BaseEntity {
     /**
      * 中兴证书数量
      */
-    @Column(name = "",columnDefinition = "VARCHAR(255)   COMMENT '中兴证书数量'")
+    @Column(name = "zteNum",columnDefinition = "VARCHAR(255)   COMMENT '中兴证书数量'")
     private Integer zteNum;
 
     /**
@@ -131,5 +131,19 @@ public class Summary extends BaseEntity {
 
     public void setImpProNum(Integer impProNum) {
         this.impProNum = impProNum;
+    }
+
+    @Override
+    public String toString() {
+        return "Summary{" +
+                "name='" + name + '\'' +
+                ", qualifiNum=" + qualifiNum +
+                ", adminNum=" + adminNum +
+                ", majorNum=" + majorNum +
+                ", zteNum=" + zteNum +
+                ", huaweiNum=" + huaweiNum +
+                ", finishProNum=" + finishProNum +
+                ", impProNum=" + impProNum +
+                '}';
     }
 }

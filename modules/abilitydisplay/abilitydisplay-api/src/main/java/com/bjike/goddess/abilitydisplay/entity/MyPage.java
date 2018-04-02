@@ -43,4 +43,12 @@ public class MyPage implements Serializable {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "MyPage{" +
+                "totalElements=" + totalElements +
+                ", number=" + number +
+                ", content=" + content +
+                '}';
+    }
 }

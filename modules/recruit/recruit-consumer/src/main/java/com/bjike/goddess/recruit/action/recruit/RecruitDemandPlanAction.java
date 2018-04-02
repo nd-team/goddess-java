@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -148,18 +149,21 @@ public class RecruitDemandPlanAction {
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) RecruitDemandPlanTO to, BindingResult result, HttpServletRequest request) throws ActException, IOException, SerException {
         if (to.getPlanRecruitNum() > 0) {
-            myWebSocket.sendMsg1("计划招聘人数","亲，公司有新的招聘需求，记得跟进哦：\n" +
-                    "            详情信息如下：\n" +
-                    "            “招聘部门:"+to.getProjectGroup()+"”+“招聘岗位:"+to.getPosition()+"”+“计划招聘人数:"+to.getPlanRecruitNum()+"”");
-        } else if (to.getPlanScreenNum() > 0) {
-            myWebSocket.sendMsg1("计划简历筛选量","面试官您好，人事小姐姐已经帮您找到了一些相关的简历，麻烦您确认哪些需要邀约面试的名单，辛苦啦。\n" +
-                    "            详情信息如下：（对应下载的所有简历库）\n" +
-                    "            “姓名”+“应聘岗位”");
-        } else if (to.getPlanInterviewAmount() > 0) {
-            myWebSocket.sendMsg1("计划邀约面试量","招聘负责人：亲，邀约名单已经确认啦，麻烦您电访确认参加初面的名单，\t\t\t\t  辛苦啦。\n" +
-                    "            详情信息如下：（对应下载的所有简历库）\n" +
-                    "            “姓名”+“应聘岗位”");
+            myWebSocket.sendMsg1("计划招聘人数", "亲，公司有新的招聘需求啦！\n" +
+                    "详情信息如下：\n" +
+                    "“" + to.getProjectGroup() + "”+“" + to.getPosition() + "”+“" + to.getPlanRecruitNum() + "”\n" +
+                    "初次筛选简历数量预计需要30份哦。预计用时1.5h。您的工作将直接影响初试面试官的筛选工作、财务部预算工作，请您及时完成哦！\n" +
+                    "据以往数据预测：本职位学历要求为“本科”全网占有64.3%，平均薪资范围在[6k，8k]。招贤纳士就看你的啦，记得跟进哦");
         }
+//        else if (to.getPlanScreenNum() > 0) {
+//            myWebSocket.sendMsg1("计划简历筛选量","面试官您好，人事小姐姐已经帮您找到了一些相关的简历，麻烦您确认哪些需要邀约面试的名单，辛苦啦。\n" +
+//                    "            详情信息如下：（对应下载的所有简历库）\n" +
+//                    "            “姓名”+“应聘岗位”");
+//        } else if (to.getPlanInterviewAmount() > 0) {
+//            myWebSocket.sendMsg1("计划邀约面试量","招聘负责人：亲，邀约名单已经确认啦，麻烦您电访确认参加初面的名单，\t\t\t\t  辛苦啦。\n" +
+//                    "            详情信息如下：（对应下载的所有简历库）\n" +
+//                    "            “姓名”+“应聘岗位”");
+//        }
         try {
             RecruitDemandPlanBO bo = recruitDemandPlanAPI.save(to);
             RecruitDemandPlanVO vo = BeanTransform.copyProperties(bo, RecruitDemandPlanVO.class, request);

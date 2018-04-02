@@ -67,7 +67,7 @@ public class WorkOGSerImpl extends ServiceImpl<WorkOG, WorkOGDTO> implements Wor
     @Transactional
     @Override
     public List<WorkOGBO> getWorkMsg(String name) throws SerException {
-        return BeanTransform.wanycopyProperties(workOGRep.findByRaters(name),WorkOGBO.class);
+        return BeanTransform.wanycopyProperties(workOGRep.findByRatersOrScoringOB(name,name),WorkOGBO.class);
     }
 
     //评分消息
@@ -86,6 +86,13 @@ public class WorkOGSerImpl extends ServiceImpl<WorkOG, WorkOGDTO> implements Wor
     @Override
     public WorkOG findByModular(String modular) {
         return workOGRep.findByModular(modular);
+    }
+
+
+    @Transactional
+    @Override
+    public WorkOGBO findByTime(String time) {
+        return BeanTransform.wanycopyProperties(workOGRep.findByTime(time), WorkOGBO.class);
     }
 
 

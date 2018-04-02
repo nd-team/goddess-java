@@ -466,13 +466,19 @@ public class BeanTransform {
                      * wany
                      *
                      */
-//                    System.out.println(s_field.getGenericType().toString().split("\\.")[2].split("<")[0]);
-//                    System.out.println("第二if");
-//                    System.out.println(s_field.getName());
-//                    System.out.println(t_field.getName());
+                    System.out.println("---------");
+
                     t_field.setAccessible(true);
                     s_field.setAccessible(true);
+                    System.out.println(t_field.getGenericType().toString().replace("class ", ""));
+                    System.out.println(t_field);
+                    System.out.println(s_field);
+                    System.out.println(target);
+                    System.out.println(s_field.get(source));
+                    System.out.println(Class.forName(t_field.getGenericType().toString().replace("class ", "")));
                     t_field.set(target, wanycopyProperties(s_field.get(source), Class.forName(t_field.getGenericType().toString().replace("class ", ""))));
+                    System.out.println(target);
+                    System.out.println("----hey----");
 //                    System.out.println("第二if结尾");
                 } else if (t_string.replace(s_string, "").equals("BO") || s_string.replace(t_string, "").equals("BO")) {
                     if (s_field.getGenericType().toString().split("\\.")[2].split("<")[0].equals("List")) {
@@ -483,27 +489,13 @@ public class BeanTransform {
                         List set = (List) s_field.get(source);
                         t_field.set(target, wanycopyProperties(set, Class.forName(t_field.getGenericType().toString().substring(15, t_field.getGenericType().toString().length() - 1))));
                     } else if (s_field.getGenericType().toString().split("\\.")[2].split("<")[0].equals("Set")) {
-//                        System.out.println(s_field.getGenericType().toString().split("\\.")[2].split("<")[0]);
-//                        System.out.println("第四if");
                         t_field.setAccessible(true);
                         s_field.setAccessible(true);
                         Set set = (Set) s_field.get(source);
 //                        System.out.println(t_field.getGenericType().toString().substring(14, t_field.getGenericType().toString().length() - 1));
                         t_field.set(target, wanycopySet(set, Class.forName(t_field.getGenericType().toString().substring(14, t_field.getGenericType().toString().length() - 1))));
                     }
-//                    (t_field.getName().indexOf("BOS") != -1 && s_field.getName().endsWith("s")) || (t_field.getName().indexOf("VOS") != -1 && s_field.getName().endsWith("S")) || (s_field.getName().indexOf("BOS") != -1) && t_field.getName().endsWith("s")
-//                    System.out.println(t_string);
-//                    System.out.println(t_string.replace(s_string,""));
-//                    System.out.println(s_string.replace(t_string, ""));
-//                    System.out.println("----------------");
-//                    System.out.println(t_field.getGenericType().toString().split("\\.")[2].split("<")[0]);
-//                    System.out.println(s_string);
-//                    System.out.println(t_string.replace(s_string,""));
-//                    System.out.println(s_string.replace(t_string, ""));
-//                    System.out.println(s_field.getGenericType().toString().split("\\.")[2].split("<")[0]);
                     String[] strings = s_field.getGenericType().toString().split("\\.");
-//                    System.out.println(strings[strings.length - 1].replace(">", ""));
-
                 }
             }
         }

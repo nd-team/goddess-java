@@ -65,4 +65,14 @@ public class CompanyPlanBO extends BaseBO {
     public void setPlanningBN(String planningBN) {
         this.planningBN = planningBN;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyPlanBO{" +
+                "planningORG='" + planningORG + '\'' +
+                ", planningCD='" + planningCD + '\'' +
+                ", planningPD='" + planningPD + '\'' +
+                ", planningBN='" + planningBN + '\'' +
+                '}';
+    }
 }

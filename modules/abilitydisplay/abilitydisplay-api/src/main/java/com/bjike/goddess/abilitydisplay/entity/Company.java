@@ -85,7 +85,7 @@ public class Company extends BaseEntity {
      */
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId")
-    protected List<CompanyPlan> plans;
+    private List<CompanyPlan> plans;
 
     /**
      * 公司认证
@@ -236,5 +236,26 @@ public class Company extends BaseEntity {
 
     public void setCulturals(List<ComCultural> culturals) {
         this.culturals = culturals;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", nameEn='" + nameEn + '\'' +
+                ", officialWeb='" + officialWeb + '\'' +
+                ", area='" + area + '\'' +
+                ", address='" + address + '\'' +
+                ", placeREG='" + placeREG + '\'' +
+                ", capitalREG=" + capitalREG +
+                ", personnels=" + personnels +
+                ", equipment='" + equipment + '\'' +
+                ", plans=" + plans +
+                ", auths=" + auths +
+                ", business=" + business +
+                ", culturals=" + culturals +
+                ", contacts=" + contacts +
+                '}';
     }
 }

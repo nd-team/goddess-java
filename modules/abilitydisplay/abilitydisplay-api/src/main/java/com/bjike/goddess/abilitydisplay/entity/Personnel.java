@@ -47,4 +47,12 @@ public class Personnel extends BaseEntity {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "Personnel{" +
+                "name='" + name + '\'' +
+                ", position='" + position + '\'' +
+                '}';
+    }
 }

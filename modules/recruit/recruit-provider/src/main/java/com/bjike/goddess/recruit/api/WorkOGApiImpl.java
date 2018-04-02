@@ -64,4 +64,9 @@ public class WorkOGApiImpl implements WorkOGAPI {
     public WorkOG findByModular(String modular) {
         return workOGSer.findByModular(modular);
     }
+
+    @Override
+    public WorkOGBO findByTime(String time) {
+        return workOGSer.findByTime(time);
+    }
 }

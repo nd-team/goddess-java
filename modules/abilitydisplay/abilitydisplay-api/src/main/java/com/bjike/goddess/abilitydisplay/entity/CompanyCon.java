@@ -146,4 +146,19 @@ public class CompanyCon extends BaseEntity {
     public void setCharacterEVA(String characterEVA) {
         this.characterEVA = characterEVA;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyCon{" +
+                "name='" + name + '\'' +
+                ", area='" + area + '\'' +
+                ", phone='" + phone + '\'' +
+                ", post='" + post + '\'' +
+                ", placeORI='" + placeORI + '\'' +
+                ", workEXP='" + workEXP + '\'' +
+                ", learnEXP='" + learnEXP + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", characterEVA='" + characterEVA + '\'' +
+                '}';
+    }
 }

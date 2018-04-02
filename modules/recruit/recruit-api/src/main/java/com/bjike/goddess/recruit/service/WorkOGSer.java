@@ -38,4 +38,6 @@ public interface WorkOGSer extends Ser<WorkOG, WorkOGDTO> {
 
     WorkOG findByModular(String modular);
 
+    WorkOGBO findByTime(String time);
+
 }

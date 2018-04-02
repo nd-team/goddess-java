@@ -39,4 +39,12 @@ public class ComCulturalBO extends BaseBO {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "ComCulturalBO{" +
+                "name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

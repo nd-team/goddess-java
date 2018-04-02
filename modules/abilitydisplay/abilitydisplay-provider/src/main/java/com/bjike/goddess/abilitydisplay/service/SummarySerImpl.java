@@ -24,12 +24,12 @@ import java.util.List;
 public class SummarySerImpl extends ServiceImpl<Summary, SummaryDTO> implements SummarySer {
 
     @Override
-    public List<SummaryBO> getSum() throws SerException {
+    public List<SummaryBO> getSum(String date) throws SerException {
         String[] fields = {"name", "qualifiNum", "adminNum", "majorNum", "zteNum", "huaweiNum", "finishProNum", "impProNum"};
-        return super.findBySql(sql(), SummaryBO.class, fields);
+        return super.findBySql(sql(date), SummaryBO.class, fields);
     }
 
-    private String sql() {
+    private String sql(String date) {
         String sql = "SELECT\n" +
                 "  name,\n" +
                 "  any_value(ss)        AS qualifiNum,\n" +
@@ -53,17 +53,17 @@ public class SummarySerImpl extends ServiceImpl<Summary, SummaryDTO> implements 
                 "                            count(type)              AS ss,\n" +
                 "                            any_value(companyAuthid) AS companyAuthid\n" +
                 "                          FROM abilitydisplay_comcertificate\n" +
-                "                          WHERE type = '公司资质数量') AS c ON companyAuthid = id\n" +
+                "                          WHERE type = '公司资质证书') AS c ON companyAuthid = id\n" +
                 "               LEFT JOIN (SELECT\n" +
                 "                            count(type)              AS ss,\n" +
                 "                            any_value(companyAuthid) AS companyAuthid1\n" +
                 "                          FROM abilitydisplay_comcertificate\n" +
-                "                          WHERE type = '管理资质认证数量') AS s ON companyAuthid1 = id\n" +
+                "                          WHERE type = '管理资质认证') AS s ON companyAuthid1 = id\n" +
                 "               LEFT JOIN (SELECT\n" +
                 "                            count(type)              AS ss,\n" +
                 "                            any_value(companyAuthid) AS companyAuthid2\n" +
                 "                          FROM abilitydisplay_comcertificate\n" +
-                "                          WHERE type = '专业资质认证数量') AS b ON companyAuthid2 = id) AS companyauth\n" +
+                "                          WHERE type = '专业资质认证') AS b ON companyAuthid2 = id) AS companyauth\n" +
                 "    ON companyId = abilitydisplay_company.id\n" +
                 "  LEFT JOIN (SELECT\n" +
                 "               project_id,\n" +
@@ -73,6 +73,7 @@ public class SummarySerImpl extends ServiceImpl<Summary, SummaryDTO> implements 
                 "               LEFT JOIN (SELECT progress ,id AS proId\n" +
                 "                          FROM abilitydisplay_comproject) AS comproject ON project_id = proId) AS companybn\n" +
                 "    ON comId = abilitydisplay_company.id\n" +
+                "WHERE createTime LIKE '" + date + "%'\n" +
                 "GROUP BY name;";
 
         return sql;

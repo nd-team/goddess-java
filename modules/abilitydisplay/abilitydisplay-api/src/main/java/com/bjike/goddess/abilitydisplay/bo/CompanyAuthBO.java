@@ -27,10 +27,15 @@ public class CompanyAuthBO extends BaseBO {
      */
     private Integer huaweiNum;
 
+
+
+
     /**
      * 公司证书
      */
     private Set<ComCertificateBO> certificateBOS;
+
+
 
 
     public Integer getZteNum() {
@@ -55,5 +60,14 @@ public class CompanyAuthBO extends BaseBO {
 
     public void setCertificateBOS(Set<ComCertificateBO> certificateBOS) {
         this.certificateBOS = certificateBOS;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyAuthBO{" +
+                "zteNum=" + zteNum +
+                ", huaweiNum=" + huaweiNum +
+                ", certificateBOS=" + certificateBOS +
+                '}';
     }
 }
