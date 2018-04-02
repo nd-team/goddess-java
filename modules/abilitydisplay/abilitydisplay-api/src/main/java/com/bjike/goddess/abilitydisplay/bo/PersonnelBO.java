@@ -39,4 +39,12 @@ public class PersonnelBO extends BaseBO {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "PersonnelBO{" +
+                "name='" + name + '\'' +
+                ", position='" + position + '\'' +
+                '}';
+    }
 }

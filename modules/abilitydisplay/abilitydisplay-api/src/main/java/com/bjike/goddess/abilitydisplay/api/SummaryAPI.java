@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface SummaryAPI {
 
-    List<SummaryBO> getSum() throws SerException;
+    List<SummaryBO> getSum(String date) throws SerException;
 
 }

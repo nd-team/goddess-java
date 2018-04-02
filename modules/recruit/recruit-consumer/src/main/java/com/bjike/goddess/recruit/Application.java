@@ -1,10 +1,13 @@
 package com.bjike.goddess.recruit;
 
+import com.bjike.goddess.recruit.action.recruit.MyWebSocket;
+import com.bjike.goddess.recruit.api.WorkOGAPI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -38,11 +41,10 @@ public class Application{
         return factory.createMultipartConfig();
     }
 
-
-
     public static void main(String[] args) throws IOException {
-        SpringApplication.run(Application.class,args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class,args);
         System.in.read();
+        MyWebSocket.setContext(applicationContext);
     }
 
 }

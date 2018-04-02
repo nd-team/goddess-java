@@ -23,7 +23,7 @@ public class SummaryApiImpl implements SummaryAPI {
     @Autowired
     private SummarySer summarySer;
     @Override
-    public List<SummaryBO> getSum() throws SerException {
-        return summarySer.getSum();
+    public List<SummaryBO> getSum(String date) throws SerException {
+        return summarySer.getSum(date);
     }
 }

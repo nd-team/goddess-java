@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface SummarySer extends Ser<Summary, SummaryDTO> {
 
-
-    List<SummaryBO> getSum() throws SerException;
+//    List<SummaryBO> getSum() throws SerException;
+    List<SummaryBO> getSum(String date) throws SerException;
 
 }

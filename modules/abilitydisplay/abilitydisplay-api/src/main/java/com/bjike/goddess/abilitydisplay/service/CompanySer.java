@@ -17,8 +17,9 @@ import com.bjike.goddess.common.api.service.Ser;
  * @Copy: [ com.bjike ]
  */
 public interface CompanySer extends Ser<Company, CompanyDTO> {
-    default void test() {
 
+    default Company test() {
+        return null;
     }
 
     MyPage getList(Integer pageNum) throws SerException;
@@ -28,5 +29,7 @@ public interface CompanySer extends Ser<Company, CompanyDTO> {
     void del(String id);
 
     CompanyBO edi(String id) throws SerException;
+
+    void update(CompanyBO companyBO) throws SerException;
 
 }

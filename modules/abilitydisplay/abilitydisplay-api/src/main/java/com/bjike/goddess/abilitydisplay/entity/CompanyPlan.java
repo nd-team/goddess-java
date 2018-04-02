@@ -76,4 +76,14 @@ public class CompanyPlan extends BaseEntity {
     public void setPlanningBN(String planningBN) {
         this.planningBN = planningBN;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyPlan{" +
+                "planningORG='" + planningORG + '\'' +
+                ", planningCD='" + planningCD + '\'' +
+                ", planningPD='" + planningPD + '\'' +
+                ", planningBN='" + planningBN + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.abilitydisplay.action.abilitydisplay;
 
 import com.bjike.goddess.abilitydisplay.api.CompanyAPI;
 import com.bjike.goddess.abilitydisplay.bo.CompanyBO;
+import com.bjike.goddess.abilitydisplay.entity.Company;
 import com.bjike.goddess.abilitydisplay.entity.MyPage;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,7 +10,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.WanyJackson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -36,8 +40,7 @@ public class CompanyAction {
      */
     @GetMapping("test")
     public Result test() {
-        companyAPI.test();
-        return new ActResult("success");
+        return new ActResult("success", companyAPI.test());
     }
 
     /**
@@ -59,8 +62,10 @@ public class CompanyAction {
      * @param data data
      * @version v1
      */
+
     @PostMapping("v1/add")
-    public Result add(String data) throws IOException, SerException {
+    public Result add(String data, HttpServletRequest request) throws IOException, SerException {
+        System.out.println( data );
         companyAPI.add(WanyJackson.superman(data, CompanyBO.class));
         return new ActResult("success");
     }
@@ -73,6 +78,7 @@ public class CompanyAction {
      */
     @DeleteMapping("v1/del")
     public Result del(String id) {
+        System.out.println(id);
         companyAPI.del(id);
         return new ActResult();
     }
@@ -95,8 +101,16 @@ public class CompanyAction {
      * @version v1
      */
     @PutMapping("v1/update")
-    public Result update(String data) {
+    public Result update(String data) throws IOException, SerException {
+        System.out.println(data);
+        CompanyBO companyBO = WanyJackson.superman(data, CompanyBO.class);
+        companyAPI.update(companyBO);
         return new ActResult("success");
+    }
+
+    @GetMapping("demo")
+    public ModelAndView demo(){
+        return new ModelAndView("demo");
     }
 
 }

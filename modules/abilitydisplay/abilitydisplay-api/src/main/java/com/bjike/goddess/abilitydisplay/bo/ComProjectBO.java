@@ -39,4 +39,12 @@ public class ComProjectBO extends BaseBO {
     public void setProgress(String progress) {
         this.progress = progress;
     }
+
+    @Override
+    public String toString() {
+        return "ComProjectBO{" +
+                "name='" + name + '\'' +
+                ", progress='" + progress + '\'' +
+                '}';
+    }
 }

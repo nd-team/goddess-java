@@ -210,4 +210,25 @@ public class CompanyBO extends BaseBO {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyBO{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", nameEn='" + nameEn + '\'' +
+                ", officialWeb='" + officialWeb + '\'' +
+                ", area='" + area + '\'' +
+                ", address='" + address + '\'' +
+                ", placeREG='" + placeREG + '\'' +
+                ", capitalREG=" + capitalREG +
+                ", personnelBOS=" + personnelBOS +
+                ", equipment='" + equipment + '\'' +
+                ", planBOS=" + planBOS +
+                ", authBOS=" + authBOS +
+                ", businessBOS=" + businessBOS +
+                ", culturalBOS=" + culturalBOS +
+                ", contactsBOS=" + contactsBOS +
+                '}';
+    }
 }

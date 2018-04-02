@@ -3,6 +3,7 @@ package com.bjike.goddess.recruit.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 

@@ -34,6 +34,5 @@ dependencies {
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:contacts:contacts-api")
     compile project(":common:common-utils")
-    compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
 }
 

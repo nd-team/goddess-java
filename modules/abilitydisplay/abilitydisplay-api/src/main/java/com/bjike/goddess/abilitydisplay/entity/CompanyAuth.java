@@ -63,4 +63,13 @@ public class CompanyAuth extends BaseEntity {
     public void setCertificate(Set<ComCertificate> certificate) {
         this.certificate = certificate;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyAuth{" +
+                "zteNum=" + zteNum +
+                ", huaweiNum=" + huaweiNum +
+                ", certificate=" + certificate +
+                '}';
+    }
 }

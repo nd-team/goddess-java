@@ -34,4 +34,6 @@ public interface WorkOGAPI {
     List<WorkOGBO> getWorkScore(String name) throws SerException;
 
     WorkOG findByModular(String modular);
+
+    WorkOGBO findByTime(String time);
 }

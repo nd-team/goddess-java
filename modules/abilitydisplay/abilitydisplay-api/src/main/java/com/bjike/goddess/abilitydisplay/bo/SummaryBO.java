@@ -117,4 +117,18 @@ public class SummaryBO extends BaseBO {
     public void setImpProNum(Integer impProNum) {
         this.impProNum = impProNum;
     }
+
+    @Override
+    public String toString() {
+        return "SummaryBO{" +
+                "name='" + name + '\'' +
+                ", qualifiNum=" + qualifiNum +
+                ", adminNum=" + adminNum +
+                ", majorNum=" + majorNum +
+                ", zteNum=" + zteNum +
+                ", huaweiNum=" + huaweiNum +
+                ", finishProNum=" + finishProNum +
+                ", impProNum=" + impProNum +
+                '}';
+    }
 }

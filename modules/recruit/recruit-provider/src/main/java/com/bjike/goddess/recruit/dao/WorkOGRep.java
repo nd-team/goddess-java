@@ -25,4 +25,7 @@ public interface WorkOGRep extends JpaRep<WorkOG, WorkOGDTO> {
     @Modifying
     void deleteByModular(String modular);
 
+    List<WorkOG> findByRatersOrScoringOB(String name, String sc);
+
+    WorkOG findByTime(String time);
 }

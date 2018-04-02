@@ -1,11 +1,14 @@
-模块名:user
-类名:Integrtal
-作者:chenyang
-描述:用户积分
+模块名:lendreimbursement
+类名:mailingByReim
+作者:wany
+描述:报销-寄件信息
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-String userId 用户ID;
-String integral 用户积分；
-String inviterIntegral 邀请人积分你；
-String inviterId 邀请人ID；
+boolean invoice 是否有发票;
+String addressee 收件人;
+String time 寄件时间;
+String area 地区;
+String address 详细地址;
+String remarks 寄件备注;
+)

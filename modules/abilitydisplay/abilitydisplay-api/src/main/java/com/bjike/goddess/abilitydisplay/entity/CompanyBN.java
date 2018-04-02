@@ -60,4 +60,13 @@ public class CompanyBN extends BaseEntity {
     public void setProject(ComProject project) {
         this.project = project;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyBN{" +
+                "introduction='" + introduction + '\'' +
+                ", type='" + type + '\'' +
+                ", project=" + project +
+                '}';
+    }
 }

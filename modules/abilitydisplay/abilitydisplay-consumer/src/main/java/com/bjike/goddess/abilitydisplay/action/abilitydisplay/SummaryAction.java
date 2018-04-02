@@ -26,7 +26,8 @@ public class SummaryAction {
     private SummaryAPI summaryAPI;
 
     @GetMapping("v1/sum")
-    public Result getSum() throws SerException {
-        return new ActResult("success",summaryAPI.getSum());
+    public Result getSum(String date) throws SerException {
+        System.out.println(date);
+        return new ActResult("success", summaryAPI.getSum(date));
     }
 }

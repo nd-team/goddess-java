@@ -2,6 +2,7 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -85,7 +86,7 @@ public class WorkOGBO extends BaseBO {
      */
     private String score;
 
-    private Set<AlertIndexBO> alertIndexBOS;
+    private List<AlertIndexBO> alertIndexBOS;
 
     /**
      * 状态
@@ -139,11 +140,11 @@ public class WorkOGBO extends BaseBO {
         this.state = state;
     }
 
-    public Set<AlertIndexBO> getAlertIndexBOS() {
+    public List<AlertIndexBO> getAlertIndexBOS() {
         return alertIndexBOS;
     }
 
-    public void setAlertIndexBOS(Set<AlertIndexBO> alertIndexBOS) {
+    public void setAlertIndexBOS(List<AlertIndexBO> alertIndexBOS) {
         this.alertIndexBOS = alertIndexBOS;
     }
 

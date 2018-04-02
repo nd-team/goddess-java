@@ -1,11 +1,9 @@
 package com.bjike.goddess.recruit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import javafx.scene.control.Alert;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -17,6 +15,7 @@ import java.util.Set;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+
 @Entity
 @Table(name = "recruit_workog")
 public class WorkOG extends BaseEntity {
@@ -96,7 +95,7 @@ public class WorkOG extends BaseEntity {
     /**
      * 各标签评分
      */
-    @Column( columnDefinition = "INT(10)   COMMENT '各标签评分'")
+    @Column(columnDefinition = "INT(10)   COMMENT '各标签评分'")
     private Integer labelSCO;
 
     /**
@@ -110,18 +109,18 @@ public class WorkOG extends BaseEntity {
      */
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "workog_id")
-    private Set<AlertIndex> alertIndices ;
+    private List<AlertIndex> alertIndices;
 
     /**
      * 状态
      */
-    @Column(name = "state",columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "state", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private String state;
 
     /**
      * 接受时间
      */
-    @Column(name = "acceptTime",columnDefinition = "VARCHAR(255)   COMMENT '接受时间'")
+    @Column(name = "acceptTime", columnDefinition = "VARCHAR(255)   COMMENT '接受时间'")
     private String acceptTime;
 
     /**
@@ -131,9 +130,9 @@ public class WorkOG extends BaseEntity {
     private String scoreContent;
 
     /**
-     *对赌内容
+     * 对赌内容
      */
-    @Column(name = "content",columnDefinition = "VARCHAR(255)   COMMENT '对赌内容'")
+    @Column(name = "content", columnDefinition = "VARCHAR(255)   COMMENT '对赌内容'")
     private String content;
 
 
@@ -169,11 +168,11 @@ public class WorkOG extends BaseEntity {
         this.state = state;
     }
 
-    public Set<AlertIndex> getAlertIndices() {
+    public List<AlertIndex> getAlertIndices() {
         return alertIndices;
     }
 
-    public void setAlertIndices(Set<AlertIndex> alertIndices) {
+    public void setAlertIndices(List<AlertIndex> alertIndices) {
         this.alertIndices = alertIndices;
     }
 

@@ -48,4 +48,12 @@ public class ComProject extends BaseEntity {
     public void setProgress(String progress) {
         this.progress = progress;
     }
+
+    @Override
+    public String toString() {
+        return "ComProject{" +
+                "name='" + name + '\'' +
+                ", progress='" + progress + '\'' +
+                '}';
+    }
 }

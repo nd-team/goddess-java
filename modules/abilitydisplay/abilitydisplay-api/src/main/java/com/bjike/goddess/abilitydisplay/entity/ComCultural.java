@@ -49,4 +49,12 @@ public class ComCultural extends BaseEntity {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "ComCultural{" +
+                "name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

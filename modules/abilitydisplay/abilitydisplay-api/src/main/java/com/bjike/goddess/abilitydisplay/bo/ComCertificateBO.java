@@ -40,4 +40,12 @@ public class ComCertificateBO extends BaseBO {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ComCertificateBO{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

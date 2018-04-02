@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 公司业务实现
  *
@@ -32,38 +34,48 @@ public class CompanySerImpl extends ServiceImpl<Company, CompanyDTO> implements 
     @Autowired
     private CompanyRep companyRep;
 
+
     @Transactional
     @Override
     public MyPage getList(Integer pageNum) throws SerException {
-        Pageable pageable = new PageRequest(0, 10);
+        Pageable pageable = new PageRequest(pageNum - 1, 10);
         Page<Company> page = companyRep.findAll(pageable);
         MyPage myPage = new MyPage();
-
+//        List<CompanyBO> list = BeanTransform.wanycopyProperties(page.getContent(), CompanyBO.class);
         myPage.setContent(BeanTransform.wanycopyProperties(page.getContent(), CompanyBO.class));
-        myPage.setNumber(page.getNumber());
         myPage.setTotalElements(page.getTotalElements());
         return myPage;
     }
 
+    @Transactional
     @Override
     public void add(CompanyBO companyBO) throws SerException {
         Company company = BeanTransform.wanycopyProperties(companyBO, Company.class);
         super.save(company);
     }
 
+    @Transactional
     @Override
     public void del(String id) {
         companyRep.deleteById(id);
     }
 
+    @Transactional
     @Override
     public CompanyBO edi(String id) throws SerException {
-        return BeanTransform.wanycopyProperties(super.findById(id), Company.class);
+        return BeanTransform.wanycopyProperties(super.findById(id), CompanyBO.class);
     }
 
     @Override
-    public void test() {
-
+    public void update(CompanyBO companyBO) throws SerException {
+        Company company = BeanTransform.wanycopyProperties(companyBO, Company.class);
+        super.update(company);
     }
 
+    @Override
+    public Company test() {
+        Company company = new Company();
+        company.setArea("hello");
+        return company;
+    }
 }

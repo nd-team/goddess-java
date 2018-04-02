@@ -29,6 +29,10 @@
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="loanApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LoanAPI" />
+	<dubbo:reference  validation="true" id="auditingApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AuditingAPI" />
+	<dubbo:reference  validation="true" id="mailingApiImpl" interface="com.bjike.goddess.lendreimbursement.api.MailingAPI" />
+	<dubbo:reference  validation="true" id="reimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimbursementAPI" />
 
 
 	<dubbo:reference  validation="true" id="finoddinforApiImpl" interface="com.bjike.goddess.lendreimbursement.api.FinoddinforAPI" />
