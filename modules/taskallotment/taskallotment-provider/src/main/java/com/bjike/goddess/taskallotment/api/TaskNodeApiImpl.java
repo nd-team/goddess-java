@@ -102,6 +102,11 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
+    public void increase(TaskNodeTO to) throws SerException {
+        taskNodeSer.increase(to);
+    }
+
+    @Override
     public void addTask(TaskNodeTO to) throws SerException {
         taskNodeSer.addTask(to);
     }

@@ -34,7 +34,7 @@ var vm = new Vue({
 	data:{
 		user:{},
 		menuList:{},
-		main:"list",
+		main:"user.html",
 		password:'',
 		newPassword:'',
         navTitle:"欢迎页"

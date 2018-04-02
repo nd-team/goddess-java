@@ -29,6 +29,7 @@ import com.bjike.goddess.taskallotment.to.*;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
@@ -567,6 +568,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void initiateTask(TaskNodeTO to) throws SerException {
+        TaskNodeDTO dto = new TaskNodeDTO();
+        dto.getConditions().add(Restrict.eq("fatherId",to.getId()));
+        List<TaskNode> taskNodes =  super.findByCis(dto);
+        if (taskNodes.size()>0&&!taskNodes.isEmpty()){
+            throw new SerException("该任务已被分发，无需发起");
+        }
         String token = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
         TaskNode entity1 = super.findById(to.getId());
@@ -640,6 +647,66 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 CustomTitle title = BeanTransform.copyProperties(customTitle, CustomTitle.class, true, "id", "taskNodeId");
                 title.setTaskNodeId(son.getId());
                 customTitleSer.save(customTitle);
+            }
+        }
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public void increase(TaskNodeTO to) throws SerException {
+        Double increase = to.getIncrease(); //增长天数
+        Boolean split = to.getSplit();//是否拆分
+        Double day = to.getDay();   //拆分为多少天
+
+        //先获取该对象
+        TaskNode entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("该对象不存在");
+        }
+        Double planNum = entity.getPlanNum();
+        Double needTime =  entity.getNeedTime();
+        //所需天数 和 计划天数 修改
+        entity.setPlanNum( planNum + increase);
+        entity.setNeedTime( needTime + increase);
+        super.update(entity);
+
+        StringBuilder jpql = new StringBuilder();
+        jpql.append("SELECT MAX ( ");
+        jpql.append(" startTime ");
+        jpql.append(") FROM ");
+        jpql.append( TaskNode.class.getName() + " where fatherId = '"+to.getId()+"'");
+        Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
+
+        String start = obj.toString().substring(0,10);
+        //是否拆分
+        if (split){
+            for (int i = 0; i < day; i++) {
+                LocalDateTime st = DateUtil.parseDateTime(start + " 08:30:00");
+                LocalDateTime et = DateUtil.parseDateTime(start + " 18:00:00");
+                st = st.plusDays(i+1);
+                et = et.plusDays(i+1);
+
+                TaskNode son = new TaskNode();
+                BeanUtils.copyProperties(entity, son, "split", "day", "id", "haveSon");
+                son.setStartTime(st);
+                son.setEndTime(et);
+                son.setFatherId(entity.getId());
+//                son.setNeedTime(new BigDecimal(entity.getNeedTime() / (needTime+day)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+//                son.setPlanNum(new BigDecimal(entity.getPlanNum() / (planNum+day)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                son.setTime(LocalDateTime.now());
+                super.save(son);
+
+                TaskNodeDTO dto = new TaskNodeDTO();
+                dto.getConditions().add(Restrict.eq("fatherId",to.getId()));
+                List<TaskNode> taskNodes =  super.findByCis(dto);
+
+                //更新全部子集
+                for (TaskNode taskNode : taskNodes){
+                    taskNode.setNeedTime(new BigDecimal(entity.getNeedTime() / (needTime+day)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                    taskNode.setPlanNum(new BigDecimal(entity.getPlanNum() / (planNum+day)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                }
+                super.update(taskNodes);
             }
         }
     }
