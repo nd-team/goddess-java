@@ -98,6 +98,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public HierarchyBO congeal(String id) throws SerException {
         Hierarchy entity = super.findById(id);
@@ -108,6 +109,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public HierarchyBO thaw(String id) throws SerException {
         Hierarchy entity = super.findById(id);

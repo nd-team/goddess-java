@@ -12,11 +12,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.organize.dto.HierarchyDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
-import com.bjike.goddess.organize.vo.ActResultOrgan;
-import com.bjike.goddess.organize.vo.AreaVO;
-import com.bjike.goddess.organize.vo.DepartmentDetailVO;
-import com.bjike.goddess.organize.vo.OpinionVO;
+import com.bjike.goddess.organize.util.PageUtils;
+import com.bjike.goddess.organize.vo.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -306,4 +305,29 @@ public class DepartmentDetailAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 列表
+     *
+     * @param dto 部门项目组数据传输
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/datalist")
+    public Result datalist(DepartmentDetailDTO dto, HttpServletRequest request) throws ActException {
+        try {
+
+            PageUtils pageUtils = new PageUtils(BeanTransform.copyProperties(departmentDetailAPI.view(dto), DepartmentDetailVO.class),
+                    departmentDetailAPI.getTotal().intValue(), dto.getLimit(),dto.getPage() );
+            return ActResult.initialize(pageUtils);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
+
+
 }
