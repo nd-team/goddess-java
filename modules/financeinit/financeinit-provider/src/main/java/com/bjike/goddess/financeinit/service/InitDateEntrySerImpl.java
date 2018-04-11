@@ -267,6 +267,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
 
     @Override
     public InitDateEntryBO findBySubject(String firstSubject, String systemId) throws SerException {
+
         if (StringUtils.isBlank(firstSubject)) {
             return null;
         }

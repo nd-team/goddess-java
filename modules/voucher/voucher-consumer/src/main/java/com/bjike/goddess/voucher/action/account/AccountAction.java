@@ -140,6 +140,7 @@ public class AccountAction extends BaseFileAction {
     public Result account(VoucherGenerateDTO dto,HttpServletRequest request) throws ActException {
         try {
             List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto), AccountInfoVO.class);
+
             for (AccountInfoVO accountInfoVO : accountInfoVOS) {
                 accountInfoVO.setId(UUID.randomUUID().toString());
             }
