@@ -333,6 +333,7 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
      */
     private String getSystemId() throws SerException {
         String token = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
         String systemId = userAPI.currentSysNO();
         RpcTransmit.transmitUserToken(token);
         return systemId;
