@@ -1,6 +1,5 @@
 package com.bjike.goddess.voucher.service;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -25,7 +24,6 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.*;
-import com.bjike.goddess.voucher.entity.SubjectCollect;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.enums.*;
@@ -46,7 +44,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -4551,12 +4552,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
         String token = RpcTransmit.getUserToken();
         List<AccountInfoBO> boList = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT voucherDate AS voucherDate,voucherWord AS voucherWord,voucherNum AS voucherNum, ");
-        sb.append(" area AS area,projectName AS projectName,projectGroup AS projectGroup,sumary AS sumary, ");
-        sb.append(" firstSubject AS firstSubject,secondSubject AS secondSubject,thirdSubject AS thirdSubject, ");
-        sb.append(" sum(borrowMoney) AS borrowMoney,sum(loanMoney) AS loanMoney ");
-        sb.append(" FROM voucher_vouchergenerate WHERE transferStatus=1 ");
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT voucherDate AS voucherDate, voucherWord AS voucherWord,voucherNum AS voucherNum, area AS area,");
+        sb.append(" projectName AS projectName,projectGroup AS projectGroup,sumary AS sumary, ");
+        sb.append(" firstSubject AS firstSubject,secondSubject AS secondSubject,thirdSubject AS thirdSubject,");
+        sb.append(" sum(borrowMoney) AS borrowMoney, sum(loanMoney) AS loanMoney");
+        sb.append(" FROM voucher_vouchergenerate WHERE transferStatus=1");
         if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
             sb.append(" and ( cast( voucherDate as date ) between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "')");
         }
@@ -4571,14 +4572,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         if (StringUtils.isNotBlank(dto.getFirstSubject()) && StringUtils.isNotBlank(dto.getSecondSubject()) && StringUtils.isNotBlank(dto.getThirdSubject())) {
             sb.append(" and firstSubject = '" + dto.getFirstSubject() + "'");
-            sb.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
-            sb.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
+           // sb.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
+           // sb.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
         }
-        sb.append(" GROUP BY voucherDate,voucherWord,voucherNum,area,projectName,projectGroup,sumary, ");
-        sb.append(" firstSubject,secondSubject,thirdSubject ORDER BY voucherDate DESC");
-        String[] fields = new String[]{"voucherDate", "voucherWord", "voucherNum", "area", "projectName", "projectGroup", "sumary",
-                "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
+        sb.append(" GROUP BY voucherDate,voucherWord,voucherNum,area,projectName,projectGroup, ");
+        sb.append(" sumary,firstSubject,secondSubject,thirdSubject,borrowMoney,loanMoney ORDER BY voucherDate DESC");
+        String[] fields = new String[]{"voucherDate", "voucherWord","voucherNum", "area", "projectName",
+                "projectGroup", "sumary","firstSubject","secondSubject","thirdSubject","borrowMoney", "loanMoney"};
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
+
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
 //            财务初始化中根据会计科目名称获取方向
             RpcTransmit.transmitUserToken(token);
@@ -4591,6 +4593,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                accountInfoBO.setBalance(boList1.get(0).getBalance());
 //            }
             if (initDateEntryBO != null) {
+                System.out.println(initDateEntryBO);
                 if (initDateEntryBO.getBalanceDirection() != null) {
                     if (initDateEntryBO.getBalanceDirection().equals(BalanceDirection.CREDIT)) {
                         accountInfoBO.setDirection("贷");
@@ -4598,10 +4601,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         accountInfoBO.setDirection("借");
                     }
                 }
-//                accountInfoBO.setDirection(String.valueOf(initDateEntryBO.getBalanceDirection()));
+                accountInfoBO.setDirection(String.valueOf(initDateEntryBO.getBalanceDirection()));
                 accountInfoBO.setBalance(initDateEntryBO.getBegingBalance());
             }
+
             boList.add(accountInfoBO);
+
         }
         Double borrowMoney = boList.stream().filter(p -> p.getBorrowMoney() != null).mapToDouble(p -> p.getBorrowMoney()).sum();
         Double loanMoney = boList.stream().filter(p -> p.getLoanMoney() != null).mapToDouble(p -> p.getLoanMoney()).sum();
@@ -4610,6 +4615,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         bo.setBorrowMoney(borrowMoney);
         bo.setLoanMoney(loanMoney);
         boList.add(bo);
+
         return boList;
     }
 
@@ -4638,8 +4644,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         dto.getSorts().add("voucherNum=asc");
         List<AccountInfoBO> boList = new ArrayList<>();
         List<VoucherGenerate> list = super.findByCis(dto);
+
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
+
             //财务初始化中根据会计科目名称获取方向
             RpcTransmit.transmitUserToken(token);
             InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(accountInfoBO.getFirstSubject());
@@ -4665,7 +4673,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         List<AccountInfoExport> accountInfoExports = new ArrayList<>();
         boList.stream().forEach(str -> {
+
             AccountInfoExport export = BeanTransform.copyProperties(str, AccountInfoExport.class);
+            export.setVoucherWord(str.getVoucherWord()+"-"+str.getVoucherNum());
             accountInfoExports.add(export);
         });
         Excel excel = new Excel(0, 2);

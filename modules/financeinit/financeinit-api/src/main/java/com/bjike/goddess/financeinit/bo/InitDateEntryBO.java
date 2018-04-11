@@ -105,4 +105,17 @@ public class InitDateEntryBO extends BaseBO {
     public void setYearProfitLossNum(Double yearProfitLossNum) {
         this.yearProfitLossNum = yearProfitLossNum;
     }
+
+    @Override
+    public String toString() {
+        return "InitDateEntryBO{" +
+                "code='" + code + '\'' +
+                ", accountanName='" + accountanName + '\'' +
+                ", yearBorrowerNum=" + yearBorrowerNum +
+                ", yearLenderNum=" + yearLenderNum +
+                ", balanceDirection=" + balanceDirection +
+                ", begingBalance=" + begingBalance +
+                ", yearProfitLossNum=" + yearProfitLossNum +
+                '}';
+    }
 }
