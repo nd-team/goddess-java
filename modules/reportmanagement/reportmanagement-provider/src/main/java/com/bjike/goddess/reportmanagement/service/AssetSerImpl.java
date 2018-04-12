@@ -608,7 +608,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         Double endSum3 = 0.0;
         Double endSum4 = 0.0;
         Double endSum5 = 0.0;
+        String token = RpcTransmit.getUserToken();
         for (Asset asset : list) {
+            RpcTransmit.transmitUserToken(token);
             List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
             if ((formulaBOs == null) || (formulaBOs.isEmpty())) {
                 continue;

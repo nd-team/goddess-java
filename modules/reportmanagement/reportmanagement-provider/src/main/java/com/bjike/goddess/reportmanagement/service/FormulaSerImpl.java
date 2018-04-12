@@ -383,6 +383,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 
     @Override
     public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken();
         double beginSum = 0;
         double endSum = 0;
         double currentSum = 0;
@@ -427,7 +428,10 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                 } else if (AccessRules.DEBIT.equals(f.getAccessRules())) {
                     tar = true;
                 }
+
+                RpcTransmit.transmitUserToken(token);
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, s, e, tar);
+                RpcTransmit.transmitUserToken(token);
                 subjectCollectBO.setCurrentAmount(voucherGenerateAPI.getCurrent(subjectCollectDTO, s, e, tar));
                 FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                 if ("1".equals(f.getType1())) {
