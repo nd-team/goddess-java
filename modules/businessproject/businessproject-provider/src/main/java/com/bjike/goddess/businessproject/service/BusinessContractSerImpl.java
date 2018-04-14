@@ -379,6 +379,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         List<BusinessContract> contracts = super.findByCis(dto, true);
         List<BusinessContractsBO> contractBOS = BeanTransform.copyProperties(contracts, BusinessContractsBO.class);
         return contractBOS;
+
     }
 
     @Override
