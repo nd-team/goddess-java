@@ -212,6 +212,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
 
     @Override
     public List<DebtBO> list(DebtDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken();
 //        checkSeeIdentity();
         List<DebtBO> boList = new ArrayList<DebtBO>();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
@@ -422,6 +423,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
 
         int num = 0;
         for (Debt debt : list) {
+            RpcTransmit.transmitUserToken(token);
             List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
             if ((formulaBOs == null) || (formulaBOs.isEmpty())) {
                 continue;

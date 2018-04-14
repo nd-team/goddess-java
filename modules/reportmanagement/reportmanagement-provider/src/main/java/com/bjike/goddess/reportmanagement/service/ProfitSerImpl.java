@@ -602,24 +602,28 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
         List<ProfitBO> boList = new ArrayList<ProfitBO>();
 
+        String token;
 
-        public profitThread(Profit profit, String start, String end, List<ProfitBO> boList) {
+
+        public profitThread(Profit profit, String start, String end, List<ProfitBO> boList, String token) {
             this.profit = profit;
             this.start = start;
             this.end = end;
             this.boList = boList;
+            this.token = token;
         }
 
         @Override
         public void run() {
             SubjectCollectBO subjectCollectBO = null;
             try {
-                subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), start, end);
+                RpcTransmit.transmitUserToken(token);
+                subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), start, end, token);
             } catch (SerException e) {
                 e.printStackTrace();
             }
             if (subjectCollectBO != null) {
-                ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class, "project");
+                ProfitBO bo = BeanTransform.copyProperties(subjectCollectBO, ProfitBO.class, "project");
                 bo.setProject(profit.getProject());
                 bo.setProjectType(profit.getProjectType());
 //                    bo.setProject1(profit.getProject());
@@ -636,6 +640,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken();
         Date time1 = new Date();
         List<ProfitBO> boList = new ArrayList<ProfitBO>();
 //        checkSeeIdentity();
@@ -651,6 +656,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             profitDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
             List<ProfitData> cashFlows = profitDataSer.findByCis(profitDTO);
             if (null != cashFlows && cashFlows.size() > 0) {
+                int i = 1;
                 for (ProfitData data : cashFlows) {
                     ProfitBO bo = new ProfitBO();
                     bo.setCurrentMonthAmount(data.getMonthMoney().doubleValue());
@@ -659,9 +665,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     bo.setProjectType(data.getProjectType());
                     bo.setProfitType(data.getProfitType());
                     bo.setType(data.getType());
-                    bo.setNum(data.getNum());
+                    bo.setNum(i);
                     bo.setId(data.getProjectId());
                     boList.add(bo);
+                    i ++;
                 }
                 return convertProfit(boList);
             }
@@ -693,7 +700,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         Double currentYearAmount1 = 0.0;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit profit : list) {
-                Thread thread = new Thread(new profitThread(profit, startTime, endTime, boList));
+                RpcTransmit.transmitUserToken(token);
+                Thread thread = new Thread(new profitThread(profit, startTime, endTime, boList, token));
                 thread.start();
                 /*Date oldDate= new Date();
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), startTime, endTime);
@@ -745,7 +753,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             Double yearAmount8 = 0.0;
 
             Date oldDate = new Date();
-            SubjectCollectBO subjectCollectBO1_1 = voucherGenerateAPI.findCurrentAndYear("营业收入", startTime, endTime);
+            RpcTransmit.transmitUserToken(token);
+            SubjectCollectBO subjectCollectBO1_1 = voucherGenerateAPI.findCurrentAndYear("营业收入", startTime, endTime, token);
             Date newDate = new Date();
             System.out.println("project: 营业收入" + "  date: " + (newDate.getSeconds() - oldDate.getSeconds()) + "  month：" + subjectCollectBO1_1.getCurrentAmount());
             if (null != subjectCollectBO1_1) {
@@ -856,7 +865,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 //            lastBO7.setCurrentYearAmount(yearAmount1 + yearAmount2 + yearAmount3 + yearAmount4 + yearAmount5 + yearAmount6 + yearAmount7);
 
             oldDate = new Date();
-            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("以前年度损益调整", startTime, endTime);
+            RpcTransmit.transmitUserToken(token);
+            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("以前年度损益调整", startTime, endTime, token);
             newDate = new Date();
             System.out.println("project: 以前年度损益调整" + "  date: " + (newDate.getSeconds() - oldDate.getSeconds()));
             if (null != subjectCollectBO6) {

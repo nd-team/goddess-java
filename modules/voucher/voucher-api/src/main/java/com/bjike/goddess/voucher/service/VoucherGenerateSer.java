@@ -741,7 +741,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime, String token) throws SerException {
         return null;
     }
 

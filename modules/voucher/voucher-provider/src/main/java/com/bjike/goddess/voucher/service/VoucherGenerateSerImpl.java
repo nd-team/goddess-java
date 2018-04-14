@@ -571,7 +571,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String sTime, String time, Boolean tar) throws SerException {
-        String token = RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken() == null ? subjectCollectDTO.getToken() : RpcTransmit.getUserToken();
         String firstSubject = subjectCollectDTO.getFirstSubject();
         //保留两位小数
         DecimalFormat df = new DecimalFormat("######0.00");
@@ -766,8 +766,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
-        String token = RpcTransmit.getUserToken();
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime, String token) throws SerException {
+        token = token == null ? RpcTransmit.getUserToken() : token;
         if (StringUtils.isBlank(firstSubject)) {
             return null;
         }

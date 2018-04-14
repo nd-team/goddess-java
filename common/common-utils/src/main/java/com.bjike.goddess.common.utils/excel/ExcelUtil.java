@@ -206,7 +206,8 @@ public class ExcelUtil {
                         Object obj = clazz.newInstance();
 
                         List<Object> vs = new ArrayList<>();
-                        for (int j = 0; j < cellSize; j++) {
+//                        for (int j = 0; j < cellSize; j++) {  修改2018-03-21
+                        for (int j = 0; j < headers.size(); j++) {
                             ExcelHeader eh = headers.get(j);
                             String cellVal = "";
                             //判断是否是合并的单元格
@@ -498,8 +499,6 @@ public class ExcelUtil {
     }
 
 
-
-
     /**
      * 验证表头是否正确
      *
@@ -540,7 +539,7 @@ public class ExcelUtil {
      * @return
      */
     private static int initTitleAndHeader(XSSFWorkbook wb, XSSFSheet sheet, Excel excel, List<ExcelHeader> excelHeaders, int cellSize) {
-        int rowIndex =excel.getHeaderStartRow();
+        int rowIndex = excel.getHeaderStartRow();
         XSSFCellStyle titleStyle = wb.createCellStyle();  // 标题的样式
         titleStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         titleStyle.setWrapText(true);
@@ -656,26 +655,26 @@ public class ExcelUtil {
      * @throws ActException
      */
     public static void setCellValue(Cell cell, Field field, Object val) throws ActException {
-        val = val==null?"":val;
+        val = val == null ? "" : val;
         String fileType = field.getType().getName();
-            if (fileType.equals(LocalDateTime.class.getName()) || //处理时间类型
-                    fileType.equals(LocalDate.class.getName()) ||
-                    fileType.equals(LocalTime.class.getName())) {
-                cell.setCellValue(DateUtil.dateToString(val));
-            } else if (fileType.equals(Double.class.getName())) {//Double
-                val = val == ""?0d:val;
-                cell.setCellValue(Double.parseDouble(val.toString()));
-            } else if (fileType.equals(Integer.class.getName())) {//Integer
-                val = val == ""?0:val;
-                cell.setCellValue(Integer.parseInt(val.toString()));
-            } else if (fileType.equals(Long.class.getName())) {//Long
-                val = val == ""?0:val;
-                cell.setCellValue(Long.parseLong(val.toString()));
-            } else if (field.getType().isEnum()) {//枚举
-                cell.setCellValue(fieldToEnum(field, val));
-            } else { //字符
-                cell.setCellValue(val.toString());
-            }
+        if (fileType.equals(LocalDateTime.class.getName()) || //处理时间类型
+                fileType.equals(LocalDate.class.getName()) ||
+                fileType.equals(LocalTime.class.getName())) {
+            cell.setCellValue(DateUtil.dateToString(val));
+        } else if (fileType.equals(Double.class.getName())) {//Double
+            val = val == "" ? 0d : val;
+            cell.setCellValue(Double.parseDouble(val.toString()));
+        } else if (fileType.equals(Integer.class.getName())) {//Integer
+            val = val == "" ? 0 : val;
+            cell.setCellValue(Integer.parseInt(val.toString()));
+        } else if (fileType.equals(Long.class.getName())) {//Long
+            val = val == "" ? 0 : val;
+            cell.setCellValue(Long.parseLong(val.toString()));
+        } else if (field.getType().isEnum()) {//枚举
+            cell.setCellValue(fieldToEnum(field, val));
+        } else { //字符
+            cell.setCellValue(val.toString());
+        }
 
     }
 

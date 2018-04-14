@@ -415,8 +415,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
-        return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime);
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime, String token) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime, token);
     }
 
     @Override
