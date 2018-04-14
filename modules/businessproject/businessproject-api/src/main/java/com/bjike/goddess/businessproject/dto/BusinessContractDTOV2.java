@@ -13,6 +13,15 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class BusinessContractDTOV2 extends BaseDTO{
+    /**
+     * 总包单位名称
+     */
+    private String majorCompany;
+
+    /**
+     * 单次合同名称
+     */
+    private String singleContractName;
 
     /**
      * 签订时间
@@ -48,6 +57,34 @@ public class BusinessContractDTOV2 extends BaseDTO{
      * 派工状态
      */
     private TaskContract taskStatus;
+    /**
+     * 所属项目组
+     */
+    private String projectGroup;
+
+    public String getMajorCompany() {
+        return majorCompany;
+    }
+
+    public void setMajorCompany(String majorCompany) {
+        this.majorCompany = majorCompany;
+    }
+
+    public String getSingleContractName() {
+        return singleContractName;
+    }
+
+    public void setSingleContractName(String singleContractName) {
+        this.singleContractName = singleContractName;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
 
     public BusinessContractDTOV2() {
     }

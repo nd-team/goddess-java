@@ -1150,10 +1150,33 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     /**
      * 获取所有地区
      */
-    default Set<String> areas() throws SerException {
+    default List<String> areas() throws SerException {
         return null;
     }
-
+    /**
+     * 获取所有所属项目组
+     */
+    default List<String> projectGroups() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有总包单位
+     */
+    default List<String> majorCompanys() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有单次合同名称
+     */
+    default List<String> singleContractNames() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有业务方向科目
+     */
+    default List<String> businessSubjects() throws SerException {
+        return null;
+    }
 
     /**
      * 导入

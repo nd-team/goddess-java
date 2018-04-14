@@ -15,19 +15,6 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class BusinessContractDTO extends BaseDTO {
     /**
-     * 签订时间
-     */
-    private String signedTime;
-    /**
-     * 地区
-     */
-    private String area;
-
-    /**
-     * 业务类型
-     */
-    private String businessType;
-    /**
      * 总包单位名称
      */
     private String majorCompany;
@@ -35,6 +22,24 @@ public class BusinessContractDTO extends BaseDTO {
      * 所属项目组
      */
     private String projectGroup;
+
+    /**
+     * 单次合同名称
+     */
+    private String singleContractName;
+    /**
+     * 签订时间
+     */
+    private String signedTime;
+
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 业务类型
+     */
+    private String businessType;
     /**
      * 内部项目名称
      */
@@ -77,6 +82,14 @@ public class BusinessContractDTO extends BaseDTO {
      * 测算分类
      */
     private String measureClassify;
+
+    public String getSingleContractName() {
+        return singleContractName;
+    }
+
+    public void setSingleContractName(String singleContractName) {
+        this.singleContractName = singleContractName;
+    }
 
     public String getBusinessSubject() {
         return businessSubject;
