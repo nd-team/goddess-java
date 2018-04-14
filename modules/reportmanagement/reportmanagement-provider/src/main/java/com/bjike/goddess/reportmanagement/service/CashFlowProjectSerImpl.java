@@ -3,6 +3,7 @@ package com.bjike.goddess.reportmanagement.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -79,6 +80,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     @Transactional(rollbackFor = SerException.class)
     @Override
     public List<CashFlowProjectBO> list(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        dto.setToken(token);
         List<CashFlowProjectBO> bos = new ArrayList<>(0);
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
@@ -181,7 +184,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
             for (CashFlowProjectBO bo : bos) {
                 if ("一、现金流入小计".equals(bo.getProjectName())) {
                     saveFormula("一、现金流入小计", ProjectType.MANAGEMENT, "销售商品、提供劳务收到的现金 + 收到的税费返还 + 收到的其他与经营活动有关的现金");
-                     continue;
+                    continue;
                 }
                 if ("一、现金流出小计".equals(bo.getProjectName())) {
                     saveFormula("一、现金流出小计", ProjectType.MANAGEMENT, "购买商品、接受劳务支付的现金 + 支付给职工以及为职工支付的现金 + 支付的各项税费 + 支付的其他与经营活动有关的现金");
@@ -355,7 +358,9 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         }
     }
 
-    /** 从记账凭证获取现金表数据 */
+    /**
+     * 从记账凭证获取现金表数据
+     */
     public class CashFlowThread implements Runnable {
 
         CashFlowProjectBO cashFlowProjectBOS;
@@ -679,7 +684,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         CashFlow cashFlow = cashFlowSer.findOne(cashFlowDTO);
         if (cashFlow == null) {
-          throw new SerException("指定实体不存在");
+            throw new SerException("指定实体不存在");
         }
         cashFlow.setMoney(dto.getMoney());
         cashFlow.setModifyTime(LocalDateTime.now());
@@ -726,6 +731,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //根据科目查询金额
     public Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
         Double cash = 0d;
         if ("销售商品、提供劳务收到的现金".equals(projectName)) {
             cash = findCash(dto);
@@ -828,8 +835,9 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private Double findCash(CashFlowProjectDTO dto) throws SerException {
         //利润表中主营业务收入(本年累计数)*(1+6%)   比率可更改
         Double cash1 = 0d;
-        //todo 利润表的
-        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime());
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime(), dto.getToken());
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getYearAmount();
             cash1 = cash1 == null ? 0d : cash1;
@@ -858,6 +866,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         Double cash2 = 0d;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("其他业务收入");
+        RpcTransmit.transmitUserToken(token);
         cash2 = voucherGenerateAPI.getCurrent(subjectCollectDTO, dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
         cash2 = cash2 == null ? 0d : cash2;
         CashRateDTO cashRateDTO1 = new CashRateDTO();
@@ -876,6 +885,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         Double cash3 = 0d;
         SubjectCollectDTO subjectCollectDTO1 = new SubjectCollectDTO();
         subjectCollectDTO1.setFirstSubject("应收票据");
+        RpcTransmit.transmitUserToken(token);
         SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO1, dto.getStartTime(), dto.getEndTime(), true);
         if (null != subjectCollectBO) {
             cash3 = subjectCollectBO.getBeginAmount() - subjectCollectBO.getEndAmount();
@@ -883,15 +893,15 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
         //应收账款期初余额-应收账款期末余额
         Double cash4 = 0d;
-        cash4 = findAssetNum("应收账款", dto.getEndTime(), true) - findAssetNum("应收账款", dto.getEndTime(), false);
+        cash4 = findAssetNum("应收账款", dto.getEndTime(), true, token) - findAssetNum("应收账款", dto.getEndTime(), false, token);
 
         //预收账款期末余额-预收账款期初余额
         Double cash5 = 0d;
-        cash5 = findAssetNum("预收账款", dto.getEndTime(), false) - findAssetNum("预收账款", dto.getEndTime(), true);
+        cash5 = findAssetNum("预收账款", dto.getEndTime(), false, token) - findAssetNum("预收账款", dto.getEndTime(), true, token);
 
         //计提的应收账款坏账准备期末余额
         Double cash6 = 0d;
-        cash6 = findAssetNum("应收账款坏账准备", dto.getEndTime(), false);
+        cash6 = findAssetNum("应收账款坏账准备", dto.getEndTime(), false, token);
 
         //存入公式
         ProjectDTO proDTO = new ProjectDTO();
@@ -929,14 +939,16 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //收到的税费返还 （应收补贴款期初余额－应收补贴款期末余额）＋补贴收入＋所得税本期贷方发生额累计数
     private Double findCash1(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（应收补贴款期初余额－应收补贴款期末余额）
         Double cash1 = 0d;
-        cash1 = findAssetNum("应收补贴款", dto.getEndTime(), true) - findAssetNum("应收补贴款", dto.getEndTime(), false);
+        cash1 = findAssetNum("应收补贴款", dto.getEndTime(), true, token) - findAssetNum("应收补贴款", dto.getEndTime(), false, token);
 
         //补贴收入(记账凭证~贷方-借方(本年累计))
         Double cash2 = 0d;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("补贴收入");
+        RpcTransmit.transmitUserToken(token);
         cash2 = voucherGenerateAPI.getCurrent(subjectCollectDTO, dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
         //todo 没有减‘借方’
 
@@ -944,6 +956,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         Double cash3 = 0d;
         SubjectCollectDTO subjectCollectDTO1 = new SubjectCollectDTO();
         subjectCollectDTO1.setFirstSubject("所得税");
+        RpcTransmit.transmitUserToken(token);
         cash3 = voucherGenerateAPI.getCurrent(subjectCollectDTO1, dto.getStartTime(), dto.getEndTime(), false);
 
         //存入公式
@@ -954,11 +967,12 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //收到的其他与经营活动有关的现金
     private Double findCash2(CashFlowProjectDTO dto) throws SerException {
-
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //补充资料中“经营活动产生的现金流量净额”－{（1+3）－(10+12+13+18) }   注意：里面的数字指的是行次
         Double cash1 = 0d;
         //todo 经营活动产生的现金流量净额
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear("净利润", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear("净利润", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO) {
             cash1 = subjectCollectBO.getYearAmount();
         }
@@ -985,17 +999,18 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //购买商品、接受劳务支付的现金
     private Double findCash4(CashFlowProjectDTO dto) throws SerException {
-
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //利润表中主营业务成本
         Double cash1 = 0d;
-        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getYearAmount();
         }
 
         //（存货期末余额－存货期初余额）
         Double cash2 = 0d;
-        cash2 = findAssetNum("存货", dto.getEndTime(), false) - findAssetNum("存货", dto.getEndTime(), true);
+        cash2 = findAssetNum("存货", dto.getEndTime(), false, token) - findAssetNum("存货", dto.getEndTime(), true, token);
 
         //〔利润表中主营业务成本＋（存货期末余额－存货期初余额）〕×（1＋17%）
         Double cash3 = 0d;
@@ -1008,7 +1023,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
         //其他业务支出(记账凭证~借方-贷方(本年累计))（剔除税金）/(1+X%)
         Double cash4 = 0d;
-        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("其他业务支出", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("其他业务支出", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO2) {
             cash4 = subjectCollectBO2.getYearAmount();
         }
@@ -1021,15 +1037,15 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
         //（应付票据期初余额－应付票据期末余额）
         Double cash5 = 0d;
-        cash5 = findAssetNum("应付票据", dto.getEndTime(), true) - findAssetNum("应付票据", dto.getEndTime(), false);
+        cash5 = findAssetNum("应付票据", dto.getEndTime(), true, token) - findAssetNum("应付票据", dto.getEndTime(), false, token);
 
         //（应付账款期初余额－应付账款期末余额）
         Double cash6 = 0d;
-        cash6 = findAssetNum("应付账款", dto.getEndTime(), true) - findAssetNum("应付账款", dto.getEndTime(), false);
+        cash6 = findAssetNum("应付账款", dto.getEndTime(), true, token) - findAssetNum("应付账款", dto.getEndTime(), false, token);
 
         //（预付账款期末余额－预付账款期初余额）
         Double cash7 = 0d;
-        cash7 = findAssetNum("预付账款", dto.getEndTime(), false) - findAssetNum("预付账款", dto.getEndTime(), true);
+        cash7 = findAssetNum("预付账款", dto.getEndTime(), false, token) - findAssetNum("预付账款", dto.getEndTime(), true, token);
 
 
         //存入公式
@@ -1067,45 +1083,55 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     // 支付给职工以及为职工支付的现金
     private Double findCash5(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //“应付工资”科目本期借方发生额累计数
         Double cash1 = 0d;
-        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("应付工资", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("应付工资", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getCurrentAmount();
         }
 
         //“应付福利费”科目本期借方发生额累计数
         Double cash2 = 0d;
-        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("应付福利费", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("应付福利费", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO2) {
             cash2 = subjectCollectBO2.getCurrentAmount();
         }
 
         //管理费用中“社保费”
         Double cash3 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash3 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("社保费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //住房公积金
         Double cash4 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash4 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("住房公积金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //残保金
         Double cash5 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash5 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("残保金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //工会经费
         Double cash6 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash6 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("工会经费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //成本及制造费用明细表中的“劳动保护费”
+        RpcTransmit.transmitUserToken(token);
         Double cash7 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("劳动保护费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //职工保险
         Double cash8 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash8 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("职工保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //职工培训费
         Double cash9 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash9 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("职工培训费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //存入公式
@@ -1116,23 +1142,27 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     // 支付的各项税费
     private Double findCash6(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //“应交税金”各明细账户本期借方发生额累计数
         Double cash1 = 0d;
-        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("应交税金", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("应交税金", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getCurrentAmount();
         }
 
         //“其他应交款”各明细账户借方数
         Double cash2 = 0d;
-        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("其他应交款", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrentAndYear("其他应交款", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO2) {
             cash2 = subjectCollectBO2.getCurrentAmount();
         }
 
         //“管理费用”中“税金”本期借方发生额累计数
         Double cash3 = 0d;
-        SubjectCollectBO subjectCollectBO3 = voucherGenerateAPI.findCurrentAndYear("税金", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO3 = voucherGenerateAPI.findCurrentAndYear("税金", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO3) {
             cash3 = subjectCollectBO3.getCurrentAmount();
         }
@@ -1149,42 +1179,66 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //支付的其他与经营活动有关的现金
     private Double findCash7(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //营业外支出（剔除固定资产处置损失）(本年累计)
         Double cash1 = 0d;
-        cash1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("营业外支出"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产处置损失"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash1 += voucherGenerateAPI.getCurrent(new SubjectCollectDTO("营业外支出"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash1 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产处置损失"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //管理费用(剔除工资、福利费、劳动保险金、待业保险金、住房公积金、养老保险、医疗保险、折旧、坏账准备或坏账损失、列入的各项税金等)(本年累计)
         Double cash2 = 0d;
-        cash2 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("管理费用"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("工资"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("福利费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("劳动保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("待业保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("住房公积金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("养老保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("医疗保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("折旧"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("坏账准备或坏账损失"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("列入的各项税金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 += voucherGenerateAPI.getCurrent(new SubjectCollectDTO("管理费用"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("工资"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("福利费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("劳动保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("待业保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("住房公积金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("养老保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("医疗保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("折旧"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("坏账准备或坏账损失"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash2 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("列入的各项税金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //营业费用
         Double cash3 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash3 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("营业费用"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //成本及制造费用(剔除工资、福利费、劳动保险金、待业保险金、住房公积金、养老保险、医疗保险等)(本年累计)
         Double cash4 = 0d;
-        cash4 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("成本及制造费用"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("工资"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("福利费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("劳动保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("待业保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("住房公积金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("养老保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true) -
-                voucherGenerateAPI.getCurrent(new SubjectCollectDTO("医疗保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 += voucherGenerateAPI.getCurrent(new SubjectCollectDTO("成本及制造费用"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("工资"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("福利费"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("劳动保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("待业保险金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("住房公积金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("养老保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        RpcTransmit.transmitUserToken(token);
+        cash4 -= voucherGenerateAPI.getCurrent(new SubjectCollectDTO("医疗保险"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
         //其他应收款本期借方发生额
         Double cash5 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash5 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("其他应收款"), dto.getStartTime(), dto.getEndTime(), true);
 
         //其他应付中有关税金项目
@@ -1214,17 +1268,21 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //收回投资所收到的现金
     private Double findCash10(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //(短期投资期初数－短期投资期末数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("短期投资", dto.getEndTime(), true) - findAssetNum("短期投资", dto.getEndTime(), false);
+        RpcTransmit.transmitUserToken(token);
+        cash1 = findAssetNum("短期投资", dto.getEndTime(), true, token) - findAssetNum("短期投资", dto.getEndTime(), false, token);
 
         //（长期股权投资期初数－长期股权投资期末数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("长期股权投资", dto.getEndTime(), true) - findAssetNum("长期股权投资", dto.getEndTime(), false);
+        RpcTransmit.transmitUserToken(token);
+        cash2 = findAssetNum("长期股权投资", dto.getEndTime(), true, token) - findAssetNum("长期股权投资", dto.getEndTime(), false, token);
 
         //（长期债权投资期初数－长期债权投资期末数）
         Double cash3 = 0d;
-        cash3 = findAssetNum("长期债权投资", dto.getEndTime(), true) - findAssetNum("长期债权投资", dto.getEndTime(), false);
+        RpcTransmit.transmitUserToken(token);
+        cash3 = findAssetNum("长期债权投资", dto.getEndTime(), true, token) - findAssetNum("长期债权投资", dto.getEndTime(), false, token);
 
         //存入公式
         saveFormula("收回投资所收到的现金", ProjectType.INVESTMENT, "（短期投资期初数－短期投资期末数）＋（长期股权投资期初数－长期股权投资期末数）＋（长期债权投资期初数－长期债权投资期末数）");
@@ -1234,20 +1292,22 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //取得投资收益所收到的现金
     private Double findCash11(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //利润表投资收益
         Double cash1 = 0d;
-        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("投资收益", dto.getStartTime(), dto.getEndTime());
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("投资收益", dto.getStartTime(), dto.getEndTime(), token);
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getCurrentAmount();
         }
 
         //（应收利息期末数－应收利息期初数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("应收利息", dto.getEndTime(), false) - findAssetNum("应收利息", dto.getEndTime(), true);
+        cash2 = findAssetNum("应收利息", dto.getEndTime(), false, token) - findAssetNum("应收利息", dto.getEndTime(), true, token);
 
         //（应收股利期末数－应收股利期初数）
         Double cash3 = 0d;
-        cash3 = findAssetNum("应收股利", dto.getEndTime(), false) - findAssetNum("应收股利", dto.getEndTime(), true);
+        cash3 = findAssetNum("应收股利", dto.getEndTime(), false, token) - findAssetNum("应收股利", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("取得投资收益所收到的现金", ProjectType.INVESTMENT, "利润表投资收益－（应收利息期末数－应收利息期初数）－（应收股利期末数－应收股利期初数）");
@@ -1257,20 +1317,23 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //处置固定资产、无形资产和其他长期资产所收回的现金净额
     private Double findCash12(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //“固定资产清理”的贷方余额(记账凭证)(贷方-借方本年累计)
         Double cash1_1 = 0d;
         Double cash1_2 = 0d;
+        RpcTransmit.transmitUserToken(token);
         cash1_1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产清理"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
+        RpcTransmit.transmitUserToken(token);
         cash1_2 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产清理"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
         Double cash1 = cash1_1 - cash1_2;
 
         //(无形资产期末数－无形资产期初数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("无形资产", dto.getEndTime(), false) - findAssetNum("无形资产", dto.getEndTime(), true);
+        cash2 = findAssetNum("无形资产", dto.getEndTime(), false, token) - findAssetNum("无形资产", dto.getEndTime(), true, token);
 
         //（其他长期资产期末数－其他长期资产期初数）
         Double cash3 = 0d;
-        cash3 = findAssetNum("其他长期资产", dto.getEndTime(), false) - findAssetNum("其他长期资产", dto.getEndTime(), true);
+        cash3 = findAssetNum("其他长期资产", dto.getEndTime(), false, token) - findAssetNum("其他长期资产", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("处置固定资产、无形资产和其他长期资产所收回的现金净额", ProjectType.INVESTMENT, "“固定资产清理”的贷方余额＋（无形资产期末数－无形资产期初数）＋（其他长期资产期末数－其他长期资产期初数）");
@@ -1298,21 +1361,22 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     // 购建固定资产、无形资产和其他长期资产所支付的现金
     private Double findCash15(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（在建工程期末数－在建工程期初数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("在建工程", dto.getEndTime(), false) - findAssetNum("在建工程", dto.getEndTime(), true);
+        cash1 = findAssetNum("在建工程", dto.getEndTime(), false, token) - findAssetNum("在建工程", dto.getEndTime(), true, token);
 
         //（固定资产期末数－固定资产期初数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("固定资产", dto.getEndTime(), false) - findAssetNum("固定资产", dto.getEndTime(), true);
+        cash2 = findAssetNum("固定资产", dto.getEndTime(), false, token) - findAssetNum("固定资产", dto.getEndTime(), true, token);
 
         //无形资产期末数－无形资产期初数）
         Double cash3 = 0d;
-        cash3 = findAssetNum("无形资产", dto.getEndTime(), false) - findAssetNum("无形资产", dto.getEndTime(), true);
+        cash3 = findAssetNum("无形资产", dto.getEndTime(), false, token) - findAssetNum("无形资产", dto.getEndTime(), true, token);
 
         //（其他长期资产期末数－其他长期资产期初数）
         Double cash4 = 0d;
-        cash4 = findAssetNum("其他长期资产", dto.getEndTime(), false) - findAssetNum("其他长期资产", dto.getEndTime(), true);
+        cash4 = findAssetNum("其他长期资产", dto.getEndTime(), false, token) - findAssetNum("其他长期资产", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("购建固定资产、无形资产和其他长期资产所支付的现金", ProjectType.INVESTMENT, " （在建工程期末数－在建工程期初数）＋（固定资产期末数－固定资产期初数）＋（无形资产期末数－无形资产期初数）＋（其他长期资产期末数－其他长期资产期初数）     （备注：如期末数小于期初数，则在处置固定资产、无形资产和其他长期资产所收回的现金净额项目中核算，这里不用核算）");
@@ -1326,20 +1390,21 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //投资所支付的现金
     private Double findCash16(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（短期投资期末数－短期投资期初数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("短期投资", dto.getEndTime(), false) - findAssetNum("短期投资", dto.getEndTime(), true);
+        cash1 = findAssetNum("短期投资", dto.getEndTime(), false, token) - findAssetNum("短期投资", dto.getEndTime(), true, token);
 
         //（长期股权投资期末数－长期股权投资期初数）（剔除投资收益或损失）
         Double cash2 = 0d;
-        cash2 = findAssetNum("长期股权投资", dto.getEndTime(), false) - findAssetNum("长期股权投资", dto.getEndTime(), true);
+        cash2 = findAssetNum("长期股权投资", dto.getEndTime(), false, token) - findAssetNum("长期股权投资", dto.getEndTime(), true, token);
 
         Double cash3 = 0d;
-        cash3 = findAssetNum("投资收益或损失", dto.getEndTime(), false) - findAssetNum("投资收益或损失", dto.getEndTime(), true);
+        cash3 = findAssetNum("投资收益或损失", dto.getEndTime(), false, token) - findAssetNum("投资收益或损失", dto.getEndTime(), true, token);
 
         //（长期债权投资期末数－长期债权投资期初数）
         Double cash4 = 0d;
-        cash4 = findAssetNum("长期债权投资", dto.getEndTime(), false) - findAssetNum("长期债权投资", dto.getEndTime(), true);
+        cash4 = findAssetNum("长期债权投资", dto.getEndTime(), false, token) - findAssetNum("长期债权投资", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("投资所支付的现金", ProjectType.INVESTMENT, " （短期投资期末数－短期投资期初数）＋（长期股权投资期末数－长期股权投资期初数）（剔除投资收益或损失）＋（长期债权投资期末数－长期债权投资期初数）(投资收益来源与利润表)（备注：如期末数小于期初数，则在收回投资所收到的现金项目中核算，这里不用核算）");
@@ -1378,13 +1443,14 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //吸收投资所收到的现金
     private Double findCash20(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（实收资本期末数－实收资本期初数）
         Double cash1 = 0d;
-        cash1 = findAssetNum1("实收资本", dto.getEndTime(), false) - findAssetNum1("实收资本", dto.getEndTime(), true);
+        cash1 = findAssetNum1("实收资本", dto.getEndTime(), false, token) - findAssetNum1("实收资本", dto.getEndTime(), true, token);
 
         //（应付债券期末数－应付债券期初数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("应付债券", dto.getEndTime(), false) - findAssetNum("应付债券", dto.getEndTime(), true);
+        cash2 = findAssetNum("应付债券", dto.getEndTime(), false, token) - findAssetNum("应付债券", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("吸收投资所收到的现金", ProjectType.FINANCING, "（实收资本期末数－实收资本期初数）＋（应付债券期末数－应付债券期初数）");
@@ -1394,13 +1460,14 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //借款所收到的现金
     private Double findCash21(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（短期借款期末数－短期借款期初数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("短期借款", dto.getEndTime(), false) - findAssetNum("短期借款", dto.getEndTime(), true);
+        cash1 = findAssetNum("短期借款", dto.getEndTime(), false, token) - findAssetNum("短期借款", dto.getEndTime(), true, token);
 
         //（长期借款期末数－长期借款期初数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("长期借款", dto.getEndTime(), false) - findAssetNum("长期借款", dto.getEndTime(), true);
+        cash2 = findAssetNum("长期借款", dto.getEndTime(), false, token) - findAssetNum("长期借款", dto.getEndTime(), true, token);
 
         //存入公式
         saveFormula("借款所收到的现金", ProjectType.FINANCING, "（短期借款期末数－短期借款期初数）＋（长期借款期末数－长期借款期初数）");
@@ -1427,17 +1494,18 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
     //偿还债务所支付的现金
     private Double findCash24(CashFlowProjectDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken() == null ? dto.getToken() : RpcTransmit.getUserToken();
         //（短期借款期初数－短期借款期末数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("短期借款", dto.getEndTime(), true) - findAssetNum("短期借款", dto.getEndTime(), false);
+        cash1 = findAssetNum("短期借款", dto.getEndTime(), true, token) - findAssetNum("短期借款", dto.getEndTime(), false, token);
 
         //（长期借款期初数－长期借款期末数）
         Double cash2 = 0d;
-        cash2 = findAssetNum("长期借款", dto.getEndTime(), true) - findAssetNum("长期借款", dto.getEndTime(), false);
+        cash2 = findAssetNum("长期借款", dto.getEndTime(), true, token) - findAssetNum("长期借款", dto.getEndTime(), false, token);
 
         //（应付债券期初数－应付债券期末数）
         Double cash3 = 0d;
-        cash3 = findAssetNum("应付债券", dto.getEndTime(), true) - findAssetNum("应付债券", dto.getEndTime(), false);
+        cash3 = findAssetNum("应付债券", dto.getEndTime(), true, token) - findAssetNum("应付债券", dto.getEndTime(), false, token);
 
         //存入公式
         saveFormula("偿还债务所支付的现金", ProjectType.FINANCING, "（短期借款期初数－短期借款期末数）＋（长期借款期初数－长期借款期末数）＋（应付债券期初数－应付债券期末数）");
@@ -1490,11 +1558,13 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     }
 
     //获取资产负债表中的期初数和期末数,tar为true,获取期初数(借方-贷方)
-    private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
+    private Double findAssetNum(String firstSubject, String endTime, Boolean tar, String token) throws SerException {
+        token = token == null ? RpcTransmit.getUserToken() : token;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, endTime, true);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
@@ -1507,11 +1577,13 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
 
     //获取资产负债表中的期初数和期末数,tar为true,获取期初数(贷方-借方)
-    private Double findAssetNum1(String firstSubject, String endTime, Boolean tar) throws SerException {
+    private Double findAssetNum1(String firstSubject, String endTime, Boolean tar, String token) throws SerException {
+        token = token == null ? RpcTransmit.getUserToken() : token;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
+        RpcTransmit.transmitUserToken(token);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, endTime, false);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
@@ -1658,7 +1730,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         XSSFWorkbook wb = null;
         String comp = "";
         List<String> comps = companyBasicInfoAPI.findCompanyName();
-        if(comps!=null && comps.size()>0){
+        if (comps != null && comps.size() > 0) {
             comp = comps.get(0);
         }
         try {
@@ -1671,22 +1743,22 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
             XSSFRow row = sheet.createRow(0);
             XSSFRow row1 = sheet.createRow(1);
             //标题
-            for(int o = 0; o<6; o++){
+            for (int o = 0; o < 6; o++) {
                 row.createCell(o).setCellValue("现金流量表");
             }
-            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 5);
+            CellRangeAddress cra = new CellRangeAddress(0, 0, 0, 5);
             sheet.addMergedRegion(cra);//这个干嘛的
             //公司和单位
             row1.createCell(0).setCellValue("编制单位");
-            row1.createCell(1).setCellValue(comp+"公司");
-            row1.createCell(2).setCellValue(comp+"公司");
+            row1.createCell(1).setCellValue(comp + "公司");
+            row1.createCell(2).setCellValue(comp + "公司");
             row1.createCell(3).setCellValue("所属期:" + dto.getStartTime() + "至" + dto.getEndTime());
             row1.createCell(4).setCellValue("所属期:" + dto.getStartTime() + "至" + dto.getEndTime());
             row1.createCell(5).setCellValue("单位:元");
 
-            CellRangeAddress cra1=new CellRangeAddress(1, 1, 1, 2);
+            CellRangeAddress cra1 = new CellRangeAddress(1, 1, 1, 2);
             sheet.addMergedRegion(cra1);//这个干嘛的
-            CellRangeAddress cra2=new CellRangeAddress(1, 1, 3, 4);
+            CellRangeAddress cra2 = new CellRangeAddress(1, 1, 3, 4);
             sheet.addMergedRegion(cra2);//这个干嘛的
 
             row.getCell(0).setCellStyle(headerStyle);
@@ -1706,7 +1778,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return os.toByteArray();
     }
 
-    List<CashFlowExportBO> convertCashFlow (List<CashFlowProjectBO> bos1, List<CashFlowDataBO> bos2) {
+    List<CashFlowExportBO> convertCashFlow(List<CashFlowProjectBO> bos1, List<CashFlowDataBO> bos2) {
         List<CashFlowExportBO> list = new ArrayList<>();
         for (CashFlowProjectBO cashFlowProjectBO : bos1) {
             CashFlowExportBO cashFlowExportBO = new CashFlowExportBO();
@@ -1860,9 +1932,9 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 }
                 if ("投资所支付的现金".equals(cashFlowProjectBO.getProjectName())) {
 //                    if ("1、将净利润调节为经营活动现金流量".equals(cashFlowDataBO.getData())) {
-                        cashFlowExportBO.setProjectData(null);
-                        cashFlowExportBO.setProjectDataAsset(null);
-                        cashFlowExportBO.setProjectDataMoney(null);
+                    cashFlowExportBO.setProjectData(null);
+                    cashFlowExportBO.setProjectDataAsset(null);
+                    cashFlowExportBO.setProjectDataMoney(null);
 //                        break;
 //                    }
                 }
@@ -1997,7 +2069,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 }
 
                 System.out.println("时间段：" + first.with(TemporalAdjusters.firstDayOfMonth()) + " - " + first.with(TemporalAdjusters.lastDayOfMonth()) + "  " + new Date());
-                LocalDateTime date1 =LocalDateTime.now();
+                LocalDateTime date1 = LocalDateTime.now();
 
                 LocalDate start = first.with(TemporalAdjusters.firstDayOfMonth());
                 LocalDate end = first.with(TemporalAdjusters.lastDayOfMonth());
@@ -2027,16 +2099,15 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                     }
                     profitDataList.add(data);
                 }
-                LocalDateTime date2 =LocalDateTime.now();
+                LocalDateTime date2 = LocalDateTime.now();
                 System.out.println("耗时：" + "分钟：" + (date2.getMinute() - date1.getMinute()) + ", 秒：" + (date2.getSecond() - date1.getSecond()));
                 //保存到本模块
                 if (profitDataList != null && profitDataList.size() > 0) {
 
                     cashFlowSer.save(profitDataList);
                 }
-                LocalDateTime date3 =LocalDateTime.now();
+                LocalDateTime date3 = LocalDateTime.now();
                 System.out.println("耗时：" + "分钟：" + (date3.getMinute() - date2.getMinute()) + ", 秒：" + (date3.getSecond() - date2.getSecond()));
-
 
 
             }

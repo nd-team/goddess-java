@@ -27,8 +27,8 @@ public class AccountInfoExport {
     /**
      * 凭证号
      */
-    @ExcelHeader(name = "凭证号",notNull = true)
-    private Double voucherNum;
+   // @ExcelHeader(name = "凭证号",notNull = true)
+   // private Double voucherNum;
 
     /**
      * 地区
@@ -110,13 +110,12 @@ public class AccountInfoExport {
         this.voucherWord = voucherWord;
     }
 
-    public Double getVoucherNum() {
-        return voucherNum;
-    }
-
-    public void setVoucherNum(Double voucherNum) {
-        this.voucherNum = voucherNum;
-    }
+//    public Double getVoucherNum() { return voucherNum;
+//    }
+//
+//    public void setVoucherNum(Double voucherNum) {
+//        this.voucherNum = voucherNum;
+//    }
 
     public String getArea() {
         return area;

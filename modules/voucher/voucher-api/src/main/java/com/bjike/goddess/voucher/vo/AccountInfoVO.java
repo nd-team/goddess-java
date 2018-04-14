@@ -18,7 +18,9 @@ public class AccountInfoVO {
     /**
      * 日期
      */
+
     private String voucherDate;
+
     /**
      * 凭证字
      */
@@ -86,6 +88,7 @@ public class AccountInfoVO {
      * 余额
      */
     private Double balance;
+
 
     public String getId() {
         return id;
@@ -213,5 +216,27 @@ public class AccountInfoVO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountInfoVO{" +
+                "id='" + id + '\'' +
+                ", voucherDate='" + voucherDate + '\'' +
+                ", voucherWord='" + voucherWord + '\'' +
+                ", voucherNum=" + voucherNum +
+                ", area='" + area + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", projectGroup='" + projectGroup + '\'' +
+                ", sumary='" + sumary + '\'' +
+                ", source='" + source + '\'' +
+                ", firstSubject='" + firstSubject + '\'' +
+                ", secondSubject='" + secondSubject + '\'' +
+                ", thirdSubject='" + thirdSubject + '\'' +
+                ", borrowMoney=" + borrowMoney +
+                ", loanMoney=" + loanMoney +
+                ", direction='" + direction + '\'' +
+                ", balance=" + balance +
+                '}';
     }
 }

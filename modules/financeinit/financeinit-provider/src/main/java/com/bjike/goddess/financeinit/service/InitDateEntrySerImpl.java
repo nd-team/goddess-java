@@ -267,6 +267,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
 
     @Override
     public InitDateEntryBO findBySubject(String firstSubject, String systemId) throws SerException {
+
         if (StringUtils.isBlank(firstSubject)) {
             return null;
         }
@@ -335,6 +336,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
      */
     private String getSystemId() throws SerException {
         String token = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
         String systemId = userAPI.currentSysNO();
         RpcTransmit.transmitUserToken(token);
         return systemId;

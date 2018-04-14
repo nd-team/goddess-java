@@ -32,6 +32,7 @@ public class AccountanCourse extends BaseEntity {
 
     /**
      * 所属科目id
+     *
      */
     @Column(name = "belongSubjectsId", columnDefinition = "VARCHAR(255)   COMMENT '所属科目id'")
     private String belongSubjectsId;

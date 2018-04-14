@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.config;
 
+import com.alibaba.dubbo.common.Constants;
+import com.alibaba.dubbo.common.extension.Activate;
+import com.alibaba.dubbo.rpc.*;
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
 import com.bjike.goddess.common.consumer.interceptor.limit.SmoothBurstyInterceptor;
@@ -21,7 +24,8 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @Component
-public class CustomIntercept implements Interceptor {
+@Activate(group = {Constants.PROVIDER})
+public class CustomIntercept implements Interceptor, Filter {
     @Autowired
     private UserAPI userAPI;
 //    @Autowired
@@ -60,5 +64,11 @@ public class CustomIntercept implements Interceptor {
          * 顺序
          */
         return Arrays.asList(smoothInfo, loginInfo);
+    }
+
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        RpcContext.getContext().getAttachments().remove(Constants.ASYNC_KEY);
+        return invoker.invoke(invocation);
     }
 }

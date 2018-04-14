@@ -33,6 +33,9 @@ public abstract class BaseDTO extends PageDTO implements Serializable {
      */
     protected String conditionsJson;
 
+    private String token;
+
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -71,4 +74,12 @@ public abstract class BaseDTO extends PageDTO implements Serializable {
         }
     }
 
+    public String getToken() {
+        return token;
+    }
+
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
