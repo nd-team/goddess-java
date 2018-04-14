@@ -27,8 +27,6 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.vo.AreaVO;
-import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
@@ -42,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -194,7 +193,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/contractDetails")
-    public Result contractDetails(@Validated(EDIT.class)BusinessContractDetailsTO to, BindingResult bindingResult) throws ActException {
+    public Result contractDetails(@Validated(EDIT.class) BusinessContractDetailsTO to, BindingResult bindingResult) throws ActException {
         try {
             BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
             BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
@@ -213,7 +212,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/contractMoney")
-    public Result contractMoney(@Validated(EDIT.class)BusinessContractMoneyTO to, BindingResult bindingResult) throws ActException {
+    public Result contractMoney(@Validated(EDIT.class) BusinessContractMoneyTO to, BindingResult bindingResult) throws ActException {
         try {
             BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
             BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
@@ -232,7 +231,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/contractImpl")
-    public Result contractImpl(@Validated(EDIT.class)BusinessContractImplTO to, BindingResult bindingResult) throws ActException {
+    public Result contractImpl(@Validated(EDIT.class) BusinessContractImplTO to, BindingResult bindingResult) throws ActException {
         try {
             BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
             BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
@@ -251,7 +250,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/contractAccount")
-    public Result contractAccount(@Validated(EDIT.class)BusinessContractAccountTO to, BindingResult bindingResult) throws ActException {
+    public Result contractAccount(@Validated(EDIT.class) BusinessContractAccountTO to, BindingResult bindingResult) throws ActException {
         try {
             BusinessContractTO businessContractTO = BeanTransform.copyProperties(to, BusinessContractTO.class);
             BusinessContractsBO bo = businessContractAPI.edit(businessContractTO);
@@ -529,16 +528,84 @@ public class BusinessContractAction extends BaseFileAction {
         }
     }
 
-
-    /*@GetMapping("v1/areas")
+    /**
+     * 获取商务合同中的所有地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/areas")
     public Result areas() throws ActException {
         try {
-            Set<String> areas = businessContractAPI.areas();
+            List<String> areas = businessContractAPI.areas();
             return ActResult.initialize(areas);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }*/
+    }
+    /**
+     * 获取商务合同中的所有所属项目组
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projectGroups")
+    public Result projectGroups() throws ActException {
+        try {
+            List<String> areas = businessContractAPI.projectGroups();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取商务合同中的所有单次合同名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/singleContractNames")
+    public Result singleContractNames() throws ActException {
+        try {
+            List<String> areas = businessContractAPI.singleContractNames();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取商务合同中的所有总包单位
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/majorCompanys")
+    public Result majorCompanys() throws ActException {
+        try {
+            List<String> areas = businessContractAPI.majorCompanys();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取商务合同中的所有业务方向科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/businessSubjects")
+    public Result businessSubjects() throws ActException {
+        try {
+            List<String> areas = businessContractAPI.businessSubjects();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 导入Excel
@@ -569,7 +636,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否通报
-                if(null != str.getNotification()){
+                if (null != str.getNotification()) {
                     if (str.getNotification().equals("是")) {
                         contractTO.setNotification(true);
                     } else {
@@ -577,7 +644,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否有共同分包单位
-                if(null != str.getCommonSubcontractor()){
+                if (null != str.getCommonSubcontractor()) {
                     if (str.getCommonSubcontractor().equals("是")) {
                         contractTO.setCommonSubcontractor(true);
                     } else {
@@ -585,7 +652,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //派工归属清理是否完成
-                if(null != str.getTaskFinish()){
+                if (null != str.getTaskFinish()) {
                     if (str.getTaskFinish().equals("是")) {
                         contractTO.setTaskFinish(true);
                     } else {
@@ -602,7 +669,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否解决差异问题
-                if(null != str.getSolutionBalance()){
+                if (null != str.getSolutionBalance()) {
                     if (str.getSolutionBalance().equals("是")) {
                         contractTO.setSolutionBalance(true);
                     } else {
@@ -610,7 +677,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //预估项目是否确认实施
-                if(null != str.getImplement()){
+                if (null != str.getImplement()) {
                     if (str.getImplement().equals("是")) {
                         contractTO.setImplement(true);
                     } else {
@@ -618,7 +685,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否分批结算
-                if(null != str.getPartial()){
+                if (null != str.getPartial()) {
                     if (str.getPartial().equals("是")) {
                         contractTO.setPartial(true);
                     } else {
@@ -626,7 +693,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否为持续
-                if(null != str.getPersist()){
+                if (null != str.getPersist()) {
                     if (str.getPersist().equals("是")) {
                         contractTO.setPersist(true);
                     } else {
@@ -634,7 +701,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否正在走结算流程
-                if(null != str.getSettlementProcess()){
+                if (null != str.getSettlementProcess()) {
                     if (str.getSettlementProcess().equals("是")) {
                         contractTO.setSettlementProcess(true);
                     } else {
@@ -642,7 +709,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否到账
-                if(null != str.getAccount()){
+                if (null != str.getAccount()) {
                     if (str.getAccount().equals("是")) {
                         contractTO.setAccount(true);
                     } else {
@@ -650,7 +717,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //是否闭单
-                if(null != str.getCloseSingle()){
+                if (null != str.getCloseSingle()) {
                     if (str.getCloseSingle().equals("是")) {
                         contractTO.setCloseSingle(true);
                     } else {
@@ -658,7 +725,7 @@ public class BusinessContractAction extends BaseFileAction {
                     }
                 }
                 //合同是否已归档
-                if(null != str.getArchive()){
+                if (null != str.getArchive()) {
                     if (str.getArchive().equals("是")) {
                         contractTO.setArchive(true);
                     } else {
@@ -685,7 +752,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
 //    @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(@Validated() BusinessContractDTO dto, HttpServletResponse response, BindingResult
+    public Result exportReport( BusinessContractDTO dto, HttpServletResponse response, BindingResult
             result) throws ActException {
         try {
             String fileName = "商务项目合同.xlsx";
@@ -886,4 +953,22 @@ public class BusinessContractAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 获取所有年份
+     *
+     * @version v1
+     */
+    @GetMapping("v1/years")
+    public Result years() throws ActException {
+        try {
+            List<Integer> list = new ArrayList<>();
+            int year = LocalDate.now().getYear();
+            for (int i = year - 5; i <= year + 5; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

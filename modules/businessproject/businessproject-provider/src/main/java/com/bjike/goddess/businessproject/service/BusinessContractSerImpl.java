@@ -27,9 +27,6 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-//import com.bjike.goddess.projectcalculation.entity.InterfaceCalculationDetail;
-//import com.bjike.goddess.projectcalculation.service.CalculationDecisionsSer;
-//import com.bjike.goddess.projectcalculation.service.InterfaceCalculationDetailSer;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
@@ -48,6 +45,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+//import com.bjike.goddess.projectcalculation.entity.InterfaceCalculationDetail;
+//import com.bjike.goddess.projectcalculation.service.CalculationDecisionsSer;
+//import com.bjike.goddess.projectcalculation.service.InterfaceCalculationDetailSer;
 
 /**
  * 商务项目合同业务实现
@@ -372,11 +373,13 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     @Override
     public List<BusinessContractsBO> list(BusinessContractDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
+        dto.getSorts().add("signedTime=desc");
         checkSeeIdentity();
         search(dto);
         List<BusinessContract> contracts = super.findByCis(dto, true);
         List<BusinessContractsBO> contractBOS = BeanTransform.copyProperties(contracts, BusinessContractsBO.class);
         return contractBOS;
+
     }
 
     @Override
@@ -384,8 +387,12 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         checkSeeIdentity();
         BusinessContractDTO newDto = new BusinessContractDTO();
         newDto.getSorts().add("createTime=desc");
+        newDto.getSorts().add("signedTime=desc");
         newDto.setSignedTime(dto.getSignedTime());
         newDto.setArea(dto.getArea());
+        newDto.setProjectGroup(dto.getProjectGroup());
+        newDto.setMajorCompany(dto.getMajorCompany());
+        newDto.setSingleContractName(dto.getSingleContractName());
         newDto.setBusinessType(dto.getBusinessType());
         newDto.setBusinessSubject(dto.getBusinessSubject());
         newDto.setMeasureClassify(dto.getMeasureClassify());
@@ -706,7 +713,18 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     private void search(BusinessContractDTO dto) throws SerException {
-
+        //单次合同名称
+        if (StringUtils.isNotBlank(dto.getSingleContractName())) {
+            dto.getConditions().add(Restrict.eq("singleContractName", dto.getSingleContractName()));
+        }
+        //总包单位名称
+        if (StringUtils.isNotBlank(dto.getMajorCompany())) {
+            dto.getConditions().add(Restrict.eq("majorCompany", dto.getMajorCompany()));
+        }
+        //所属项目组
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            dto.getConditions().add(Restrict.eq("projectGroup", dto.getProjectGroup()));
+        }
         //签订时间
         if (StringUtils.isNotBlank(dto.getSignedTime())) {
             dto.getConditions().add(Restrict.eq("signedTime", dto.getSignedTime()));
@@ -718,14 +736,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         //业务类型
         if (StringUtils.isNotBlank(dto.getBusinessType())) {
             dto.getConditions().add(Restrict.like("businessType", dto.getBusinessType()));
-        }
-        //总包单位名称
-        if (StringUtils.isNotBlank(dto.getMajorCompany())) {
-            dto.getConditions().add(Restrict.like("majorCompany", dto.getMajorCompany()));
-        }
-        //所属项目组
-        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
-            dto.getConditions().add(Restrict.like("projectGroup", dto.getProjectGroup()));
         }
         //内部项目名称
         if (StringUtils.isNotBlank(dto.getInnerProject())) {
@@ -2512,13 +2522,53 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
-    public Set<String> areas() throws SerException {
+    public List<String> areas() throws SerException {
         Set<String> set = new HashSet<>();
         List<BusinessContract> list = super.findAll();
         for (BusinessContract businessContract : list) {
             set.add(businessContract.getArea());
         }
-        return set;
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> projectGroups() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<BusinessContract> list = super.findAll();
+        for (BusinessContract businessContract : list) {
+            set.add(businessContract.getProjectGroup());
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> majorCompanys() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<BusinessContract> list = super.findAll();
+        for (BusinessContract businessContract : list) {
+            set.add(businessContract.getMajorCompany());
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> singleContractNames() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<BusinessContract> list = super.findAll();
+        for (BusinessContract businessContract : list) {
+            set.add(businessContract.getSingleContractName());
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> businessSubjects() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<BusinessContract> list = super.findAll();
+        for (BusinessContract businessContract : list) {
+            set.add(businessContract.getBusinessSubject());
+        }
+        return new ArrayList<>(set);
     }
 
     @Override

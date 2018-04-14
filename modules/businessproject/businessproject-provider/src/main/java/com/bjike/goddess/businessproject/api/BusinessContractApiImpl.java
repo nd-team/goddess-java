@@ -82,8 +82,28 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     }
 
     @Override
-    public Set<String> areas() throws SerException {
+    public List<String> areas() throws SerException {
         return businessContractSer.areas();
+    }
+
+    @Override
+    public List<String> projectGroups() throws SerException {
+        return businessContractSer.projectGroups();
+    }
+
+    @Override
+    public List<String> majorCompanys() throws SerException {
+        return businessContractSer.majorCompanys();
+    }
+
+    @Override
+    public List<String> singleContractNames() throws SerException {
+        return businessContractSer.singleContractNames();
+    }
+
+    @Override
+    public List<String> businessSubjects() throws SerException {
+        return businessContractSer.businessSubjects();
     }
 
     @Override
