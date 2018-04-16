@@ -326,6 +326,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
                 "auditStatus", "transferStatus", "checkStatus", "totalId", "uId"};
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
+
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (listBO == null || listBO.size() == 0) {
             return null;
@@ -338,7 +339,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         List<VoucherGenerateBO> listBOs = convertVoucher(listBO, null);
 
-        return listBOs == null ? null : listBOs.get(0);
+        VoucherGenerateBO bo = listBOs == null ? null : listBOs.get(0);
+        if (bo == null) {
+            return bo;
+        }
+        BigDecimal borrowMoneyTotal = new BigDecimal(0.0);
+        BigDecimal loanMoneyTotal = new BigDecimal(0.0);
+        for(VoucherGenerateChildBO b : bo.getDetails()) {
+            borrowMoneyTotal = borrowMoneyTotal.add(new BigDecimal(String.valueOf(b.getBorrowMoney())));
+            loanMoneyTotal = loanMoneyTotal.add(new BigDecimal(String.valueOf(b.getLoanMoney())));
+        }
+        bo.setBorrowMoneyTotal(borrowMoneyTotal.doubleValue());
+        bo.setLoanMoneyTotal(loanMoneyTotal.doubleValue());
+        return bo;
 
     }
 
@@ -2149,6 +2162,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (vt != null) {
                 str.setMoneyTotal(vt.getMoney());
             }
+
+            str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
         }
 
         return convertVoucher(listBO, null);
@@ -2240,13 +2255,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
             sql.append("and voucherDate between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
         }
-        sql.append(" group by uId limit " + startRow + ", " + endRow + ")m");
+        sql.append(" group by uId order by voucherDate desc limit " + startRow + ", " + endRow + ")m");
+        sql.append(") ");
         if ("降序".equals(dto.getAscOrDesc())) {
             sql.append(" order by voucherDate, voucherNum, borrowMoney desc");
         } else {
             sql.append(" order by voucherDate, voucherNum asc, borrowMoney desc");
         }
-        sql.append(") ");
+
 
         String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
@@ -2267,13 +2283,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 }
             }
 
+
+
         }
 
         return list;
     }
 
     /**
-     * 整合记账凭证: uId相同的的数据合并为一条
+     * 整合记账凭证: uId相同的的数据合并为一条,并进行排序（年月降序、日期升序）
      *
      * @param bos
      * @param type
@@ -2281,8 +2299,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
      * @throws SerException
      */
     List<VoucherGenerateBO> convertVoucher(List<VoucherGenerateBO> bos, String type) throws SerException {
-        List<VoucherGenerateBO> list = new ArrayList<>();
         int len = bos.size();
+        //合并
         for (int i = 0; i < len; i++) {
             if (null == bos.get(i).getuId()) {
                 continue;
@@ -2316,6 +2334,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             bos.get(i).setDetails(details);
         }
 
+        //重新排序
         for (int i = 0; i < len - 1; i++) {
             for (int j = 0; j < len - 1 - i; j++) {
                 LocalDate voucherDate = LocalDate.parse(bos.get(j).getVoucherDate());
@@ -2346,7 +2365,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     bos.set(j + 1, temp);
                 }
             }
+
         }
+
 
         return bos;
     }
@@ -2441,10 +2462,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         BigDecimal borrowSum = new BigDecimal(0);
         BigDecimal loanSum = new BigDecimal(0);
         for (Double b : borrow) {
-            borrowSum.add(new BigDecimal(String.valueOf(b)));
+            borrowSum = borrowSum.add(new BigDecimal(String.valueOf(b)));
         }
         for (Double l : loan) {
-            loanSum.add(new BigDecimal(String.valueOf(l)));
+            loanSum = loanSum.add(new BigDecimal(String.valueOf(l)));
         }
 
         if (!borrowSum.equals(loanSum)) {
@@ -2468,7 +2489,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             BeanUtils.copyProperties(voucherGenerate, temp);
             temp.setCreateTime(LocalDateTime.now());
             temp.setFirstSubject(first.get(i));
-            temp.setSecondSubject(second.get(i));
+            temp.setSecondSubject(second == null ? "" : second.get(i));
             temp.setThirdSubject(third == null ? "" : third.get(i));
             temp.setBorrowMoney(borrow.get(i));
             temp.setLoanMoney(loan.get(i));
@@ -2485,14 +2506,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
             RpcTransmit.transmitUserToken(token);
             String code1 = accountanCourseAPI.findByCourseName(temp.getFirstSubject());
-            RpcTransmit.transmitUserToken(token);
             String arr1[] = code1.split(":");
-            String code2 = accountanCourseAPI.findByCourseName(temp.getSecondSubject());
-            RpcTransmit.transmitUserToken(token);
-            String arr2[] = code2.split(":");
+            if (StringUtils.isNotBlank(temp.getSecondSubject())) {
+                RpcTransmit.transmitUserToken(token);
+                String code2 = accountanCourseAPI.findByCourseName(temp.getSecondSubject());
+                RpcTransmit.transmitUserToken(token);
+                String arr2[] = code2.split(":");
+                if (arr2.length > 0) {
+                    temp.setSecondSubjectCode(arr2[0]);
+                }
+            }
             if (StringUtils.isNotBlank(temp.getThirdSubject())) {
                 String code3 = accountanCourseAPI.findByCourseName(temp.getThirdSubject());
-//                RpcTransmit.transmitUserToken(token);
+                RpcTransmit.transmitUserToken(token);
                 String arr3[] = code3.split(":");
                 if (arr3.length > 0) {
                     temp.setThirdSubjectCode(arr3[0]);
@@ -2501,9 +2527,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (arr1.length > 0) {
                 temp.setFirstSubjectCode(arr1[0]);
             }
-            if (arr2.length > 0) {
-                temp.setSecondSubjectCode(arr2[0]);
-            }
+
             list.add(temp);
         }
         super.save(list);
@@ -2536,11 +2560,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        Double loanSum = loan.stream().filter(l -> l != null).mapToDouble(l -> l).sum();
         BigDecimal borrowSum = new BigDecimal(0);
         BigDecimal loanSum = new BigDecimal(0);
-        for (Double b : voucherGenerateTO.getBorrowMoneys()) {
-            borrowSum.add(new BigDecimal(String.valueOf(b)));
-        }
-        for (Double l : voucherGenerateTO.getLoanMoneys()) {
-            loanSum.add(new BigDecimal(String.valueOf(l)));
+        for (VoucherGenerateChildTO childTO : voucherGenerateTO.getDetails()) {
+            borrowSum = borrowSum.add(new BigDecimal(String.valueOf(childTO.getBorrowMoney())));
+            loanSum = loanSum.add(new BigDecimal(String.valueOf(childTO.getLoanMoney())));
         }
 
         if (!borrowSum.equals(loanSum)) {
@@ -2700,6 +2722,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }*/
     }
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        if (uIds.length == 0) {
+            throw new SerException("id不能为空");
+        }
+        String ids = "";
+        for (String id : uIds) {
+            ids += ",'" + id + "'";
+        }
+        StringBuffer sql = new StringBuffer();
+        ids = ids.substring(1, ids.length());
+        sql.append("delete from voucher_vouchergenerate where uId in (" + ids + ")");
+        super.executeSql(sql.toString());
+    }
 
     @Override
     public Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
@@ -2728,6 +2765,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (VoucherGenerateBO str : listBO) {
             VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
             str.setMoneyTotal(vt.getMoney());
+            str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
         }
 
         return convertVoucher(listBO, null);
@@ -2858,6 +2896,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (VoucherGenerateBO str : listBO) {
             VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
             str.setMoneyTotal(vt.getMoney());
+            str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
         }
 
         return convertVoucher(listBO, null);
@@ -3300,6 +3339,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
                 str.setMoneyTotal(vt.getMoney());
+                str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
             }
         }
 
@@ -3471,6 +3511,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
                 }
             }
+
 
         }
 
@@ -3751,6 +3792,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
                 str.setMoneyTotal(vt.getMoney());
+                str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
             }
         }
 
@@ -4124,6 +4166,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (VoucherGenerateBO str : listBO) {
             VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
             str.setMoneyTotal(vt.getMoney());
+            str.setNewVoucherNum(str.getVoucherWord() + "-" + str.getVoucherNum().intValue());
         }
 
         return convertVoucher(listBO, null);

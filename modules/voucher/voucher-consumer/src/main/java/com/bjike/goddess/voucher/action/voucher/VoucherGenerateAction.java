@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.action.voucher;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -11,6 +12,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.ProofWordsAPI;
+import com.bjike.goddess.financeinit.bo.ProofWordsBO;
+import com.bjike.goddess.financeinit.dto.ProofWordsDTO;
+import com.bjike.goddess.financeinit.enums.ProofCharacter;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
@@ -43,9 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 记账凭证生成
@@ -70,6 +73,9 @@ public class VoucherGenerateAction extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ProofWordsAPI proofWordsAPI;
+
 
 
     /**
@@ -249,6 +255,25 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result delete(@PathVariable String uId) throws ActException {
         try {
             voucherGenerateAPI.deleteVoucherGenerate(uId);
+            return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param to uIds
+     * @des 批量删除记账凭证信息记录
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/deleteBatch")
+    public Result deleteBatch(VoucherGenerateTO to) throws ActException {
+        try {
+
+            voucherGenerateAPI.deleteVoucherGenerateBatch(to.getuIds());
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
@@ -1580,6 +1605,38 @@ public class VoucherGenerateAction extends BaseFileAction {
         try {
             List<String> list = voucherGenerateAPI.findFirstSubject();
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 从财务初始化获取凭证字列表
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/proofWords")
+    public Result listProofWords(HttpServletRequest request) throws ActException {
+        try {
+            List<ProofWordsBO> list = proofWordsAPI.listProof(new ProofWordsDTO());
+            Set<String> set = new HashSet<>();
+            for (ProofWordsBO bo : list) {  //@see 若是ProofCharacter添加新的类型，则需修改if语句
+                String name = "";
+                if (bo.getProofCharacter().equals(ProofCharacter.POCTAA)) {
+                    name = "记账凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.POP)) {
+                    name = "付款凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.TV)) {
+                    name = "转账凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.WTROP)) {
+                    name = "收款凭证";
+                }
+
+                set.add(name);
+            }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

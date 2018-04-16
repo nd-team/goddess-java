@@ -1,7 +1,9 @@
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
+import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,16 @@ public class MyTest {
         t1(departmentTO);
         System.out.println(departmentTO.getName());
 
+        String id = "";
+        String[] str = {"a"};
+        for (String s : str) {
+            id += "," + s;
+        }
+        System.out.println("id:" + id);
+
+        BigDecimal bigDecimal = new BigDecimal(0.0);
+        bigDecimal = bigDecimal.add(new BigDecimal(2));
+        System.out.println(bigDecimal);
 
     }
 
