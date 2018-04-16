@@ -2223,7 +2223,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
                 "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, firstSubjectCode, secondSubjectCode, thirdSubjectCode";
         sql.append("select " + colums + " from voucher_vouchergenerate a  where a.uId in ");
-        sql.append("(select * from (select uId from voucher_vouchergenerate where 1 = 1 ");
+        sql.append("(select uId from (select distinct(uId), voucherDate from voucher_vouchergenerate where 1 = 1 ");
         switch (type) {
             case "1":
                 sql.append("and auditStatus = 0 ");
@@ -2255,7 +2255,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
             sql.append("and voucherDate between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
         }
-        sql.append(" group by uId order by voucherDate desc limit " + startRow + ", " + endRow + ")m");
+        sql.append("  order by voucherDate desc limit " + startRow + ", " + endRow + ")m");
         sql.append(") ");
         if ("降序".equals(dto.getAscOrDesc())) {
             sql.append(" order by voucherDate, voucherNum, borrowMoney desc");
@@ -2589,9 +2589,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             RpcTransmit.transmitUserToken(token);
             String code1 = accountanCourseAPI.findByCourseName(entity.getFirstSubject());
             String arr1[] = code1.split(":");
-            RpcTransmit.transmitUserToken(token);
-            String code2 = accountanCourseAPI.findByCourseName(entity.getSecondSubject());
-            String arr2[] = code2.split(":");
+            if (StringUtils.isNotBlank(entity.getSecondSubject())) {
+                RpcTransmit.transmitUserToken(token);
+                String code2 = accountanCourseAPI.findByCourseName(entity.getSecondSubject());
+                String arr2[] = code2.split(":");
+                if (arr2.length > 0) {
+                    entity.setSecondSubjectCode(arr2[0]);
+                }
+            }
+
 //            String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
 //            String arr3[] = code3.split(":");
             if (StringUtils.isNotBlank(entity.getThirdSubject())) {
@@ -2605,9 +2611,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (arr1.length > 0) {
                 entity.setFirstSubjectCode(arr1[0]);
             }
-            if (arr2.length > 0) {
-                entity.setSecondSubjectCode(arr2[0]);
-            }
+
             entities.add(entity);
         }
         super.update(entities);
