@@ -18,6 +18,8 @@
 
     <!-- 资金流水API -->
 	<dubbo:reference interface="com.bjike.goddess.fundrecords.api.FundRecordAPI" id="fundRecordApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.fundrecords.api.CapitalFlowRecordAPI" id="capitalFlowRecordApiImpl" />
+
 
 	<!-- 组织结构API -->
 	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl" />
