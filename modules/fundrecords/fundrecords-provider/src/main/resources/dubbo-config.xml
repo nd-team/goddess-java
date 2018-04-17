@@ -21,6 +21,8 @@
 
     <!-- 资金流水API -->
     <dubbo:service interface="com.bjike.goddess.fundrecords.api.FundRecordAPI" ref="fundRecordApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.fundrecords.api.CapitalFlowRecordAPI" ref="capitalFlowRecordApiImpl"/>
+
 
     <!-- 权限API -->
     <dubbo:service interface="com.bjike.goddess.fundrecords.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>

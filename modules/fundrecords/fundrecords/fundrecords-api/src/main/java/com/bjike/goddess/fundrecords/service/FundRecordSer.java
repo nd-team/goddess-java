@@ -1,12 +1,15 @@
-package com.bjike.goddess.fundrecords.api;
+package com.bjike.goddess.fundrecords.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
+import com.bjike.goddess.fundrecords.entity.FundRecord;
 import com.bjike.goddess.fundrecords.excel.SonPermissionObject;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
 import com.bjike.goddess.fundrecords.to.GuidePermissionTO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface FundRecordAPI {
+public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
 
     /**
      * 新增补填资金流水
@@ -27,7 +30,7 @@ public interface FundRecordAPI {
      * @param to 资金流水
      * @return 资金流水
      */
-    FundRecordBO add(FundRecordTO to) throws SerException;
+    FundRecordBO insertModel(FundRecordTO to) throws SerException;
 
     /**
      * 编辑补填资金流水
@@ -35,7 +38,7 @@ public interface FundRecordAPI {
      * @param to 资金流水
      * @return 资金流水
      */
-    FundRecordBO edit(FundRecordTO to) throws SerException;
+    FundRecordBO updateModel(FundRecordTO to) throws SerException;
 
     /**
      * 删除补填资金流水
@@ -53,12 +56,12 @@ public interface FundRecordAPI {
     List<FundRecordBO> pageList(FundRecordDTO dto) throws SerException;
 
     /**
-     * 分页查询资金流水总记录数
+     * 查询所有记录
      *
      * @param dto 分页条件
-     * @return 资金流水结果集
+     * @return 所有记录
      */
-    Long count(FundRecordDTO dto) throws SerException;
+    List<FundRecordBO> findAllBO(FundRecordDTO dto, VoucherGenerateDTO generateDTO) throws SerException;
 
     /**
      *
@@ -76,7 +79,6 @@ public interface FundRecordAPI {
      * @return 列表
      */
     Long findCount(FundRecordDTO dto) throws SerException;
-
 
 
     /**
@@ -97,20 +99,12 @@ public interface FundRecordAPI {
     List<ConditionCollectBO> condition(CollectTO to) throws SerException;
 
     /**
-     * 根据id查询资金流水
-     *
-     * @param id 资金流水id
-     * @return 资金流水
-     */
-    FundRecordBO findById(String id) throws SerException;
-
-    /**
      * 地区分析
      *
      * @param year  年份
      * @param month 月份
      * @param area  地区
-     * @return
+     * @return 地区分析结果集
      */
     List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
 
@@ -120,7 +114,7 @@ public interface FundRecordAPI {
      * @param year  年份
      * @param month 月份
      * @param group 项目组
-     * @return
+     * @return 项目组分析结果集
      */
     List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String group) throws SerException;
 
@@ -130,29 +124,32 @@ public interface FundRecordAPI {
      * @param year    年份
      * @param month   月份
      * @param project 项目
-     * @return
+     * @return 项目分析结果集
      */
     List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
 
     void leadExcel(List<FundRecordTO> toList) throws SerException;
 
+    byte[] exportExcel(String startDate, String endDate) throws SerException;
+
     /**
      * 根据账户来源导出
+     *
      * @param dataSource 账户来源
      * @return
      * @throws SerException
      */
     byte[] exportExcelLJT(String dataSource) throws SerException;
 
-    byte[] exportExcel(String startDate, String endDate)  throws SerException;
-
     byte[] exportExcelModule() throws SerException;
 
     List<SonPermissionObject> sonPermission() throws SerException;
 
-    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
     /**
      * 账户来源下拉值
+     *
      * @return
      * @throws SerException
      */
@@ -160,6 +157,7 @@ public interface FundRecordAPI {
 
     /**
      * 导入资金流水
+     *
      * @return
      * @throws SerException
      */
@@ -179,88 +177,99 @@ public interface FundRecordAPI {
      *
      * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 地区汇总结果集
      */
-    ConditionCollectBO areaSumma(Integer year, Integer month,String area) throws SerException;
+    ConditionCollectBO areaSumma(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组汇总lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year    年份
+     * @param month   月份
      * @param project 项目组
      * @return 项目组汇总结果集
      */
-    ConditionCollectBO projectSumma(Integer year, Integer month,String project) throws SerException;
+    ConditionCollectBO projectSumma(Integer year, Integer month, String project) throws SerException;
 
     /**
      * 项目名称汇总lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year        年份
+     * @param month       月份
      * @param projectName 项目名称
      * @return 项目组汇总结果集
      */
-    ConditionCollectBO projectNameSumma(Integer year, Integer month,String projectName) throws SerException;
+    ConditionCollectBO projectNameSumma(Integer year, Integer month, String projectName) throws SerException;
 
     /**
      * 获取所有地区
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllArea() throws SerException{return null;}
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有账户来源
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllDataSource() throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有项目组
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllProjectGroup() throws SerException{return null;}
+    default List<String> findAllProjectGroup() throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有项目名称
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllProjectName() throws SerException{return null;}
+    default List<String> findAllProjectName() throws SerException {
+        return null;
+    }
 
     /**
      * 地区分析lijuntao
      *
      * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 地区分析结果集
      */
-    AreaAnalyzeBO areaAnalysis(Integer year, Integer month,String area) throws SerException;
+    AreaAnalyzeBO areaAnalysis(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组分析lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year    年份
+     * @param month   月份
      * @param project 项目组
      * @return 项目组分析结果集
      */
-    GroupAnalyzeBO projectAnalysis(Integer year, Integer month,String project) throws SerException;
+    GroupAnalyzeBO projectAnalysis(Integer year, Integer month, String project) throws SerException;
 
     /**
      * 项目名称分析lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year        年份
+     * @param month       月份
      * @param projectName 项目名称
      * @return 项目名称分析结果集
      */
-    ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month,String projectName) throws SerException;
-
-    /**
-     * 获取所有账户来源
-     * @return
-     * @throws SerException
-     */
-    default List<String> findAllDataSource() throws SerException{return null;}
-
+    ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month, String projectName) throws SerException;
 
 }
