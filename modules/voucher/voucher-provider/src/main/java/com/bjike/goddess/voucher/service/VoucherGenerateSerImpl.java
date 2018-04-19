@@ -319,12 +319,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
                 ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
-                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId";
+                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, type ";
         StringBuffer sql = new StringBuffer();
         sql.append("select " + colums + " from voucher_vouchergenerate where uId = '" + id + "'");
         String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
-                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId"};
+                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId", "type"};
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
 
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
@@ -2200,6 +2200,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             default:
                 break;
         }
+        if (dto.getTypes() != null && dto.getTypes().length > 0) {
+            String types = "";
+            for(String str : dto.getTypes()) {
+                types += "'" + str + "',";
+            }
+            types = types.substring(0, types.length() - 1);
+            sql.append(" and type in ("+ types +")");
+        }
         sql.append("group by uId) m");
         long amount = Long.parseLong(String.valueOf(super.findBySql(sql.toString()).get(0)));
         return amount;
@@ -2221,7 +2229,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         StringBuffer sql = new StringBuffer();
         String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
                 ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
-                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, firstSubjectCode, secondSubjectCode, thirdSubjectCode";
+                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, firstSubjectCode, secondSubjectCode, thirdSubjectCode, type ";
         sql.append("select " + colums + " from voucher_vouchergenerate a  where a.uId in ");
         sql.append("(select uId from (select distinct(uId), voucherDate from voucher_vouchergenerate where 1 = 1 ");
         switch (type) {
@@ -2255,6 +2263,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
             sql.append("and voucherDate between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
         }
+        //新增type字段
+        if (dto.getTypes() != null && dto.getTypes().length > 0) {
+            String types = "";
+            for(String str : dto.getTypes()) {
+                types += "'" + str + "',";
+            }
+            types = types.substring(0, types.length() - 1);
+            sql.append(" and type in ("+ types +") ");
+        }
         sql.append("  order by voucherDate desc limit " + startRow + ", " + endRow + ")m");
         sql.append(") ");
         if ("降序".equals(dto.getAscOrDesc())) {
@@ -2266,7 +2283,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
-                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
+                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode", "type"};
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
         if (list == null) {
             return null;
@@ -2282,11 +2299,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
                 }
             }
-
-
-
         }
-
         return list;
     }
 
@@ -2611,7 +2624,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (arr1.length > 0) {
                 entity.setFirstSubjectCode(arr1[0]);
             }
-
+            //添加type属性
+            entity.setType(voucherGenerateTO.getType());
             entities.add(entity);
         }
         super.update(entities);
@@ -2698,10 +2712,38 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
+        VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+        dto2.setLimit(1);
+        dto2.getConditions().add(Restrict.eq("uId", id));
+        VoucherGenerate entity = super.findByCis(dto2, true).get(0);
+
         //修改为根据uId属性删除
         StringBuffer sql = new StringBuffer();
         sql.append("delete from voucher_vouchergenerate where uId = '" + id + "'");
         super.executeSql(sql.toString());
+
+        try {
+            LocalDate localDate = entity.getVoucherDate();
+            LocalDate start = localDate.with(TemporalAdjusters.firstDayOfMonth());
+            LocalDate end = localDate.with(TemporalAdjusters.lastDayOfMonth());
+            String[] date = new String[]{start.toString(), end.toString()};
+            double voucherNum = entity.getVoucherNum();
+            String voucherWord = entity.getVoucherWord();
+            VoucherGenerateDTO dto = new VoucherGenerateDTO();
+            dto.getConditions().add(Restrict.gt("voucherNum", voucherNum));
+            dto.getConditions().add(Restrict.between("voucherDate", date));
+            dto.getConditions().add(Restrict.eq("voucherWord", voucherWord));
+            List<VoucherGenerate> list = super.findByCis(dto);
+            for (VoucherGenerate voucherGenerate : list) {
+                voucherGenerate.setVoucherNum((voucherGenerate.getVoucherNum() - 1) > 0 ? (voucherGenerate.getVoucherNum() - 1) : voucherGenerate.getVoucherNum());
+            }
+            super.update(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
 
         /*VoucherGenerate voucherGenerate = super.findById(id);
         if (voucherGenerate != null) {
@@ -2732,6 +2774,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (uIds.length == 0) {
             throw new SerException("id不能为空");
         }
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.in("uId", uIds));
+        List<VoucherGenerate> list = findByCis(dto);
         String ids = "";
         for (String id : uIds) {
             ids += ",'" + id + "'";
@@ -2740,6 +2785,36 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         ids = ids.substring(1, ids.length());
         sql.append("delete from voucher_vouchergenerate where uId in (" + ids + ")");
         super.executeSql(sql.toString());
+
+        //更新记账凭证号（虽然智障，可以一试）
+        try {
+            VoucherGenerate entity = list.get(0);
+            for (VoucherGenerate voucherGenerate : list) {
+                if (entity.getVoucherNum() < voucherGenerate.getVoucherNum()) {
+                    entity = voucherGenerate;
+                }
+            }
+            LocalDate localDate = entity.getVoucherDate();
+            LocalDate start = localDate.with(TemporalAdjusters.firstDayOfMonth());
+            LocalDate end = localDate.with(TemporalAdjusters.lastDayOfMonth());
+            String[] date = new String[]{start.toString(), end.toString()};
+            double voucherNum = entity.getVoucherNum();
+            String voucherWord = entity.getVoucherWord();
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+            dto1.getConditions().add(Restrict.gt("voucherNum", voucherNum));
+            dto1.getConditions().add(Restrict.between("voucherDate", date));
+            dto1.getConditions().add(Restrict.eq("voucherWord", voucherWord));
+            List<VoucherGenerate> list1 = super.findByCis(dto1);
+            for (VoucherGenerate voucherGenerate : list1) {
+                voucherGenerate.setVoucherNum((voucherGenerate.getVoucherNum() - uIds.length) > 0 ? (voucherGenerate.getVoucherNum() - uIds.length) : voucherGenerate.getVoucherNum());
+            }
+            super.update(list1);
+
+        } catch (Exception e) {
+
+        }
+
+
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
@@ -75,6 +76,8 @@ public class VoucherGenerateAction extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private ProofWordsAPI proofWordsAPI;
+    @Autowired
+    private UserAPI userAPI;
 
 
 
@@ -224,6 +227,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     }
 
 
+
     /**
      * 编辑记账凭证
      *
@@ -251,12 +255,12 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/delete/{uId}")
+    @DeleteMapping("v1/delete/{uId                                                  }")
     public Result delete(@PathVariable String uId) throws ActException {
         try {
             voucherGenerateAPI.deleteVoucherGenerate(uId);
             return new ActResult("delete success!");
-        } catch (SerException e) {
+        } catch (SerException e) {                                                                                                                                                                                                                  
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
@@ -1637,6 +1641,24 @@ public class VoucherGenerateAction extends BaseFileAction {
                 set.add(name);
             }
             return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取当前用户名
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/currentUserName")
+    public Result getCurrentUserName(HttpServletRequest request) throws ActException {
+        try {
+            String name = userAPI.currentUser().getUsername();
+            return ActResult.initialize(name);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

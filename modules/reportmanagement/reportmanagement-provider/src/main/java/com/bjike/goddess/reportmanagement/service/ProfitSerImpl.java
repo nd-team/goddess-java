@@ -637,6 +637,14 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         }
     }
 
+    void sleep () {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
@@ -720,7 +728,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     boList.add(bo);
                 }*/
             }
-            if (boList != null && list != null && boList.size() != list.size()) {
+            while (boList != null && list != null && boList.size() != list.size()) {
+                sleep();
+            }
+            /*if (boList != null && list != null && boList.size() != list.size()) {
                 try {
                     Thread.sleep(1000);
                     if (boList != null && list != null && boList.size() != list.size()) {
@@ -733,7 +744,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
 
             Double monthAmount1 = 0.0;
             Double monthAmount2 = 0.0;

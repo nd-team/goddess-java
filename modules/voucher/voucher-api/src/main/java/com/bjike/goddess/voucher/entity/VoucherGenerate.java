@@ -176,6 +176,11 @@ public class VoucherGenerate extends BaseEntity {
 
 //    private Double moneyTotal;
 
+    /**
+     * 类别
+     */
+    @Column(name = "type",  columnDefinition = "VARCHAR(8)   COMMENT '类别'")
+    private String type;
 
 
     public String getVoucherWord() {
@@ -378,5 +383,11 @@ public class VoucherGenerate extends BaseEntity {
         this.thirdSubjectCode = thirdSubjectCode;
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 }
