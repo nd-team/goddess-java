@@ -175,6 +175,19 @@ public class VoucherGenerateTO extends BaseTO {
     @NotNull(groups = {VoucherGenerateTO.Audit.class} , message = "uId不能为空")
     private String[] uIds;
 
+    /**
+     * 类别
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
     public String getVoucherWord() {
         return voucherWord;

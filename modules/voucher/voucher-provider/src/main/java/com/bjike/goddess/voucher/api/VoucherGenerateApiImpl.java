@@ -80,6 +80,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        voucherGenerateSer.deleteVoucherGenerateBatch(uIds);
+    }
+
+    @Override
     public Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return voucherGenerateSer.countAudit(voucherGenerateDTO);
     }

@@ -190,6 +190,33 @@ public class VoucherGenerateVO {
     private List<VoucherGenerateChildVO> details;
 
 
+    /*
+     * 凭证字号”和“凭证字”合并成“凭证字号”字段
+     */
+    private String newVoucherNum;
+
+    /**
+     * 类别
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNewVoucherNum() {
+        return newVoucherNum;
+    }
+
+    public void setNewVoucherNum(String newVoucherNum) {
+        this.newVoucherNum = newVoucherNum;
+    }
+
+
     public String getId() {
         return id;
     }

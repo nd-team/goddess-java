@@ -80,6 +80,19 @@ public class VoucherGenerateDTO extends BaseDTO {
      */
     private String ascOrDesc;
 
+    /**
+     * 类别
+     */
+    private String[] types;
+
+    public String[] getTypes() {
+        return types;
+    }
+
+    public void setTypes(String[] types) {
+        this.types = types;
+    }
+
     public Integer getPage() {
         return page;
     }

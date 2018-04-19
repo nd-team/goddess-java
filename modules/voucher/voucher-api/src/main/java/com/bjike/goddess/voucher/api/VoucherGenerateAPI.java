@@ -99,6 +99,15 @@ public interface VoucherGenerateAPI {
         return;
     }
 
+    /**
+     * 删除
+     *
+     * @param uIds uIds
+     */
+    default void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        return;
+    }
+
     ;
 
     /**

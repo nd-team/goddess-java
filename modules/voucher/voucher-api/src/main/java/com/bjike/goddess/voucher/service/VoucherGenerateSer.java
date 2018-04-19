@@ -110,6 +110,15 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return;
     }
 
+    /**
+     * 删除
+     *
+     * @param uIds uIds
+     */
+    default void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        return;
+    }
+
     ;
 
     /**

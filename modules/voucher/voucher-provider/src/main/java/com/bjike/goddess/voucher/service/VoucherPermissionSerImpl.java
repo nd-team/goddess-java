@@ -482,6 +482,7 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+
         Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
