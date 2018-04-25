@@ -3,6 +3,8 @@ package com.bjike.goddess.reportmanagement.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Arrays;
+
 /**
  * 负债表数据传输对象
  *
@@ -94,5 +96,17 @@ public class DebtDTO extends BaseDTO {
 
     public void setLastest(boolean lastest) {
         this.lastest = lastest;
+    }
+
+    @Override
+    public String toString() {
+        return "DebtDTO{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", projectNames=" + Arrays.toString(projectNames) +
+                ", departs=" + Arrays.toString(departs) +
+                ", areas=" + Arrays.toString(areas) +
+                ", lastest=" + lastest +
+                '}';
     }
 }

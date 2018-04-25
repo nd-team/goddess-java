@@ -92,7 +92,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Autowired
     private ProfitFormulaSer profitFormulaSer;
     //    @Autowired
-//    private SubjectCollectAPI subjectCollectAPI;
+// private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
 

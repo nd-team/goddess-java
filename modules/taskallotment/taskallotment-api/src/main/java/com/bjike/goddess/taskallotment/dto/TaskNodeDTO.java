@@ -7,6 +7,7 @@ import com.bjike.goddess.taskallotment.enums.PersonCountType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 /**
  * 任务节点数据传输对象
@@ -215,5 +216,25 @@ public class TaskNodeDTO extends BaseDTO {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskNodeDTO{" +
+                "countType=" + countType +
+                ", datatype=" + datatype +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", area=" + Arrays.toString(area) +
+                ", depart=" + Arrays.toString(depart) +
+                ", projects=" + Arrays.toString(projects) +
+                ", name=" + Arrays.toString(name) +
+                ", tables=" + Arrays.toString(tables) +
+                ", deparIds=" + Arrays.toString(deparIds) +
+                ", tableId='" + tableId + '\'' +
+                ", taskNames=" + Arrays.toString(taskNames) +
+                ", personCountType=" + personCountType +
+                ", user='" + user + '\'' +
+                '}';
     }
 }

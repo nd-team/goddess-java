@@ -156,7 +156,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         dto.getConditions().add(Restrict.eq("hierarchy.id", hierarchyId));
         return this.transformationToBOList(super.findByCis(dto));
     }
-
+    //获取所有项目组/部门未冻结
     @Override
     public List<DepartmentDetailBO> findStatus() throws SerException {
         DepartmentDetailDTO departmentDTO = new DepartmentDetailDTO();
@@ -294,7 +294,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public DepartmentDetailBO getById(String id) throws SerException {
         return this.transformationToBO(super.findById(id));
     }
-
+    //获取所有地区名称
     @Override
     public List<AreaBO> findArea() throws SerException {
         List<DepartmentDetail> list = super.findAll().stream()

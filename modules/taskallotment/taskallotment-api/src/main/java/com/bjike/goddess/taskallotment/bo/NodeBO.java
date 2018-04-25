@@ -137,4 +137,20 @@ public class NodeBO extends BaseBO {
     public void setTimesType(TimesType timesType) {
         this.timesType = timesType;
     }
+
+    @Override
+    public String toString() {
+        return "NodeBO{" +
+                "taskName='" + taskName + '\'' +
+                ", execute='" + execute + '\'' +
+                ", planTime='" + planTime + '\'' +
+                ", taskType=" + taskType +
+                ", timesType=" + timesType +
+                ", planNum=" + planNum +
+                ", needTime=" + needTime +
+                ", needType=" + needType +
+                ", remark='" + remark + '\'' +
+                ", taskStatus=" + taskStatus +
+                '}';
+    }
 }

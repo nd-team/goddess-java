@@ -5,6 +5,7 @@ import com.bjike.goddess.task.enums.CollectSuitation;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -200,5 +201,24 @@ public class CollectDTO extends BaseDTO {
 
     public void setNeedFixed(Boolean needFixed) {
         this.needFixed = needFixed;
+    }
+
+    @Override
+    public String toString() {
+        return "CollectDTO{" +
+                "projectId='" + projectId + '\'' +
+                ", tablesId=" + Arrays.toString(tablesId) +
+                ", needFixed=" + needFixed +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", fields=" + fields +
+                ", collectSuitations=" + collectSuitations +
+                ", vals=" + vals +
+                ", tableFields=" + tableFields +
+                ", type='" + type + '\'' +
+                ", typeExplain='" + typeExplain + '\'' +
+                ", projectIds=" + projectIds +
+                ", tabs=" + tabs +
+                '}';
     }
 }

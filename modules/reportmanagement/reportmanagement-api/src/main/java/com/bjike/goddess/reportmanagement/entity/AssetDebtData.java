@@ -142,4 +142,18 @@ public class AssetDebtData extends BaseEntity {
     public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
+
+    @Override
+    public String toString() {
+        return "AssetDebtData{" +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", project='" + project + '\'' +
+                ", num=" + num +
+                ", beginAsset=" + beginAsset +
+                ", systemId='" + systemId + '\'' +
+                ", endAsset=" + endAsset +
+                ", projectId='" + projectId + '\'' +
+                '}';
+    }
 }
