@@ -204,6 +204,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
 
         String token = RpcTransmit.getUserToken();
 //        checkSeeIdentity();
+        checkSeeIdentity();
+      //  System.out.println(dto);
         List<DebtBO> boList = new ArrayList<DebtBO>();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
