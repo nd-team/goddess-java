@@ -99,7 +99,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            Boolean flag1 = cusPermissionSer.busCusPermission("3");
             if (!flag) {
                 throw new SerException("您不是管理层人员，不可以操作");
             }
@@ -186,6 +186,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void saves(TaskNodeBaseTO to) throws SerException {
+        System.out.println(to);
         TaskNodeBase entity = BeanTransform.copyProperties(to, TaskNodeBase.class, true);
 
         taskNodeBaseSer.save(entity);
@@ -360,18 +361,56 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
     }
 
+    /**
+     * 查询计划任务节点列表实现类
+     * */
     @Override
     public List<TableBO> list(TableDTO dto) throws SerException {
-        List<TableBO> tableBOS = new ArrayList<>();
+
+        // List<TableBO> tableBOList= new ArrayList<>();
+        // 根据项目名称id查询出项目表信息
+        List<Table> tabInfo = tableSer.findByCis(dto, true);
+        List<TableBO> tableBOS = BeanTransform.copyProperties(tabInfo, TableBO.class);
+        for(TableBO tblBo : tableBOS){
+
+            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+            taskNodeDTO.getConditions().add(Restrict.eq("tableId",tblBo.getId()));
+            taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
+            //根据tableId、fatherId查询出项目表下所有任务节点信息
+            List<TaskNode> nodes = super.findByCis(taskNodeDTO, true);
+            //将任务节点实体转换为，对应数据库返回的任务节点数据bo
+            // List<NodeBO> nodeBOS = BeanTransform.copyProperties(nodes, NodeBO.class);
+            for(TaskNode tn:nodes){
+
+                TaskNodeDTO taskNodeDTO1 = new TaskNodeDTO();
+                taskNodeDTO1.getConditions().add(Restrict.eq("fatherId",tn.getId()));
+                List<TaskNode> nodes1 = super.findByCis(taskNodeDTO1, true);
+                //将任务节点实体转换为，对应数据库返回的任务节点数据bo
+                List<NodeBO> nodeBOS = BeanTransform.copyProperties(nodes1, NodeBO.class);
+                tblBo.setNodeS(nodeBOS);
+            }
+           // tblBo.setNodeS(nodeBOS);
+        }
+        for(TableBO t:tableBOS){
+            System.out.println(t);
+        }
+     // select * from t where projectId = 'aaa' and tableId = 'aa' and fatherId is null
+
+     /* List<TableBO> tableBOS = new ArrayList<>();
         dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
+        //根据项目名称id查询出项目表信息
         List<Table> tables = tableSer.findByCis(dto, true);
         for (Table t : tables) {
+            //任务节点数据传输对象
             TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
             taskNodeDTO.getConditions().add(Restrict.eq("tableId", t.getId()));
             taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
+            //查询任务节点所有信息
             List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
             List<TaskNode> list1 = new ArrayList<>();
             for (TaskNode taskNode0 : taskNodes) {
+                System.out.println(taskNode0);
+                //根据id查询任务节点信息
                 TaskNode taskNode = super.findById(taskNode0.getId());
                 TaskNodeDTO taskNodeDTOs = new TaskNodeDTO();
                 taskNodeDTOs.getConditions().add(Restrict.eq("fatherId", taskNode.getId()));
@@ -384,6 +423,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
                 if (tid != null && tid.size() > 0) {
                     TaskStatus taskStatus = tid.get(0);
+                    System.out.println(taskStatus);
+
                     for (TaskStatus taskStatus1 : tid) {
                         if (!taskStatus1.equals(taskStatus)) {
                             System.out.println("有一个不相等，返回false");
@@ -398,11 +439,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 }
                 list1.add(taskNode);
             }
+
             List<NodeBO> nodeBOS = BeanTransform.copyProperties(list1, NodeBO.class);
             TableBO tableBO = BeanTransform.copyProperties(t, TableBO.class);
             tableBO.setNodeS(nodeBOS);
             tableBOS.add(tableBO);
-        }
+            for (TableBO ts:tableBOS){
+                System.out.println(ts);
+            }
+        }*/
         return tableBOS;
     }
 
@@ -651,7 +696,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
     }
 
-
+    /**
+     * 增加时长业务实现类
+     */
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void increase(TaskNodeTO to) throws SerException {
@@ -952,6 +999,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        }
     }
 
+    //我分发的任务
     @Override
     public List<TaskNodeBO> myInitiate(TaskNodeDTO dto) throws SerException {
         String name = userAPI.currentUser().getUsername();
@@ -987,9 +1035,14 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         delete(id);
     }
 
+    /**
+     * 确认完成任务实现类
+     */
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void finish(TaskNodeTO to) throws SerException {
+
+        System.out.println(to);
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -1202,6 +1255,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<TaskNodeBO> myExecute(TaskNodeDTO dto) throws SerException {
+        //获取项目组
         String[] depart = dto.getDepart();
         if (null != depart) {
             ProjectDTO projectDTO = new ProjectDTO();

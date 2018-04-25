@@ -108,8 +108,10 @@ public class TaskNodeAction extends BaseFileAction {
      */
     @GetMapping("v1/list")
     public Result list(@Validated(TableDTO.LIST.class) TableDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+
         try {
             List<TableBO> list = taskNodeAPI.list(dto);
+
             return ActResult.initialize(BeanTransform.copyProperties(list, TableVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

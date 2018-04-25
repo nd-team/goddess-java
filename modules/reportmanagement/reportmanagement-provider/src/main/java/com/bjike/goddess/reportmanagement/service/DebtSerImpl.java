@@ -198,22 +198,14 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         return BeanTransform.copyProperties(entity, DebtBO.class);
     }
 
-//    @Override
-//    public DebtBO find(String id, String startTime, String endTime) throws SerException {
-//        Debt entity = super.findById(id);
-//        if (entity == null) {
-//            throw new SerException("该对象不存在");
-//        }
-//        DebtBO bo = BeanTransform.copyProperties(entity, DebtBO.class);
-//        bo.setStartTime(startTime);
-//        bo.setEndTime(endTime);
-//        return bo;
-//    }
-
+    //**资产负债列表
     @Override
     public List<DebtBO> list(DebtDTO dto) throws SerException {
+
         String token = RpcTransmit.getUserToken();
 //        checkSeeIdentity();
+        checkSeeIdentity();
+      //  System.out.println(dto);
         List<DebtBO> boList = new ArrayList<DebtBO>();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
@@ -228,13 +220,21 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             List<AssetDebtData> cashFlows = assetDebtDataSer.findByCis(profitDTO);
             if (null != cashFlows && cashFlows.size() > 0) {
                 for (AssetDebtData data : cashFlows) {
+                      System.out.println(data);
                     DebtBO bo = new DebtBO();
+                    //负债期末数
                     bo.setEndDebt(data.getEndAsset().doubleValue());
+                    //负债年初数
                     bo.setBeginDebt(data.getBeginAsset().doubleValue());
+                    //负债和所有者权益行次
                     bo.setDebtNum(data.getNum());
+                    //负债和所有者权益
                     bo.setDebt(data.getProject());
+                    //当前月发生额
                     bo.setCurrent(null);
+                    //运算类型
                     bo.setType(null);
+                    //负债类型
                     bo.setDebtType(null);
                     bo.setStartTime(data.getStartTime().toString());
                     bo.setEndTime(data.getEndTime().toString());
@@ -242,171 +242,14 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                     boList.add(bo);
                 }
                 return convertDebt(boList);
+                }
             }
-        }
-
-
-
+        //对应的公式数据传输对象
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
         dto.getSorts().add("createTime=ASC");
         List<Debt> list = super.findByCis(dto);
-        /*List<DebtBO> boList = new ArrayList<DebtBO>();*/
-       /* boolean b1 = true;
-        boolean b2 = true;
-        boolean b3 = true;
-        boolean b4 = true;
-        double beginSum = 0;
-        double endSum = 0;
-        double debtBegin = 0;
-        double debtEnd = 0;    //负债合计
-        double countBegin = 0;
-        double countEnd = 0;       //负债和所有权益合计
-        int num = Static.getNum();
-        for (Debt debt : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
-            if (DebtType.AFLOW.equals(debt.getDebtType()) && b1) {
-                DebtBO debtBO = new DebtBO();
-                debtBO.setDebt("流动负债：");
-                boList.add(debtBO);
-                b1 = false;
-            } else if (DebtType.BLONG.equals(debt.getDebtType()) && b2) {
-                DebtBO sumBO = new DebtBO();
-                sumBO.setDebt("流动负债合计");
-                sumBO.setBeginDebt(beginSum);
-                sumBO.setEndDebt(endSum);
-                sumBO.setDebtNum(num);
-                num++;
-                boList.add(sumBO);
-                debtBegin += beginSum;
-                debtEnd += endSum;
-                beginSum = 0;
-                endSum = 0;    //置为0
-                DebtBO debtBO = new DebtBO();
-                debtBO.setDebt("长期负债：");
-                boList.add(debtBO);
-                b2 = false;
-            } else if (DebtType.CTAX.equals(debt.getDebtType()) && b3) {
-                DebtBO sumBO = new DebtBO();
-                sumBO.setDebt("长期负债合计");
-                sumBO.setBeginDebt(beginSum);
-                sumBO.setEndDebt(endSum);
-                sumBO.setDebtNum(num);
-                num++;
-                boList.add(sumBO);
-                debtBegin += beginSum;
-                debtEnd += endSum;
-                beginSum = 0;
-                endSum = 0;    //置为0
-                DebtBO debtBO = new DebtBO();
-                debtBO.setDebt("递延税项：");
-                boList.add(debtBO);
-                b3 = false;
-            } else if (DebtType.DALL.equals(debt.getDebtType()) && b4) {
-                DebtBO sumBO = new DebtBO();
-                sumBO.setDebt("负债合计");
-                debtBegin += beginSum;
-                debtEnd += endSum;
-                sumBO.setBeginDebt(debtBegin);
-                sumBO.setEndDebt(debtEnd);
-                sumBO.setDebtNum(num);
-                num++;
-                boList.add(sumBO);
-                beginSum = 0;
-                endSum = 0;    //置为0
-                DebtBO debtBO1 = new DebtBO();
-                boList.add(debtBO1);
-                DebtBO debtBO = new DebtBO();
-                debtBO.setDebt("所有者权益(或股东权益)：");
-                boList.add(debtBO);
-                b4 = false;
-            }
-            DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
-            if (formulaBOs != null) {
-                FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
-                bo.setBeginDebt(formulaBO.getBegin());
-                bo.setEndDebt(formulaBO.getEnd());
-                *//*if (Type.ADD.equals(debt.getType())) {
-                    if (!"实收资本".equals(bo.getDebt()) || !"已归还投资".equals(bo.getDebt())) {
-                        if ("实收资本（或股本）净额".equals(bo.getDebt()) || "资本公积".equals(bo.getDebt()) ||
-                                "盈余公积".equals(bo.getDebt()) || "未分配利润".equals(bo.getDebt())) {
-                            beginSum += bo.getBeginDebt();
-                            endSum += bo.getEndDebt();
-                        }
-
-                        countBegin += bo.getBeginDebt();
-                        countEnd += bo.getEndDebt();
-                    }
-                } else if (Type.REMOVE.equals(debt.getType())) {
-                    if (!"实收资本".equals(bo.getDebt()) || !"已归还投资".equals(bo.getDebt())) {
-                        if ("实收资本（或股本）净额".equals(bo.getDebt()) || "资本公积".equals(bo.getDebt()) ||
-                                "盈余公积".equals(bo.getDebt()) || "未分配利润".equals(bo.getDebt())) {
-                            beginSum -= bo.getBeginDebt();
-                            endSum -= bo.getEndDebt();
-                        }
-
-                        countBegin -= bo.getBeginDebt();
-                        countEnd -= bo.getEndDebt();
-                    }
-                }*//*
-                if ("实收资本（或股本）净额".equals(bo.getDebt()) || "实收资本(或股本)净额".equals(bo.getDebt()) || "资本公积".equals(bo.getDebt()) ||
-                        "盈余公积".equals(bo.getDebt()) || "未分配利润".equals(bo.getDebt())) {
-                    beginSum += bo.getBeginDebt();
-                    endSum += bo.getEndDebt();
-                }
-
-               *//* if ("负债合计".equals(bo.getDebt()) || "所有者权益(或股东权益)合计".equals(bo.getDebt()) ||
-                        "所有者权益（或股东权益）合计".equals(bo.getDebt())) {
-                    countBegin += bo.getBeginDebt();
-                    countEnd += bo.getEndDebt();
-                }*//*
-            }
-            bo.setDebtNum(num);
-            num++;
-            boList.add(bo);
-
-        }
-
-        AssetDTO assetDTO = new AssetDTO();
-        BeanUtils.copyProperties(dto, assetDTO, "sorts");
-        Long size = assetSer.count(assetDTO);
-
-//        if (size + 10 > boList.size() + 2) {
-//            for (int i = 0; i < size + 10 - (boList.size() + 2); i++) {
-//                DebtBO debtBO = new DebtBO();
-//                boList.add(debtBO);
-//            }
-//        }
-
-        DebtBO lastTwo = new DebtBO();
-        lastTwo.setDebt("所有者权益(或股东权益)合计");
-        lastTwo.setBeginDebt(beginSum);
-        lastTwo.setEndDebt(endSum);
-        lastTwo.setDebtNum(num);
-        num++;
-        boList.add(lastTwo);
-
-        for (DebtBO bo : boList) {
-            if ("负债合计".equals(bo.getDebt())) {
-                countBegin += bo.getBeginDebt();
-                countEnd += bo.getEndDebt();
-                break;
-            }
-        }
-        DebtBO lastBO = new DebtBO();
-        lastBO.setDebt("负债和所有者权益(或股东权益)总计");
-//        lastBO.setBeginDebt(countBegin);
-//        lastBO.setEndDebt(countEnd);
-        lastBO.setBeginDebt(beginSum + countBegin);
-        lastBO.setEndDebt(endSum + countEnd);
-        lastBO.setDebtNum(num);
-        num++;
-        boList.add(lastBO);
-        boList.stream().forEach(obj -> {
-            obj.setStartTime(dto.getStartTime());
-            obj.setEndTime(dto.getEndTime());
-        });*/
 
         Double beginSum1 = 0.0;
         Double beginSum2 = 0.0;
@@ -424,6 +267,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         int num = 0;
         for (Debt debt : list) {
             RpcTransmit.transmitUserToken(token);
+
             List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
             if ((formulaBOs == null) || (formulaBOs.isEmpty())) {
                 continue;
@@ -640,7 +484,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         DebtBO bo36 = new DebtBO();
         DebtBO bo37 = new DebtBO();
         DebtBO bo38 = new DebtBO();
-
+        int i = 1;
         for (DebtBO bo : list) {
             if (null != bo.getBeginDebt()) {
                 bo.setBeginDebt(new BigDecimal(bo.getBeginDebt()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
@@ -650,115 +494,115 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             }
 
             if ("流动负债：".equals(bo.getDebt()) || "流动负债:".equals(bo.getDebt())) {
-                bo1 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo1 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), null, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("短期借款".equals(bo.getDebt())) {
-                bo2 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo2 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付票据".equals(bo.getDebt())) {
-                bo3 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo3 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付账款".equals(bo.getDebt())) {
-                bo4 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo4 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("预收账款".equals(bo.getDebt())) {
-                bo5 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo5 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付职工薪酬".equals(bo.getDebt())) {
-                bo6 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo6 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付利息".equals(bo.getDebt())) {
-                bo7 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo7 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付股利".equals(bo.getDebt())) {
-                bo8 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo8 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应交税金".equals(bo.getDebt())) {
-                bo9 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo9 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("其他应交款".equals(bo.getDebt())) {
-                bo10 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo10 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("其他应付款".equals(bo.getDebt())) {
-                bo11 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo11 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("预提费用".equals(bo.getDebt())) {
-                bo12 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo12 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("预计负债".equals(bo.getDebt())) {
-                bo13 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo13 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("一年内到期的长期负债".equals(bo.getDebt())) {
-                bo14 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo14 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("其他流动负债".equals(bo.getDebt())) {
-                bo15 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo15 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
                 bo16 = new DebtBO();
             }
             if ("流动负债合计".equals(bo.getDebt())) {
-                bo17 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo17 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("长期负债：".equals(bo.getDebt()) || "长期负债:".equals(bo.getDebt())) {
-                bo18 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo18 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), null, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("长期借款".equals(bo.getDebt())) {
-                bo19 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo19 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("应付债券".equals(bo.getDebt())) {
-                bo20 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo20 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("长期应付款".equals(bo.getDebt())) {
-                bo21 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo21 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("专项应付款".equals(bo.getDebt())) {
-                bo22 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo22 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("其他长期负债".equals(bo.getDebt())) {
-                bo23 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo23 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("长期负债合计".equals(bo.getDebt())) {
-                bo24 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo24 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("递延税项：".equals(bo.getDebt()) || "递延税项:".equals(bo.getDebt())) {
-                bo25 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo25 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), null, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("递延税款贷项".equals(bo.getDebt())) {
-                bo26 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo26 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("负债合计".equals(bo.getDebt())) {
-                bo27 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo27 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
                 bo28 = new DebtBO();
             }
             if ("所有者权益(或股东权益)：".equals(bo.getDebt()) || "所有者权益(或股东权益):".equals(bo.getDebt())
                     || "所有者权益（或股东权益）：".equals(bo.getDebt()) || "所有者权益（或股东权益）:".equals(bo.getDebt())) {
-                bo29 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo29 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), null, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("实收资本(或股本)".equals(bo.getDebt()) || "实收资本（或股本）".equals(bo.getDebt())) {
-                bo30 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo30 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("减：已归还投资".equals(bo.getDebt()) || "减:已归还投资".equals(bo.getDebt())) {
-                bo31 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo31 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("实收资本(或股本)净额".equals(bo.getDebt()) || "实收资本（或股本）净额".equals(bo.getDebt())) {
-                bo32 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo32 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("资本公积".equals(bo.getDebt())) {
-                bo33 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo33 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("盈余公积".equals(bo.getDebt())) {
-                bo34 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo34 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("其中：法定公益金".equals(bo.getDebt()) || "其中:法定公益金".equals(bo.getDebt())) {
-                bo35 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo35 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("未分配利润".equals(bo.getDebt())) {
-                bo36 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo36 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("所有者权益(或股东权益)合计".equals(bo.getDebt()) || "所有者权益（或股东权益）合计".equals(bo.getDebt())) {
-                bo37 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo37 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
             if ("负债和所有者权益（或股东权益）总计".equals(bo.getDebt()) || "负债和所有者权益(或股东权益)总计".equals(bo.getDebt())) {
-                bo38 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), bo.getDebtNum(), bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
+                bo38 = new DebtBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getDebt(), bo.getDebtType(), bo.getType(), i++, bo.getBeginDebt(), bo.getCurrent(), bo.getEndDebt());
             }
         }
 
@@ -800,7 +644,6 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         bos.add(bo36);
         bos.add(bo37);
         bos.add(bo38);
-
         return bos;
     }
 

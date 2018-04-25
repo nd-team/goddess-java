@@ -92,4 +92,14 @@ public class Table extends BaseEntity {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Table{" +
+                "name='" + name + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", creater='" + creater + '\'' +
+                ", status=" + status +
+                ", taskStatus=" + taskStatus +
+                '}';
+    }
 }

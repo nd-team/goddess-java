@@ -27,6 +27,7 @@ include ':modules:storage:storage-provider'
 include ':modules:organize:organize-api'
 include ':modules:organize:organize-consumer'
 include ':modules:organize:organize-provider'
+//# Updated upstream
 //#contacts
 include ':modules:contacts:contacts-api'
 include ':modules:contacts:contacts-consumer'
@@ -55,6 +56,17 @@ include ':modules:voucher:voucher-provider'
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
+//
+
+////#staffentry
+//include ':modules:staffentry:staffentry-api'
+//include ':modules:staffentry:staffentry-consumer'
+//include ':modules:staffentry:staffentry-provider'
+////#voucher
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
+//Stashed changes
 ////#financeinit
 include ':modules:financeinit:financeinit-api'
 include ':modules:financeinit:financeinit-consumer'
@@ -63,6 +75,7 @@ include ':modules:financeinit:financeinit-provider'
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
+//Updated upstream
 ////#business -工商注册-年检-变更
 include ':modules:business:business-api'
 include ':modules:business:business-consumer'
@@ -132,17 +145,73 @@ include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
 ////#regularization
-include ':modules:regularization:regularization-api'
-include ':modules:regularization:regularization-consumer'
-include ':modules:regularization:regularization-provider'
-////#event
+//
+
+include ':modules:attendance:attendance-api'
+include ':modules:attendance:attendance-consumer'
+include ':modules:attendance:attendance-provider'
+
+include ':modules:taskallotment:taskallotment-api'
+include ':modules:taskallotment:taskallotment-consumer'
+include ':modules:taskallotment:taskallotment-provider'
+
 include ':modules:event:event-api'
 include ':modules:event:event-consumer'
 include ':modules:event:event-provider'
-////#marketdevelopment
+
+include ':modules:contacts:contacts-api'
+include ':modules:contacts:contacts-consumer'
+include ':modules:contacts:contacts-provider'
+
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
+
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
+
+include ':modules:push:push-api'
+include ':modules:push:push-consumer'
+include ':modules:push:push-provider'
+
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
+
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
+
+include ':modules:qualifications:qualifications-api'
+include ':modules:qualifications:qualifications-consumer'
+include ':modules:qualifications:qualifications-provider'
+
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
+
+include ':modules:managementpromotion:managementpromotion-api'
+include ':modules:managementpromotion:managementpromotion-consumer'
+include ':modules:managementpromotion:managementpromotion-provider'
+
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
+
+include ':modules:recruit:recruit-api'
+include ':modules:recruit:recruit-consumer'
+include ':modules:recruit:recruit-provider'
+
+//Stashed changes
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'
+
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
 include ':modules:marketdevelopment:marketdevelopment-provider'
+// Updated upstream
 ////#market
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
@@ -196,17 +265,37 @@ include ':modules:managepromotion:managepromotion-api'
 include ':modules:managepromotion:managepromotion-consumer'
 include ':modules:managepromotion:managepromotion-provider'
 ////#salaryconfirm
+//
+
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+
+include ':modules:accommodation:accommodation-api'
+include ':modules:accommodation:accommodation-consumer'
+include ':modules:accommodation:accommodation-provider'
+
+include ':modules:salarymanage:salarymanage-api'
+include ':modules:salarymanage:salarymanage-consumer'
+include ':modules:salarymanage:salarymanage-provider'
+
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
+
+// Stashed changes
 include ':modules:salaryconfirm:salaryconfirm-api'
 include ':modules:salaryconfirm:salaryconfirm-consumer'
 include ':modules:salaryconfirm:salaryconfirm-provider'
-////#secure
-include ':modules:secure:secure-api'
-include ':modules:secure:secure-consumer'
-include ':modules:secure:secure-provider'
-////#rentutilitiespay
+
+include ':modules:managepromotion:managepromotion-api'
+include ':modules:managepromotion:managepromotion-consumer'
+include ':modules:managepromotion:managepromotion-provider'
+
 include ':modules:rentutilitiespay:rentutilitiespay-api'
 include ':modules:rentutilitiespay:rentutilitiespay-consumer'
 include ':modules:rentutilitiespay:rentutilitiespay-provider'
+//Updated upstream
 ////#businsurance --商业保险
 include ':modules:businsurance:businsurance-api'
 include ':modules:businsurance:businsurance-consumer'
@@ -338,3 +427,31 @@ include ':modules:abilitydisplay:abilitydisplay-api'
 include ':modules:abilitydisplay:abilitydisplay-consumer'
 include ':modules:abilitydisplay:abilitydisplay-provider'
 
+//
+
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
+
+include ':modules:business:business-api'
+include ':modules:business:business-consumer'
+include ':modules:business:business-provider'
+
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
+
+include ':modules:reimbursementprepare:reimbursementprepare-api'
+include ':modules:reimbursementprepare:reimbursementprepare-consumer'
+include ':modules:reimbursementprepare:reimbursementprepare-provider'
+// Stashed changeshttps://github.com/dongtiantian1001/issp-doc.git
+
+//task任务进度管理
+include ':modules:task:task-api'
+include ':modules:task:task-consumer'
+include ':modules:task:task-provider'
+
+//财务报表
+include ':modules:reportmanagement:reportmanagement-api'
+include ':modules:reportmanagement:reportmanagement-consumer'
+include ':modules:reportmanagement:reportmanagement-provider'

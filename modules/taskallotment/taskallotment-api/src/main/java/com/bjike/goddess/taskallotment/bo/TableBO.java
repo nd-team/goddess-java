@@ -80,4 +80,15 @@ public class TableBO extends BaseBO {
     public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+    @Override
+    public String toString() {
+        return "TableBO{" +
+                "name='" + name + '\'' +
+                ", creater='" + creater + '\'' +
+                ", status=" + status +
+                ", nodeS=" + nodeS +
+                ", taskStatus=" + taskStatus +
+                '}';
+    }
 }

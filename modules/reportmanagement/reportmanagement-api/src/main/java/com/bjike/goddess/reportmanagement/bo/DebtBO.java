@@ -146,4 +146,19 @@ public class DebtBO extends BaseBO {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
+    @Override
+    public String toString() {
+        return "DebtBO{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", debt='" + debt + '\'' +
+                ", debtType=" + debtType +
+                ", type=" + type +
+                ", debtNum=" + debtNum +
+                ", beginDebt=" + beginDebt +
+                ", current=" + current +
+                ", endDebt=" + endDebt +
+                '}';
+    }
 }

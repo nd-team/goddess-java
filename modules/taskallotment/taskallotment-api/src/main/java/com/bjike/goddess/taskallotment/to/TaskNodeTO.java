@@ -777,4 +777,65 @@ public class TaskNodeTO extends BaseTO {
     public void setCustomTitles(List<CustomTitleTO> customTitles) {
         this.customTitles = customTitles;
     }
+
+    @Override
+    public String toString() {
+        return "TaskNodeTO{" +
+                "area='" + area + '\'' +
+                ", depart='" + depart + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", tableId='" + tableId + '\'' +
+                ", table='" + table + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", charge='" + charge + '\'' +
+                ", execute='" + execute + '\'' +
+                ", planTime='" + planTime + '\'' +
+                ", taskType=" + taskType +
+                ", timesType=" + timesType +
+                ", moudle='" + moudle + '\'' +
+                ", gpriority=" + gpriority +
+                ", content='" + content + '\'' +
+                ", planNum=" + planNum +
+                ", actualNum=" + actualNum +
+                ", needTime=" + needTime +
+                ", needType=" + needType +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", remark='" + remark + '\'' +
+                ", reason='" + reason + '\'' +
+                ", split=" + split +
+                ", day=" + day +
+                ", executeTime=" + executeTime +
+                ", executeType=" + executeType +
+                ", startExecute='" + startExecute + '\'' +
+                ", endExecute='" + endExecute + '\'' +
+                ", actualTime=" + actualTime +
+                ", actualType=" + actualType +
+                ", undoneTime=" + undoneTime +
+                ", undoneType=" + undoneType +
+                ", finishTime='" + finishTime + '\'' +
+                ", executeArea='" + executeArea + '\'' +
+                ", executeDepart='" + executeDepart + '\'' +
+                ", finishStatus=" + finishStatus +
+                ", confirm=" + confirm +
+                ", reimbursement=" + reimbursement +
+                ", notice='" + notice + '\'' +
+                ", attachment=" + attachment +
+                ", question=" + question +
+                ", report=" + report +
+                ", delay=" + delay +
+                ", delayTime=" + delayTime +
+                ", delayType=" + delayType +
+                ", reportReason='" + reportReason + '\'' +
+                ", result='" + result + '\'' +
+                ", notPassReason='" + notPassReason + '\'' +
+                ", summary='" + summary + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", questions=" + questions +
+                ", customTitles=" + customTitles +
+                ", increase=" + increase +
+                ", initiate='" + initiate + '\'' +
+                ", innerProject='" + innerProject + '\'' +
+                '}';
+    }
 }

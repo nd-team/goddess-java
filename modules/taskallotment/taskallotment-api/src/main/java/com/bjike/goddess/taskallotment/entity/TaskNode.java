@@ -302,7 +302,7 @@ public class TaskNode extends BaseEntity {
     @Column(name = "efficiency", columnDefinition = "DECIMAL(10,2)    COMMENT '工作效率'")
     private Double efficiency;
     /**
-     * 项目表信息
+     * 项目表id
      */
     @Column(name = "table_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目表信息'")
     private String tableId;
@@ -770,5 +770,65 @@ public class TaskNode extends BaseEntity {
 
     public void setTimesType(TimesType timesType) {
         this.timesType = timesType;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskNode{" +
+                "fatherId='" + fatherId + '\'' +
+                ", haveSon=" + haveSon +
+                ", initiate='" + initiate + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", charge='" + charge + '\'' +
+                ", execute='" + execute + '\'' +
+                ", planTime=" + planTime +
+                ", taskType=" + taskType +
+                ", timesType=" + timesType +
+                ", moudle='" + moudle + '\'' +
+                ", type='" + type + '\'' +
+                ", content='" + content + '\'' +
+                ", planNum=" + planNum +
+                ", actualNum=" + actualNum +
+                ", needTime=" + needTime +
+                ", needType=" + needType +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", remark='" + remark + '\'' +
+                ", split=" + split +
+                ", day=" + day +
+                ", executeTime=" + executeTime +
+                ", executeType=" + executeType +
+                ", startExecute=" + startExecute +
+                ", endExecute=" + endExecute +
+                ", actualTime=" + actualTime +
+                ", actualType=" + actualType +
+                ", undoneTime=" + undoneTime +
+                ", undoneType=" + undoneType +
+                ", finishTime=" + finishTime +
+                ", executeArea='" + executeArea + '\'' +
+                ", executeDepart='" + executeDepart + '\'' +
+                ", finishStatus=" + finishStatus +
+                ", confirm=" + confirm +
+                ", reason='" + reason + '\'' +
+                ", reimbursement=" + reimbursement +
+                ", notice='" + notice + '\'' +
+                ", attachment=" + attachment +
+                ", question=" + question +
+                ", report=" + report +
+                ", delay=" + delay +
+                ", delayTime=" + delayTime +
+                ", delayType=" + delayType +
+                ", reportReason='" + reportReason + '\'' +
+                ", aduitType=" + aduitType +
+                ", result='" + result + '\'' +
+                ", notPassReason='" + notPassReason + '\'' +
+                ", summary='" + summary + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", priority=" + priority +
+                ", gpriority=" + gpriority +
+                ", efficiency=" + efficiency +
+                ", tableId='" + tableId + '\'' +
+                ", time=" + time +
+                '}';
     }
 }

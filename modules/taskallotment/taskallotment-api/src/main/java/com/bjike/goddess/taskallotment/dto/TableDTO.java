@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 /**
  * 项目表数据传输对象
@@ -98,5 +99,17 @@ public class TableDTO extends BaseDTO {
 
     public void setProjectIds(String[] projectIds) {
         this.projectIds = projectIds;
+    }
+
+    @Override
+    public String toString() {
+        return "TableDTO{" +
+                "projectIds=" + Arrays.toString(projectIds) +
+                ", tables=" + Arrays.toString(tables) +
+                ", projectId='" + projectId + '\'' +
+                ", area='" + area + '\'' +
+                ", depart='" + depart + '\'' +
+                ", makeProject='" + makeProject + '\'' +
+                '}';
     }
 }

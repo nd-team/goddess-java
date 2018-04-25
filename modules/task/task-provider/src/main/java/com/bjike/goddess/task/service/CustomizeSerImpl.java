@@ -788,6 +788,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
      */
     @Override
     public String gather(CollectDTO dto) throws SerException {
+        System.out.println(dto);
         /**
          * 新增汇总类型
          * 新增汇总说明

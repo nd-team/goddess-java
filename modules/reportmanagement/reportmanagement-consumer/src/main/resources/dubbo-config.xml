@@ -41,4 +41,15 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+
+
+	<dubbo:reference  validation="true" id="ModuleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+	<dubbo:reference  validation="true" id="ModuleApplyApiImpl" interface="com.bjike.goddess.assemble.api.ModuleApplyAPI" />
+	<dubbo:reference  validation="true" id="ModuleAssembleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAssembleAPI" />
+
+	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
+	<dubbo:reference  validation="true" id="voucherTotalApiImpl" interface="com.bjike.goddess.voucher.api.VoucherTotalAPI" />
+	<dubbo:reference  validation="true" id="voucherPermissionApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionAPI" />
+	<dubbo:reference  validation="true" id="voucherPermissionOperateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionOperateAPI" />
+
 </beans>

@@ -767,7 +767,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return current;
     }
-
+    //获取所有项目名称
     @Override
     public List<String> findProjectName() throws SerException {
         List<VoucherGenerate> voucherGenerateList = super.findAll();
