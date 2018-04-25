@@ -62,6 +62,19 @@ public class BankAccountInfo extends BaseEntity {
     @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '类型'")
     private String type;
 
+    /**
+     * 备注
+     */
+    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    private  String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getName() {
         return name;

@@ -22,6 +22,8 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.TempMatterDemandAPI" ref="tempMatterDemandApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.BankOfTheWaterAPI" ref="bankOfTheWaterApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.BankAccountInformationAPI" ref="bankAccountInformationApiImpl"></dubbo:service>
 
 	<!--引用其他模块的API-->
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />

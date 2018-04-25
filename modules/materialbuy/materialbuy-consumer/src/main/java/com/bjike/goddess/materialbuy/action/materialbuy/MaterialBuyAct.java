@@ -11,7 +11,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.api.DeviceTypeAPI;
 import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
-import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.to.DeleteFileTO;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;

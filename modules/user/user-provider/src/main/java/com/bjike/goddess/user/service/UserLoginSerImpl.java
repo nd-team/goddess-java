@@ -154,7 +154,7 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @param loginTO
      */
     private String validatePassword(UserLoginTO loginTO, User persistUser) throws SerException {
-        String token = null;
+         String token = null;
         String account = loginTO.getAccount();
         try {
             //该密码经过公钥加密

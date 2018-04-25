@@ -2,17 +2,17 @@ package com.bjike.goddess.bankrecords.action.bankrecords;
 
 import com.bjike.goddess.bankrecords.api.BankAccountInfoAPI;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
+import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
+import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.bankrecords.to.CommunicateDeleteFileTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
-import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
-import com.bjike.goddess.bankrecords.vo.BankRecordInfoVO;
-import com.bjike.goddess.bankrecords.vo.BankRecordPageListVO;
-import com.bjike.goddess.bankrecords.vo.ExcelTitleVO;
+import com.bjike.goddess.bankrecords.vo.*;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -50,7 +50,60 @@ public class BankRecordAct extends BaseFileAction {
     private BankAccountInfoAPI accountInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private BankSummaryAPI bankSummaryAPI;
 
+
+    /**
+     * 新银行汇总筛选查询
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/backfilterQuery")
+    public Result backfilterQuery(BankSummaryDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto), BankSummaryVO.class));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 新分析To
+     *
+     * @param startDate
+     * @param endDate
+     * @param accountIds
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/analyzeTo")
+    public Result analyzeTo(String startDate, String endDate, String accountIds) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(bankRecordAPI.analyzeTo(startDate, endDate, accountIds), BankRecordAnalyzeVO.class));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+//
+//    /**
+//     * 新对比To
+//     *
+//     * @param years
+//     * @param month
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PostMapping("v1/compareTo")
+//    public Result compareTo(String years, String month) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(bankRecordAPI.compareTo(years, month), BankRecordCompareVO.class));
+//        } catch (Exception e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 功能导航权限
@@ -75,6 +128,36 @@ public class BankRecordAct extends BaseFileAction {
         }
     }
 
+
+    /**
+     * 批量上传附件
+     * @param tos 传id属性
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @PostMapping("v1/uploadsTO")
+    public Result uploadsTo(List<BaseTO> tos, HttpServletRequest request) throws ActException {
+        try {
+            for (int i = 0; i < tos.size(); i++) {
+                 /*InputStream is=new FileInputStream(upload.get(i));
+                 OutputStream os=new FileOutputStream("d://upload//"+uploadFileName.get(i));
+                 byte [] buffer=new byte[1024];
+                 int count=0;
+                 while ((count=is.read(buffer))>0){
+                     os.write(buffer,0,count);
+                 }
+                 os.close();
+                 is.close();*/
+                String paths = "/" + tos.get(i).getId();
+                List<InputStream> inputStreams = getInputStreams(request, paths);
+                fileAPI.upload(inputStreams);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+        return new ActResult("上传成功");
+    }
 
     /**
      * 上传附件
@@ -104,11 +187,11 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/files")
-    public Result list(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/files/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/";
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -191,7 +274,6 @@ public class BankRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 导入银行流水
      *
@@ -214,7 +296,7 @@ public class BankRecordAct extends BaseFileAction {
     }
 
     /**
-     * 查询列表总条数
+     * 用查询列表总条数
      *
      * @param dto 查询条件或分页条件
      * @version v1
@@ -247,7 +329,7 @@ public class BankRecordAct extends BaseFileAction {
     }
 
     /**
-     * 列表
+     * 用查询条件或者分页条件
      *
      * @param dto 查询条件或分页条件
      * @return class BankRecordPageListVO
@@ -263,6 +345,7 @@ public class BankRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 删除银行流水记录
      *

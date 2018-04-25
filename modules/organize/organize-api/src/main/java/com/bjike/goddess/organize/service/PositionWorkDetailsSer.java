@@ -193,4 +193,12 @@ public interface PositionWorkDetailsSer extends Ser<PositionWorkDetails, Positio
     default OptionAnnularBO figureShow() throws SerException {
         return null;
     }
+
+    /**
+     * 通过岗位获取姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    PositionWorkDetailsBO pb(String position) throws SerException;
 }

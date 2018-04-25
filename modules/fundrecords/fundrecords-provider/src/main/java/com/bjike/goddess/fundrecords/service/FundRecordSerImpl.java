@@ -66,6 +66,18 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     private ModuleAPI modulesAPI;
     private static Logger logger = Logger.getLogger(FundRecordSerImpl.class);
 
+
+    @Override
+    public FundRecordBO balanceCall(String years, String month) throws SerException {
+        String sql="select sum(amount) as amount from fundrecords_fundrecord where  ";
+        List<FundRecordBO> list= super.findBySql(sql,FundRecordBO.class,new String[]{"amount"});
+        if(list!=null && !list.isEmpty()) {
+            return list.get(0);
+        }else{
+            throw new SerException("没有值");
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FundRecordBO insertModel(FundRecordTO to) throws SerException {

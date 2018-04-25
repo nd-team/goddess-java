@@ -7,6 +7,7 @@ import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -19,7 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BankRecordAPI {
-
+    /**
+     * 查询记录总条数
+     *
+     * @param dto 查询条件
+     * @return 记录总条数
+     */
+    Long countTo(BankRecordDTO dto) throws SerException;
+    /**
+     * 显示银行流水列表
+     *
+     */
+     List<BankRecordBO> bankRecordcall(BankRecordDTO dto) throws SerException;
     /**
      * 检查导入的Excel标题
      *
@@ -76,6 +88,9 @@ public interface BankRecordAPI {
      */
     List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountIds) throws SerException;
 
+
+
+
     /**
      * 分析
      *
@@ -87,6 +102,13 @@ public interface BankRecordAPI {
     List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
+     * 分析To
+     * */
+
+    List<BankRecordAnalyzeBO> analyzeTo(String startDate,String endDate,String accountIds)throws SerException;
+
+
+    /**
      * 对比
      *
      * @param year  年份
@@ -94,6 +116,11 @@ public interface BankRecordAPI {
      * @return 对比结果
      */
     BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
+    /**
+     * 对比To
+     * @return 对比结果
+     */
+    BankRecordCompareBO compareTo(Integer year,Integer month) throws SerException;
 
     /**
      * 根据条件查询列表信息
@@ -133,7 +160,6 @@ public interface BankRecordAPI {
      * @return 余额
      */
     Double balanceByMonth(String startTime,String endTime) throws SerException;
-
     /**
      * 汇总导出
      * @param year 年份
@@ -153,4 +179,11 @@ public interface BankRecordAPI {
      * @throws SerException
      */
     byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+    /**
+     * 银行导出
+     * @param accountIds 账户名称Id
+     * @return
+     * @throws SerException
+     */
+    byte[] bankRecordExcel(String accountIds)throws SerException;
 }

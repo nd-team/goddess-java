@@ -2,6 +2,8 @@ package com.bjike.goddess.bankrecords.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.time.LocalDate;
+
 /**
  * 分析对象
  *
@@ -12,7 +14,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class BankRecordCompareBO extends BaseBO {
-
+    /**
+     *日期
+     */
+    private String years;
     /**
      * 年份
      */
@@ -36,6 +41,14 @@ public class BankRecordCompareBO extends BaseBO {
      * 差额
      */
     private Double fundBalance;
+
+    public String getYears() {
+        return years;
+    }
+
+    public void setYears(String years) {
+        this.years = years;
+    }
 
     public Integer getYear() {
         return year;

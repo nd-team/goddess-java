@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,6 +23,12 @@ import java.util.List;
  */
 public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
 
+    Long countTo(BankRecordDTO dto) throws SerException;
+    /**
+     * 显示银行流水列表
+     *
+     */
+    List<BankRecordBO> bankRecordcall(BankRecordDTO dto) throws SerException;
     /**
      * 检查导入的Excel标题
      *
@@ -89,6 +96,16 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      */
     List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException;
 
+
+    /**
+     * 分析To
+     *
+     * @param startDate  开始时间
+     * @param endDate    结束时间
+     * @param accountIds 账户名称ID
+     * @return 分析结果
+     */
+    List<BankRecordAnalyzeBO> analyzeTo(String startDate,String endDate,String accountIds)throws SerException;
     /**
      * 对比分析
      * @param year 年份
@@ -96,7 +113,11 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      * @return
      */
     BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
-
+    /**
+     * 对比To
+     * @return 对比结果
+     */
+    BankRecordCompareBO compareTo(Integer year,Integer month) throws SerException;
     /**
      * 根据账号查询
      * @param year
@@ -124,4 +145,11 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
     byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 
     byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+    /**
+     * 银行导出
+     * @param accountIds 账户名称Id
+     * @return
+     * @throws SerException
+     */
+    byte[] bankRecordExcel(String accountIds)throws SerException;
 }

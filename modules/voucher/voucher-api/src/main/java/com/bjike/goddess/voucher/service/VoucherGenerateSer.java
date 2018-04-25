@@ -11,6 +11,7 @@ import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -854,4 +855,52 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> findFirstSubject() throws SerException {
         return null;
     }
+    /**
+     * 记账凭证汇总科目N
+     *
+     * @param dto
+     * @return VoucherSummanryBO
+     * @throws SerException
+     */
+    List<VoucherSummanryBO> summaryListN(VoucherSummaryDTO dto) throws SerException;
+
+    /**
+     * 记账凭证汇总科目W
+     *
+     * @param dto
+     * @return VoucherSummanryBO
+     * @throws SerException
+     */
+    List<VoucherSummanryBO> summaryListW(VoucherSummaryDTO dto)throws SerException;
+    /**
+     * 记账凭证数量
+     * @param dto
+     * @throws SerException
+     */
+    Long countSummary(VoucherSummaryDTO dto )throws SerException;
+
+    /**
+     * 凭证导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException;
+
+    /**
+     * 凭证汇总的基本信息(比如公司,时间..)
+     *
+     * @param startTime
+     * @param endTime
+     * @throws SerException
+     */
+    VoucherInformationBO information(String startTime,String endTime) throws SerException;
+    /**
+     * 查询所有的id
+     *
+     * @throws SerException
+     */
+    List<VoucherGenerateBO> voucherId()throws SerException;
+
+    List<VoucherSummanryBO> summaryListN1(VoucherSummaryDTO dto)throws SerException;
 }

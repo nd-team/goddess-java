@@ -51,7 +51,7 @@ public class BankRecord extends BaseEntity {
     private Double balance;
 
     /**
-     * 流水日期
+     * 流水日期(交易日)
      */
     @Column(name = "recordDate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '流水日期'")
     private String recordDate;

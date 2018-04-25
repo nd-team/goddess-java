@@ -12,6 +12,7 @@ import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -324,6 +325,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
         return voucherGenerateSer.accountCollect(dto);
     }
 
+
+
     @Override
     public byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.exportExcelAccount(dto);
@@ -458,4 +461,41 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
         return voucherGenerateSer.findCurrent(i,firstSubject,startTime,endTime);
     }
+
+    @Override
+    public List<VoucherSummanryBO> summaryListN(VoucherSummaryDTO dto) throws SerException {
+        return voucherGenerateSer.summaryListN(dto);
+    }
+
+    @Override
+    public List<VoucherSummanryBO> summaryListW(VoucherSummaryDTO dto) throws SerException {
+        return voucherGenerateSer.summaryListW(dto);
+    }
+
+
+    @Override
+    public byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException {
+        return voucherGenerateSer.exportExcelVocher(dto);
+    }
+
+    @Override
+    public VoucherInformationBO information(String startTime, String endTime) throws SerException {
+        return voucherGenerateSer.information(startTime,endTime);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> voucherId() throws SerException {
+        return voucherGenerateSer.voucherId();
+    }
+
+    @Override
+    public List<VoucherSummanryBO> summaryListN1(VoucherSummaryDTO dto) throws SerException {
+        return voucherGenerateSer.summaryListN1(dto);
+    }
+
+    @Override
+    public Long countSummary(VoucherSummaryDTO dto) throws SerException {
+        return voucherGenerateSer.countSummary(dto);
+    }
+
 }

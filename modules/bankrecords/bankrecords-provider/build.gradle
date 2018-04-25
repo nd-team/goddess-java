@@ -29,14 +29,6 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:bankrecords:bankrecords-api")
-    compile project(":modules:fundrecords:fundrecords-api")
-    compile project(":modules:storage:storage-api")
     compile project(":common:common-utils")
-    // https://mvnrepository.com/artifact/org.apache.poi/poi
-    compile group: 'org.apache.poi', name: 'poi', version: '3.16'
-    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.16'
-
-
 }
 

@@ -312,6 +312,7 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
 
     @Override
     public String findDoudap() throws SerException {
+
         BaseParameterDTO dto = new BaseParameterDTO();
         dto.getConditions().add(Restrict.eq("systemId", getSystemId()));
 //        List<BaseParameter> baseParameters = super.findAll();

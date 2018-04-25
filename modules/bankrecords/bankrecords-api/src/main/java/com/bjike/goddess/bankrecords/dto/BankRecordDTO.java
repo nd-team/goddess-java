@@ -16,7 +16,6 @@ public class BankRecordDTO extends BaseDTO {
 
     public interface PageList {
     }
-
     /**
      * 分页
      */

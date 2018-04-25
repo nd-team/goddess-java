@@ -45,6 +45,52 @@ public class BankAccountInfoAct {
     private UserSetPermissionAPI userSetPermissionAPI;
 
     /**
+     * 新查询账户列表
+     *
+     * @param dto 账户信息
+     * @return class BankAccountInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/findAlltoPage")
+    public Result findAlltoPage(BankAccountInfoDTO dto)throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(bankAccountInfoAPI.findAlltoPage(dto),BankAccountInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 按搜索全局银行账户信息查询
+     *
+     * @param dto 账户信息
+     * @return class BankAccountInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/listPage")
+    public Result listPage(BankAccountInfoDTO dto)throws ActException{
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(bankAccountInfoAPI.listPage(dto),BankAccountInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 新账户列表查询
+     *
+     * @return class BankAccountInfoVO
+     * @version v1
+     *
+     */
+    @GetMapping("v1/listAccount")
+    public Result listAccount()throws ActException{
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(bankAccountInfoAPI.listAccount(),BankAccountInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 模块设置导航权限
      *
      * @throws ActException
@@ -56,7 +102,7 @@ public class BankAccountInfoAct {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
+            obj.setName("cusperzmission");
             obj.setDescribesion("设置");
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {

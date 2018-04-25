@@ -11,6 +11,7 @@ import com.bjike.goddess.fundrecords.to.FundRecordTO;
 import com.bjike.goddess.fundrecords.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,6 +25,8 @@ import java.util.List;
  */
 public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
 
+
+    FundRecordBO balanceCall(String years,String month)throws SerException;
     /**
      * 新增补填资金流水
      *

@@ -47,7 +47,8 @@ public class LoginAct {
 //                type = LoginType.MOBILE;
 //            }
             loginTO.setLoginType(type);
-            loginTO.setIp(IpUtil.getIp(request));
+//            loginTO.setIp(IpUtil.getIp(request));
+            loginTO.setIp("127.0.0.1");  //todo 本地测试
             String token = userLoginAPI.login(loginTO);
             return ActResult.initialize(token);
 

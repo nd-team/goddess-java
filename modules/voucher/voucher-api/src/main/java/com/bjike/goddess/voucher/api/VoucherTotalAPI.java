@@ -1,5 +1,9 @@
 package com.bjike.goddess.voucher.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.voucher.bo.VoucherTotalGoldBO;
+import com.bjike.goddess.voucher.dto.VoucherTotalDTO;
+
 /**
  * 记账凭证合计金额业务接口
  *
@@ -11,4 +15,9 @@ package com.bjike.goddess.voucher.api;
  */
 public interface VoucherTotalAPI {
 
+//    /**
+//     * 记账汇总
+//     * @throws SerException
+//     */
+//    VoucherTotalGoldBO vb(VoucherTotalDTO dto) throws SerException;
 }
