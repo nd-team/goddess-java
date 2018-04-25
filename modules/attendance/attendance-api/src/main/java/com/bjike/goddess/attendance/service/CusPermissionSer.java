@@ -104,5 +104,13 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
         return null;
     }
 
+    /**
+     * 综合资源部操作权限
+     * @param idFlag
+     * @return
+     * @throws SerException
+     */
+    default  Boolean getDepartment(String idFlag) throws  SerException{return null;}
 
+//    default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
 }

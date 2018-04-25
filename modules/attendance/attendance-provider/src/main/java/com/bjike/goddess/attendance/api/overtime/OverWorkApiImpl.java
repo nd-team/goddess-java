@@ -6,6 +6,8 @@ import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
+import com.bjike.goddess.attendance.excel.SonPermissionObject;
+import com.bjike.goddess.attendance.service.CusPermissionSer;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
@@ -33,6 +35,8 @@ public class OverWorkApiImpl implements OverWorkAPI {
 
     @Autowired
     private OverWorkSer overWorkSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
 
     @Override
@@ -165,4 +169,20 @@ public class OverWorkApiImpl implements OverWorkAPI {
     public Long currentUserCount() throws SerException {
         return overWorkSer.currentUserCount();
     }
+
+    @Override
+    public Boolean getDepartment(String idFlag) throws SerException {
+        return overWorkSer.getDepartment(idFlag);
+    }
+
+    @Override
+    public Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return overWorkSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<SonPermissionObject> theSonPermission() throws SerException {
+        return overWorkSer.theSonPermission();
+    }
+
 }

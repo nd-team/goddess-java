@@ -56,6 +56,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -295,59 +297,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
 
-    @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
-        String ss = RpcTransmit.getUserToken();
-        Boolean flag = false;
-        //但前用户
-        UserBO userBO = userAPI.currentUser();
-        String userId = userBO.getId();
-        if (StringUtils.isBlank(idFlag)) {
-            throw new SerException("idFlag不能为空");
-        }
-        CusPermissionDTO dto = new CusPermissionDTO();
-        dto.getConditions().add(Restrict.eq("idFlag", idFlag));
-        CusPermission cusPermission = super.findOne(dto);
 
-        //先查询获操作对象
-        List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
-        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
-        if (operateList != null && operateList.size() > 0) {
-            operateList.stream().forEach(op -> {
-                idList.add(op.getOperator());
-            });
-        }
-
-
-        String[] operateIds = null;
-        if (null != idList && idList.size() > 0) {
-            operateIds = new String[idList.size()];
-            for (int i = 0; i < idList.size(); i++) {
-                operateIds[i] = idList.get(i);
-            }
-
-        }
-
-        //checkAsUserPosition
-        //checkAsUserArrangement
-        //checkAsUserModule
-//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-//        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
-//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-            Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-
-
-            //TODO 部门
-            if (depart) {
-                flag = true;
-            } else {
-                flag = false;
-            }
-
-        return flag;
-    }
 
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
@@ -398,4 +348,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         String aa = RpcTransmit.getUserToken();
         return flag;
     }
+
+
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.attendance.bo.overtime.*;
 import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.entity.overtime.OverWork;
 import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
+import com.bjike.goddess.attendance.excel.SonPermissionObject;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.OverWorkTO;
@@ -249,4 +250,13 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
      * @throws SerException
      */
     Long currentUserCount() throws SerException;
+
+    default  Boolean getDepartment(String idFlag) throws  SerException{return null;}
+
+    default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
+
+    default List<SonPermissionObject> theSonPermission() throws SerException {
+        return null;
+    }
+
 }
