@@ -4,6 +4,7 @@ import com.bjike.goddess.attendance.bo.CusPermissionBO;
 import com.bjike.goddess.attendance.dto.CusPermissionDTO;
 import com.bjike.goddess.attendance.entity.CusPermission;
 import com.bjike.goddess.attendance.to.CusPermissionTO;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.OpinionBO;
@@ -112,5 +113,5 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      */
     default  Boolean getDepartment(String idFlag) throws  SerException{return null;}
 
-//    default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
+    default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
 }

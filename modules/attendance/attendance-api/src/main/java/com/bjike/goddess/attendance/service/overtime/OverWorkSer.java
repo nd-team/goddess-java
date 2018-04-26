@@ -28,6 +28,10 @@ import java.util.List;
  */
 public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
     Boolean sonPermission() throws SerException;
+
+    /**
+     * 项目经理考勤权限添加
+     */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
@@ -258,5 +262,8 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
     default List<SonPermissionObject> theSonPermission() throws SerException {
         return null;
     }
+
+    default List<SonPermissionObject> theSonPerDepart() throws SerException{return null;}
+
 
 }

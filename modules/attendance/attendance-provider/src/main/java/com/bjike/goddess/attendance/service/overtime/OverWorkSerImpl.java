@@ -185,11 +185,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
 
     @Override
-    public List<SonPermissionObject> theSonPermission() throws SerException {
+    public List<SonPermissionObject> theSonPerDepart() throws SerException {
 
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        Boolean flagSeeSign = byAuthority(); // 综合资源部
         RpcTransmit.transmitUserToken(userToken);
 
 //        Boolean flagAddSign = byProManage();
@@ -236,6 +236,82 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         list.add(obj);
 
+//        obj = new SonPermissionObject();
+//        obj.setName("overWorkCountSet");
+//        obj.setDescribesion("审核加班");
+//        if (flagSeeSign) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+
+        return list;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> theSonPermission() throws SerException {
+
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = byProManage(); // 项目经理
+        RpcTransmit.transmitUserToken(userToken);
+
+//        Boolean flagAddSign = byProManage();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("punchSon");
+        obj.setDescribesion("打卡");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("vacate");
+        obj.setDescribesion("请假");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("overWorkCountSet");
+        obj.setDescribesion("加班情况");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("punchSon");
+        obj.setDescribesion("录入");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("overWorkCountSet");
+        obj.setDescribesion("审核加班");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
         return list;
     }
 
@@ -244,15 +320,14 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
          */
     private Boolean byProManage() throws  SerException{
         Boolean flag = false;
-        String userToken =RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if(!"admin".equals(userName.toLowerCase())){
-            flag = cusPermissionSer.getDepartment("10");
-        }
-        else {
-            flag = false;
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("10");
+        } else {
+            flag = true;
         }
         return flag;
     }
@@ -265,22 +340,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         Boolean flag = true;
         switch (guide) {
             case LIST:
-                flag = guideSeeIdentity();
-                break;
-            case AUDIT:
-                flag = guideAddIdentity();
-                break;
-            case RECORD:
-                flag =byAuthority();
-                break;
-            case PUNCH:
-                flag =byAuthority();
-                break;
-            case LEAVE:
-                flag =byAuthority();
-                break;
-            case OVERTIME:
-                flag =byAuthority();
+                flag = byProManage();
                 break;
             case SEARCH:
                 flag =byProManage();
@@ -297,7 +357,6 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             case APPLY:
                 flag =byProManage();
                 break;
-
 
             default:
                 flag = true;

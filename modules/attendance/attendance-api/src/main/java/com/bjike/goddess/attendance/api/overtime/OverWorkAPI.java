@@ -239,11 +239,19 @@ public interface OverWorkAPI {
 
     default  Boolean getDepartment(String idFlag) throws  SerException{return null;}
 
+    /**
+     * 项目经理权限
+     * @param guidePermissionTO
+     * @return
+     * @throws SerException
+     */
     default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
 
     default List<SonPermissionObject> theSonPermission() throws SerException {
         return null;
     }
+
+    default List<SonPermissionObject> theSonPerDepart() throws SerException{return null;}
 
 
 }

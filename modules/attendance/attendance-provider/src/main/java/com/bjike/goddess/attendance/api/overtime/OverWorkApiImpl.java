@@ -175,6 +175,12 @@ public class OverWorkApiImpl implements OverWorkAPI {
         return overWorkSer.getDepartment(idFlag);
     }
 
+    /**
+     * 考勤项目经理权限添加
+     * @param guidePermissionTO
+     * @return
+     * @throws SerException
+     */
     @Override
     public Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return overWorkSer.guidePermission(guidePermissionTO);
