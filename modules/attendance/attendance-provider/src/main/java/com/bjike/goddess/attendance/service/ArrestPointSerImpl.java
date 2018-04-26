@@ -40,9 +40,9 @@ public class ArrestPointSerImpl extends ServiceImpl<ArrestPoint, ArrestPointDTO>
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public ArrestPointBO save(ArrestPointTO to) throws SerException {
-        String name = userAPI.currentUser().getUsername();
-        ArrestPoint entity = BeanTransform.copyProperties(to, ArrestPoint.class, true);
-        Week[] workDays = to.getWorkDays();
+        String name = userAPI.currentUser().getUsername();  // 调用user模块获取当前用户方法
+        ArrestPoint entity = BeanTransform.copyProperties(to, ArrestPoint.class, true); // 驻点设置实体
+        Week[] workDays = to.getWorkDays();  // 打卡工作日
         if (null != to.getWeek() && to.getWeek()) {
             entity.setWorkDay("大小周（8:30-18:00）");
         } else {

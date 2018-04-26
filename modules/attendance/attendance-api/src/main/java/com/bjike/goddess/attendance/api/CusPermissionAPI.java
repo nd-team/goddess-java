@@ -100,4 +100,11 @@ public interface CusPermissionAPI {
     default Boolean busCusPermission(String idFlag) throws SerException {
         return null;
     }
+
+
+//    default  Boolean getDepartment(String idFlag) throws  SerException{return null;}
+
+//    default  Boolean guideCusPermission(GuidePermissionTO guidePermissionTO) throws  SerException{return null;}
+
+
 }

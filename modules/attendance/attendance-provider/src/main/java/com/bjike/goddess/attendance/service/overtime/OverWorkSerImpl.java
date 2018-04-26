@@ -13,6 +13,7 @@ import com.bjike.goddess.attendance.enums.GuideAddrStatus;
 import com.bjike.goddess.attendance.enums.OverTimesType;
 import com.bjike.goddess.attendance.excel.OverWorkExportExcel;
 import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
+import com.bjike.goddess.attendance.excel.SonPermissionObject;
 import com.bjike.goddess.attendance.service.CusPermissionSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
@@ -28,7 +29,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.event.api.EventAPI;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -163,18 +163,201 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
     }
 
+
+    /**
+     * 打卡请假加班情况补录请假权限
+     */
+    private Boolean byAuthority() throws SerException {
+
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("9");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> theSonPerDepart() throws SerException {
+
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = byAuthority(); // 综合资源部
+        RpcTransmit.transmitUserToken(userToken);
+
+//        Boolean flagAddSign = byProManage();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("punchSon");
+        obj.setDescribesion("打卡");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("vacate");
+        obj.setDescribesion("请假");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("overWorkCountSet");
+        obj.setDescribesion("加班情况");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("vacate");
+        obj.setDescribesion("补录请假");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+//        obj = new SonPermissionObject();
+//        obj.setName("overWorkCountSet");
+//        obj.setDescribesion("审核加班");
+//        if (flagSeeSign) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+
+        return list;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> theSonPermission() throws SerException {
+
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = byProManage(); // 项目经理
+        RpcTransmit.transmitUserToken(userToken);
+
+//        Boolean flagAddSign = byProManage();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("punchSon");
+        obj.setDescribesion("打卡");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("vacate");
+        obj.setDescribesion("请假");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("overWorkCountSet");
+        obj.setDescribesion("加班情况");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("punchSon");
+        obj.setDescribesion("录入");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("overWorkCountSet");
+        obj.setDescribesion("审核加班");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+        /**
+         * 组员打卡请假加班录入审核请假权限
+         */
+    private Boolean byProManage() throws  SerException{
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("10");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        GuideAddrStatus guide = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;
-        switch (guideAddrStatus) {
+        switch (guide) {
             case LIST:
-                flag = guideSeeIdentity();
+                flag = byProManage();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
+            case SEARCH:
+                flag =byProManage();
                 break;
+            case JOIN:
+                flag =byProManage();
+                break;
+            case AUDITOVER:
+                flag =byProManage();
+                break;
+            case AUDITLEAVE:
+                flag =byProManage();
+                break;
+            case APPLY:
+                flag =byProManage();
+                break;
+
             default:
                 flag = true;
                 break;
@@ -1119,4 +1302,6 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         return count;
     }
+
+
 }

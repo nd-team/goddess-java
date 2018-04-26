@@ -154,4 +154,24 @@ public class CusPermissionAction {
         }
     }
 
+    /**
+     * 综合资源部权限
+     *
+     * @param cusPermissionTO 综合资源部权限
+     * @return class CusPermissionVO
+     * @des 综合资源部权限
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/getDepartment")
+    public Result getDepartment(@Validated CusPermissionTO cusPermissionTO) throws ActException {
+        try {
+            CusPermissionBO cusPermissionBO1 = cusPermissionAPI.edit(cusPermissionTO);
+            return ActResult.initialize(BeanTransform.copyProperties(cusPermissionBO1, CusPermissionVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }
