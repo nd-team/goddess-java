@@ -113,4 +113,9 @@ public class PositionWorkDetailsApiImpl implements PositionWorkDetailsAPI {
     public OptionAnnularBO figureShow() throws SerException {
         return positionWorkDetailsSer.figureShow();
     }
+
+    @Override
+    public PositionWorkDetailsBO pb(String position) throws SerException {
+        return positionWorkDetailsSer.pb(position);
+    }
 }

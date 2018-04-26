@@ -1413,6 +1413,8 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         return bo;
     }
 
+
+
     //判断两个对象中的第j张模块表的数据是否相同
     private Boolean isRepeat(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2, int j) throws SerException {
         //是否相同
@@ -3327,5 +3329,11 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                 file.delete();
             }
         }
+    }
+
+    @Override
+    public PositionWorkDetailsBO pb(String position) throws SerException {
+        String sql="select name from organize_positionworkdetails where position='"+position+"'";
+        return null;
     }
 }

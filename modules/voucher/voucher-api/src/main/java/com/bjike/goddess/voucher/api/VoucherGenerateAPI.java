@@ -9,6 +9,7 @@ import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -180,7 +181,7 @@ public interface VoucherGenerateAPI {
      * @param voucherGenerateTO 记账凭证信息
      */
     default void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        return ;
+        return;
     }
 
     /**
@@ -615,7 +616,6 @@ public interface VoucherGenerateAPI {
         return null;
     }
 
-
     /**
      * 导出Excel
      *
@@ -701,13 +701,14 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String starTime,String time, Boolean tar) throws SerException {
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String starTime, String time, Boolean tar) throws SerException {
         return null;
     }
 
 
     /**
      * 获取年初未分配利润科目(1月)的数据
+     *
      * @param i
      * @param firstSubject
      * @param startTime
@@ -716,10 +717,13 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
+    default SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
 
     /**
      * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+     *
      * @param i
      * @param sumary
      * @param startTime
@@ -728,7 +732,9 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
+    default SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
 
     default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
         return null;
@@ -767,7 +773,6 @@ public interface VoucherGenerateAPI {
     }
 
 
-
     /**
      * 获取所有一级科目为现金或者银行存款的数据
      */
@@ -794,9 +799,11 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findFirstSubject() throws SerException { return null;}
+    default List<String> findFirstSubject() throws SerException {
+        return null;
+    }
 
-        /**
+    /**
      * 根据科目,时间 获取本期累计
      *
      * @param firstSubject
@@ -807,20 +814,77 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     //tar:true,获取借方,false,获取贷方
-    default SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    default SubjectCollectBO getCurrent(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return null;
     }
 
     /**
      * 根据一级科目,时间获取本期或本年
-     * @param i 区分方法标识
+     *
+     * @param i            区分方法标识
      * @param firstSubject
      * @param startTime
      * @param endTime
      * @return SubjectCollectBO
      * @throws SerException
      */
-    default SubjectCollectBO findCurrent(int i,String firstSubject, String startTime, String endTime) throws SerException {
+    default SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * 记账凭证汇总科目N
+     *
+     * @param dto
+     * @return VoucherSummanryBO
+     * @throws SerException
+     */
+    List<VoucherSummanryBO> summaryListN(VoucherSummaryDTO dto) throws SerException;
+
+    /**
+     * 记账凭证汇总科目W
+     *
+     * @param dto
+     * @return VoucherSummanryBO
+     * @throws SerException
+     */
+    List<VoucherSummanryBO> summaryListW(VoucherSummaryDTO dto)throws SerException;
+    /**
+     * 记账凭证数量
+     *
+     * @param dto
+     * @throws SerException
+     */
+    Long countSummary(VoucherSummaryDTO dto) throws SerException;
+
+    /**
+     * 凭证导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException;
+
+    /**
+     * 凭证汇总的基本信息(比如公司,时间..)
+     *
+     * @param startTime
+     * @param endTime
+     * @throws SerException
+     */
+    VoucherInformationBO information(String startTime,String endTime) throws SerException;
+    /**
+     * 查询所有的id
+     *
+     * @throws SerException
+     */
+     List<VoucherGenerateBO> voucherId()throws SerException;
+    /**
+     * 记账凭证汇总科目N1(为了导出用的)
+     *
+     * @param dto
+     * @return VoucherSummanryBO
+     * @throws SerException
+     */
+    List<VoucherSummanryBO> summaryListN1(VoucherSummaryDTO dto)throws SerException;
 }

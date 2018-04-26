@@ -10,9 +10,8 @@ package com.bjike.goddess.bankrecords.vo;
  * @Copy: [ com.bjike ]
  */
 public class BankAccountInfoVO {
-
     /**
-     * id
+     * 账号id
      */
     private String id;
     /**
@@ -36,19 +35,33 @@ public class BankAccountInfoVO {
     private String company;
 
     /**
-     * 银行
+     * 银行(开户行)
      */
     private String bank;
 
     /**
-     * 银行地址
+     * 银行地址(开户行地址)
      */
     private String bankAddress;
 
     /**
-     * 类型
+     * 类型(开户行属性)
      */
     private String type;
+
+    /**
+     * 备注
+     */
+    private  String remark;
+
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
 
     public String getId() {

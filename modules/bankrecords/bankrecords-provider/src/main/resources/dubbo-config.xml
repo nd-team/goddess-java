@@ -29,6 +29,12 @@
     <dubbo:service interface="com.bjike.goddess.bankrecords.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
 
+
+    <dubbo:service interface=" com.bjike.goddess.bankrecords.api.BankSummaryAPI" ref="bankSummaryApiImpl"/>
+
+
+
+
     <!--注册模块接口 -->
 
     <!-- 存储API -->
@@ -50,6 +56,10 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.financeinit.api.AccountAPI" id="accountApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.financeinit.api.BaseParameterAPI" id="baseParameterApiImpl"/>
 
 
 </beans>

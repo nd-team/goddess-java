@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.voucher.bo.VoucherTotalGoldBO;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.dto.VoucherTotalDTO;
 
@@ -16,4 +17,9 @@ import com.bjike.goddess.voucher.dto.VoucherTotalDTO;
  */
 public interface VoucherTotalSer extends Ser<VoucherTotal, VoucherTotalDTO> {
 
+//    /**
+//     * 记账汇总
+//     * @throws SerException
+//     */
+//    VoucherTotalGoldBO vb(VoucherTotalDTO dto) throws SerException;
 }

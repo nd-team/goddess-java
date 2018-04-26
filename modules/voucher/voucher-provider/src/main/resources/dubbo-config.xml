@@ -43,6 +43,6 @@
 	<dubbo:reference  validation="true" id="accountanCourseApiImpl" interface="com.bjike.goddess.financeinit.api.AccountanCourseAPI" />
 	<dubbo:reference  validation="true" id="baseParameterApiImpl" interface="com.bjike.goddess.financeinit.api.BaseParameterAPI" />
 	<dubbo:reference  validation="true" id="initDateEntryApiImpl" interface="com.bjike.goddess.financeinit.api.InitDateEntryAPI" />
-
-
+	<dubbo:reference  validation="true" id="companyBasicInfoApiImpl" interface="com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI" />
+	<dubbo:reference  validation="true" id="positionWorkDetailsApiImpl" interface="com.bjike.goddess.organize.api.PositionWorkDetailsAPI" />
 </beans>

@@ -11,18 +11,21 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
-import com.bjike.goddess.financeinit.api.BaseParameterAPI;
-import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.financeinit.api.InitDateEntryAPI;
-import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
-import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
-import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.api.*;
+import com.bjike.goddess.financeinit.bo.*;
+import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
+import com.bjike.goddess.financeinit.dto.CompanyBasicInfoDTO;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
+import com.bjike.goddess.organize.api.PositionWorkDetailsAPI;
+import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.bo.FirstSubjectBO;
 import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
@@ -31,6 +34,7 @@ import com.bjike.goddess.voucher.excel.*;
 import com.bjike.goddess.voucher.to.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFCell;
@@ -44,6 +48,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,8 +93,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     private BaseParameterAPI baseParameterAPI;
     @Autowired
     private InitDateEntryAPI initDateEntryAPI;
-
-
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
+    @Autowired
+    private PositionWorkDetailsAPI positionWorkDetailsAPI;
+    @Autowired
+    private FileAPI fileAPI;
     /**
      * 导航栏核对查看权限（部门级别）
      */
@@ -106,6 +115,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return flag;
     }
+
 
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
@@ -345,7 +355,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         BigDecimal borrowMoneyTotal = new BigDecimal(0.0);
         BigDecimal loanMoneyTotal = new BigDecimal(0.0);
-        for(VoucherGenerateChildBO b : bo.getDetails()) {
+        for (VoucherGenerateChildBO b : bo.getDetails()) {
             borrowMoneyTotal = borrowMoneyTotal.add(new BigDecimal(String.valueOf(b.getBorrowMoney())));
             loanMoneyTotal = loanMoneyTotal.add(new BigDecimal(String.valueOf(b.getLoanMoney())));
         }
@@ -2202,11 +2212,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         if (dto.getTypes() != null && dto.getTypes().length > 0) {
             String types = "";
-            for(String str : dto.getTypes()) {
+            for (String str : dto.getTypes()) {
                 types += "'" + str + "',";
             }
             types = types.substring(0, types.length() - 1);
-            sql.append(" and type in ("+ types +")");
+            sql.append(" and type in (" + types + ")");
         }
         sql.append("group by uId) m");
         long amount = Long.parseLong(String.valueOf(super.findBySql(sql.toString()).get(0)));
@@ -2266,11 +2276,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         //新增type字段
         if (dto.getTypes() != null && dto.getTypes().length > 0) {
             String types = "";
-            for(String str : dto.getTypes()) {
+            for (String str : dto.getTypes()) {
                 types += "'" + str + "',";
             }
             types = types.substring(0, types.length() - 1);
-            sql.append(" and type in ("+ types +") ");
+            sql.append(" and type in (" + types + ") ");
         }
         sql.append("  order by voucherDate desc limit " + startRow + ", " + endRow + ")m");
         sql.append(") ");
@@ -4694,13 +4704,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         if (StringUtils.isNotBlank(dto.getFirstSubject()) && StringUtils.isNotBlank(dto.getSecondSubject()) && StringUtils.isNotBlank(dto.getThirdSubject())) {
             sb.append(" and firstSubject = '" + dto.getFirstSubject() + "'");
-           // sb.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
-           // sb.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
+            // sb.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
+            // sb.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
         }
         sb.append(" GROUP BY voucherDate,voucherWord,voucherNum,area,projectName,projectGroup, ");
         sb.append(" sumary,firstSubject,secondSubject,thirdSubject,borrowMoney,loanMoney ORDER BY voucherDate DESC");
-        String[] fields = new String[]{"voucherDate", "voucherWord","voucherNum", "area", "projectName",
-                "projectGroup", "sumary","firstSubject","secondSubject","thirdSubject","borrowMoney", "loanMoney"};
+        String[] fields = new String[]{"voucherDate", "voucherWord", "voucherNum", "area", "projectName",
+                "projectGroup", "sumary", "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
 
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
@@ -4741,6 +4751,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return boList;
     }
 
+
     @Override
     public byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException {
         String token = RpcTransmit.getUserToken();
@@ -4768,6 +4779,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
 
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
+
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
 
             //财务初始化中根据会计科目名称获取方向
@@ -4793,11 +4805,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
             boList.add(accountInfoBO);
         }
+
         List<AccountInfoExport> accountInfoExports = new ArrayList<>();
         boList.stream().forEach(str -> {
 
             AccountInfoExport export = BeanTransform.copyProperties(str, AccountInfoExport.class);
-            export.setVoucherWord(str.getVoucherWord()+"-"+str.getVoucherNum());
+            export.setVoucherWord(str.getVoucherWord() + "-" + str.getVoucherNum());
             accountInfoExports.add(export);
         });
         Excel excel = new Excel(0, 2);
@@ -6298,5 +6311,388 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return new ArrayList<>(set);
     }
+
+
+    @Override
+    public List<VoucherSummanryBO> summaryListN(VoucherSummaryDTO dto) throws SerException {
+        StringBuffer buffer = new StringBuffer();
+        //
+    //           String[]  ss=dto.getType();
+//        for(int i=0;i<type.length;i++){
+//
+//        }
+        Double borrowMoneyCount = 0.00;
+        Double loanMoneyCount = 0.00;
+        buffer.append("select ANY_VALUE(firstSubjectCode) as accountantCourse,ANY_VALUE(firstSubject) as courseName,sum(borrowMoney) as borrowMoney,sum(loanMoney) as loanMoney,ANY_VALUE(type) as type  from voucher_vouchergenerate where 1=1");
+        buffer.append(" and voucherDate>='" + dto.getStartTime() + "' ");
+        buffer.append(" and voucherDate<='" + dto.getEndTime() + "' ");
+        buffer.append(" and area='" + dto.getArea() + "'");
+        buffer.append(" and projectName='" + dto.getProjectName() + "'");
+        buffer.append(" and projectGroup='" + dto.getProjectGroup() + "'");
+        String []ss=dto.getType();
+        if(ss.length==1){
+            for(int i=0;i<ss.length;i++){
+                if(ss[i].equals("N")){
+                    buffer.append(" and type='N' ");
+                }else if(ss[i].equals("W")){
+                    buffer.append(" and type='W' ");
+                }
+            }
+        }
+        if(ss.length>1){
+
+        }
+        //buffer.append(" and type='N' ");
+        buffer.append(" group by firstSubjectCode,type");
+        String[] s = new String[]{"accountantCourse", "courseName", "borrowMoney", "loanMoney","type"};
+        List<VoucherSummanryBO> list=super.findBySql(buffer.toString(), VoucherSummanryBO.class, s);
+        // List<VoucherSummanryBO> list1=summaryListW(dto);
+        if(list!=null) {
+            for (int i = 0; i < list.size(); i++) {
+                borrowMoneyCount += list.get(i).getBorrowMoney();
+                loanMoneyCount += list.get(i).getLoanMoney();
+            }
+//                if (list1.size() > list.size()) {
+//                    if (ss.length > 1) {
+//                        int count = list1.size() - list.size();
+//                        for (int i = 0; i < count; i++) {
+//                            VoucherSummanryBO voucherSummanryBO1 = new VoucherSummanryBO();
+//                            voucherSummanryBO1.setAccountantCourse(" ");
+//                            voucherSummanryBO1.setCourseName(" ");
+//                            voucherSummanryBO1.setBorrowMoney(0.0);
+//                            voucherSummanryBO1.setLoanMoney(0.0);
+//                            list.add(voucherSummanryBO1);
+//                        }
+//                    }
+//            }
+            VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
+            voucherSummanryBO.setAccountantCourse("合计:");
+            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
+            voucherSummanryBO.setLoanMoney(loanMoneyCount);
+            list.add(voucherSummanryBO);
+        }else {
+            throw new SerException("没有任何数据");
+        }
+        return list;
+
+    }
+
+    @Override
+    public List<VoucherSummanryBO> summaryListN1(VoucherSummaryDTO dto) throws SerException {
+        StringBuffer buffer = new StringBuffer();
+        //      String[]  type=dto.getType();
+//        for(int i=0;i<type.length;i++){
+//
+//        }
+        //String[]  ss=dto.getType();
+        Double borrowMoneyCount = 0.00;
+        Double loanMoneyCount = 0.00;
+        buffer.append("select ANY_VALUE(firstSubjectCode) as accountantCourse,ANY_VALUE(firstSubject) as courseName,sum(borrowMoney) as borrowMoney,sum(loanMoney) as loanMoney  from voucher_vouchergenerate where 1=1");
+        buffer.append(" and voucherDate>='" + dto.getStartTime() + "' ");
+        buffer.append(" and voucherDate<='" + dto.getEndTime() + "' ");
+        buffer.append(" and area='" + dto.getArea() + "'");
+        buffer.append(" and projectName='" + dto.getProjectName() + "'");
+        buffer.append(" and projectGroup='" + dto.getProjectGroup() + "'");
+        buffer.append(" and type='N' ");
+        buffer.append(" group by firstSubjectCode");
+        String[] s = new String[]{"accountantCourse", "courseName", "borrowMoney", "loanMoney"};
+        List<VoucherSummanryBO> list= super.findBySql(buffer.toString(),VoucherSummanryBO.class, s);
+//        List<VoucherSummanryBO> list1=summaryListN(dto);
+//        int count1=list1.size();
+//        int count2=list.size();
+        if(list!=null) {
+            for (int i = 0; i < list.size(); i++) {
+                borrowMoneyCount +=list.get(i).getBorrowMoney();
+                loanMoneyCount +=list.get(i).getLoanMoney();
+            }
+//            if (ss.length > 1) {
+//                if (count1>count2) {
+//                    int count = summaryListN(dto).size()-list.size();
+//                    for (int i = 0; i < count; i++) {
+//                        VoucherSummanryBO voucherSummanryBO1 = new VoucherSummanryBO();
+//                        voucherSummanryBO1.setAccountantCourse(" ");
+//                        voucherSummanryBO1.setCourseName(" ");
+//                        voucherSummanryBO1.setBorrowMoney(0.0);
+//                        voucherSummanryBO1.setLoanMoney(0.0);
+//                        list.add(voucherSummanryBO1);
+//                    }
+//                }
+//            }
+            VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
+            voucherSummanryBO.setAccountantCourse("合计:");
+            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
+            voucherSummanryBO.setLoanMoney(loanMoneyCount);
+            list.add(voucherSummanryBO);
+        }else{
+            throw new SerException("没有任何数据");
+        }
+        return list;
+
+    }
+
+
+
+
+    @Override
+    public List<VoucherSummanryBO> summaryListW(VoucherSummaryDTO dto) throws SerException {
+        StringBuffer buffer = new StringBuffer();
+        //      String[]  type=dto.getType();
+//        for(int i=0;i<type.length;i++){
+//
+//        }
+       //String[]  ss=dto.getType();
+        Double borrowMoneyCount = 0.00;
+        Double loanMoneyCount = 0.00;
+        buffer.append("select ANY_VALUE(firstSubjectCode) as accountantCourse,ANY_VALUE(firstSubject) as courseName,sum(borrowMoney) as borrowMoney,sum(loanMoney) as loanMoney  from voucher_vouchergenerate where 1=1");
+        buffer.append(" and voucherDate>='" + dto.getStartTime() + "' ");
+        buffer.append(" and voucherDate<='" + dto.getEndTime() + "' ");
+        buffer.append(" and area='" + dto.getArea() + "'");
+        buffer.append(" and projectName='" + dto.getProjectName() + "'");
+        buffer.append(" and projectGroup='" + dto.getProjectGroup() + "'");
+        buffer.append(" and type='W' ");
+        buffer.append(" group by firstSubjectCode");
+        String[] s = new String[]{"accountantCourse", "courseName", "borrowMoney", "loanMoney"};
+        List<VoucherSummanryBO> list= super.findBySql(buffer.toString(),VoucherSummanryBO.class, s);
+//        List<VoucherSummanryBO> list1=summaryListN(dto);
+//          int count1=list1.size();
+//         int count2=list.size();
+        if(list!=null) {
+            for (int i = 0; i < list.size(); i++) {
+                borrowMoneyCount +=list.get(i).getBorrowMoney();
+                loanMoneyCount +=list.get(i).getLoanMoney();
+            }
+//            if (ss.length > 1) {
+//                if (count1>count2) {
+//                    int count = summaryListN(dto).size()-list.size();
+//                    for (int i = 0; i < count; i++) {
+//                        VoucherSummanryBO voucherSummanryBO1 = new VoucherSummanryBO();
+//                        voucherSummanryBO1.setAccountantCourse(" ");
+//                        voucherSummanryBO1.setCourseName(" ");
+//                        voucherSummanryBO1.setBorrowMoney(0.0);
+//                        voucherSummanryBO1.setLoanMoney(0.0);
+//                        list.add(voucherSummanryBO1);
+//                    }
+//                }
+//            }
+            VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
+            voucherSummanryBO.setAccountantCourse("合计:");
+            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
+            voucherSummanryBO.setLoanMoney(loanMoneyCount);
+            list.add(voucherSummanryBO);
+        }else{
+           throw new SerException("没有任何数据");
+        }
+        return list;
+
+    }
+
+    @Override
+    public Long countSummary(VoucherSummaryDTO dto) throws SerException {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("select count(id) from voucher_vouchergenerate where 1=1");
+        buffer.append(" and voucherDate>='" + dto.getStartTime() + "' ");
+        buffer.append(" and voucherDate<='" + dto.getEndTime() + "' ");
+        buffer.append(" and area='" + dto.getArea() + "'");
+        buffer.append(" and projectName='" + dto.getProjectName() + "'");
+        buffer.append(" and projectGroup='" + dto.getProjectGroup() + "'");
+        String[] s = dto.getType();//传过来的值
+        if (s != null) {
+            if (s.length == 1) {
+                for (int i = 0; i < s.length; i++) {
+                    buffer.append(" and type='" + s[i] + "'");
+                }
+            }
+            if (s.length > 1) {
+
+            }
+            buffer.append(" group by firstSubjectCode,type");
+        }
+        List<Object> list = super.findBySql(buffer.toString());
+
+        return Long.parseLong(String.valueOf(list.get(0)));
+    }
+    @Override
+    public byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException {
+       // VoucherInformationBO informationBO = information(dto.getStartTime(), dto.getEndTime());
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("记账凭证汇总表");
+        CellStyle cellStyleTitle = wb.createCellStyle();
+        cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER); //水平布局：居中
+        sheet.setDefaultColumnWidth(5);//设置宽度
+        XSSFRow row = sheet.createRow(0);//创建行从0开始
+        XSSFCell cell = row.createCell(0);//创建列从0开始
+        //cell.setCellValue(informationBO.getCompany());//公司名
+
+        cell.setCellValue("大公司");//公司名
+
+        //row.createCell(1).setCellValue(informationBO.getTime());//时间
+        row.createCell(1).setCellValue("2017-12-30");//时间
+        row.createCell(2).setCellValue("汇总凭证数量"+countSummary(dto));//汇总凭证数量
+        row.createCell(3).setCellValue("附件数量"+0);//模拟附件数量
+        row = sheet.createRow(2);//隔一行
+        String[] s = dto.getType();//传过来的值
+        if (s.length == 1) {
+                    List<VoucherSummanryBO> list = summaryListN(dto);
+                    for(int i=0;i<s.length;i++) {
+                        row.createCell(0).setCellValue("会计科目"+s[i]+"");
+                        row.createCell(1).setCellValue("科目名称");
+                        row.createCell(2).setCellValue("借方发生额");
+                        row.createCell(3).setCellValue("贷方发生额");
+                    }
+                    for (int j = 0; j < list.size(); j++) {
+                        row = sheet.createRow(j + 3);
+                        row.createCell(0).setCellValue(list.get(j).getAccountantCourse());//会计科目
+
+                        row.createCell(1).setCellValue(list.get(j).getCourseName());//科目名称
+                        row.createCell(2).setCellValue(list.get(j).getBorrowMoney());//借方发生额
+                        row.createCell(3).setCellValue(list.get(j).getLoanMoney());//贷方发生额
+
+                    }
+                    row = sheet.createRow(list.size() + 5);//隔一行到5
+
+//                    row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+//                    row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+
+            row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+            row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+
+                }
+        if (s.length > 1) {
+            List<VoucherSummanryBO> list = summaryListN1(dto);//科目N
+            List<VoucherSummanryBO> list1 = summaryListW(dto);//科目W
+            row.createCell(0).setCellValue("会计科目N");
+            row.createCell(1).setCellValue("科目名称");
+            row.createCell(2).setCellValue("借方发生额");
+            row.createCell(3).setCellValue("贷方发生额");
+            row.createCell(4).setCellValue("会计科目W");
+            row.createCell(5).setCellValue("科目名称");
+            row.createCell(6).setCellValue("借方发生额");
+            row.createCell(7).setCellValue("贷方发生额");
+            if(list.size()>list1.size()) {
+                    int count=list.size()-list1.size();
+                     for(int j=0;j<count;j++){
+                         VoucherSummanryBO vb=new VoucherSummanryBO();
+                         vb.setAccountantCourse(null);
+                         vb.setCourseName(null);
+                         vb.setBorrowMoney(0.0);
+                         vb.setLoanMoney(0.0);
+                         list1.add(vb);
+                     }
+                for (int i = 0; i < list.size(); i++) {
+                    row = sheet.createRow(i + 3);
+                    row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
+                    row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
+                    row.createCell(2).setCellValue(list.get(i).getBorrowMoney());//借方发生额
+                    row.createCell(3).setCellValue(list.get(i).getLoanMoney());//贷方发生额
+                    row.createCell(4).setCellValue(list1.get(i).getAccountantCourse());//会计科目W
+                    row.createCell(5).setCellValue(list1.get(i).getCourseName());//科目名称
+                    row.createCell(6).setCellValue(list1.get(i).getBorrowMoney());//借方发生额
+                    row.createCell(7).setCellValue(list1.get(i).getLoanMoney());//贷方发生额
+                }
+                row = sheet.createRow(list.size() + 5);//隔一行到5
+//                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+//                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+
+                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+
+
+            }else if(list.size()<list1.size()) {
+                int count=list.size()-list1.size();
+                for(int j=0;j<count;j++){
+                    VoucherSummanryBO vb=new VoucherSummanryBO();
+                    vb.setAccountantCourse(null);
+                    vb.setCourseName(null);
+                    vb.setBorrowMoney(0.0);
+                    vb.setLoanMoney(0.0);
+                    list.add(vb);
+                }
+                for (int i = 0; i < list1.size(); i++) {
+                    row = sheet.createRow(i + 3);
+                    row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
+                    row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
+                    row.createCell(2).setCellValue(list.get(i).getBorrowMoney());//借方发生额
+                    row.createCell(3).setCellValue(list.get(i).getLoanMoney());//贷方发生额
+
+                    row.createCell(4).setCellValue(list1.get(i).getAccountantCourse());//会计科目W
+                    row.createCell(5).setCellValue(list1.get(i).getCourseName());//科目名称
+                    row.createCell(6).setCellValue(list1.get(i).getBorrowMoney());//借方发生额
+                    row.createCell(7).setCellValue(list1.get(i).getLoanMoney());//贷方发生额
+                }
+                row = sheet.createRow(list1.size() + 5);//隔一行到5
+//                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+//                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+
+
+                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+            }
+        }
+
+//        CellRangeAddress cellRangeAddress=new CellRangeAddress(0,list.size()+5,0,1);//合并单元格合计
+//
+//        CellRangeAddress cellRangeAddress1=new CellRangeAddress(0,list.size()+6,0,1);//合并单元格会计主管
+//        CellRangeAddress cellRangeAddress2=new CellRangeAddress(0,list.size()+6,3,4);//合并单元格制作人
+//        sheet.addMergedRegion(cellRangeAddress);
+//        sheet.addMergedRegion(cellRangeAddress1);
+//        sheet.addMergedRegion(cellRangeAddress2);
+
+
+//        Excel excel = new Excel(0, 2);
+
+
+//        byte[] bytes = ExcelUtil.clazzToExcel(voucherExportToExports, excel);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+//        return bytes;
+    }
+
+    @Override
+    public VoucherInformationBO information(String startTime, String endTime) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        VoucherInformationBO informationBO = new VoucherInformationBO();
+        informationBO.setTime(startTime + "~" + endTime);//获取时间
+        RpcTransmit.transmitUserToken(token);
+        informationBO.setProducer(userAPI.currentUser().getUsername());//获取制作人名字
+//        String sql="select companyName from financeinit_baseparameter";
+//        String []fils=new String[]{"companyName"};
+//         List<BaseParameterBO>  list=super.findBySql(sql,BaseParameterBO.class,fils);
+
+//        CompanyBasicInfoDTO cd=new CompanyBasicInfoDTO();
+//        cd.setSystemId(systemId);
+//        RpcTransmit.transmitUserToken(token);
+//
+//        List<CompanyBasicInfoBO> list= companyBasicInfoAPI.listBaseInfo(cd);
+//        if(list!=null) {
+//            informationBO.setCompany(list.get(0).getCompanyName());//获取公司名称
+//        }
+
+
+
+        informationBO.setCompany("北京艾佳天诚信息技术有限公司");//由于调用其他模块有问题,写死了
+        RpcTransmit.transmitUserToken(token);
+        PositionWorkDetailsBO pbo = positionWorkDetailsAPI.pb("会计主管");
+        informationBO.setAccountingSupervisor(pbo == null ? "没值" : pbo.getName());
+
+        //差附件次数
+        informationBO.setAttachment(" "+0);
+        return informationBO;
+    }
+
+    @Override
+    public List<VoucherGenerateBO> voucherId() throws SerException {
+        String sql="select id from voucher_vouchergenerate";
+        String [] s=new String[]{"id"};
+        return super.findBySql(sql,VoucherGenerateBO.class,s);
+    }
 }
+
+
 

@@ -8,6 +8,7 @@ import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
 import com.bjike.goddess.fundrecords.to.GuidePermissionTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -51,6 +52,8 @@ public interface FundRecordAPI {
      * @return 资金流水结果集
      */
     List<FundRecordBO> pageList(FundRecordDTO dto) throws SerException;
+
+    FundRecordBO balanceCall(String years,String month)throws SerException;
 
     /**
      * 分页查询资金流水总记录数

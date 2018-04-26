@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,10 +28,27 @@ public class BankRecordApiImpl implements BankRecordAPI {
 
     @Autowired
     private BankRecordSer bankRecordSer;
+    @Override
+    public Long countTo(BankRecordDTO dto) throws SerException {
+        return bankRecordSer.countTo(dto);
+    }
+
+    @Override
+    public List<BankRecordBO> bankRecordcall(BankRecordDTO dto) throws SerException {
+        return bankRecordSer.bankRecordcall(dto);
+    }
 
     @Override
     public List<ExcelTitleBO> check(List<InputStream> inputStreams) throws SerException {
         return bankRecordSer.check(inputStreams);
+    }
+
+    public BankRecordSer getBankRecordSer() {
+        return bankRecordSer;
+    }
+
+    public void setBankRecordSer(BankRecordSer bankRecordSer) {
+        this.bankRecordSer = bankRecordSer;
     }
 
     @Override
@@ -51,6 +69,7 @@ public class BankRecordApiImpl implements BankRecordAPI {
     @Override
     public List<BankRecordBO> pageList(BankRecordDTO dto) throws SerException {
         return bankRecordSer.pageList(dto);
+       // return bankRecordSer.pageList_V2(dto);
     }
 
     @Override
@@ -69,9 +88,21 @@ public class BankRecordApiImpl implements BankRecordAPI {
     }
 
     @Override
+    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String accountIds) throws SerException {
+        return bankRecordSer.analyzeTo(startDate,endDate,accountIds);
+    }
+
+
+    @Override
     public BankRecordCompareBO compare(Integer year, Integer month) throws SerException {
         return bankRecordSer.compare(year, month);
     }
+
+    @Override
+    public BankRecordCompareBO compareTo(Integer year, Integer month) throws SerException {
+        return bankRecordSer.compareTo(year,month);
+    }
+
 
     @Override
     public List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException {
@@ -108,5 +139,9 @@ public class BankRecordApiImpl implements BankRecordAPI {
         return bankRecordSer.analyzeExcel(year, month, accountIds);
     }
 
-
+    @Override
+    public byte[] bankRecordExcel(String accountIds) throws SerException {
+        return  bankRecordSer.bankRecordExcel(accountIds);
+    }
+    
 }

@@ -12,7 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class BankAccountInfoBO extends BaseBO {
-
+    /**
+     * 账号id
+     */
+    private String id;
     /**
      * 账号名称
      */
@@ -48,6 +51,28 @@ public class BankAccountInfoBO extends BaseBO {
      */
     private String type;
 
+    /**
+     * 备注
+     */
+    private  String remark;
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getName() {
         return name;

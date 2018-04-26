@@ -156,6 +156,8 @@ public class VoucherGenerate extends BaseEntity {
     @Column(name = "uId", nullable = false, columnDefinition = "VARCHAR(60)   COMMENT '凭证唯一id(一个凭证多个科目的uId一样)'")
     private String uId;
 
+
+
     /**
      * 一级科目code
      */
@@ -181,7 +183,6 @@ public class VoucherGenerate extends BaseEntity {
      */
     @Column(name = "type",  columnDefinition = "VARCHAR(8)   COMMENT '类别'")
     private String type;
-
 
     public String getVoucherWord() {
         return voucherWord;

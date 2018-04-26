@@ -1,7 +1,9 @@
 package com.bjike.goddess.bankrecords.api;
 
 import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
+import com.bjike.goddess.bankrecords.bo.BankAccountInformationBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
+import com.bjike.goddess.bankrecords.dto.BankAccountInformationDTO;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.to.SonPermissionObject;
@@ -19,6 +21,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BankAccountInfoAPI {
+
+    /**
+     * 新查询账户列表
+     *
+     * @param to 账户信息
+     * @return 账户信息
+     */
+    List<BankAccountInfoBO> findAlltoPage(BankAccountInfoDTO dto) throws SerException;
+    /**
+     * 搜索全局银行账户信息查询
+     */
+    List<BankAccountInfoBO> listPage(BankAccountInfoDTO dto) throws SerException;
+    /**
+     * 账户列表查询
+     */
+    List<BankAccountInfoBO> listAccount() throws SerException;
+
 
     /**
      * 新增账户信息

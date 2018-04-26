@@ -19,6 +19,8 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.TempMatterDemandAPI" id="tempMatterDemandApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionAPI" id="cusPermissionApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.BankOfTheWaterAPI" id="bankOfTheWaterApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.BankAccountInformationAPI" id="BankAccountInformationApiImpl"></dubbo:reference>
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"></dubbo:reference>

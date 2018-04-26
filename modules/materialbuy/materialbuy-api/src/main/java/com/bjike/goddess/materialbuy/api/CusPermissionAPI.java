@@ -55,7 +55,8 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<com.bjike.goddess.organize.bo.OpinionBO
+            > listOperateById(String id) throws SerException {
         return null;
     }
 

@@ -15,6 +15,7 @@ import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -50,6 +51,11 @@ public class FundRecordApiImpl implements FundRecordAPI {
     @Override
     public List<FundRecordBO> pageList(FundRecordDTO dto) throws SerException {
         return fundRecordSer.pageList(dto);
+    }
+
+    @Override
+    public FundRecordBO balanceCall(String years, String month) throws SerException {
+        return fundRecordSer.balanceCall(years,month);
     }
 
     @Override

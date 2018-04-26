@@ -29,10 +29,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
-import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
-import com.bjike.goddess.voucher.dto.VoucherChartDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.enums.ExportStatus;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.excel.VoucherTemplateImportExcel;
@@ -52,7 +49,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * 记账凭证生成
+ * 记账凭证生成s
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-17 05:33 ]
@@ -255,7 +252,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/delete/{uId                                                  }")
+    @DeleteMapping("v1/delete/{uId}")
     public Result delete(@PathVariable String uId) throws ActException {
         try {
             voucherGenerateAPI.deleteVoucherGenerate(uId);
@@ -1068,7 +1065,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 明细账列表
      *
-     * @param dto
+     * @param dto dto
      * @return class AccountInfoVO
      * @throws ActException
      * @des 根据日期或地区或项目名称或项目组部门或科目进行列表查看
@@ -1106,6 +1103,9 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+
+
 
     /**
      * 获取所有已过账的地区
@@ -1546,7 +1546,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 在已过账记录里面根据二级或三级统计金额
      *
-     * @param dto
+     * @param dto dto
      * @version v1
      */
     @GetMapping("v1/findByMoney")
@@ -1581,7 +1581,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * 科目汇总导出
      *
      * @param to       导出条件
-     * @param response
+     * @param response response
      * @version v1
      */
     @GetMapping("v1/subject/exprot")
@@ -1600,7 +1600,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 获取所有会计科目
      *
-     * @param request
+     * @param request request
      * @throws ActException
      * @version v1
      */
@@ -1617,7 +1617,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 从财务初始化获取凭证字列表
      *
-     * @param request
+     * @param request request
      * @throws ActException
      * @version v1
      */
@@ -1645,12 +1645,47 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 凭证汇总N科目
+     *
+     * @param dto dto
+     * @return class VoucherSummaryVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/summaryListN")
+    public Result summaryListN(VoucherSummaryDTO dto) throws ActException {
+        try {
+            List<VoucherSummanryBO> list = voucherGenerateAPI.summaryListN(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list,VoucherSummaryVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 凭证汇总W科目
+     *
+     * @param dto dto
+     * @return class VoucherSummaryVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/summaryListW")
+    public Result summaryListw(VoucherSummaryDTO dto) throws ActException {
+        try {
+            List<VoucherSummanryBO> list = voucherGenerateAPI.summaryListW(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list,VoucherSummaryVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
     /**
      * 获取当前用户名
      *
-     * @param request
+     * @param request 请求
      * @throws ActException
      * @version v1
      */
@@ -1663,4 +1698,91 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 凭证汇总导出
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/exportAccountTo")
+    public Result exportReportTo(VoucherSummaryDTO dto, HttpServletResponse response,HttpServletRequest request) throws ActException {
+        try {
+            RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
+            String fileName = "记账凭证汇总.xlsx";
+            super.writeOutFile(response, voucherGenerateAPI.exportExcelVocher(dto),fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 凭证汇总基本信息
+     *
+     * @param startTime
+     * @param endTime
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/informationTo")
+    public Result information(String startTime,String endTime) throws ActException {
+        try {
+            VoucherInformationBO vb= voucherGenerateAPI.information(startTime,endTime);
+            return ActResult.initialize(BeanTransform.copyProperties(vb,VoucherInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 凭证数量
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/voucherCount")
+    public Result voucherCount(VoucherSummaryDTO dto) throws ActException {
+        try {
+            Long count = voucherGenerateAPI.countSummary(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 附件数量
+     *
+     * @param request request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/attachmentCount")
+    public Result attachmentCount(HttpServletRequest request) throws ActException {
+        try {
+            List<VoucherGenerateBO> list=voucherGenerateAPI.voucherId();
+            int count=0;
+            if(list!=null) {
+                for (int i = 0; i < list.size(); i++) {
+                    String path = "/voucher/vouchergenerate/" + list.get(i).getId();
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setPath(path);
+                    Object storageToken = request.getAttribute("storageToken");
+                    fileInfo.setStorageToken(storageToken.toString());
+                    List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+                    if(files!=null) {
+                        count+=files.size();
+                    }else{
+                       count+=0;
+                    }
+                }
+            }
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

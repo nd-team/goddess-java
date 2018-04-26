@@ -1,7 +1,9 @@
 package com.bjike.goddess.bankrecords.api;
 
 import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
+import com.bjike.goddess.bankrecords.bo.BankAccountInformationBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
+import com.bjike.goddess.bankrecords.dto.BankAccountInformationDTO;
 import com.bjike.goddess.bankrecords.service.BankAccountInfoSer;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
@@ -27,6 +29,23 @@ public class BankAccountInfoApiImpl implements BankAccountInfoAPI {
 
     @Autowired
     private BankAccountInfoSer bankAccountInfoSer;
+
+    @Override
+    public List<BankAccountInfoBO> findAlltoPage(BankAccountInfoDTO dto) throws SerException {
+        return bankAccountInfoSer.findAlltoPage(dto);
+    }
+
+    @Override
+    public List<BankAccountInfoBO> listPage(BankAccountInfoDTO dto) throws SerException {
+        return bankAccountInfoSer.listPage(dto);
+    }
+
+    @Override
+    public List<BankAccountInfoBO> listAccount() throws SerException {
+        return bankAccountInfoSer.listAccount();
+    }
+
+
 
     @Override
     public BankAccountInfoBO add(BankAccountInfoTO to) throws SerException {

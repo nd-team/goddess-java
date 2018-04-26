@@ -2,6 +2,8 @@ package com.bjike.goddess.bankrecords.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.time.LocalDate;
+
 /**
  * 分析对象
  *
@@ -12,7 +14,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class BankRecordAnalyzeBO extends BaseBO {
-
+    /**
+     * 日期
+     */
+    private String theDateOf;
     /**
      * 银行
      */
@@ -60,11 +65,11 @@ public class BankRecordAnalyzeBO extends BaseBO {
     /**
      * 收入比例
      */
-    private String creditorRate;
+    private Double creditorRate;
     /**
      * 支出比例
      */
-    private String debtorRate;
+    private Double debtorRate;
     /**
      * 收入增长率
      */
@@ -73,6 +78,14 @@ public class BankRecordAnalyzeBO extends BaseBO {
      * 支出增长率
      */
     private Double debtorGrow;
+
+    public String getTheDateOf() {
+        return theDateOf;
+    }
+
+    public void setTheDateOf(String theDateOf) {
+        this.theDateOf = theDateOf;
+    }
 
     public String getBank() {
         return bank;
@@ -162,19 +175,19 @@ public class BankRecordAnalyzeBO extends BaseBO {
         this.debtorSubtract = debtorSubtract;
     }
 
-    public String getCreditorRate() {
+    public Double getCreditorRate() {
         return creditorRate;
     }
 
-    public void setCreditorRate(String creditorRate) {
+    public void setCreditorRate(Double creditorRate) {
         this.creditorRate = creditorRate;
     }
 
-    public String getDebtorRate() {
+    public Double getDebtorRate() {
         return debtorRate;
     }
 
-    public void setDebtorRate(String debtorRate) {
+    public void setDebtorRate(Double debtorRate) {
         this.debtorRate = debtorRate;
     }
 

@@ -1,11 +1,13 @@
 package com.bjike.goddess.bankrecords.service;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
 import com.bjike.goddess.bankrecords.beanlist.Detail;
 import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.dto.BankRecordDetailDTO;
+import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
 import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.entity.BankRecordDetail;
@@ -22,13 +24,17 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.BaseParameterAPI;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
+import com.bjike.goddess.fundrecords.bo.FundRecordBO;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
@@ -40,12 +46,17 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -71,6 +82,88 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private BaseParameterAPI baseParameterAPI;
+    @Autowired
+    private BankSummaryAPI bankSummaryAPI;
+
+    @Autowired
+    private BankSummarySer bankSummarySer;
+
+    @Override
+    public Long countTo(BankRecordDTO dto) throws SerException {
+////        String token = RpcTransmit.getUserToken();
+////        String systemId = userAPI.currentSysNO();
+////        RpcTransmit.transmitUserToken(token);
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("select count(id) from bankrecords_bankrecord where 1=1");
+//        if (dto.getPropertyid().equals("基本户")) {
+//            sb.append(" and accountId in (select id from bankrecords_bankaccountinfo where type='基本户') ");
+//        } else {
+//            sb.append(" and accountId in (select id from bankrecords_bankaccountinfo where type='一般户') ");
+//        }
+//        if (dto.getAccountId().equals("0")) {
+//
+//        } else {
+//            sb.append(" and accountId=' " + dto.getAccountId() + " ' ");
+//        }
+//        if (dto.getStartDate() != null) {
+//            String s = baseParameterAPI.findDoudap();//账套会计期间启用日期
+//            LocalDate beginDateTime = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));//这是把
+//            LocalDate beginDateTime1 = LocalDate.parse(dto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//            if (beginDateTime1.until(beginDateTime, ChronoUnit.WEEKS) > 0) {
+//                sb.append(" and recordDate>=' " + dto.getStartDate() + " ' ");
+//            } else {
+//                throw new SerException("不能低于账套会计期间启用日期");
+//            }
+//        }
+//        if (dto.getEndDate() != null) {
+//            sb.append(" and recordDate<=' " + dto.getEndDate() + " ' ");
+//        }
+//        List<Object> list = super.findBySql(sb.toString());
+        return null;
+    }
+
+
+    @Override
+    public List<BankRecordBO> bankRecordcall(BankRecordDTO dto) throws SerException {
+//        String token = RpcTransmit.getUserToken();
+//        String systemId = userAPI.currentSysNO();
+//        RpcTransmit.transmitUserToken(token);
+        int page = dto.getPage();
+        int limit = dto.getLimit();
+        int start = (page - 1) * limit;
+        int end = page * limit;
+
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("select * from bankrecords_bankrecord where 1=1");
+//        if (dto.getPropertyid().equals("基本户")) {
+//            sb.append(" and accountId in (select id from bankrecords_bankaccountinfo where type='基本户') ");
+//        } else {
+//            sb.append(" and accountId in (select id from bankrecords_bankaccountinfo where type='一般户') ");
+//        }
+//        if (dto.getAccountId().equals("0")) {
+//
+//        } else {
+//            sb.append(" and accountId=' " + dto.getAccountId() + " ' ");
+//        }
+        if (dto.getStartDate() != null) {
+            String s = baseParameterAPI.findDoudap();//账套会计期间启用日期
+            LocalDate beginDateTime = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));//这是把它转为时间类型
+            LocalDate beginDateTime1 = LocalDate.parse(dto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            if (beginDateTime1.until(beginDateTime, ChronoUnit.WEEKS) > 0) {
+                sb.append(" and recordDate>=' " + dto.getStartDate() + " ' ");
+            } else {
+                throw new SerException("不能低于账套会计期间启用日期");
+            }
+        }
+        if (dto.getEndDate() != null) {
+            sb.append(" and recordDate<=' " + dto.getEndDate() + " ' ");
+        }
+        sb.append(" ORDER BY recordDate desc limit  " + start + "  , " + end + "  ");
+        return BeanTransform.copyProperties(super.findBySql(sb.toString()), BankRecordBO.class);
+    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -160,6 +253,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             e.printStackTrace();
         }
     }
+
     @Override
     public Long count(BankRecordDTO dto) throws SerException {
 
@@ -167,49 +261,49 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 "  SELECT 1 as c\n" +
                 "  FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id\n" +
                 "  WHERE 1 = 1 ";
-                if (!StringUtils.isEmpty(dto.getAccountId())) {
-                    sql += "AND b.accountId = '"+ dto.getAccountId() +"' ";
-                }
-                if (!StringUtils.isEmpty(dto.getStartDate()) && !StringUtils.isEmpty(dto.getEndDate())) {
-                    sql += "       AND b.id IN\n" +
+        if (!StringUtils.isEmpty(dto.getAccountId())) {
+            sql += "AND b.accountId = '" + dto.getAccountId() + "' ";
+        }
+        if (!StringUtils.isEmpty(dto.getStartDate()) && !StringUtils.isEmpty(dto.getEndDate())) {
+            sql += "       AND b.id IN\n" +
                     "        (SELECT bankRecord_id\n" +
                     "         FROM bankrecords_bankrecorddetail\n" +
-                    "         WHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '"+ dto.getStartDate() +"' AND '"+ dto.getEndDate() +"'\n" +
+                    "         WHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '" + dto.getStartDate() + "' AND '" + dto.getEndDate() + "'\n" +
                     "        )\n";
-                }
-                if (!StringUtils.isEmpty(dto.getMoney())) {
-                    sql += "        AND b.id IN\n" +
+        }
+        if (!StringUtils.isEmpty(dto.getMoney())) {
+            sql += "        AND b.id IN\n" +
                     "            (SELECT bankRecord_id\n" +
                     "             FROM bankrecords_bankrecorddetail\n" +
                     "             WHERE\n" +
-                    "               (title = '余额' AND val = "+ dto.getMoney() +") OR (title = '贷方金额' AND val = "+ dto.getMoney() +") OR (title = '借方金额' AND val = "+ dto.getMoney() +")\n" +
+                    "               (title = '余额' AND val = " + dto.getMoney() + ") OR (title = '贷方金额' AND val = " + dto.getMoney() + ") OR (title = '借方金额' AND val = " + dto.getMoney() + ")\n" +
                     "            )\n";
-                }
-                if (!StringUtils.isEmpty(dto.getSummary())) {
-                    sql += "        AND b.id IN\n" +
+        }
+        if (!StringUtils.isEmpty(dto.getSummary())) {
+            sql += "        AND b.id IN\n" +
                     "            (SELECT bankRecord_id\n" +
                     "             FROM bankrecords_bankrecorddetail\n" +
                     "             WHERE\n" +
-                    "               title = '摘要' AND val = '"+ dto.getSummary() +"'\n" +
+                    "               title = '摘要' AND val = '" + dto.getSummary() + "'\n" +
                     "            )\n";
-                }
-                if (!StringUtils.isEmpty(dto.getPayName())) {
-                    sql += "        AND b.id IN\n" +
+        }
+        if (!StringUtils.isEmpty(dto.getPayName())) {
+            sql += "        AND b.id IN\n" +
                     "            (SELECT bankRecord_id\n" +
                     "             FROM bankrecords_bankrecorddetail\n" +
                     "             WHERE\n" +
-                    "               title = '收/付方名称' AND val = '"+ dto.getPayName() +"'\n" +
+                    "               title = '收/付方名称' AND val = '" + dto.getPayName() + "'\n" +
                     "            )\n";
-                }
-                if (!StringUtils.isEmpty(dto.getPayAccount())) {
-                    sql += "        AND b.id IN\n" +
+        }
+        if (!StringUtils.isEmpty(dto.getPayAccount())) {
+            sql += "        AND b.id IN\n" +
                     "            (SELECT bankRecord_id\n" +
                     "             FROM bankrecords_bankrecorddetail\n" +
                     "             WHERE\n" +
-                    "               title = '收/付方帐号' AND val = '"+ dto.getPayAccount() +"'\n" +
+                    "               title = '收/付方帐号' AND val = '" + dto.getPayAccount() + "'\n" +
                     "            )\n";
-                }
-                 sql += "  GROUP BY b.id )m";
+        }
+        sql += "  GROUP BY b.id )m";
         List<Object> list = super.findBySql(sql);
         return Long.parseLong(String.valueOf(list.get(0)));
     }
@@ -222,61 +316,77 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 //        List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
 //修改：改为sql语句查询
 
+        String token = RpcTransmit.getUserToken();
+//
+//String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
         int page = dto.getPage();
         int limit = dto.getLimit();
         int start = (page - 1) * limit;
         int end = page * limit;
+        String sql = "SELECT b.id as id, d.bankRecord_id as bankRecord_id, d.id as detailId, d.title as title, d.titleIndex as titleIndex, d.val as val FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id " +
+                "WHERE " +
+                "b.id in (select n.id from (" +
+                "(SELECT b.id as id FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id " +
+                "WHERE ";
+        if (dto.getAccountId().equals("0")) {
+            sql += " b.accountId in (select id from bankrecords_bankaccountinfo where type='基本户') ";
+        } else {
+            sql += " b.accountId='" + dto.getAccountId() + "' ";
+        }
+        if (dto.getStartDate() != null && dto.getEndDate() != null) {
+            String s=baseParameterAPI.findDoudap();
+            if(s!=null){
+                LocalDate beginDateTime = LocalDate.parse(s);//账套会计期间启用日期这是把它转为时间类型
+            if (LocalDate.parse(dto.getStartDate()).isAfter(beginDateTime)) {
+                sql += " AND b.id in (" +
 
-        String sql = "SELECT b.id as id, d.bankRecord_id as bankRecord_id, d.id as detailId, d.title as title, d.titleIndex as titleIndex, d.val as val FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id \n" +
-                "WHERE b.accountId = '"+ dto.getAccountId() +"' " +
-                "AND b.id in (select n.id from (\n" +
-                "(SELECT b.id as id FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id \n" +
-                "WHERE b.accountId = '"+ dto.getAccountId() +"' \n";
-        if (!StringUtils.isEmpty(dto.getStartDate()) && !StringUtils.isEmpty(dto.getEndDate())) {
-            sql += " AND b.id in (\n" +
-                    "\tSELECT bankRecord_id as id FROM bankrecords_bankrecorddetail \n" +
-                    "\tWHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '"+ dto.getStartDate() +"'  AND '"+ dto.getEndDate() +"' \n" +
-                    "\t) \n";
-
+                        "SELECT bankRecord_id as id FROM bankrecords_bankrecorddetail" +
+                        "WHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '" + dto.getStartDate() + "'  AND '" + dto.getEndDate() + "' " +
+                        ") ";
+            }
+            } else {
+                throw new SerException("不能低于账套会计期间启用日期");
+            }
         }
-        if (!StringUtils.isEmpty(dto.getMoney())) {
-            sql += "\tand b.id in (\n" +
-                    "\tSELECT bankRecord_id as id FROM bankrecords_bankrecorddetail \n" +
-                    "\tWHERE (title = '余额' AND val = "+ dto.getMoney() +") OR (title = '贷方金额' AND val = "+ dto.getMoney() +") OR (title = '借方金额' AND val = "+                    dto.getMoney() +")\n" +
-                    "\t) \n";
-        }
-        if (!StringUtils.isEmpty(dto.getSummary())) {
-            sql += "\tAND b.id IN\n" +
-                    "            (SELECT bankRecord_id\n" +
-                    "             FROM bankrecords_bankrecorddetail\n" +
-                    "             WHERE\n" +
-                    "               title = '摘要' AND val = '"+ dto.getSummary() +"'\n" +
-                    "            )\n";
-        }
-        if (!StringUtils.isEmpty(dto.getPayName())) {
-            sql += "        AND b.id IN\n" +
-                    "            (SELECT bankRecord_id\n" +
-                    "             FROM bankrecords_bankrecorddetail\n" +
-                    "             WHERE\n" +
-                    "               title = '收/付方名称' AND val = '"+ dto.getPayName() +"'\n" +
-                    "            )\n";
-        }
-        if (!StringUtils.isEmpty(dto.getPayAccount())) {
-            sql += "        AND b.id IN\n" +
-                    "            (SELECT bankRecord_id\n" +
-                    "             FROM bankrecords_bankrecorddetail\n" +
-                    "             WHERE\n" +
-                    "               title = '收/付方帐号' AND val = '"+ dto.getPayAccount() +"'\n" +
-                    "            )\n";
-        }
-        sql += "GROUP BY b.id limit "+ start +", "+ end +") n\n" +
-                ")\n" +
+//        if (!StringUtils.isEmpty(dto.getMoney())) {
+//            sql += "\tand b.id in (\n" +
+//                    "\tSELECT bankRecord_id as id FROM bankrecords_bankrecorddetail \n" +
+//                    "\tWHERE (title = '余额' AND val = '" + dto.getMoney() + "') OR (title = '贷方金额' AND val = '" + dto.getMoney() + "') OR (title = '借方金额' AND val = '" + dto.getMoney() + "')\n" +
+//                    "\t) \n";
+//        }
+//        if (!StringUtils.isEmpty(dto.getSummary())) {
+//            sql += "\tAND b.id IN\n" +
+//                    "            (SELECT bankRecord_id\n" +
+//                    "             FROM bankrecords_bankrecorddetail\n" +
+//                    "             WHERE\n" +
+//                    "               title = '摘要' AND val = '" + dto.getSummary() + "'\n" +
+//                    "            )\n";
+//        }
+//        if (!StringUtils.isEmpty(dto.getPayName())) {
+//            sql += "        AND b.id IN\n" +
+//                    "            (SELECT bankRecord_id\n" +
+//                    "             FROM bankrecords_bankrecorddetail\n" +
+//                    "             WHERE\n" +
+//                    "               title = '收/付方名称' AND val = '" + dto.getPayName() + "'\n" +
+//                    "            )\n";
+//        }
+//        if (!StringUtils.isEmpty(dto.getPayAccount())) {
+//            sql += "        AND b.id IN\n" +
+//                    "            (SELECT bankRecord_id\n" +
+//                    "             FROM bankrecords_bankrecorddetail\n" +
+//                    "             WHERE\n" +
+//                    "               title = '收/付方帐号' AND val = '" + dto.getPayAccount() + "'\n" +
+//                    "            )\n";
+//        }
+        sql += "GROUP BY b.id limit " + start + ", " + end + ") n" +
+                ")" +
                 ") ";
 
         List<Object> list = super.findBySql(sql);
 
         Set set = new HashSet();
-        for (int i = 0; i < list.size(); i ++) {
+        for (int i = 0; i < list.size(); i++) {
             Object[] obj = (Object[]) list.get(i);
             set.add(obj[0]);
         }
@@ -287,7 +397,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             bankRecordBO.setId(String.valueOf(object));
 
             List<Detail> details = new ArrayList<>();
-            for (int j = 0; j < list.size(); j ++) {
+            for (int j = 0; j < list.size(); j++) {
                 Object[] obj2 = (Object[]) list.get(j);
                 if (obj2[1].equals(bankRecordBO.getId())) {
                     Detail detail = new Detail();
@@ -400,7 +510,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                     bo.setBalance(list.get(0).getBalance());
                     bo.setId(list.get(0).getId());
                     bo.setMakeMoney(bo.getCreditorCost() - bo.getDebtorCost());
-                    bo.setMakeMoney(new BigDecimal(bo.getMakeMoney()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                    bo.setMakeMoney(new BigDecimal(bo.getMakeMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
             }
             double debtorCost = boList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecordCollectBO::getDebtorCost).sum();
@@ -414,6 +524,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             return null;
         }
     }
+
 
     public List<BankRecord> findBalance(Integer year, Integer month, String accountId) throws SerException {
         StringBuilder sql = new StringBuilder("select id,balance from bankrecords_bankrecord bankrecord  where 0 = 0");
@@ -480,7 +591,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 bo.setCurrentDebtorCost(cuuretnBO.get(0).getDebtorCost());
             }
             //查询accountIds账户year年(month-1)月最后的银行流水记录
-            Integer lastMonth = month == 1 ? 12 : (month -1);
+            Integer lastMonth = month == 1 ? 12 : (month - 1);
             Integer lastYear = month == 1 ? (year - 1) : year;
             List<BankRecordCollectBO> lastBO = findByMonth(lastYear, lastMonth, accountIds[i]);
             if (!CollectionUtils.isEmpty(lastBO)) {
@@ -510,7 +621,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 } else {
 
                     bo.setCreditorGrow(creditorSubtract / lastCreditorCost);
-                    bo.setCreditorGrow(new BigDecimal(bo.getCreditorGrow()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                    bo.setCreditorGrow(new BigDecimal(bo.getCreditorGrow()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
                 if (lastDebtorCost == 0) {
                     if (debtorSubtract == 0) {
@@ -520,7 +631,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                     }
                 } else {
                     bo.setDebtorGrow(debtorSubtract / lastDebtorCost);
-                    bo.setDebtorGrow(new BigDecimal(bo.getDebtorGrow()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                    bo.setDebtorGrow(new BigDecimal(bo.getDebtorGrow()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
                 //计算比率
                 BankRecordDTO allDTO = new BankRecordDTO();//查询总流水
@@ -545,7 +656,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                         debtorRate = format.format(debtorRateTemp * 100) + "%";
                     }
                 }
-                bo.setDebtorRate(debtorRate);
+                // bo.setDebtorRate(debtorRate);
 
                 if (creditorRateTemp.doubleValue() == 0.0) {
                     creditorRate = "0.00%";
@@ -556,11 +667,85 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                         creditorRate = format.format(creditorRateTemp * 100) + "%";
                     }
                 }
-                bo.setCreditorRate(creditorRate);
+                //bo.setCreditorRate(creditorRate);
                 boList.add(bo);
             }
         }
         return boList;
+    }
+
+    /**
+     * 银行分析
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String accountIds) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        // RpcTransmit.transmitUserToken(token);
+//        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        if (startDate != null && endDate != null) {
+            //String s = baseParameterAPI.findDoudap();
+            String s="2013-12-30";
+            if (s != null) {
+                LocalDate beginDateTime = LocalDate.parse(s);//账套会计期间启用日期这是把它转为时间类型
+                if (LocalDate.parse(startDate).isAfter(beginDateTime)) {//这里是对比账套会计期间启用日期
+                    BankRecordAnalyzeBO bankRecordAnalyzeBO = new BankRecordAnalyzeBO();
+                    BankSummaryDTO bankSummaryDTO = new BankSummaryDTO();
+                    bankSummaryDTO.setStartDate(startDate);
+                    bankSummaryDTO.setEndDate(endDate);
+                    bankSummaryDTO.setAccountId(accountIds);
+                    String sql = null;
+                    String pin = null;
+                    Integer lastMonth = 0;
+                    Integer lastYear = 0;
+                    List<BankRecordAnalyzeBO> brblist = new ArrayList<>();
+                    List<BankSummaryBO> lastMonthList = new ArrayList<>();
+                    List<BankSummaryBO> list =bankSummarySer.backfilterQuery(bankSummaryDTO);
+                    for (int i = 0; i < list.size(); i++) {
+//                        list.get(i).getIncomeCreditAmount();//本月收入
+//                        list.get(i).getExpenseDebitAmount();//本月支出
+//                        list.get(i).getYear();//年
+//                        list.get(i).getMonth();//月
+//                        list.get(i).getTheDateOf();//年月
+//                        list.get(i).getBankName();//银行名称
+//                        list.get(i).getAmountOfThisMonth();//差额
+                        lastMonth = list.get(i).getMonth() == 1 ? 12 : (list.get(i).getMonth() - 1);
+                        lastYear = list.get(i).getMonth() == 1 ? (list.get(i).getYear() - 1) : list.get(i).getYear();
+
+
+                        sql = "select ifnull(sum(debtorCost), 0) as expenseDebitAmount,ifnull(sum(creditorCost), 0) as incomeCreditAmount from bankrecords_bankrecord  where recordYear='" + lastYear + "' and recordMonth='" + lastMonth + "' and accountId='"+list.get(i).getAccountId()+"' ";
+                        lastMonthList = super.findBySql(sql, BankSummaryBO.class, new String[]{"expenseDebitAmount", "incomeCreditAmount"});
+                        if (org.apache.commons.lang3.StringUtils.isBlank(lastMonthList.get(0).getId())) {
+                            lastMonthList.get(0).setIncomeCreditAmount(0.0);//上个月的收入
+                            lastMonthList.get(0).setExpenseDebitAmount(0.0);//上个月的支出
+
+                        }
+                        bankRecordAnalyzeBO.setBank(list.get(i).getBankName());//银行名称
+
+                        bankRecordAnalyzeBO.setCurrentCreditorCost(list.get(i).getExpenseDebitAmount());//本月支出
+                        bankRecordAnalyzeBO.setLastDebtorCost(lastMonthList.get(0).getExpenseDebitAmount());//上个月支出
+                        bankRecordAnalyzeBO.setCurrentDebtorCost(list.get(i).getIncomeCreditAmount());//本月收入
+                        bankRecordAnalyzeBO.setLastDebtorCost(lastMonthList.get(0).getIncomeCreditAmount());//上个月收入
+                        bankRecordAnalyzeBO.setCreditorSubtract(list.get(i).getIncomeCreditAmount() - lastMonthList.get(0).getIncomeCreditAmount());//收入差额
+                        bankRecordAnalyzeBO.setDebtorSubtract(list.get(i).getExpenseDebitAmount() - lastMonthList.get(0).getExpenseDebitAmount());//支出差额
+                        bankRecordAnalyzeBO.setCreditorRate(list.get(i).getIncomeCreditAmount() / (list.get(i).getIncomeCreditAmount() + list.get(i).getExpenseDebitAmount()));//收入比例
+                        bankRecordAnalyzeBO.setDebtorRate(list.get(i).getExpenseDebitAmount() / (list.get(i).getIncomeCreditAmount() + list.get(i).getExpenseDebitAmount()));//支出比例额
+                        bankRecordAnalyzeBO.setTheDateOf(list.get(i).getTheDateOf());//日期;
+                        bankRecordAnalyzeBO.setCreditorGrow(list.get(i).getIncomeCreditAmount() - lastMonthList.get(0).getIncomeCreditAmount()/ lastMonthList.get(0).getIncomeCreditAmount());//收入增长率
+                        bankRecordAnalyzeBO.setDebtorGrow(list.get(i).getExpenseDebitAmount() - lastMonthList.get(0).getExpenseDebitAmount() / lastMonthList.get(0).getExpenseDebitAmount());//支出增长率
+                        brblist.add(bankRecordAnalyzeBO);
+                        return brblist;
+                    }
+                } else {
+                    throw new SerException("不能低于账套会计间启用日期");
+                }
+            } else {
+                throw new SerException("开始和结束不能空");
+            }
+        }
+        return null;
     }
 
     @Override
@@ -584,12 +769,39 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             if (fundBO != null) {
                 BigDecimal bigDecimal = new BigDecimal(fundBO.getCurrentBalance());
 
-                bo.setFundBalance(bigDecimal.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                bo.setFundBalance(bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                 bo.setBalanceSubtract(bo.getBankBalance() - fundBO.getCurrentBalance());
             }
         }
         return bo;
     }
+
+    /**
+     * 新对比
+     */
+    @Override
+    public BankRecordCompareBO compareTo(Integer years, Integer month) throws SerException {
+//        String datetime = years + "-" + month;
+////        String token = RpcTransmit.getUserToken();
+////        RpcTransmit.transmitUserToken(token);
+//        if (years != null && month != null) {
+//            MonthCollectBO fundBO  = fundRecordAPI.month(years,month);
+//            BankRecordCompareBO bankRecordCompareBO = new BankRecordCompareBO();
+//            String sql = "select ANY_VALUE(sum(balance)) as balance,date_format(recordDate,'%y-%m') as recordDate from bankrecords_bankrecord where recordDate year='"+years+"' and month='"+month+"' group by recordDate ";
+//            List<BankRecordBO> list = super.findBySql(sql, BankRecordBO.class, new String[]{"balance", "recordDate"});
+//            if (list != null && !list.isEmpty()) {
+//                bankRecordCompareBO.setFundBalance(list.get(0).getBalance() - bo.getAmount());
+//                bankRecordCompareBO.setBankBalance(list.get(0).getBalance());
+//                bankRecordCompareBO.setBalanceSubtract(bo.getAmount());
+//                bankRecordCompareBO.setYears(list.get(0).getRecordDate());
+//            }
+//            return bankRecordCompareBO;
+//        } else {
+//            throw new SerException("不能空");
+        return null;
+
+    }
+
 
     @Override
     public List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException {
@@ -738,9 +950,27 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             judgeDate(model, to, sheet, i);
 
             model.setAccountId(to.getAccountId());
-            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
-            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
-            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+//            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
+//            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
+//            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+
+            for (int j = 0; j < sheet.getRow(i).getLastCellNum(); j++) {
+                if ("交易日".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setRecordDate(sheet.getRow(i).getCell(j).getStringCellValue());
+                }
+                if ("借方金额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setDebtorCost(org.apache.commons.lang3.StringUtils.isBlank(sheet.getRow(i).getCell(j).getStringCellValue()) ? 0.0 :
+                            Double.parseDouble(sheet.getRow(i).getCell(j).getStringCellValue()));
+                }
+                if ("贷方金额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setCreditorCost(org.apache.commons.lang3.StringUtils.isBlank(sheet.getRow(i).getCell(j).getStringCellValue()) ? 0.0 :
+                            Double.parseDouble(sheet.getRow(i).getCell(j).getStringCellValue()));
+                }
+                if ("余额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setBalance(org.apache.commons.lang3.StringUtils.isBlank(sheet.getRow(i).getCell(j).getStringCellValue()) ? 0.0 :
+                            Double.parseDouble(sheet.getRow(i).getCell(j).getStringCellValue()));
+                }
+            }
 
 
             List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
@@ -794,12 +1024,41 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         for (int i = 1; i <= rowNum; i++) {
             BankRecord model = new BankRecord();
             //校验时间格式
-            judgeDate(model, to, sheet, i);
+//            judgeDate(model, to, sheet, i);
 
-            model.setAccountId(to.getAccountId());
-            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
-            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
-            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+            model.setAccountId(to.getAccountId());//让前端传一个账户id过来
+//            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
+//            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
+//            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+
+
+            for (int j = 0; j < sheet.getRow(i).getLastCellNum(); j++) {
+                System.out.println("hang:" + sheet.getRow(0).getCell(j).getStringCellValue());
+                if ("交易日".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+
+
+                    Date date = sheet.getRow(i).getCell(j).getDateCellValue();
+                    Instant instant = date.toInstant();
+                    ZoneId zoneId = ZoneId.systemDefault();
+                    LocalDate localDate1 = instant.atZone(zoneId).toLocalDate();
+                    model.setRecordDate(localDate1.toString());
+                    if (org.apache.commons.lang3.StringUtils.isNotBlank(model.getRecordDate())) {
+                        LocalDate localDate = LocalDate.parse(model.getRecordDate());
+                        model.setYear(localDate.getYear());
+                        model.setMonth(localDate.getMonthValue());
+                    }
+
+                }
+                if ("借方金额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setDebtorCost(sheet.getRow(i).getCell(j).getNumericCellValue());
+                }
+                if ("贷方金额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setCreditorCost(sheet.getRow(i).getCell(j).getNumericCellValue());
+                }
+                if ("余额".equals(sheet.getRow(0).getCell(j).getStringCellValue())) {
+                    model.setBalance(sheet.getRow(i).getCell(j).getNumericCellValue());
+                }
+            }
 
 
             List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
@@ -808,7 +1067,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             }
             if (!CollectionUtils.isEmpty(detailList)) {
 
-                if (!judegeFormat) {
+               /* if (!judegeFormat) {
                     //判断该账号是否已经存在银行流水记录，如果存在检查本次导入的Excel数据格式是否对应已存在的Excel数据格式,只需要检查第一行可以确定
                     BankRecordDTO dto = new BankRecordDTO();
                     dto.getConditions().add(Restrict.eq("accountId", to.getAccountId()));
@@ -832,7 +1091,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                         }
                     }
                     judegeFormat = true;
-                }
+                }*/
                 model.setDetailList(detailList);
             } else {
                 throw new SerException("导入的Excel银行流水记录不能为空!");
@@ -1021,7 +1280,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
         Double totalBalance = 0.0;
         List<BankRecord> list = findBalanceByTime(startTime, endTime);
-        totalBalance = list.stream().filter(p->p.getBalance() != null).mapToDouble(p->p.getBalance()).sum();
+        totalBalance = list.stream().filter(p -> p.getBalance() != null).mapToDouble(p -> p.getBalance()).sum();
         return totalBalance;
     }
 
@@ -1102,4 +1361,69 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
+    /**
+     * 银行流水导出
+     *
+     * @param accountIds
+     * @return
+     */
+    @Override
+    public byte[] bankRecordExcel(String accountIds) throws SerException {
+        BankRecordDTO dto=new BankRecordDTO();
+        dto.setAccountId(accountIds);
+        List<BankRecordBO> list=pageList(dto);
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("银行流水");
+        sheet.setDefaultColumnWidth(20);
+        sheet.setDefaultColumnWidth(25);//设置宽度
+        XSSFRow row = sheet.createRow(0);//创建行从0开始
+        XSSFCell cell = row.createCell(0);//创建列从0开始
+        row.createCell(0).setCellValue("交易日");
+        row.createCell(1).setCellValue("交易时间");
+        row.createCell(2).setCellValue("起息日");
+        row.createCell(3).setCellValue("交易类型");
+        row.createCell(4).setCellValue("借方金额");
+        row.createCell(5).setCellValue("贷方金额");
+        row.createCell(6).setCellValue("余额");
+        row.createCell(7).setCellValue("摘要");
+        for (int i=0;i<list.size();i++){
+           row=sheet.createRow(i);
+           List<Detail> list1=list.get(i).getDetailList();
+           for (int j=0;j<list1.size();i++) {
+               if(list1.get(i).getTitle().equals("交易日")) {
+                   row.createCell(0).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("交易时间")){
+                   row.createCell(1).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("起息日")){
+                   row.createCell(2).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("交易类型")){
+                   row.createCell(3).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("借方金额")){
+                   row.createCell(4).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("贷方金额")){
+                   row.createCell(5).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("余额")){
+                   row.createCell(6).setCellValue(list1.get(i).getVal());
+               }
+               if(list1.get(i).getTitle().equals("摘要")){
+                   row.createCell(7).setCellValue(list1.get(i).getVal());
+               }
+           }
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+    }
+
 }

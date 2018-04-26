@@ -41,5 +41,10 @@
 
 	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bankrecords.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference interface="com.bjike.goddess.financeinit.api.AccountAPI" id="accountApiImpl"/>
 
+
+	<dubbo:reference interface=" com.bjike.goddess.bankrecords.api.BankSummaryAPI" id="bankSummarySerImpl"/>
+
+	<dubbo:reference interface="com.bjike.goddess.financeinit.api.BaseParameterAPI" id="baseParameterAPI"/>
 </beans>

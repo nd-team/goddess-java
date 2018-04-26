@@ -30,5 +30,5 @@
 	<dubbo:reference  validation="true" id="voucherPermissionApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionAPI" />
 	<dubbo:reference  validation="true" id="voucherPermissionOperateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionOperateAPI" />
 
-
+	<dubbo:reference  validation="true" id="companyBasicInfoApiImpl" interface="com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI" />
 </beans>

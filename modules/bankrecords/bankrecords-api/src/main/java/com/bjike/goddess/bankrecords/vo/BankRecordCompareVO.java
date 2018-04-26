@@ -1,5 +1,7 @@
 package com.bjike.goddess.bankrecords.vo;
 
+import java.time.LocalDate;
+
 /**
  * 分析对象
  *
@@ -10,7 +12,10 @@ package com.bjike.goddess.bankrecords.vo;
  * @Copy: [ com.bjike ]
  */
 public class BankRecordCompareVO {
-
+    /**
+     *日期
+     */
+    private LocalDate years;
     /**
      * 年份
      */
@@ -34,6 +39,14 @@ public class BankRecordCompareVO {
      * 差额
      */
     private Double fundBalance;
+
+    public LocalDate getYears() {
+        return years;
+    }
+
+    public void setYears(LocalDate years) {
+        this.years = years;
+    }
 
     public Integer getYear() {
         return year;

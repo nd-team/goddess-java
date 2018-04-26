@@ -31,25 +31,26 @@ public class BankRecordTO extends BaseTO {
     /**
      * 借方金额下标
      */
-    @NotNull(message = "借方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
+   // @NotNull(message = "借方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer debtorCostIndex;
+
 
     /**
      * 贷方金额下标
      */
-    @NotNull(message = "贷方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
+    //@NotNull(message = "贷方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer creditorCostIndex;
 
     /**
      * 余额下标
      */
-    @NotNull(message = "余额下标不能为空!", groups = {BankRecordTO.Upload.class})
+    //@NotNull(message = "余额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer balanceIndex;
 
     /**
      * 流水日期下标
      */
-    @NotNull(message = "流水日期下标不能为空!", groups = {BankRecordTO.Upload.class})
+    //@NotNull(message = "流水日期下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer recordDateIndex;
 
     //request文件信息
