@@ -1584,6 +1584,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @param response response
      * @version v1
      */
+
     @GetMapping("v1/subject/exprot")
     public Result exportExcel(ExportSubjectCollectTO to, HttpServletResponse response) throws ActException {
         try {
@@ -1705,16 +1706,19 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/exportAccountTo")
+
+    @PostMapping("v1/exportAccountTo")
     public Result exportReportTo(VoucherSummaryDTO dto, HttpServletResponse response,HttpServletRequest request) throws ActException {
         try {
-            RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
+            //RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
             String fileName = "记账凭证汇总.xlsx";
             super.writeOutFile(response, voucherGenerateAPI.exportExcelVocher(dto),fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
+
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
+
             throw new ActException(e1.getMessage());
         }
     }

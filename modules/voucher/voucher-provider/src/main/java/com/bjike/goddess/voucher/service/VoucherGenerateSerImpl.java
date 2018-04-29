@@ -6347,10 +6347,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String[] s = new String[]{"accountantCourse", "courseName", "borrowMoney", "loanMoney","type"};
         List<VoucherSummanryBO> list=super.findBySql(buffer.toString(), VoucherSummanryBO.class, s);
         // List<VoucherSummanryBO> list1=summaryListW(dto);
-        if(list!=null) {
+       // DecimalFormat df=new DecimalFormat("#.00");
+        if(list!=null&&list.size()>0) {
             for (int i = 0; i < list.size(); i++) {
                 borrowMoneyCount += list.get(i).getBorrowMoney();
                 loanMoneyCount += list.get(i).getLoanMoney();
+//                list.get(i).setLoanMoneyCount(df.format(list.get(i).getLoanMoney()));
+//                list.get(i).setBorrowMoneyCount(df.format(list.get(i).getBorrowMoney()));
             }
 //                if (list1.size() > list.size()) {
 //                    if (ss.length > 1) {
@@ -6365,10 +6368,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                        }
 //                    }
 //            }
+
+//            String borrowMoneyc=df.format(borrowMoneyCount);//借方总额金额
+//            String loanMoneyC= df.format(loanMoneyCount);//贷方总额金额
             VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
-            voucherSummanryBO.setAccountantCourse("合计:");
-            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
+//            voucherSummanryBO.setBorrowMoneyCount(borrowMoneyc);//借方总额金额
+//            voucherSummanryBO.setLoanMoneyCount(loanMoneyC);//贷方总金额
             voucherSummanryBO.setLoanMoney(loanMoneyCount);
+            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
+            voucherSummanryBO.setAccountantCourse("合计:");
             list.add(voucherSummanryBO);
         }else {
             throw new SerException("没有任何数据");
@@ -6400,10 +6408,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        List<VoucherSummanryBO> list1=summaryListN(dto);
 //        int count1=list1.size();
 //        int count2=list.size();
-        if(list!=null) {
+        DecimalFormat df=new DecimalFormat("#.00");
+        if(list!=null && list.size()>0) {
             for (int i = 0; i < list.size(); i++) {
-                borrowMoneyCount +=list.get(i).getBorrowMoney();
-                loanMoneyCount +=list.get(i).getLoanMoney();
+                borrowMoneyCount += list.get(i).getBorrowMoney();
+                loanMoneyCount += list.get(i).getLoanMoney();
+//                list.get(i).setLoanMoneyCount(df.format(list.get(i).getLoanMoney()));
+//                list.get(i).setBorrowMoneyCount(df.format(list.get(i).getBorrowMoney()));
             }
 //            if (ss.length > 1) {
 //                if (count1>count2) {
@@ -6418,10 +6429,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                    }
 //                }
 //            }
+//            String borrowMoneyc=df.format(borrowMoneyCount);//借方总额金额
+//            String loanMoneyC= df.format(loanMoneyCount);//贷方总额金额
             VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
-            voucherSummanryBO.setAccountantCourse("合计:");
+//            voucherSummanryBO.setBorrowMoneyCount(borrowMoneyc);//借方总额金额
+//            voucherSummanryBO.setLoanMoneyCount(loanMoneyC);//贷方总金额
             voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
             voucherSummanryBO.setLoanMoney(loanMoneyCount);
+            voucherSummanryBO.setAccountantCourse("合计:");
             list.add(voucherSummanryBO);
         }else{
             throw new SerException("没有任何数据");
@@ -6456,10 +6471,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        List<VoucherSummanryBO> list1=summaryListN(dto);
 //          int count1=list1.size();
 //         int count2=list.size();
-        if(list!=null) {
+       // DecimalFormat df=new DecimalFormat("#.00");
+        if(list!=null&& list.size()>0) {
             for (int i = 0; i < list.size(); i++) {
-                borrowMoneyCount +=list.get(i).getBorrowMoney();
-                loanMoneyCount +=list.get(i).getLoanMoney();
+                borrowMoneyCount += list.get(i).getBorrowMoney();
+                loanMoneyCount += list.get(i).getLoanMoney();
+//                list.get(i).setLoanMoneyCount(df.format(list.get(i).getLoanMoney()));
+//                list.get(i).setBorrowMoneyCount(df.format(list.get(i).getBorrowMoney()));
             }
 //            if (ss.length > 1) {
 //                if (count1>count2) {
@@ -6474,10 +6492,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                    }
 //                }
 //            }
+//            String borrowMoneyc=df.format(borrowMoneyCount);//借方总额金额
+//            String loanMoneyC= df.format(loanMoneyCount);//贷方总额金额
             VoucherSummanryBO voucherSummanryBO = new VoucherSummanryBO();
+            voucherSummanryBO.setLoanMoney(loanMoneyCount);//借方总额金额
+            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);//贷方总金额
             voucherSummanryBO.setAccountantCourse("合计:");
-            voucherSummanryBO.setBorrowMoney(borrowMoneyCount);
-            voucherSummanryBO.setLoanMoney(loanMoneyCount);
             list.add(voucherSummanryBO);
         }else{
            throw new SerException("没有任何数据");
@@ -6499,21 +6519,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (s != null) {
             if (s.length == 1) {
                 for (int i = 0; i < s.length; i++) {
-                    buffer.append(" and type='" + s[i] + "'");
+                    buffer.append(" and type in('" + s[i] + "')");
                 }
             }
-            if (s.length > 1) {
+            if(s.length>1){
 
             }
             buffer.append(" group by firstSubjectCode,type");
         }
         List<Object> list = super.findBySql(buffer.toString());
 
-        return Long.parseLong(String.valueOf(list.get(0)));
+        return Long.parseLong(String.valueOf(list.size()));
     }
     @Override
     public byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException {
-       // VoucherInformationBO informationBO = information(dto.getStartTime(), dto.getEndTime());
+        VoucherInformationBO informationBO = information(dto.getStartTime(), dto.getEndTime());
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("记账凭证汇总表");
         CellStyle cellStyleTitle = wb.createCellStyle();
@@ -6522,11 +6542,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         XSSFRow row = sheet.createRow(0);//创建行从0开始
         XSSFCell cell = row.createCell(0);//创建列从0开始
         //cell.setCellValue(informationBO.getCompany());//公司名
+         DecimalFormat df=new DecimalFormat("#.00");
+        cell.setCellValue(informationBO.getCompany());//公司名
 
-        cell.setCellValue("大公司");//公司名
-
-        //row.createCell(1).setCellValue(informationBO.getTime());//时间
-        row.createCell(1).setCellValue("2017-12-30");//时间
+        row.createCell(1).setCellValue(informationBO.getTime());//时间
+        //row.createCell(1).setCellValue("2017-12-30");//时间
         row.createCell(2).setCellValue("汇总凭证数量"+countSummary(dto));//汇总凭证数量
         row.createCell(3).setCellValue("附件数量"+0);//模拟附件数量
         row = sheet.createRow(2);//隔一行
@@ -6544,17 +6564,17 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         row.createCell(0).setCellValue(list.get(j).getAccountantCourse());//会计科目
 
                         row.createCell(1).setCellValue(list.get(j).getCourseName());//科目名称
-                        row.createCell(2).setCellValue(list.get(j).getBorrowMoney());//借方发生额
-                        row.createCell(3).setCellValue(list.get(j).getLoanMoney());//贷方发生额
+                        row.createCell(2).setCellValue(df.format(list.get(j).getBorrowMoney()));//借方发生额
+                        row.createCell(3).setCellValue(df.format(list.get(j).getLoanMoney()));//贷方发生额
 
                     }
                     row = sheet.createRow(list.size() + 5);//隔一行到5
 
-//                    row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
-//                    row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+                    row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+                    row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
 
-            row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
-            row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+//            row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+//            row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
 
                 }
         if (s.length > 1) {
@@ -6582,19 +6602,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     row = sheet.createRow(i + 3);
                     row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
                     row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
-                    row.createCell(2).setCellValue(list.get(i).getBorrowMoney());//借方发生额
-                    row.createCell(3).setCellValue(list.get(i).getLoanMoney());//贷方发生额
+                    row.createCell(2).setCellValue(df.format(list.get(i).getBorrowMoney()));//借方发生额
+                    row.createCell(3).setCellValue(df.format(list.get(i).getLoanMoney()));//贷方发生额
                     row.createCell(4).setCellValue(list1.get(i).getAccountantCourse());//会计科目W
                     row.createCell(5).setCellValue(list1.get(i).getCourseName());//科目名称
-                    row.createCell(6).setCellValue(list1.get(i).getBorrowMoney());//借方发生额
-                    row.createCell(7).setCellValue(list1.get(i).getLoanMoney());//贷方发生额
+                    row.createCell(6).setCellValue(df.format(list1.get(i).getBorrowMoney()));//借方发生额
+                    row.createCell(7).setCellValue(df.format(list1.get(i).getLoanMoney()));//贷方发生额
                 }
                 row = sheet.createRow(list.size() + 5);//隔一行到5
-//                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
-//                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
 
-                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
-                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+//                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+//                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
 
 
             }else if(list.size()<list1.size()) {
@@ -6611,21 +6631,20 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     row = sheet.createRow(i + 3);
                     row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
                     row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
-                    row.createCell(2).setCellValue(list.get(i).getBorrowMoney());//借方发生额
-                    row.createCell(3).setCellValue(list.get(i).getLoanMoney());//贷方发生额
-
+                    row.createCell(2).setCellValue(df.format(list.get(i).getBorrowMoney()));//借方发生额
+                    row.createCell(3).setCellValue(df.format(list.get(i).getLoanMoney()));//贷方发生额
                     row.createCell(4).setCellValue(list1.get(i).getAccountantCourse());//会计科目W
                     row.createCell(5).setCellValue(list1.get(i).getCourseName());//科目名称
-                    row.createCell(6).setCellValue(list1.get(i).getBorrowMoney());//借方发生额
-                    row.createCell(7).setCellValue(list1.get(i).getLoanMoney());//贷方发生额
+                    row.createCell(6).setCellValue(df.format(list1.get(i).getBorrowMoney()));//借方发生额
+                    row.createCell(7).setCellValue(df.format(list1.get(i).getLoanMoney()));//贷方发生额
                 }
                 row = sheet.createRow(list1.size() + 5);//隔一行到5
-//                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
-//                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
+                row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
+                row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
 
 
-                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
-                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
+//                row.createCell(0).setCellValue("会计主管:阿珍");//这是会计主管
+//                row.createCell(1).setCellValue("制作人:啊啊");//这是制作人
             }
         }
 

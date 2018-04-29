@@ -32,7 +32,6 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
-
     /**
      * 下拉导航权限
      */
