@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 驻点设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-09-22 03:12 ]
  * @Description: [ 驻点设置 ]
  * @Version: [ v1.0.0 ]

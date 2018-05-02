@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 客户权限配置
  *
- * @Author: [ tanghaixiang ]
+ * @Author: [tanghaixiang]
  * @Date: [ 2017-05-12 05:43 ]
  * @Description: [ 客户权限配置 ]
  * @Version: [ v1.0.0 ]

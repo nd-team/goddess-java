@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 手机提醒打卡
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-03 09:28 ]
  * @Description: [ 手机提醒打卡 ]
  * @Version: [ v1.0.0 ]

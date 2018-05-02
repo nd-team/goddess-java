@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 自动打卡
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-06 09:22 ]
  * @Description: [ 自动打卡 ]
  * @Version: [ v1.0.0 ]

@@ -348,32 +348,9 @@ public class OverWorkAction extends BaseFileAction {
             return new ActResult(0,"有权限",list);
         } catch (SerException e) {
             e.printStackTrace();
-            throw  new ActException("无请求权限: " +e.getMessage());
+            throw  new ActException("权限请求错误: " +e.getMessage());
         }
     }
-
-//    /**
-//     * 组员打卡请假加班录入审核加班
-//     * @param guidePermissionTO
-//     * @param bindingResult
-//     * @param request
-//     * @return
-//     * @throws ActException
-//     */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//            Boolean isHasPermission = overWorkAPI.guideCusPermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
 
 
 

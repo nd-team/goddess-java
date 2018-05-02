@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * 假期设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-20 11:54 ]
  * @Description: [ 假期设置 ]
  * @Version: [ v1.0.0 ]

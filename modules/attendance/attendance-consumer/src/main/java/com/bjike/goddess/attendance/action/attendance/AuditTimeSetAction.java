@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 审批时间设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-03 04:37 ]
  * @Description: [ 审批时间设置 ]
  * @Version: [ v1.0.0 ]

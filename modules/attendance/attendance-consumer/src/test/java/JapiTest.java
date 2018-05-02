@@ -3,19 +3,14 @@ import com.dounine.japi.JapiClientStorage;
 import com.dounine.japi.JapiClientTransfer;
 import com.dounine.japi.core.IProject;
 import com.dounine.japi.core.impl.ProjectImpl;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/github/ljt/goddess-java/");//路径前缀
+		JapiClient.delete(true);
+		JapiClient.setPrefixPath("/home/ike/yangruizhen/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/attendance/attendance-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/attendance/action");//主项目action位置

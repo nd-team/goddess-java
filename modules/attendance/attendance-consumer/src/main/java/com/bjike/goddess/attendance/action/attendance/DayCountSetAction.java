@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 日报汇总设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-03 04:20 ]
  * @Description: [ 日报汇总设置 ]
  * @Version: [ v1.0.0 ]
