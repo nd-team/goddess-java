@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * 日报
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-07 10:28 ]
  * @Description: [ 日报 ]
  * @Version: [ v1.0.0 ]

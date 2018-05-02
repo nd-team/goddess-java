@@ -168,7 +168,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
      * 打卡请假加班情况补录请假权限
      */
     private Boolean byAuthority() throws SerException {
-
+        // 综合资源部
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         RpcTransmit.transmitUserToken(userToken);
@@ -176,7 +176,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("9");
+            flag = cusPermissionSer.busCusPermission("9");
         } else {
             flag = true;
         }
@@ -192,13 +192,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         Boolean flagSeeSign = byAuthority(); // 综合资源部
         RpcTransmit.transmitUserToken(userToken);
 
-//        Boolean flagAddSign = byProManage();
-
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("punchSon");
-        obj.setDescribesion("打卡");
+        obj.setDescribesion("打卡管理");
         if (flagSeeSign) {
             obj.setFlag(true);
         } else {
@@ -208,7 +206,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
         obj = new SonPermissionObject();
         obj.setName("vacate");
-        obj.setDescribesion("请假");
+        obj.setDescribesion("请假管理");
         if (flagSeeSign) {
             obj.setFlag(true);
         } else {
@@ -218,7 +216,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
         obj = new SonPermissionObject();
         obj.setName("overWorkCountSet");
-        obj.setDescribesion("加班情况");
+        obj.setDescribesion("加班列表");
         if (flagSeeSign) {
             obj.setFlag(true);
         } else {
@@ -228,23 +226,13 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
         obj = new SonPermissionObject();
         obj.setName("vacate");
-        obj.setDescribesion("补录请假");
+        obj.setDescribesion("加班补录");
         if (flagSeeSign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
-
-//        obj = new SonPermissionObject();
-//        obj.setName("overWorkCountSet");
-//        obj.setDescribesion("审核加班");
-//        if (flagSeeSign) {
-//            obj.setFlag(true);
-//        } else {
-//            obj.setFlag(false);
-//        }
-//        list.add(obj);
 
         return list;
     }
@@ -1302,6 +1290,8 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         return count;
     }
+
+
 
 
 }

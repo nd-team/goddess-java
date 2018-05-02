@@ -36,7 +36,6 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -55,7 +54,7 @@ import java.util.stream.Collectors;
 /**
  * 请假管理
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-07 05:15 ]
  * @Description: [ 请假管理 ]
  * @Version: [ v1.0.0 ]
@@ -503,10 +502,10 @@ public class VacateAction extends BaseFileAction {
 
     /**
      * 获取当前用户信息
-     *
-     * @return class UserVO
-     * @throws ActException
+     * @param request
+     * @return class InternalContactsConditionVO
      * @version v1
+     * @throws ActException
      */
     @GetMapping("v1/user")
     public Result user(HttpServletRequest request) throws ActException {

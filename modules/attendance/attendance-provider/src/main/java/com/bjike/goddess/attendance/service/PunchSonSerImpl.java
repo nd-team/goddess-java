@@ -15,7 +15,6 @@ import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
-import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -30,7 +29,9 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.bo.ObjectBO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,8 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     private OverWorkSer overWorkSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -122,12 +125,33 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
         return flag;
     }
 
+    private Boolean guideComprehensive() throws SerException {
+        Boolean flag = false;  // 添加综合资源部权限
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        UserDetailBO userDetailBO= userDetailAPI.findByUserId(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+//        String userName = userBO.getUsername();
+        String depart = userDetailBO.getDepartmentName();
+        if (!"综合资源部".equals(depart.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("9");
+//            flag=cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
+
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee) {
+        Boolean flagCompre = guideComprehensive();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagCompre) {
             return true;
         } else {
             return false;
@@ -143,6 +167,10 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             case SEE:
                 flag = guideSeeIdentity();
                 break;
+            case LIST:
+                flag = guideComprehensive();
+                break;
+
             default:
                 flag = true;
                 break;
@@ -383,9 +411,9 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     @Override
     public List<PunchBO> list(PunchDTO dto) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        if (StringUtils.isNotBlank(dto.getName())) {
-            name = dto.getName();
-        }
+//        if (StringUtils.isNotBlank(dto.getName())) {
+//            name = dto.getName();
+//        }
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {

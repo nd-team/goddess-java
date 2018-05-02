@@ -9,7 +9,6 @@ import com.bjike.goddess.attendance.vo.FinanceAttendanceVO;
 import com.bjike.goddess.attendance.vo.FinanceCountFieldVO;
 import com.bjike.goddess.attendance.vo.FinanceCountVO;
 import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * 财务出勤表
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-16 04:09 ]
  * @Description: [ 财务出勤表 ]
  * @Version: [ v1.0.0 ]

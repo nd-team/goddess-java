@@ -298,7 +298,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
 
-
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -338,8 +337,10 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
         Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+//       Boolean positionFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean departmentFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
-        if (positionFlag) {
+        if (positionFlag || departmentFlag) {
             flag = true;
         } else {
             flag = false;

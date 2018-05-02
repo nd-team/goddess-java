@@ -191,4 +191,7 @@ public class OverWorkApiImpl implements OverWorkAPI {
         return overWorkSer.theSonPermission();
     }
 
+    @Override
+    public List<SonPermissionObject> theSonPerDepart() throws SerException{return overWorkSer.theSonPerDepart();}
+
 }

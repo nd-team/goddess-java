@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 财务出勤设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-03 04:15 ]
  * @Description: [ 财务出勤设置 ]
  * @Version: [ v1.0.0 ]

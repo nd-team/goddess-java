@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 请假汇总通报设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-11-03 04:19 ]
  * @Description: [ 请假汇总通报设置 ]
  * @Version: [ v1.0.0 ]

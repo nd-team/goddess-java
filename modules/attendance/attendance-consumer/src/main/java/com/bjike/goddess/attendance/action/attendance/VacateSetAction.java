@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 请假设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-12 01:46 ]
  * @Description: [ 请假设置 ]
  * @Version: [ v1.0.0 ]

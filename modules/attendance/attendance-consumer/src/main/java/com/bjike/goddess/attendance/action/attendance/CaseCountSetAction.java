@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 考勤情况汇总设置
  *
- * @Author: [ chenjunhao ]
+ * @Author: [chenjunhao]
  * @Date: [ 2017-10-19 06:18 ]
  * @Description: [ 考勤情况汇总设置 ]
  * @Version: [ v1.0.0 ]
