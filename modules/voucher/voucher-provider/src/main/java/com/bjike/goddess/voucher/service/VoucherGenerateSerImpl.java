@@ -6547,8 +6547,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         CellStyle cellStyleTitle = wb.createCellStyle();
         cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER); //水平布局：居中
         sheet.setDefaultColumnWidth(5);//设置宽度
-        XSSFRow row = sheet.createRow(0);//创建行从0开始
-        XSSFCell cell = row.createCell(0);//创建列从0开始
+        XSSFRow row =sheet.createRow(0);//创建行从0开始
         row.createCell(0).setCellValue("类型");
         row.createCell(1).setCellValue("凭证字");
         row.createCell(2).setCellValue("凭证字号");
@@ -6570,7 +6569,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
       List<VoucherGenerateBO> list=super.findBySql(sql,VoucherGenerateBO.class,files);
      for(int i=0;i<list.size();i++){
          list.get(i).setVoucherNum(new Double(i+1));//doublie类型
-         row = sheet.createRow(i+1);
+         row = sheet.createRow(i+2);
 
          row.createCell(0).setCellValue(list.get(i).getType());
          row.createCell(1).setCellValue(list.get(i).getVoucherWord());
@@ -6605,9 +6604,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("记账凭证汇总表");
         CellStyle cellStyleTitle = wb.createCellStyle();
-        cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER); //水平布局：居中
-        sheet.setDefaultColumnWidth(5);//设置宽度
+        cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER_SELECTION); //水平布局：居中
+        sheet.setDefaultColumnWidth(27);//设置宽度
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,4));//这是合并单元格
         XSSFRow row = sheet.createRow(0);//创建行从0开始
+        row.createCell(0).setCellValue("记账凭证汇总表");
+        row=sheet.createRow(1);
         XSSFCell cell = row.createCell(0);//创建列从0开始
         //cell.setCellValue(informationBO.getCompany());//公司名
          DecimalFormat df=new DecimalFormat("#.00");
@@ -6615,9 +6617,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         row.createCell(1).setCellValue(informationBO.getTime());//时间
         //row.createCell(1).setCellValue("2017-12-30");//时间
-        row.createCell(2).setCellValue("汇总凭证数量"+countSummary(dto));//汇总凭证数量
-        row.createCell(3).setCellValue("附件数量"+0);//模拟附件数量
-        row = sheet.createRow(2);//隔一行
+        row.createCell(2).setCellValue("汇总凭证数量:"+countSummary(dto));//汇总凭证数量
+        row.createCell(3).setCellValue("附件数量:"+0);//模拟附件数量
+        row = sheet.createRow(3);//隔一行
         String[] s = dto.getType();//传过来的值
         if (s.length == 1) {
                     List<VoucherSummanryBO> list = summaryListN(dto);
@@ -6628,7 +6630,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         row.createCell(3).setCellValue("贷方发生额");
                     }
                     for (int j = 0; j < list.size(); j++) {
-                        row = sheet.createRow(j + 3);
+                        row = sheet.createRow(j + 4);
                         row.createCell(0).setCellValue(list.get(j).getAccountantCourse());//会计科目
 
                         row.createCell(1).setCellValue(list.get(j).getCourseName());//科目名称
@@ -6636,7 +6638,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                         row.createCell(3).setCellValue(df.format(list.get(j).getLoanMoney()));//贷方发生额
 
                     }
-                    row = sheet.createRow(list.size() + 5);//隔一行到5
+                    row = sheet.createRow(list.size() + 6);//隔一行到5
 
                     row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
                     row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
@@ -6667,7 +6669,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                          list1.add(vb);
                      }
                 for (int i = 0; i < list.size(); i++) {
-                    row = sheet.createRow(i + 3);
+                    row = sheet.createRow(i + 4);
                     row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
                     row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
                     row.createCell(2).setCellValue(df.format(list.get(i).getBorrowMoney()));//借方发生额
@@ -6677,7 +6679,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     row.createCell(6).setCellValue(df.format(list1.get(i).getBorrowMoney()));//借方发生额
                     row.createCell(7).setCellValue(df.format(list1.get(i).getLoanMoney()));//贷方发生额
                 }
-                row = sheet.createRow(list.size() + 5);//隔一行到5
+                row = sheet.createRow(list.size() + 6);//隔一行到5
                 row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
                 row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
 
@@ -6696,7 +6698,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     list.add(vb);
                 }
                 for (int i = 0; i < list1.size(); i++) {
-                    row = sheet.createRow(i + 3);
+                    row = sheet.createRow(i + 4);
                     row.createCell(0).setCellValue(list.get(i).getAccountantCourse());//会计科目N
                     row.createCell(1).setCellValue(list.get(i).getCourseName());//科目名称
                     row.createCell(2).setCellValue(df.format(list.get(i).getBorrowMoney()));//借方发生额
@@ -6706,7 +6708,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     row.createCell(6).setCellValue(df.format(list1.get(i).getBorrowMoney()));//借方发生额
                     row.createCell(7).setCellValue(df.format(list1.get(i).getLoanMoney()));//贷方发生额
                 }
-                row = sheet.createRow(list1.size() + 5);//隔一行到5
+                row = sheet.createRow(list1.size() + 6);//隔一行到5
                 row.createCell(0).setCellValue("会计主管:" + informationBO.getAccountingSupervisor());//这是会计主管
                 row.createCell(1).setCellValue("制作人:" + informationBO.getProducer());//这是制作人
 
