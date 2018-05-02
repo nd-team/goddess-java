@@ -1710,7 +1710,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PostMapping("v1/exportAccountTo")
     public Result exportReportTo(VoucherSummaryDTO dto, HttpServletResponse response,HttpServletRequest request) throws ActException {
         try {
-            //RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
+            RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
             String fileName = "记账凭证汇总.xlsx";
             super.writeOutFile(response, voucherGenerateAPI.exportExcelVocher(dto),fileName);
             return new ActResult("导出成功");
