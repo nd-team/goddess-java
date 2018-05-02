@@ -2607,7 +2607,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             entity.setSecondSubject(childTO.getSecondSubject());
             entity.setThirdSubject(childTO.getThirdSubject());
             entity.setModifyTime(LocalDateTime.now());
-
             // 加上一级、二级、三级科目的编码
             RpcTransmit.transmitUserToken(token);
             String code1 = accountanCourseAPI.findByCourseName(entity.getFirstSubject());
@@ -2636,13 +2635,23 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
             //添加type属性
             entity.setType(voucherGenerateTO.getType());
+
+            entity.setSumary(voucherGenerateTO.getSumary());//这里是修改摘要
+            entity.setSource(voucherGenerateTO.getSource());//这里是修改来源
+            entity.setArea(voucherGenerateTO.getArea());//这里是修改地区
+            entity.setProjectName(voucherGenerateTO.getProjectName());//这里修改项目名称
+            entity.setProjectGroup(voucherGenerateTO.getProjectGroup());//这里修改项目组
+            entity.setTicketNum(voucherGenerateTO.getTicketNum());//这里是票据数量
+            entity.setVoucherDate(LocalDate.parse(voucherGenerateTO.getVoucherDate()));//凭证时间
             entities.add(entity);
         }
+
         super.update(entities);
 
         VoucherTotal vt = voucherTotalSer.findById(voucherGenerateTO.getTotalId());
         vt.setMoney(borrowSum.doubleValue());
         vt.setModifyTime(LocalDateTime.now());
+
         voucherTotalSer.update(vt);
         return null;
 
@@ -6447,7 +6456,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
 
-
     @Override
     public List<VoucherSummanryBO> summaryListW(VoucherSummaryDTO dto) throws SerException {
         StringBuffer buffer = new StringBuffer();
@@ -6531,6 +6539,66 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         return Long.parseLong(String.valueOf(list.size()));
     }
+
+    @Override
+    public byte[] voucherGenerateExport() throws SerException {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("记账凭证数据");
+        CellStyle cellStyleTitle = wb.createCellStyle();
+        cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER); //水平布局：居中
+        sheet.setDefaultColumnWidth(5);//设置宽度
+        XSSFRow row = sheet.createRow(0);//创建行从0开始
+        XSSFCell cell = row.createCell(0);//创建列从0开始
+        row.createCell(0).setCellValue("类型");
+        row.createCell(1).setCellValue("凭证字");
+        row.createCell(2).setCellValue("凭证字号");
+        row.createCell(3).setCellValue("凭证日期");
+        row.createCell(4).setCellValue("一级科目");
+        row.createCell(5).setCellValue("二级科目");
+        row.createCell(6).setCellValue("三级科目");
+        row.createCell(7).setCellValue("借方金额");
+        row.createCell(8).setCellValue("贷方金额");
+        row.createCell(9).setCellValue("摘要");
+        row.createCell(10).setCellValue("来源");
+        row.createCell(11).setCellValue("地区");
+        row.createCell(12).setCellValue("项目名称");
+        row.createCell(13).setCellValue("项目组");
+        row.createCell(14).setCellValue("制单人");
+        row.createCell(15).setCellValue("票据数量");
+      String sql="select voucherWord,voucherNum,voucherDate,firstSubject,secondSubject,thirdSubject,borrowMoney,loanMoney,sumary,source,area,projectName,projectGroup,ticketer,ticketNum,type from voucher_vouchergenerate ORDER BY voucherDate DESC";
+      String [] files=new String[]{"voucherWord","voucherNum","voucherDate","firstSubject","secondSubject","thirdSubject","borrowMoney","loanMoney","sumary","source","area","projectName","projectGroup","ticketer","ticketNum","type"};
+      List<VoucherGenerateBO> list=super.findBySql(sql,VoucherGenerateBO.class,files);
+     for(int i=0;i<list.size();i++){
+         list.get(i).setVoucherNum(new Double(i+1));//doublie类型
+         row = sheet.createRow(i+1);
+
+         row.createCell(0).setCellValue(list.get(i).getType());
+         row.createCell(1).setCellValue(list.get(i).getVoucherWord());
+         row.createCell(2).setCellValue(list.get(i).getVoucherNum());
+         row.createCell(3).setCellValue(list.get(i).getVoucherDate());
+         row.createCell(4).setCellValue(list.get(i).getFirstSubject());
+         row.createCell(5).setCellValue(list.get(i).getSecondSubject());
+         row.createCell(6).setCellValue(list.get(i).getThirdSubject());
+         row.createCell(7).setCellValue(list.get(i).getBorrowMoney());
+         row.createCell(8).setCellValue(list.get(i).getLoanMoney());
+         row.createCell(9).setCellValue(list.get(i).getSumary());
+         row.createCell(10).setCellValue(list.get(i).getSource());
+         row.createCell(11).setCellValue(list.get(i).getArea());
+         row.createCell(12).setCellValue(list.get(i).getProjectName());
+         row.createCell(13).setCellValue(list.get(i).getProjectGroup());
+         row.createCell(14).setCellValue(list.get(i).getTicketer());
+         row.createCell(15).setCellValue(list.get(i).getTicketNum());
+     }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+    }
+
     @Override
     public byte[] exportExcelVocher(VoucherSummaryDTO dto) throws SerException {
         VoucherInformationBO informationBO = information(dto.getStartTime(), dto.getEndTime());
@@ -6711,6 +6779,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String [] s=new String[]{"id"};
         return super.findBySql(sql,VoucherGenerateBO.class,s);
     }
+
+
 }
 
 

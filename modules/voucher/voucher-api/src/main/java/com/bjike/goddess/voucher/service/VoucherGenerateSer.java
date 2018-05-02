@@ -902,4 +902,11 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     List<VoucherGenerateBO> voucherId()throws SerException;
 
     List<VoucherSummanryBO> summaryListN1(VoucherSummaryDTO dto)throws SerException;
+    /**
+     * 记账凭证导出所有数据
+     *
+     * @return VoucherGenerateBO
+     * @throws SerException
+     */
+    byte[] voucherGenerateExport()throws SerException;
 }
