@@ -1723,6 +1723,29 @@ public class VoucherGenerateAction extends BaseFileAction {
         }
     }
     /**
+     * 凭证数据导出
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/voucherGenerateExport")
+    public Result voucherGenerateExport(HttpServletResponse response,HttpServletRequest request) throws ActException {
+        try {
+            //RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
+            String fileName = "记账凭证全部数据.xlsx";
+            super.writeOutFile(response, voucherGenerateAPI.voucherGenerateExport(),fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
      * 凭证汇总基本信息
      *
      * @param startTime

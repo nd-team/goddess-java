@@ -494,6 +494,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public byte[] voucherGenerateExport() throws SerException {
+        return voucherGenerateSer.voucherGenerateExport();
+    }
+
+
+    @Override
     public Long countSummary(VoucherSummaryDTO dto) throws SerException {
         return voucherGenerateSer.countSummary(dto);
     }
