@@ -6606,7 +6606,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         XSSFSheet sheet = wb.createSheet("记账凭证汇总表");
         CellStyle cellStyleTitle = wb.createCellStyle();
         cellStyleTitle.setAlignment(CellStyle.ALIGN_CENTER); //水平布局：居中
-        sheet.setDefaultColumnWidth(5);//设置宽度
+        sheet.setDefaultColumnWidth(27);//设置宽度
         XSSFRow row = sheet.createRow(0);//创建行从0开始
         XSSFCell cell = row.createCell(0);//创建列从0开始
         //cell.setCellValue(informationBO.getCompany());//公司名
@@ -6615,8 +6615,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         row.createCell(1).setCellValue(informationBO.getTime());//时间
         //row.createCell(1).setCellValue("2017-12-30");//时间
-        row.createCell(2).setCellValue("汇总凭证数量"+countSummary(dto));//汇总凭证数量
-        row.createCell(3).setCellValue("附件数量"+0);//模拟附件数量
+        row.createCell(2).setCellValue("汇总凭证数量:"+countSummary(dto));//汇总凭证数量
+        row.createCell(3).setCellValue("附件数量:"+0);//模拟附件数量
         row = sheet.createRow(2);//隔一行
         String[] s = dto.getType();//传过来的值
         if (s.length == 1) {
