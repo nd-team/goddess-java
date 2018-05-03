@@ -40,6 +40,7 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>

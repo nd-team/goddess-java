@@ -5,13 +5,12 @@ import com.bjike.goddess.attendance.bo.PunchBO;
 import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.PunchSonDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
-import com.bjike.goddess.attendance.entity.PunchSon;
 import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
-import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -152,5 +151,11 @@ public interface PunchSonAPI {
      * @throws SerException
      */
     List<PunchSonBO> getPunchSon(String date) throws SerException;
+
+    default List<PunchBO> sonlist(PunchDTO dto) throws SerException{return null;}
+
+   default List<PunchBO> punchList(PunchDTO dto) throws SerException{
+        return null;
+    }
 
 }

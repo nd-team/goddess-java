@@ -5,13 +5,13 @@ import com.bjike.goddess.attendance.bo.PunchBO;
 import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.PunchSonDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.service.PunchSonSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
-import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,4 +106,14 @@ public class PunchSonApiImpl implements PunchSonAPI {
     public List<PunchSonBO> getPunchSon(String date) throws SerException {
         return punchSonSer.getPunchSon(date);
     }
+
+    @Override
+    public List<PunchBO> sonlist(PunchDTO dto) throws SerException{return punchSonSer.sonlist(dto);}
+
+    @Override
+    public List<PunchBO> punchList(PunchDTO dto) throws SerException{
+        return punchSonSer.punchList(dto);
+    }
+
+
 }
