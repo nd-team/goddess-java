@@ -7,6 +7,7 @@ import com.bjike.goddess.bankrecords.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.OpinionBO;
+//import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 

@@ -5,5 +5,6 @@ compile project(":common:common-utils")
 compile project(":modules:organize:organize-api")
 compile project(":modules:carinfo:carinfo-api")
 compile project(":modules:user:user-api")
+
 //compile project(":modules:progressmanage:progressmanage-api")
 }

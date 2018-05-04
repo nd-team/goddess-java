@@ -42,7 +42,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public List<OpinionBO>  listOperateById(String id) throws SerException {
+    public List<OpinionBO> listOperateById(String id) throws SerException {
         return cusPermissionSer.listOperateById(id);
     }
 

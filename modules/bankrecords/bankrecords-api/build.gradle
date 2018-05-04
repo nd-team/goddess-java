@@ -1,4 +1,9 @@
 apply from: '../../../config.gradle'
 dependencies { 
 compile project(":common:common-api")
-compile project(":common:common-utils")} 
+    compile project(":modules:organize:organize-api")
+compile project(":common:common-utils")
+    compile project(":modules:financeinit:financeinit-api")
+    compile project(":modules:fundrecords:fundrecords-api")
+    compile project(":modules:storage:storage-api")
+}

@@ -1,6 +1,9 @@
 package com.bjike.goddess.materialbuy.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import java.time.LocalDate;
+
 /**
 * 银行流水
 * @Author:			[ yangruizhen ]
@@ -14,14 +17,14 @@ public class BankMonthTO extends BaseTO {
 /**
 * month
 */
- private   LocalDate; 
+ private LocalDate shijian;
 
 
-
- public  getLocalDate () { 
- return LocalDate;
- } 
- public void setLocalDate ( LocalDate ) { 
- this.LocalDate = LocalDate ; 
- } 
+ public LocalDate getShijian() {
+  return shijian;
  }
+
+ public void setShijian(LocalDate shijian) {
+  this.shijian = shijian;
+ }
+}

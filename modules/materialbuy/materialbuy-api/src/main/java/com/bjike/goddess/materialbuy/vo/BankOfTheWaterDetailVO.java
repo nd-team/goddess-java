@@ -1,5 +1,7 @@
 package com.bjike.goddess.materialbuy.vo;
 
+import com.bjike.goddess.materialbuy.entity.BankOfTheWater;
+
 /**
 * 银行流水表现层对象
 * @Author:			[ yangruizhen ]
@@ -17,7 +19,7 @@ public class BankOfTheWaterDetailVO {
 /**
 * 银行流水
 */
- private BankOfTheWater  bankofthewater; 
+ private BankOfTheWater bankofthewater;
 
 /**
 * 标题

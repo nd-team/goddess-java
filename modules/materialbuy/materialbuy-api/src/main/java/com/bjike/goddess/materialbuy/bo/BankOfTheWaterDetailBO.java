@@ -1,6 +1,7 @@
 package com.bjike.goddess.materialbuy.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.materialbuy.entity.BankOfTheWater;
 
 import javax.persistence.Column;
 /**
@@ -16,7 +17,7 @@ public class BankOfTheWaterDetailBO extends BaseBO {
 /**
 * 银行流水
 */
- private BankOfTheWater  bankofthewater; 
+ private BankOfTheWater bankofthewater;
 
 /**
 * 标题

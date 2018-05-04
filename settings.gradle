@@ -304,20 +304,11 @@ include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
 
-//salarymanage
-include ':modules:salarymanage:salarymanage-api'
-include ':modules:salarymanage:salarymanage-consumer'
-include ':modules:salarymanage:salarymanage-provider'
 
 //assistance
 include ':modules:assistance:assistance-api'
 include ':modules:assistance:assistance-consumer'
 include ':modules:assistance:assistance-provider'
-
-////salaryconfirm
-//include ':modules:salaryconfirm:salaryconfirm-api'
-//include ':modules:salaryconfirm:salaryconfirm-consumer'
-//include ':modules:salaryconfirm:salaryconfirm-provider'
 
 //managepromotion
 include ':modules:managepromotion:managepromotion-api'
@@ -336,10 +327,7 @@ include ':modules:businsurance:businsurance-provider'
 include ':modules:rentcar:rentcar-api'
 include ':modules:rentcar:rentcar-consumer'
 include ':modules:rentcar:rentcar-provider'
-////#salarymanage
-include ':modules:salarymanage:salarymanage-api'
-include ':modules:salarymanage:salarymanage-consumer'
-include ':modules:salarymanage:salarymanage-provider'
+
 ////#recruit
 include ':modules:recruit:recruit-api'
 include ':modules:recruit:recruit-consumer'
@@ -498,3 +486,9 @@ include ':modules:reimbursementprepare:reimbursementprepare-provider'
 include ':modules:progressmanage:progressmanage-api'
 include ':modules:progressmanage:progressmanage-consumer'
 include ':modules:progressmanage:progressmanage-provider'
+
+//salaryconfirm
+include ':modules:salaryconfirm:salaryconfirm-api'
+include ':modules:salaryconfirm:salaryconfirm-consumer'
+include ':modules:salaryconfirm:salaryconfirm-provider'
+
