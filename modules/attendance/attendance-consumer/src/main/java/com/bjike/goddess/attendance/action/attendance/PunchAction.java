@@ -1,11 +1,13 @@
 package com.bjike.goddess.attendance.action.attendance;
 
+import ch.qos.logback.core.joran.conditional.ElseAction;
 import com.bjike.goddess.attendance.api.PunchSonAPI;
 import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
 import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.PunchSonDTO;
 import com.bjike.goddess.attendance.enums.PunchSource;
 import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
@@ -25,7 +27,10 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -59,6 +64,10 @@ public class PunchAction extends BaseFileAction {
     private PunchSonAPI punchSonAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
 
     /**
      * 功能导航权限
@@ -99,14 +108,21 @@ public class PunchAction extends BaseFileAction {
                 dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
                 List<PunchPhoneBO> list = punchSonAPI.phoneList(dto);
                 return ActResult.initialize(BeanTransform.copyProperties(list, PunchPhoneVO.class, request));
-            } else {
-                List<PunchBO> list = punchSonAPI.list(dto);
-                return ActResult.initialize(BeanTransform.copyProperties(list, PunchVO.class, request));
+            }
+            else {
+
+                    List<PunchBO> list = punchSonAPI.sonlist(dto);
+                    return ActResult.initialize(BeanTransform.copyProperties(list, PunchVO.class, request));
+
             }
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
+
+
 
     /**
      * 查看打卡范围

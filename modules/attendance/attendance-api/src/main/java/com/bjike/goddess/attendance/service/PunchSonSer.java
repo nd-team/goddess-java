@@ -9,7 +9,6 @@ import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
-import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -186,5 +185,11 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
      * @throws SerException
      */
     List<PunchSonBO> getPunchSon(String date) throws SerException;
+
+    default List<PunchBO> sonlist(PunchDTO dto) throws SerException{return null;}
+
+    default List<PunchBO> punchList(PunchDTO dto) throws SerException{
+        return null;
+    }
 
 }

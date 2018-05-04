@@ -37,6 +37,7 @@ public class PunchSonBO extends BaseBO {
      */
     private PunchType punchType;
 
+
     public PunchType getPunchType() {
         return punchType;
     }

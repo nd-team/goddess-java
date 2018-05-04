@@ -15,6 +15,8 @@ import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PunchSonVO;
+import com.bjike.goddess.attendance.vo.PunchVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -38,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.awt.image.IntegerInterleavedRaster;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -411,9 +414,9 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     @Override
     public List<PunchBO> list(PunchDTO dto) throws SerException {
         String name = userAPI.currentUser().getUsername();
-//        if (StringUtils.isNotBlank(dto.getName())) {
-//            name = dto.getName();
-//        }
+        if (StringUtils.isNotBlank(dto.getName())) {
+            name = dto.getName();
+        }
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
@@ -460,8 +463,99 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             punchBO.setAfters(afters);
             bos.add(punchBO);
         }
+        System.out.println("输出bos" +bos);
         return bos;
     }
+
+
+    @Override
+    public List<PunchBO> sonlist(PunchDTO dto) throws SerException {
+//        int count =userAPI.findAllUser().size();
+        String userToken = RpcTransmit.getUserToken();
+//        List<UserBO> userbo=userAPI.findAllUser();
+
+        RpcTransmit.transmitUserToken(userToken);
+//        String name = null;
+//        List<UserBO> names = userAPI.findAllUser();
+//        for(int i=0;i <names.size();i++){
+//            name  = names.iterator().next().getUsername();
+//        }
+//        String name = userAPI.currentUser().getUsername();
+//        String name = userbo.iterator().next().getUsername();
+//        if (StringUtils.isNotBlank(dto.getName())) {
+//            name = dto.getName();
+//        }
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            LocalDate s = DateUtil.parseDate(startTime);
+            LocalDate e = DateUtil.parseDate(endTime);
+            LocalDate[] date = new LocalDate[]{s, e};
+            dto.getConditions().add(Restrict.between("date", date));
+        }
+//        dto.getConditions().add(Restrict.eq("name", name));
+        dto.getSorts().add("date=desc");
+        String depart = null;
+//        DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(name);
+//        if (null != departmentDetailBO) {
+//            depart = departmentDetailBO.getDepartment();
+//        }
+        List<Punch> punches = punchSer.findByCis(dto, true);
+        List<PunchBO> bos = new ArrayList<>();
+        for (Punch punch : punches) {
+            PunchBO punchBO = BeanTransform.copyProperties(punch, PunchBO.class);
+            if (null != depart) {
+                punchBO.setProject(depart);
+            }
+            List<PunchSonBO> gos = new ArrayList<>();
+            List<PunchSonBO> afters = new ArrayList<>();
+            PunchSonDTO punchSonDTO = new PunchSonDTO();
+            punchSonDTO.getConditions().add(Restrict.eq("punchId", punch.getId()));
+            punchSonDTO.getConditions().add(Restrict.eq("punchType", PunchType.GO));
+            PunchSon go = super.findOne(punchSonDTO);   //上班
+            if (null != go) {
+                PunchSonBO punchSonBO = BeanTransform.copyProperties(go, PunchSonBO.class);
+                punchSonBO.setPunchStatus(findPunchStatus(go));
+                gos.add(punchSonBO);
+            }
+            PunchSonDTO punchSonDTO1 = new PunchSonDTO();
+            punchSonDTO1.getConditions().add(Restrict.eq("punchId", punch.getId()));
+            punchSonDTO1.getConditions().add(Restrict.eq("punchType", PunchType.AFTER));
+            PunchSon after = super.findOne(punchSonDTO1);   //下班
+            if (null != after) {
+                PunchSonBO punchSonBO = BeanTransform.copyProperties(after, PunchSonBO.class);
+                punchSonBO.setPunchStatus(findPunchStatus(after));
+                afters.add(punchSonBO);
+            }
+            punchBO.setGos(gos);
+            punchBO.setAfters(afters);
+            bos.add(punchBO);
+        }
+//        System.out.println("输出bos"+bos);
+        return bos;
+
+    }
+
+    @Override
+   public List<PunchBO> punchList(PunchDTO dto) throws SerException{
+        String userToken = RpcTransmit.getUserToken();
+        String user = userAPI.currentUser().getId();// 获取当前用户
+        RpcTransmit.transmitUserToken(userToken);
+        UserDetailBO detailBOS = userDetailAPI.findByUserId(user);
+
+//        String userToken1 = RpcTransmit.getUserToken();
+        String depart = detailBOS.getDepartmentName();
+//        RpcTransmit.transmitUserToken(userToken1);
+        if(depart.equals("综合资源部")){
+            List<PunchBO> list = punchSonSer.sonlist(dto);
+            return BeanTransform.copyProperties(list, PunchBO.class);
+        }else{
+            List<PunchBO> list = punchSonSer.list(dto);
+            return BeanTransform.copyProperties(list, PunchBO.class);
+        }
+   }
+
+
 
     @Override
     public List<PunchPhoneBO> phoneList(PunchDTO dto) throws SerException {
@@ -547,7 +641,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     }
 
     @Override
-    public Long count(PunchDTO dto) throws SerException {
+    public Long count(PunchDTO dto) throws SerException { // 汇总
         String name = userAPI.currentUser().getUsername();
         if (StringUtils.isNotBlank(dto.getName())) {
             name = dto.getName();
@@ -561,6 +655,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             dto.getConditions().add(Restrict.between("date", date));
         }
         dto.getConditions().add(Restrict.eq("name", name));
+        System.out.println(punchSer.count(dto));
         return punchSer.count(dto);
     }
 
