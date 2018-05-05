@@ -1,7 +1,7 @@
 package com.bjike.goddess.bankrecords.service;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
+//import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
 import com.bjike.goddess.bankrecords.beanlist.Detail;
 import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
@@ -12,9 +12,9 @@ import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.entity.BankRecordDetail;
 import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
-import com.bjike.goddess.bankrecords.excel.BankRecordsAnaExcel;
+//import com.bjike.goddess.bankrecords.excel.BankRecordsAnaExcel;
 import com.bjike.goddess.bankrecords.excel.BankRecordsAnalyzeExcel;
-import com.bjike.goddess.bankrecords.excel.BankRecordsCollectExcel;
+//import com.bjike.goddess.bankrecords.excel.BankRecordsCollectExcel;
 import com.bjike.goddess.bankrecords.excel.BankSummaryExcel;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
@@ -26,11 +26,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.financeinit.api.BaseParameterAPI;
-import com.bjike.goddess.fundrecords.api.FundRecordAPI;
-import com.bjike.goddess.fundrecords.bo.FundRecordBO;
-import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
-import com.bjike.goddess.storage.to.FileInfo;
+//import com.bjike.goddess.financeinit.api.BaseParameterAPI;
+//import com.bjike.goddess.fundrecords.api.FundRecordAPI;
+//import com.bjike.goddess.fundrecords.bo.FundRecordBO;
+//import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
+//import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -78,16 +78,16 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     private BankRecordDetailSer bankRecordDetailSer;
     @Autowired
     private BankAccountInfoSer bankAccountInfoSer;
-    @Autowired
-    private FundRecordAPI fundRecordAPI;
+//    @Autowired
+//    private FundRecordAPI fundRecordAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-    @Autowired
-    private BaseParameterAPI baseParameterAPI;
-    @Autowired
-    private BankSummaryAPI bankSummaryAPI;
+//    @Autowired
+//    private BaseParameterAPI baseParameterAPI;
+//    @Autowired
+//    private BankSummaryAPI bankSummaryAPI;
 
     @Autowired
     private BankSummarySer bankSummarySer;
@@ -150,16 +150,16 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 //        } else {
 //            sb.append(" and accountId=' " + dto.getAccountId() + " ' ");
 //        }
-        if (dto.getStartDate() != null) {
-            String s = baseParameterAPI.findDoudap();//账套会计期间启用日期
-            LocalDate beginDateTime = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));//这是把它转为时间类型
-            LocalDate beginDateTime1 = LocalDate.parse(dto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            if (beginDateTime1.until(beginDateTime, ChronoUnit.WEEKS) > 0) {
-                sb.append(" and recordDate>=' " + dto.getStartDate() + " ' ");
-            } else {
-                throw new SerException("不能低于账套会计期间启用日期");
-            }
-        }
+//        if (dto.getStartDate() != null) {
+//            String s = baseParameterAPI.findDoudap();//账套会计期间启用日期
+//            LocalDate beginDateTime = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));//这是把它转为时间类型
+//            LocalDate beginDateTime1 = LocalDate.parse(dto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//            if (beginDateTime1.until(beginDateTime, ChronoUnit.WEEKS) > 0) {
+//                sb.append(" and recordDate>=' " + dto.getStartDate() + " ' ");
+//            } else {
+//                throw new SerException("不能低于账套会计期间启用日期");
+//            }
+//        }
         if (dto.getEndDate() != null) {
             sb.append(" and recordDate<=' " + dto.getEndDate() + " ' ");
         }
@@ -395,7 +395,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         Set set = new HashSet();
         for (int i = 0; i < list.size(); i++) {
             Object[] obj = (Object[]) list.get(i);
-            set.add(obj[0]);
+//            set.add(obj[0]);
         }
 
         List<BankRecordBO> bos = new ArrayList<>();
@@ -773,7 +773,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         bo.setBankBalance(0.0);
         bo.setBankBalance(0.0);
         bo.setBalanceSubtract(0.0);
-        MonthCollectBO fundBO = fundRecordAPI.month(year, month);
+//        MonthCollectBO fundBO = fundRecordAPI.month(year,month);
 
         String sql = " select sum(balance) as balance from bankrecords_bankrecord where" +
                 " recordYear = " + year + " and recordMonth = " + month;
@@ -783,12 +783,12 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             if (list.get(0).getBalance() != null) {
                 bo.setBankBalance(list.get(0).getBalance());
             }
-            if (fundBO != null) {
-                BigDecimal bigDecimal = new BigDecimal(fundBO.getCurrentBalance());
-
-                bo.setFundBalance(bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-                bo.setBalanceSubtract(bo.getBankBalance() - fundBO.getCurrentBalance());
-            }
+//            if (fundBO != null) {
+//                BigDecimal bigDecimal = new BigDecimal(fundBO.getCurrentBalance());
+//
+//                bo.setFundBalance(bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+//                bo.setBalanceSubtract(bo.getBankBalance() - fundBO.getCurrentBalance());
+//            }
         }
         return bo;
     }
@@ -1286,8 +1286,8 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         if (!StringUtils.isEmpty(json_info)) {
             json_info = json_info.replaceAll("\\\\", "");
             json_info = json_info.substring(1, json_info.length() - 1);
-            FileInfo fileInfo = JSON.parseObject(json_info, FileInfo.class);
-            return fileInfo.getFileName();
+//            FileInfo fileInfo = JSON.parseObject(json_info, FileInfo.class);
+//            return fileInfo.getFileName();
         }
         return null;
     }

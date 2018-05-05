@@ -1,6 +1,6 @@
 package com.bjike.goddess.bankrecords.service;
 
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
+//import com.bjike.goddess.bankrecords.bo.BankRecordBO;
 import com.bjike.goddess.bankrecords.bo.BankSummaryBO;
 import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
@@ -8,7 +8,7 @@ import com.bjike.goddess.bankrecords.entity.BankSummary;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
-import com.bjike.goddess.financeinit.api.BaseParameterAPI;
+//import com.bjike.goddess.financeinit.api.BaseParameterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,8 +33,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "bankrecordsSerCache")
 @Service
 public class BankSummarySerImpl extends ServiceImpl<BankSummary, BankSummaryDTO> implements BankSummarySer {
-    @Autowired
-    private BaseParameterAPI baseParameterAPI;
+//    @Autowired
+//    private BaseParameterAPI baseParameterAPI;
     @Autowired
     private UserAPI userAPI;
     /**
