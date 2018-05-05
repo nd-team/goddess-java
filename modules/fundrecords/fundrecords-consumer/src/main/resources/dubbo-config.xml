@@ -40,5 +40,6 @@
 	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.fundrecords.api.CusPermissionOperateAPI" />
 
 	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference id="VoucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 
 </beans>

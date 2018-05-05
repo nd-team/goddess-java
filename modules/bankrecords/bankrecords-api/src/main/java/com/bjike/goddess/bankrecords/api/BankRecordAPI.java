@@ -90,7 +90,6 @@ public interface BankRecordAPI {
 
 
 
-
     /**
      * 分析
      *
@@ -105,7 +104,7 @@ public interface BankRecordAPI {
      * 分析To
      * */
 
-    List<BankRecordAnalyzeBO> analyzeTo(String startDate,String endDate,String accountIds)throws SerException;
+    List<BankRecordAnalyzeBO> analyzeTo(String startDate,String endDate,String[] accountIds)throws SerException;
 
 
     /**
@@ -168,8 +167,9 @@ public interface BankRecordAPI {
      * @return
      * @throws SerException
      */
-    byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+    //byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 
+    byte[] collectExcel(String startTime,String endTime, String[] accountIds) throws SerException;
     /**
      * 分析导出
      * @param year 年份
@@ -178,7 +178,8 @@ public interface BankRecordAPI {
      * @return
      * @throws SerException
      */
-    byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+    //byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+    byte[] analyzeExcel(String startDate,String endDate, String[] accountIds) throws SerException;
     /**
      * 银行导出
      * @param accountIds 账户名称Id

@@ -10,6 +10,7 @@ import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.to.SonPermissionObject;
+import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -64,8 +65,8 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
         //accountDTO.setSystemId(systemId);
         // List<AccountBO> list = accountAPI.listAccount(accountDTO);
 
-        String sql = "select ANY_VALUE(name) as name,ANY_VALUE(account) as account,ANY_VALUE(bankAddr)as bankAddr,ANY_VALUE(secondSubject)as secondSubject,ANY_VALUE(remark) as remark from financeinit_account where secondSubject='一般户' or secondSubject='基本户' group by account limit " + start + " , " + end + "  ";
-        String s[] = new String[]{"name", "account", "bankAddr", "secondSubject", "remark"};
+        String sql = "select ANY_VALUE(id) as id,ANY_VALUE(name) as name,ANY_VALUE(account) as account,ANY_VALUE(bankAddr)as bankAddr,ANY_VALUE(secondSubject)as secondSubject,ANY_VALUE(remark) as remark from financeinit_account where secondSubject='一般户' or secondSubject='基本户' group by account limit " + start + " , " + end + "  ";
+        String s[] = new String[]{"id","name", "account", "bankAddr", "secondSubject", "remark"};
         List<AccountBO> list = super.findBySql(sql, AccountBO.class, s);
         List<BankAccountInfo> olds = super.findAll();
         if (list != null && !list.isEmpty()) {
@@ -94,26 +95,28 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
 
     @Override
     public List<BankAccountInfoBO> listPage(BankAccountInfoDTO dto) throws SerException {
+           //dto.getConditions().add(Restrict.in("name", dto.getName()));
         int page = dto.getPage();
         int limit = dto.getLimit();
         int start = (page - 1) * limit;
         int end = page * limit;
         String sql = null;
         if (dto.getName()!= null) {
-            sql = "select bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo where name='" +dto.getName()+ "' limit  " + start + "  ,  " + end + "  ";
+            sql = "select id,bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo where name='" +dto.getName()+ "' limit  " + start + "  ,  " + end + "  ";
         } else {
-            sql = "select bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo limit  " + start + "  ,  " + end + "  ";
+            sql = "select id,bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo limit  " + start + "  ,  " + end + "  ";
         }
-        String[] s = new String[]{"bank", "bankAddress", "name", "number", "type", "remark"};
-        List<BankAccountInfoBO> bos= super.findBySql(sql, BankAccountInfoBO.class, s);
-        return bos;
+
+        String[] s = new String[]{"id","bank", "bankAddress", "name", "number", "type", "remark"};
+       List<BankAccountInfoBO> bos= super.findBySql(sql, BankAccountInfoBO.class, s);
+        //List<BankAccountInfo> bos=super.findAll();
+         return bos;
 
     }
     @Override
     public List<BankAccountInfoBO> listAccount() throws SerException {
-        String sql = "select number from bankrecords_bankaccountinfo";
-        String[] field = new String[]{"number"};
-        return super.findBySql(sql, BankAccountInfoBO.class, field);
+        List<BankAccountInfo> bos=super.findAll();
+        return BeanTransform.copyProperties(bos,BankAccountInfoBO.class);
 
     }
 

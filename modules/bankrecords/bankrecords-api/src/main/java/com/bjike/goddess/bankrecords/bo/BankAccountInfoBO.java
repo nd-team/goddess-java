@@ -56,12 +56,11 @@ public class BankAccountInfoBO extends BaseBO {
      */
     private  String remark;
 
-    @Override
+
     public String getId() {
         return id;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }

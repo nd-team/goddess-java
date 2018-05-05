@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
@@ -61,14 +63,14 @@ public class BankRecordAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/backfilterQuery")
-    public Result backfilterQuery(BankSummaryDTO dto) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto), BankSummaryVO.class));
-        } catch (Exception e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/backfilterQuery")
+//    public Result backfilterQuery(BankSummaryDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto), BankSummaryVO.class));
+//        } catch (Exception e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 新分析To
@@ -80,7 +82,7 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/analyzeTo")
-    public Result analyzeTo(String startDate, String endDate, String accountIds) throws ActException {
+    public Result analyzeTo(String startDate, String endDate, String [] accountIds) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(bankRecordAPI.analyzeTo(startDate, endDate, accountIds), BankRecordAnalyzeVO.class));
         } catch (Exception e) {
@@ -136,21 +138,16 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/uploadsTO")
-    public Result uploadsTo(List<BaseTO> tos, HttpServletRequest request) throws ActException {
+    public Result uploadsTo(String [] id, HttpServletRequest request) throws ActException {
         try {
-            for (int i = 0; i < tos.size(); i++) {
-                 /*InputStream is=new FileInputStream(upload.get(i));
-                 OutputStream os=new FileOutputStream("d://upload//"+uploadFileName.get(i));
-                 byte [] buffer=new byte[1024];
-                 int count=0;
-                 while ((count=is.read(buffer))>0){
-                     os.write(buffer,0,count);
-                 }
-                 os.close();
-                 is.close();*/
-                String paths = "/" + tos.get(i).getId();
-                List<InputStream> inputStreams = getInputStreams(request, paths);
-                fileAPI.upload(inputStreams);
+            if(id!=null && id.length>0) {
+                for (int i = 0; i < id.length; i++) {
+                    String paths = "/" + id[i];
+                    List<InputStream> inputStreams = getInputStreams(request, paths);////获取输入流
+                    fileAPI.upload(inputStreams);//这个模块调用不了.有问题
+                }
+            }else {
+                throw new ActException("没有值");
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -169,10 +166,12 @@ public class BankRecordAct extends BaseFileAction {
     @PostMapping("v1/uploads")
     public Result uploads(HttpServletRequest request) throws ActException {
         try {
-            //跟前端约定好 ，文件路径是列表id
+            //跟前端约定好 ，文件路径是  列表id
             // /id/....
             String path = "/";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
+            String token = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(token);
             fileAPI.upload(inputStreams);
             return new ActResult("上传成功");
         } catch (SerException e) {
@@ -361,6 +360,36 @@ public class BankRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    @PostMapping("v1/bankRecordExcel")
+   public Result bankRecordExcel(String accountIds,HttpServletResponse response,HttpServletRequest request) throws ActException {
+        try {
+            String fileName = "银行流水.xlsx";
+            super.writeOutFile(response, bankRecordAPI.bankRecordExcel(accountIds),fileName);
+            return new ActResult("导出成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+   }
 
 
+
+
+//    @PostMapping("v1/exportAccountTo")
+//    public Result exportReportTo(VoucherSummaryDTO dto, HttpServletResponse response,HttpServletRequest request) throws ActException {
+//        try {
+//            //RpcContext.getContext().setAttachment("userToken", request.getParameter("userToken"));
+//            String fileName = "记账凭证汇总.xlsx";
+//            super.writeOutFile(response, voucherGenerateAPI.exportExcelVocher(dto),fileName);
+//            return new ActResult("导出成功");
+//        } catch (SerException e) {
+//
+//            throw new ActException(e.getMessage());
+//        } catch (IOException e1) {
+//
+//            throw new ActException(e1.getMessage());
+//        }
+//    }
 }
+

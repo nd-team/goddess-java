@@ -19,6 +19,6 @@ public interface BankSummaryAPI  {
  /**
   *筛选查询
   */
- List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto) throws SerException;
+ List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto,String[] accountIds) throws SerException;
 
- }
+}

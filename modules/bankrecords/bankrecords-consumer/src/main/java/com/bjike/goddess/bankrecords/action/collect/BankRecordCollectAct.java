@@ -2,6 +2,9 @@ package com.bjike.goddess.bankrecords.action.collect;
 
 import com.bjike.goddess.bankrecords.api.BankAccountInfoAPI;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
+import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
+import com.bjike.goddess.bankrecords.bo.BankSummaryBO;
+import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.vo.*;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -44,7 +47,8 @@ public class BankRecordCollectAct extends BaseFileAction {
     private BankAccountInfoAPI accountInfoAPI;
     @Autowired
     private FileAPI fileAPI;
-
+    @Autowired
+    private BankSummaryAPI bankSummaryAPI;
 
     /**
      * 功能导航权限
@@ -134,11 +138,24 @@ public class BankRecordCollectAct extends BaseFileAction {
      * @return class BankRecordCollectVO
      * @version v1
      */
+//    @PostMapping("v1/collect/export")
+//    public Result collectExport(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletResponse response) throws ActException {
+//        try {
+//            String fileName = year + "年" + month + "月" + "银行流水汇总.xlsx";
+//            super.writeOutFile(response, bankRecordAPI.collectExcel(year, month, accountIds), fileName);
+//            return new ActResult("导出成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        } catch (IOException e1) {
+//            throw new ActException(e1.getMessage());
+//        }
+//    }
+
     @PostMapping("v1/collect/export")
-    public Result collectExport(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletResponse response) throws ActException {
+    public Result collectExport(String startTime,String endTime, String[] accountIds, HttpServletResponse response) throws ActException {
         try {
-            String fileName = year + "年" + month + "月" + "银行流水汇总.xlsx";
-            super.writeOutFile(response, bankRecordAPI.collectExcel(year, month, accountIds), fileName);
+            String fileName ="银行流水汇总.xlsx";
+            super.writeOutFile(response,bankRecordAPI.collectExcel(startTime,endTime,accountIds), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -146,6 +163,8 @@ public class BankRecordCollectAct extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+
 
     /**
      * 分析
@@ -176,10 +195,10 @@ public class BankRecordCollectAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/analyze/export")
-    public Result analyzeExport(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletResponse response) throws ActException {
+    public Result analyzeExport(String startDate,String endDate, String[] accountIds, HttpServletResponse response) throws ActException {
         try {
-            String fileName = fileName = year + "年" + month + "月" + "银行流水分析.xlsx";
-            super.writeOutFile(response, bankRecordAPI.analyzeExcel(year, month, accountIds), fileName);
+            String fileName ="银行流水分析.xlsx";
+            super.writeOutFile(response, bankRecordAPI.analyzeExcel(startDate,endDate, accountIds), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -228,3 +247,4 @@ public class BankRecordCollectAct extends BaseFileAction {
     }
 
 }
+

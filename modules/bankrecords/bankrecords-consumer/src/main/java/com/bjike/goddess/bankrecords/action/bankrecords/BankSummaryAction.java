@@ -34,10 +34,10 @@ public class BankSummaryAction {
   * @param dto dto
   * @version v1
   */
- @GetMapping("v1/backfilterQuery")
-   public Result backfilterQuery(BankSummaryDTO dto)throws ActException{
+ @PostMapping("v1/backfilterQuery")
+   public Result backfilterQuery(BankSummaryDTO dto,String[] accountIds)throws ActException{
     try {
-     return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto),BankSummaryVO.class));
+     return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto,accountIds),BankSummaryVO.class));
     } catch (Exception e) {
      throw new ActException(e.getMessage());
        }

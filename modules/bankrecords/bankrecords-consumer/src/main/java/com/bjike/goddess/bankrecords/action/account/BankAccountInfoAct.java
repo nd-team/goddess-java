@@ -67,9 +67,10 @@ public class BankAccountInfoAct {
      * @version v1
      */
     @GetMapping("v1/listPage")
-    public Result listPage(BankAccountInfoDTO dto)throws ActException{
+    public Result listPage(BankAccountInfoDTO dto,HttpServletRequest reques)throws ActException{
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(bankAccountInfoAPI.listPage(dto),BankAccountInfoVO.class));
+             List<BankAccountInfoVO> voList =BeanTransform.copyProperties(bankAccountInfoAPI.listPage(dto),BankAccountInfoVO.class,reques);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

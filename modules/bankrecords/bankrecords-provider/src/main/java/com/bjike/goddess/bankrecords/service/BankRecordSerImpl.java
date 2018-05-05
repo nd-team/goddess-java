@@ -12,8 +12,10 @@ import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.entity.BankRecordDetail;
 import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
+import com.bjike.goddess.bankrecords.excel.BankRecordsAnaExcel;
 import com.bjike.goddess.bankrecords.excel.BankRecordsAnalyzeExcel;
 import com.bjike.goddess.bankrecords.excel.BankRecordsCollectExcel;
+import com.bjike.goddess.bankrecords.excel.BankSummaryExcel;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -261,7 +263,10 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 "  SELECT 1 as c\n" +
                 "  FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id\n" +
                 "  WHERE 1 = 1 ";
-        if (!StringUtils.isEmpty(dto.getAccountId())) {
+        if (dto.getAccountId().equals("0")) {
+            sql += " and b.accountId in (select id from bankrecords_bankaccountinfo where type='基本户') ";
+        }
+        if (!StringUtils.isEmpty(dto.getAccountId()) && !dto.getAccountId().equals("0")) {
             sql += "AND b.accountId = '" + dto.getAccountId() + "' ";
         }
         if (!StringUtils.isEmpty(dto.getStartDate()) && !StringUtils.isEmpty(dto.getEndDate())) {
@@ -335,14 +340,16 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             sql += " b.accountId='" + dto.getAccountId() + "' ";
         }
         if (dto.getStartDate() != null && dto.getEndDate() != null) {
-            String s=baseParameterAPI.findDoudap();
+            RpcTransmit.transmitUserToken(token);
+            //String s=baseParameterAPI.findDoudap();//没有任何值
+            String s="2013-01-30";
             if(s!=null){
                 LocalDate beginDateTime = LocalDate.parse(s);//账套会计期间启用日期这是把它转为时间类型
             if (LocalDate.parse(dto.getStartDate()).isAfter(beginDateTime)) {
                 sql += " AND b.id in (" +
 
                         "SELECT bankRecord_id as id FROM bankrecords_bankrecorddetail" +
-                        "WHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '" + dto.getStartDate() + "'  AND '" + dto.getEndDate() + "' " +
+                        " WHERE title = '交易日' AND date_format(val, '%Y-%m-%d') BETWEEN '" + dto.getStartDate() + "'  AND '" + dto.getEndDate() + "' " +
                         ") ";
             }
             } else {
@@ -679,7 +686,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String accountIds) throws SerException {
+    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String[] accountIds) throws SerException {
         String token = RpcTransmit.getUserToken();
         // RpcTransmit.transmitUserToken(token);
 //        String token = RpcTransmit.getUserToken();
@@ -691,18 +698,18 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             if (s != null) {
                 LocalDate beginDateTime = LocalDate.parse(s);//账套会计期间启用日期这是把它转为时间类型
                 if (LocalDate.parse(startDate).isAfter(beginDateTime)) {//这里是对比账套会计期间启用日期
+
                     BankRecordAnalyzeBO bankRecordAnalyzeBO = new BankRecordAnalyzeBO();
                     BankSummaryDTO bankSummaryDTO = new BankSummaryDTO();
                     bankSummaryDTO.setStartDate(startDate);
                     bankSummaryDTO.setEndDate(endDate);
-                    bankSummaryDTO.setAccountId(accountIds);
                     String sql = null;
                     String pin = null;
                     Integer lastMonth = 0;
                     Integer lastYear = 0;
                     List<BankRecordAnalyzeBO> brblist = new ArrayList<>();
                     List<BankSummaryBO> lastMonthList = new ArrayList<>();
-                    List<BankSummaryBO> list =bankSummarySer.backfilterQuery(bankSummaryDTO);
+                    List<BankSummaryBO> list =bankSummarySer.backfilterQuery(bankSummaryDTO,accountIds);
                     for (int i = 0; i < list.size(); i++) {
 //                        list.get(i).getIncomeCreditAmount();//本月收入
 //                        list.get(i).getExpenseDebitAmount();//本月支出
@@ -723,21 +730,31 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
                         }
                         bankRecordAnalyzeBO.setBank(list.get(i).getBankName());//银行名称
-
                         bankRecordAnalyzeBO.setCurrentCreditorCost(list.get(i).getExpenseDebitAmount());//本月支出
                         bankRecordAnalyzeBO.setLastDebtorCost(lastMonthList.get(0).getExpenseDebitAmount());//上个月支出
                         bankRecordAnalyzeBO.setCurrentDebtorCost(list.get(i).getIncomeCreditAmount());//本月收入
-                        bankRecordAnalyzeBO.setLastDebtorCost(lastMonthList.get(0).getIncomeCreditAmount());//上个月收入
+                        bankRecordAnalyzeBO.setLastCreditorCost(lastMonthList.get(0).getIncomeCreditAmount());//上个月收入
                         bankRecordAnalyzeBO.setCreditorSubtract(list.get(i).getIncomeCreditAmount() - lastMonthList.get(0).getIncomeCreditAmount());//收入差额
                         bankRecordAnalyzeBO.setDebtorSubtract(list.get(i).getExpenseDebitAmount() - lastMonthList.get(0).getExpenseDebitAmount());//支出差额
                         bankRecordAnalyzeBO.setCreditorRate(list.get(i).getIncomeCreditAmount() / (list.get(i).getIncomeCreditAmount() + list.get(i).getExpenseDebitAmount()));//收入比例
                         bankRecordAnalyzeBO.setDebtorRate(list.get(i).getExpenseDebitAmount() / (list.get(i).getIncomeCreditAmount() + list.get(i).getExpenseDebitAmount()));//支出比例额
                         bankRecordAnalyzeBO.setTheDateOf(list.get(i).getTheDateOf());//日期;
-                        bankRecordAnalyzeBO.setCreditorGrow(list.get(i).getIncomeCreditAmount() - lastMonthList.get(0).getIncomeCreditAmount()/ lastMonthList.get(0).getIncomeCreditAmount());//收入增长率
-                        bankRecordAnalyzeBO.setDebtorGrow(list.get(i).getExpenseDebitAmount() - lastMonthList.get(0).getExpenseDebitAmount() / lastMonthList.get(0).getExpenseDebitAmount());//支出增长率
+                        if(lastMonthList.get(0).getIncomeCreditAmount()==0.0) {
+                            bankRecordAnalyzeBO.setCreditorGrow(0.0);
+                        }else {
+                            bankRecordAnalyzeBO.setCreditorGrow((list.get(i).getIncomeCreditAmount() - lastMonthList.get(0).getIncomeCreditAmount()) / lastMonthList.get(0).getIncomeCreditAmount());//收入增长率
+
+                        }
+                        if(lastMonthList.get(0).getIncomeCreditAmount()==0.0) {
+                            bankRecordAnalyzeBO.setDebtorGrow(0.0);
+                        }else {
+                            bankRecordAnalyzeBO.setDebtorGrow((list.get(i).getExpenseDebitAmount() - lastMonthList.get(0).getExpenseDebitAmount()) / lastMonthList.get(0).getExpenseDebitAmount());//支出增长率
+
+                        }
                         brblist.add(bankRecordAnalyzeBO);
-                        return brblist;
+
                     }
+                    return brblist;
                 } else {
                     throw new SerException("不能低于账套会计间启用日期");
                 }
@@ -1299,25 +1316,51 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         return flag;
     }
 
-    @Override
-    public byte[] collectExcel(Integer year, Integer month, String[] accountName) throws SerException {
+//    @Override
+//    public byte[] collectExcel(Integer year, Integer month, String[] accountName) throws SerException {
+//
+//        List<BankRecordsCollectExcel> excelList = new ArrayList<BankRecordsCollectExcel>();
+//        List<BankRecordCollectBO> boList = collect(year, month, accountName);
+//        if (!CollectionUtils.isEmpty(boList)) {
+//            for (BankRecordCollectBO bo : boList) {
+//                BankRecordsCollectExcel excel = new BankRecordsCollectExcel();
+//                BeanUtils.copyProperties(bo, excel);
+//                excelList.add(excel);
+//            }
+//        } else {
+//            excelList.add(new BankRecordsCollectExcel());
+//        }
+//
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+//        return bytes;
+//    }
+//
 
-        List<BankRecordsCollectExcel> excelList = new ArrayList<BankRecordsCollectExcel>();
-        List<BankRecordCollectBO> boList = collect(year, month, accountName);
+    @Override
+    public byte[] collectExcel(String startTime,String endTime,String[] accountIds) throws SerException {
+        BankSummaryDTO bankSummaryDTO=new BankSummaryDTO();
+        bankSummaryDTO.setStartDate(startTime);
+        bankSummaryDTO.setEndDate(endTime);
+        List<BankSummaryExcel> excelList = new ArrayList<BankSummaryExcel>();
+
+        List<BankSummaryBO> boList =bankSummarySer.backfilterQuery(bankSummaryDTO,accountIds);
+
         if (!CollectionUtils.isEmpty(boList)) {
-            for (BankRecordCollectBO bo : boList) {
-                BankRecordsCollectExcel excel = new BankRecordsCollectExcel();
+            for (BankSummaryBO bo : boList) {
+                BankSummaryExcel excel = new BankSummaryExcel();
                 BeanUtils.copyProperties(bo, excel);
                 excelList.add(excel);
             }
         } else {
-            excelList.add(new BankRecordsCollectExcel());
+            excelList.add(new BankSummaryExcel());
         }
 
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
+
 
     public List<BankRecordCollectBO> collectCombine(BankRecordDTO dto, String bank, Integer year, Integer month) throws SerException {
         List<BankRecordCollectBO> boList = BeanTransform.copyProperties(super.findByCis(dto), BankRecordCollectBO.class);
@@ -1343,10 +1386,28 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         return boList;
     }
 
+//    @Override
+//    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+//        List<BankRecordsAnalyzeExcel> excelList = new ArrayList<BankRecordsAnalyzeExcel>();
+//        List<BankRecordAnalyzeBO> boList = analyze(year, month, accountIds);
+//        if (!CollectionUtils.isEmpty(boList)) {
+//            for (BankRecordAnalyzeBO bo : boList) {
+//                BankRecordsAnalyzeExcel excel = new BankRecordsAnalyzeExcel();
+//                BeanUtils.copyProperties(bo, excel);
+//                excelList.add(excel);
+//            }
+//        } else {
+//            excelList.add(new BankRecordsAnalyzeExcel());
+//        }
+//
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+//        return bytes;
+//    }
     @Override
-    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+    public byte[] analyzeExcel(String startDate,String endDate, String[] accountIds) throws SerException {
         List<BankRecordsAnalyzeExcel> excelList = new ArrayList<BankRecordsAnalyzeExcel>();
-        List<BankRecordAnalyzeBO> boList = analyze(year, month, accountIds);
+        List<BankRecordAnalyzeBO> boList=analyzeTo(startDate, endDate, accountIds);
         if (!CollectionUtils.isEmpty(boList)) {
             for (BankRecordAnalyzeBO bo : boList) {
                 BankRecordsAnalyzeExcel excel = new BankRecordsAnalyzeExcel();
@@ -1361,6 +1422,9 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
+
+
+
     /**
      * 银行流水导出
      *
@@ -1369,13 +1433,27 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
      */
     @Override
     public byte[] bankRecordExcel(String accountIds) throws SerException {
-        BankRecordDTO dto=new BankRecordDTO();
-        dto.setAccountId(accountIds);
-        List<BankRecordBO> list=pageList(dto);
+        String sql="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='交易日'";//交易日
+        String sql1="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='交易时间'";//交易时间
+        String sql2="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='起息日'";//起息日
+
+        String sql3="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='交易类型'";//交易类型
+        String sql4="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='借方金额'";//借方金额
+        String sql5="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='贷方金额'";//贷方金额
+        String sql6="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='余额'";//借方金额
+        String sql7="select val from bankrecords_bankrecorddetail where bankRecord_id in (select id from bankrecords_bankrecord where accountId='"+accountIds+"') AND title='摘要'";//贷方金额
+        String [] s=new String[]{"val"};
+        List<BankRecordDetail> list=super.findBySql(sql,BankRecordDetail.class,s);
+        List<BankRecordDetail> list1=super.findBySql(sql1,BankRecordDetail.class,s);
+        List<BankRecordDetail> list2=super.findBySql(sql2,BankRecordDetail.class,s);
+        List<BankRecordDetail> list3=super.findBySql(sql3,BankRecordDetail.class,s);
+        List<BankRecordDetail> list4=super.findBySql(sql4,BankRecordDetail.class,s);
+        List<BankRecordDetail> list5=super.findBySql(sql5,BankRecordDetail.class,s);
+        List<BankRecordDetail> list6=super.findBySql(sql6,BankRecordDetail.class,s);
+        List<BankRecordDetail> list7=super.findBySql(sql7,BankRecordDetail.class,s);
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("银行流水");
         sheet.setDefaultColumnWidth(20);
-        sheet.setDefaultColumnWidth(25);//设置宽度
         XSSFRow row = sheet.createRow(0);//创建行从0开始
         XSSFCell cell = row.createCell(0);//创建列从0开始
         row.createCell(0).setCellValue("交易日");
@@ -1387,34 +1465,15 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         row.createCell(6).setCellValue("余额");
         row.createCell(7).setCellValue("摘要");
         for (int i=0;i<list.size();i++){
-           row=sheet.createRow(i);
-           List<Detail> list1=list.get(i).getDetailList();
-           for (int j=0;j<list1.size();i++) {
-               if(list1.get(i).getTitle().equals("交易日")) {
-                   row.createCell(0).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("交易时间")){
-                   row.createCell(1).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("起息日")){
-                   row.createCell(2).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("交易类型")){
-                   row.createCell(3).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("借方金额")){
-                   row.createCell(4).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("贷方金额")){
-                   row.createCell(5).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("余额")){
-                   row.createCell(6).setCellValue(list1.get(i).getVal());
-               }
-               if(list1.get(i).getTitle().equals("摘要")){
-                   row.createCell(7).setCellValue(list1.get(i).getVal());
-               }
-           }
+           row=sheet.createRow(i+1);
+           row.createCell(0).setCellValue(list.get(i).getVal());
+            row.createCell(1).setCellValue(list1.get(i).getVal());
+            row.createCell(2).setCellValue(list2.get(i).getVal());
+            row.createCell(3).setCellValue(list3.get(i).getVal());
+            row.createCell(4).setCellValue(list4.get(i).getVal());
+            row.createCell(5).setCellValue(list5.get(i).getVal());
+            row.createCell(6).setCellValue(list6.get(i).getVal());
+            row.createCell(7).setCellValue(list7.get(i).getVal());
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
