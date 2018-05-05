@@ -111,7 +111,7 @@ public class PunchAction extends BaseFileAction {
             }
             else {
 
-                    List<PunchBO> list = punchSonAPI.sonlist(dto);
+                    List<PunchBO> list = punchSonAPI.punchList(dto);
                     return ActResult.initialize(BeanTransform.copyProperties(list, PunchVO.class, request));
 
             }

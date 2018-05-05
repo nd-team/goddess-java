@@ -43,7 +43,7 @@ public class CaseCountSetAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/list")
+    @GetMapping("v1/https://github.com/nd-team/goddess-java.git")
     public Result list(CaseCountSetDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<CaseCountSetBO> list = caseCountSetAPI.list(dto);
