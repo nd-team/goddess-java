@@ -1,18 +1,18 @@
 package com.bjike.goddess.bankrecords.action.bankrecords;
 
-import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
-import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
-import com.bjike.goddess.bankrecords.entity.BankRecord;
-import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
-import com.bjike.goddess.bankrecords.vo.BankSummaryVO;
-import com.bjike.goddess.common.api.exception.ActException;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.springframework.beans.factory.annotation.Autowired;
+//import com.bjike.goddess.bankrecords.api.BankSummaryAPI;
+//import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
+//import com.bjike.goddess.bankrecords.entity.BankRecord;
+//import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
+//import com.bjike.goddess.bankrecords.vo.BankSummaryVO;
+//import com.bjike.goddess.common.api.exception.ActException;
+//import com.bjike.goddess.common.api.exception.SerException;
+//import com.bjike.goddess.common.api.restful.Result;
+//import com.bjike.goddess.common.consumer.restful.ActResult;
+//import com.bjike.goddess.common.utils.bean.BeanTransform;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+//import javax.validation.Valid;
 
 /**
 * 银行流水
@@ -25,21 +25,21 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("banksummary")
 public class BankSummaryAction {
- @Autowired
- private BankSummaryAPI bankSummaryAPI;
+// @Autowired
+// private BankSummaryAPI bankSummaryAPI;
 
- /**
-  * 汇总
-  *
-  * @param dto dto
-  * @version v1
-  */
- @GetMapping("v1/backfilterQuery")
-   public Result backfilterQuery(BankSummaryDTO dto)throws ActException{
-    try {
-     return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto),BankSummaryVO.class));
-    } catch (Exception e) {
-     throw new ActException(e.getMessage());
-       }
-    }
+// /**
+//  * 汇总
+//  *
+//  * @param dto dto
+//  * @version v1
+//  */
+// @PostMapping("v1/backfilterQuery")
+//   public Result backfilterQuery(BankSummaryDTO dto,String[] accountIds)throws ActException{
+//    try {
+//     return ActResult.initialize(BeanTransform.copyProperties(bankSummaryAPI.backfilterQuery(dto,accountIds),BankSummaryVO.class));
+//    } catch (Exception e) {
+//     throw new ActException(e.getMessage());
+//       }
+//    }
  }

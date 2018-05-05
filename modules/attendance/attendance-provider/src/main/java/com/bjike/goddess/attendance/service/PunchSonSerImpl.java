@@ -27,6 +27,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.bo.ObjectBO;
@@ -47,10 +48,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,6 +90,9 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserDetailAPI userDetailAPI;
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -463,7 +464,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             punchBO.setAfters(afters);
             bos.add(punchBO);
         }
-        System.out.println("输出bos" +bos);
+//        System.out.println("输出个人bos" +bos);
         return bos;
     }
 
@@ -475,16 +476,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 //        List<UserBO> userbo=userAPI.findAllUser();
 
         RpcTransmit.transmitUserToken(userToken);
-//        String name = null;
-//        List<UserBO> names = userAPI.findAllUser();
-//        for(int i=0;i <names.size();i++){
-//            name  = names.iterator().next().getUsername();
-//        }
-//        String name = userAPI.currentUser().getUsername();
-//        String name = userbo.iterator().next().getUsername();
-//        if (StringUtils.isNotBlank(dto.getName())) {
-//            name = dto.getName();
-//        }
+
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
@@ -496,10 +488,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 //        dto.getConditions().add(Restrict.eq("name", name));
         dto.getSorts().add("date=desc");
         String depart = null;
-//        DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(name);
-//        if (null != departmentDetailBO) {
-//            depart = departmentDetailBO.getDepartment();
-//        }
+
         List<Punch> punches = punchSer.findByCis(dto, true);
         List<PunchBO> bos = new ArrayList<>();
         for (Punch punch : punches) {
@@ -531,7 +520,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             punchBO.setAfters(afters);
             bos.add(punchBO);
         }
-//        System.out.println("输出bos"+bos);
+//        System.out.println("输出所有bos"+bos);
         return bos;
 
     }
@@ -539,18 +528,18 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     @Override
    public List<PunchBO> punchList(PunchDTO dto) throws SerException{
         String userToken = RpcTransmit.getUserToken();
-        String user = userAPI.currentUser().getId();// 获取当前用户
+        String userName = userAPI.currentUser().getUsername();// 获取当前用户名
         RpcTransmit.transmitUserToken(userToken);
-        UserDetailBO detailBOS = userDetailAPI.findByUserId(user);
+        Map<String, String> depart =  positionUserDetailAPI.departPosition(userName); // 根据组织结构获取用户部门
+        RpcTransmit.transmitUserToken(userToken);
 
-//        String userToken1 = RpcTransmit.getUserToken();
-        String depart = detailBOS.getDepartmentName();
-//        RpcTransmit.transmitUserToken(userToken1);
-        if(depart.equals("综合资源部")){
-            List<PunchBO> list = punchSonSer.sonlist(dto);
+//       System.out.println(depart.keySet());
+
+        if(depart.containsKey("综合资源部")){  // 判断是否为综合资源部人员
+            List<PunchBO> list = punchSonSer.sonlist(dto); // 输出所有人员打卡信息
             return BeanTransform.copyProperties(list, PunchBO.class);
         }else{
-            List<PunchBO> list = punchSonSer.list(dto);
+            List<PunchBO> list = punchSonSer.list(dto); // 输出个人打卡信息
             return BeanTransform.copyProperties(list, PunchBO.class);
         }
    }

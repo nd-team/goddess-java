@@ -1,5 +1,7 @@
 package com.bjike.goddess.materialbuy.vo;
 
+import java.time.LocalDate;
+
 /**
 * 银行流水表现层对象
 * @Author:			[ yangruizhen ]
@@ -17,7 +19,7 @@ public class BankMonthVO {
 /**
 * month
 */
- private   LocalDate; 
+ private LocalDate shijian;
 
 
 
@@ -26,11 +28,13 @@ public class BankMonthVO {
  } 
  public void setId (String id ) { 
  this.id = id ; 
- } 
- public  getLocalDate () { 
- return LocalDate;
- } 
- public void setLocalDate ( LocalDate ) { 
- this.LocalDate = LocalDate ; 
- } 
  }
+
+ public LocalDate getShijian() {
+  return shijian;
+ }
+
+ public void setShijian(LocalDate shijian) {
+  this.shijian = shijian;
+ }
+}

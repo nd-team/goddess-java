@@ -150,6 +150,7 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
         return salaryInformationSer.findSkill(employeeName);
     }
 
+
     @Override
     public SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException {
         return salaryInformationSer.findSalaryConfirm(dto);

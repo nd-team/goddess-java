@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "bankrecords_bankaccountinfo")
 public class BankAccountInfo extends BaseEntity {
-
     /**
      * 账号名称
      */
@@ -67,6 +66,7 @@ public class BankAccountInfo extends BaseEntity {
      */
     @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private  String remark;
+
 
     public String getRemark() {
         return remark;
@@ -131,4 +131,5 @@ public class BankAccountInfo extends BaseEntity {
     public void setType(String type) {
         this.type = type;
     }
+
 }

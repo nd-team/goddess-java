@@ -1,6 +1,6 @@
 package com.bjike.goddess.bankrecords.service;
 
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
+//import com.bjike.goddess.bankrecords.bo.BankRecordBO;
 import com.bjike.goddess.bankrecords.bo.BankSummaryBO;
 import com.bjike.goddess.bankrecords.dto.BankSummaryDTO;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
@@ -8,7 +8,7 @@ import com.bjike.goddess.bankrecords.entity.BankSummary;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
-import com.bjike.goddess.financeinit.api.BaseParameterAPI;
+//import com.bjike.goddess.financeinit.api.BaseParameterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,44 +33,52 @@ import java.util.List;
 @CacheConfig(cacheNames = "bankrecordsSerCache")
 @Service
 public class BankSummarySerImpl extends ServiceImpl<BankSummary, BankSummaryDTO> implements BankSummarySer {
-    @Autowired
-    private BaseParameterAPI baseParameterAPI;
+//    @Autowired
+//    private BaseParameterAPI baseParameterAPI;
     @Autowired
     private UserAPI userAPI;
     /**
      * 有条件对银行流水汇总
      */
     @Override
-    public List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto) throws SerException {
+    public List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto,String[] accountIds) throws SerException {
         List<BankRecord> bankRecords=null;
         String token = RpcTransmit.getUserToken();
         String systemId = userAPI.currentSysNO();
         RpcTransmit.transmitUserToken(token);
+        StringBuffer stringBuffer=new StringBuffer();
         //String s = baseParameterAPI.findDoudap();//账套会计期间启用日期
          String s="2013-12-30";
+         String sql="select ANY_VALUE(accountId) as accountId,ANY_VALUE((select number from bankrecords_bankaccountinfo where id=accountId))" +
+                 "as bankName ,ANY_VALUE(recordMonth) as month,ANY_VALUE(recordYear) as year,sum(debtorCost) as expenseDebitAmount,sum(creditorCost) as" +
+                 "incomeCreditAmount,sum(creditorCost-debtorCost) as" +
+                 "amountOfThisMonth,ANY_VALUE(balance) as" +
+                 "theBalanceOf,ANY_VALUE(date_format(recordDate,'%y-%m')) as" +
+                 "theDateOf from bankrecords_bankrecord " +
+                 " where recordDate>='" + dto.getStartDate() + "' and  recordDate<='" + dto.getEndDate() + "'";
         if (s != null) {
             LocalDate beginDateTime = LocalDate.parse(s);//这是把它转为时间类型
             if (LocalDate.parse(dto.getStartDate()).isAfter(beginDateTime)) {
-                String sql = null;
-                if (dto.getAccountId().equals("0")) {//这里是没有传账户id过来的
-                    sql = "select ANY_VALUE(accountId) as accountId,ANY_VALUE((select number from bankrecords_bankaccountinfo where id=accountId))" +
-                            "as bankName ,ANY_VALUE(recordMonth) as month,ANY_VALUE(recordYear) as year,sum(debtorCost) as expenseDebitAmount,sum(creditorCost) as" +
-                            "incomeCreditAmount,sum(creditorCost-debtorCost) as" +
-                            "amountOfThisMonth,ANY_VALUE(balance) as" +
-                            "theBalanceOf,ANY_VALUE(date_format(recordDate,'%y-%m')) as" +
-                            "theDateOf from bankrecords_bankrecord" +
-                            " where recordDate>='" + dto.getStartDate() + "' and  recordDate<='" + dto.getEndDate() + "' group by accountId,recordMonth ";
-                } else {
+                if(accountIds!=null && accountIds.length>0) {
+                    if (accountIds.length == 1) {
+                        for (int i = 0; i < accountIds.length; i++) {
+                            sql += " and accountId in('" + accountIds[i] + "')";
+                        }
+                    }
 
-                    sql = "select ANY_VALUE(accountId) as accountId,ANY_VALUE((select number from bankrecords_bankaccountinfo where id=accountId))" +
-                            "as bankName ,ANY_VALUE(recordMonth) as month,ANY_VALUE(recordYear) as year,sum(debtorCost) as expenseDebitAmount,sum(creditorCost) as" +
-                            "incomeCreditAmount,sum(creditorCost-debtorCost) as" +
-                            "amountOfThisMonth,ANY_VALUE(balance) as" +
-                            "theBalanceOf,ANY_VALUE(date_format(recordDate,'%y-%m')) as" +
-                            "theDateOf from bankrecords_bankrecord" +
-                            " where  accountId='" + dto.getAccountId() + "' and recordDate>='" + dto.getStartDate() + "' and  recordDate<='" + dto.getEndDate() + "' group by accountId,recordMonth";
+                    if (accountIds.length > 1) {//这里是没有传账户id过来的
 
+                        for (int i = 0; i < accountIds.length; i++) {
+                            if (i != accountIds.length - 1) {
+                                stringBuffer.append("'" + accountIds[i] + "',");
+                            } else {
+                                stringBuffer.append("'" + accountIds[i] + "'");
+                            }
+                        }
+                        sql += " and accountId in(" + stringBuffer + ")";
+                    }
                 }
+                sql +="  group by accountId,recordMonth ";
                 String[] field = new String[]{"accountId","bankName", "month", "year", "expenseDebitAmount", "incomeCreditAmount", "amountOfThisMonth", "theBalanceOf", "theDateOf"};
                 List<BankSummaryBO> bos = super.findBySql(sql, BankSummaryBO.class, field);
                for(int i=0;i<bos.size();i++){

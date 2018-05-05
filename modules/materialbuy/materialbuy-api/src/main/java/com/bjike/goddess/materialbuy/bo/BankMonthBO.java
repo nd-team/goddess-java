@@ -3,6 +3,8 @@ package com.bjike.goddess.materialbuy.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
+import java.time.LocalDate;
+
 /**
 * 银行流水业务传输对象
 * @Author:			[ yangruizhen ]
@@ -16,14 +18,14 @@ public class BankMonthBO extends BaseBO {
 /**
 * month
 */
- private   LocalDate; 
+ private LocalDate shijian;
 
 
-
- public  getLocalDate () { 
- return LocalDate;
- } 
- public void setLocalDate ( LocalDate ) { 
- this.LocalDate = LocalDate ; 
- } 
+ public LocalDate getShijian() {
+  return shijian;
  }
+
+ public void setShijian(LocalDate shijian) {
+  this.shijian = shijian;
+ }
+}

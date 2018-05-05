@@ -24,7 +24,7 @@ public class BankSummaryApiImpl implements BankSummaryAPI {
     private BankSummarySer bankSummarySer;
 
     @Override
-    public List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto) throws SerException {
-        return bankSummarySer.backfilterQuery(dto);
+    public List<BankSummaryBO> backfilterQuery(BankSummaryDTO dto,String[] accountIds) throws SerException {
+        return bankSummarySer.backfilterQuery(dto,accountIds);
     }
 }

@@ -37,8 +37,8 @@ compile(project(":common:common-consumer")){
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
 
-compile project(":modules:bankrecords:bankrecords-api")
 
 compile("org.springframework.boot:spring-boot-starter-web")
+
 }
 

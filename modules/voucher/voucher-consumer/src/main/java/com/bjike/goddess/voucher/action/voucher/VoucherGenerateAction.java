@@ -1725,7 +1725,8 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 凭证数据导出
      *
-     * @param dto dto
+     * @param response response
+     * @param request request
      * @throws ActException
      * @version v1
      */

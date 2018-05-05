@@ -88,7 +88,7 @@ public class BankRecordApiImpl implements BankRecordAPI {
     }
 
     @Override
-    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String accountIds) throws SerException {
+    public List<BankRecordAnalyzeBO> analyzeTo(String startDate, String endDate, String[] accountIds) throws SerException {
         return bankRecordSer.analyzeTo(startDate,endDate,accountIds);
     }
 
@@ -129,16 +129,25 @@ public class BankRecordApiImpl implements BankRecordAPI {
         return bankRecordSer.balanceByMonth(startTime, endTime);
     }
 
+//    @Override
+//    public byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+//        return bankRecordSer.collectExcel(year, month, accountIds);
+//    }
     @Override
-    public byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException {
-        return bankRecordSer.collectExcel(year, month, accountIds);
+    public byte[] collectExcel(String startTime,String endTime, String[] accountIds) throws SerException {
+        return bankRecordSer.collectExcel(startTime, endTime, accountIds);
     }
 
-    @Override
-    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
-        return bankRecordSer.analyzeExcel(year, month, accountIds);
-    }
 
+//    @Override
+//    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+//        return bankRecordSer.analyzeExcel(year, month, accountIds);
+//    }
+
+    @Override
+    public byte[] analyzeExcel(String startDate,String endDate, String[] accountIds) throws SerException {
+        return bankRecordSer.analyzeExcel(startDate, endDate, accountIds);
+    }
     @Override
     public byte[] bankRecordExcel(String accountIds) throws SerException {
         return  bankRecordSer.bankRecordExcel(accountIds);

@@ -1,7 +1,7 @@
 package com.bjike.goddess.bankrecords.service;
 
 import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
+//import com.bjike.goddess.bankrecords.bo.BankRecordBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
@@ -10,13 +10,16 @@ import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.to.SonPermissionObject;
+//import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.bo.AccountBO;
+//import com.bjike.goddess.financeinit.api.AccountAPI;
+//import com.bjike.goddess.financeinit.bo.AccountBO;
+//import com.bjike.goddess.financeinit.bo.AccountBO;
+//import com.bjike.goddess.financeinit.bo.AccountBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +51,8 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private BankRecordSer bankRecordSer;
-    @Autowired
-    private AccountAPI accountAPI;
+//    @Autowired
+//    private AccountAPI accountAPI;
 
     public List<BankAccountInfoBO> findAlltoPage(BankAccountInfoDTO dto) throws SerException {
         int page = dto.getPage();
@@ -64,56 +67,58 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
         //accountDTO.setSystemId(systemId);
         // List<AccountBO> list = accountAPI.listAccount(accountDTO);
 
-        String sql = "select ANY_VALUE(name) as name,ANY_VALUE(account) as account,ANY_VALUE(bankAddr)as bankAddr,ANY_VALUE(secondSubject)as secondSubject,ANY_VALUE(remark) as remark from financeinit_account where secondSubject='一般户' or secondSubject='基本户' group by account limit " + start + " , " + end + "  ";
-        String s[] = new String[]{"name", "account", "bankAddr", "secondSubject", "remark"};
-        List<AccountBO> list = super.findBySql(sql, AccountBO.class, s);
+        String sql = "select ANY_VALUE(id) as id,ANY_VALUE(name) as name,ANY_VALUE(account) as account,ANY_VALUE(bankAddr)as bankAddr,ANY_VALUE(secondSubject)as secondSubject,ANY_VALUE(remark) as remark from financeinit_account where secondSubject='一般户' or secondSubject='基本户' group by account limit " + start + " , " + end + "  ";
+        String s[] = new String[]{"id","name", "account", "bankAddr", "secondSubject", "remark"};
+//        List<AccountBO> list = super.findBySql(sql,AccountBO.class,s);
         List<BankAccountInfo> olds = super.findAll();
-        if (list != null && !list.isEmpty()) {
-            for (AccountBO bo : list) {
-                boolean bool = false;
-                for (BankAccountInfo bai : olds) {
-                    if (bo.getAccount().equals(bai.getNumber())) {
-                        bool = true;
-                    }
-                }
-                if (!bool) {
-                    bankAccountInfo.setName(bo.getName());
-                    bankAccountInfo.setNumber(bo.getAccount());
-                    bankAccountInfo.setBank(bo.getBankAddr().substring(0, 4));
-                    bankAccountInfo.setBankAddress(bo.getBankAddr());
-                    bankAccountInfo.setType(bo.getSecondSubject());
-                    bankAccountInfo.setRemark(bo.getRemark());
-                    bankAccountInfo.setCompany(" ");//没有的值避免报错就存null
-                    bankAccountInfo.setCardNumber(" ");//没有的值避免报错就存null
-                    super.save(bankAccountInfo);//先把前部分的把账号来源给加进银行账户信息
-                }
-            }
-        }
+//        if (list != null && !list.isEmpty()) {
+////            for (AccountBO bo : list) {
+////                boolean bool = false;
+////                for (BankAccountInfo bai : olds) {
+////                    if (bo.getAccount().equals(bai.getNumber())) {
+////                        bool = true;
+////                    }
+////                }
+////                if (!bool) {
+////                    bankAccountInfo.setName(bo.getName());
+////                    bankAccountInfo.setNumber(bo.getAccount());
+////                    bankAccountInfo.setBank(bo.getBankAddr().substring(0, 4));
+////                    bankAccountInfo.setBankAddress(bo.getBankAddr());
+////                    bankAccountInfo.setType(bo.getSecondSubject());
+////                    bankAccountInfo.setRemark(bo.getRemark());
+////                    bankAccountInfo.setCompany(" ");//没有的值避免报错就存null
+////                    bankAccountInfo.setCardNumber(" ");//没有的值避免报错就存null
+////                    super.save(bankAccountInfo);//先把前部分的把账号来源给加进银行账户信息
+////                }
+////            }
+//        }
         return BeanTransform.copyProperties(super.findAll(), BankAccountInfoBO.class);
     }
 
     @Override
     public List<BankAccountInfoBO> listPage(BankAccountInfoDTO dto) throws SerException {
+           //dto.getConditions().add(Restrict.in("name", dto.getName()));
         int page = dto.getPage();
         int limit = dto.getLimit();
         int start = (page - 1) * limit;
         int end = page * limit;
         String sql = null;
         if (dto.getName()!= null) {
-            sql = "select bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo where name='" +dto.getName()+ "' limit  " + start + "  ,  " + end + "  ";
+            sql = "select id,bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo where name='" +dto.getName()+ "' limit  " + start + "  ,  " + end + "  ";
         } else {
-            sql = "select bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo limit  " + start + "  ,  " + end + "  ";
+            sql = "select id,bank,bankAddress,name,number,type,remark from bankrecords_bankaccountinfo limit  " + start + "  ,  " + end + "  ";
         }
-        String[] s = new String[]{"bank", "bankAddress", "name", "number", "type", "remark"};
-        List<BankAccountInfoBO> bos= super.findBySql(sql, BankAccountInfoBO.class, s);
-        return bos;
+
+        String[] s = new String[]{"id","bank", "bankAddress", "name", "number", "type", "remark"};
+       List<BankAccountInfoBO> bos= super.findBySql(sql, BankAccountInfoBO.class, s);
+        //List<BankAccountInfo> bos=super.findAll();
+         return bos;
 
     }
     @Override
     public List<BankAccountInfoBO> listAccount() throws SerException {
-        String sql = "select number from bankrecords_bankaccountinfo";
-        String[] field = new String[]{"number"};
-        return super.findBySql(sql, BankAccountInfoBO.class, field);
+        List<BankAccountInfo> bos=super.findAll();
+        return BeanTransform.copyProperties(bos,BankAccountInfoBO.class);
 
     }
 

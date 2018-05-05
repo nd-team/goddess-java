@@ -30,6 +30,9 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:dispatchcar:dispatchcar-api")
     compile project(":common:common-utils")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:message:message-api")
+    compile project(":modules:oilcardmanage:oilcardmanage-api")
 //    compile project(":modules:oilcardmanage:oilcardmanage-api")
 }
 

@@ -21,16 +21,10 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
     private String bank;
 
     /**
-     * 年份
+     * 日期
      */
-    @ExcelHeader(name = "年份", notNull = false)
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    @ExcelHeader(name = "月份", notNull = false)
-    private Integer month;
+    @ExcelHeader(name = "日期", notNull = false)
+    private String theDateOf;
 
     /**
      * 本月借方金额
@@ -44,11 +38,6 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
     @ExcelHeader(name = "本月贷方金额", notNull = false)
     private Double currentCreditorCost;
     /**
-     * 本月余额
-     */
-    @ExcelHeader(name = "本月余额", notNull = false)
-    private Double currentBalance;
-    /**
      * 上月借方金额
      */
     @ExcelHeader(name = "上月借方金额", notNull = false)
@@ -58,11 +47,6 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
      */
     @ExcelHeader(name = "上月贷方金额", notNull = false)
     private Double lastCreditorCost;
-    /**
-     * 上月余额
-     */
-    @ExcelHeader(name = "上月余额", notNull = false)
-    private Double lastBalance;
     /**
      * 收入差额
      */
@@ -77,12 +61,12 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
      * 收入比例
      */
     @ExcelHeader(name = "收入比例", notNull = false)
-    private String creditorRate;
+    private Double creditorRate;
     /**
      * 支出比例
      */
     @ExcelHeader(name = "支出比例", notNull = false)
-    private String debtorRate;
+    private Double debtorRate;
     /**
      * 收入增长率
      */
@@ -102,20 +86,12 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
         this.bank = bank;
     }
 
-    public Integer getYear() {
-        return year;
+    public String getTheDateOf() {
+        return theDateOf;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setTheDateOf(String theDateOf) {
+        this.theDateOf = theDateOf;
     }
 
     public Double getCurrentDebtorCost() {
@@ -134,13 +110,6 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
         this.currentCreditorCost = currentCreditorCost;
     }
 
-    public Double getCurrentBalance() {
-        return currentBalance;
-    }
-
-    public void setCurrentBalance(Double currentBalance) {
-        this.currentBalance = currentBalance;
-    }
 
     public Double getLastDebtorCost() {
         return lastDebtorCost;
@@ -156,14 +125,6 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
 
     public void setLastCreditorCost(Double lastCreditorCost) {
         this.lastCreditorCost = lastCreditorCost;
-    }
-
-    public Double getLastBalance() {
-        return lastBalance;
-    }
-
-    public void setLastBalance(Double lastBalance) {
-        this.lastBalance = lastBalance;
     }
 
     public Double getCreditorSubtract() {
@@ -182,19 +143,19 @@ public class BankRecordsAnalyzeExcel extends BaseTO {
         this.debtorSubtract = debtorSubtract;
     }
 
-    public String getCreditorRate() {
+    public Double getCreditorRate() {
         return creditorRate;
     }
 
-    public void setCreditorRate(String creditorRate) {
+    public void setCreditorRate(Double creditorRate) {
         this.creditorRate = creditorRate;
     }
 
-    public String getDebtorRate() {
+    public Double getDebtorRate() {
         return debtorRate;
     }
 
-    public void setDebtorRate(String debtorRate) {
+    public void setDebtorRate(Double debtorRate) {
         this.debtorRate = debtorRate;
     }
 

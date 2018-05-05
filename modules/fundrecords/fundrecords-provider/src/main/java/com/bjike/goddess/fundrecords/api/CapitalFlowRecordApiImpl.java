@@ -24,8 +24,8 @@ public class CapitalFlowRecordApiImpl implements CapitalFlowRecordAPI {
     @Autowired
     private CapitalFlowRecordSer capitalFlowRecordSer;
 
-    @Autowired
-    private VoucherGenerateSer voucherGenerateSer;
+//    @Autowired
+//    private VoucherGenerateSer voucherGenerateSer;
 
 
     /*
@@ -65,7 +65,7 @@ public class CapitalFlowRecordApiImpl implements CapitalFlowRecordAPI {
     * */
     @Override
     public void deleteArea(String id) throws SerException {
-        voucherGenerateSer.deleteVoucherGenerate(id);
+        capitalFlowRecordSer.deleteArea(id);
         return;
     }
 

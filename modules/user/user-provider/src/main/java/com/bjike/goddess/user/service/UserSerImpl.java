@@ -292,7 +292,6 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
         return userBO;
     }
-
     @CacheEvict(value = "listCache", allEntries = true)
     @Transactional
     @Override

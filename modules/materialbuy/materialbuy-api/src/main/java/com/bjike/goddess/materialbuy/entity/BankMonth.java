@@ -2,6 +2,7 @@ package com.bjike.goddess.materialbuy.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -14,20 +15,19 @@ import javax.persistence.*;
 */
 @Entity
 @Table(name = "materialbuy_bankmonth")
-public class BankMonth extends BaseEntity { 
+public class BankMonth extends BaseEntity {
 
-/**
-* month
-*/
-@Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT 'month'"  ) 
- private   LocalDate; 
+ /**
+  * month
+  */
+ @Column(name = "时间", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT 'month'")
+ private LocalDate shijian;
 
-
-
- public  getLocalDate () { 
- return LocalDate;
- } 
- public void setLocalDate ( LocalDate ) { 
- this.LocalDate = LocalDate ; 
- } 
+ public LocalDate getShijian() {
+  return shijian;
  }
+
+ public void setShijian(LocalDate shijian) {
+  this.shijian = shijian;
+ }
+}
