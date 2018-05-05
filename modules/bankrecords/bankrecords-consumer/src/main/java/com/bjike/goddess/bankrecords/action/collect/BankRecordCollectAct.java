@@ -247,4 +247,3 @@ public class BankRecordCollectAct extends BaseFileAction {
     }
 
 }
-

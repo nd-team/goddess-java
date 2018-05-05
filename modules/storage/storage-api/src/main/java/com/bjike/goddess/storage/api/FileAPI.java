@@ -27,8 +27,8 @@ public interface FileAPI {
     }
 
     /**
-     * 文件上传
-     *
+     * 文件上传,
+     *e
      * @param inputStreams 上传文件及信息
      */
     default List<FileBO> upload(List<InputStream> inputStreams) throws SerException {

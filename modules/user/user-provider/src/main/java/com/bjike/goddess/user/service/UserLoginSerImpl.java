@@ -120,6 +120,7 @@ public class UserLoginSerImpl implements UserLoginSer {
         UserLoginLogTO userLoginLogTO = new UserLoginLogTO();
         try {
             userLoginLogTO.setLoginIp(loginTO.getIp());
+//            userLoginLogTO.setLoginIp("192.168.1.");
             userLoginLogTO.setLoginType(loginTO.getLoginType());
             userLoginLogTO.setUser(user);
             userLoginLogTO.setLoginTime(DateUtil.dateToString(LocalDateTime.now()));

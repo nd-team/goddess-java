@@ -133,7 +133,7 @@ public class BankRecordAct extends BaseFileAction {
 
     /**
      * 批量上传附件
-     * @param tos 传id属性
+     * @param  request 传id属性
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
