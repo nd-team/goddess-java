@@ -7,6 +7,8 @@ import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
+import com.bjike.goddess.materialinstock.type.InstockType;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 
 import java.util.List;
@@ -171,4 +173,107 @@ public interface MaterialInStockAPI {
      * @throws SerException
      */
     Set<String> allstockEncoding() throws SerException;
+
+    /**
+     *
+     * 设备维修中需要修改入库信息
+     *
+     * @return
+     * @throws SerException
+     */
+    void updateLijuntao(MaterialInStockTO to) throws SerException;
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallUser() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的入库类型
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<InstockType> findStockType(String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据入库类型获取所有的现入库地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreaByType(InstockType instockType,String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据入库类型和现入库地区获取部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartByTyAnAr(InstockType instockType,String storageArea,String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据入库类型和现入库地区和部门获取信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MaterialInStockBO> findByTyAnAr(InstockType instockType,String storageArea,String deptment, String[] intervalTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的现存储地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea(String[] intervalTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据地区获取所有的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProByAre(String[] intervalTime,String area) throws SerException {
+        return null;
+    }
+    /**
+     * 根据地区项目组获取入库状态
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MaterialState> findStatusByAreAnpro(String[] intervalTime, String area, String projectGroup) throws SerException {
+        return null;
+    }
+    /**
+     * 根据地区项目组入库状态获取信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MaterialInStockBO> findByAreAnpro(String[] intervalTime,String area,String projectGroup,MaterialState materialState) throws SerException {
+        return null;
+    }
 }

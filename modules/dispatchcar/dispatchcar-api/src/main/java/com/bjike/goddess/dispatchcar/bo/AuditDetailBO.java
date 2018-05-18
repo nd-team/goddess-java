@@ -20,7 +20,9 @@ public class AuditDetailBO extends BaseBO {
     /**
      * 出车信息
      */
-    private DispatchInfo info;
+    private DispatchCarInfoBO dispatchCarInfo;
+
+//    private DispatchInfo info;
 
     /**
      * 审核详情
@@ -28,12 +30,12 @@ public class AuditDetailBO extends BaseBO {
     private List<AuditResult> list;
 
 
-    public DispatchInfo getInfo() {
-        return info;
+    public DispatchCarInfoBO getDispatchCarInfo() {
+        return dispatchCarInfo;
     }
 
-    public void setInfo(DispatchInfo info) {
-        this.info = info;
+    public void setDispatchCarInfo(DispatchCarInfoBO dispatchCarInfo) {
+        this.dispatchCarInfo = dispatchCarInfo;
     }
 
     public List<AuditResult> getList() {

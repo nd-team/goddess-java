@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.ArrivalMonthBO;
 import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -130,4 +131,25 @@ public interface ArrivalMonthAPI {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ArrivalMonthCountBO> collect(ArrivalMonthDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区收入月图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
+        return null;
+    }
 }

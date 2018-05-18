@@ -2,7 +2,9 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -82,6 +84,18 @@ public interface UserAPI {
     }
 
     /**
+     * 获取当前用户全部系统号
+     *      包括子公司的系统号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> currentSysNOs(Boolean bool) throws SerException {
+        return null;
+    }
+
+
+    /**
      * 条件查询用户
      *
      * @param dto
@@ -111,7 +125,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default UserBO add(TransactionContext context,UserTO userTO) throws SerException {
+    default UserBO add(TransactionContext context, UserTO userTO) throws SerException {
         return null;
     }
 
@@ -123,6 +137,39 @@ public interface UserAPI {
      * @throws SerException
      */
     default void update(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 修改密码
+     * tanghaixiang
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePassword(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 忘记密码修改密码
+     * chenyang
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePasswords(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 修改手机号码
+     * chenyang
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePhone(UserTO userTO) throws SerException {
     }
 
 
@@ -214,6 +261,7 @@ public interface UserAPI {
     default UserBO updateUser(UserTO userTO) throws SerException {
         return null;
     }
+
     /**
      * 员工入职注册删除用户
      *
@@ -230,10 +278,60 @@ public interface UserAPI {
      * @return UserBO
      * @throws SerException
      */
-    default String maxUserEmpNumber( ) throws SerException {
+    default String maxUserEmpNumber() throws SerException {
         return null;
     }
 
+    /**
+     * 移动端获取下一个员工编号(个人注册的下一个编号)
+     * lijuntao
+     *
+     * @param empNum 企业人(邀请人编号)
+     * @throws SerException
+     */
+    default String nextEmpNumber(String empNum) throws SerException {
+        return null;
+    }
 
+    /**
+     * chenjunhao
+     * 通过用户id查找用户名
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    String findNameById(String id) throws SerException;
+
+    /**
+     * 获取部门人员
+     *
+     * @param department id或者部门名
+     * @return UserBO
+     * @throws SerException
+     */
+    default List<UserBO> findByDept(String... department) throws SerException {
+        return null;
+    }
+
+    /**
+     * 成为企业（phone）
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void becomeEnterprise(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 我的团队
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<UserDetailBO> myTeam() throws SerException {
+        return null;
+    }
 
 }

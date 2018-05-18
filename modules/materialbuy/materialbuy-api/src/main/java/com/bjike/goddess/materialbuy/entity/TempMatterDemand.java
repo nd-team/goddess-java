@@ -1,7 +1,7 @@
 package com.bjike.goddess.materialbuy.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -95,7 +95,7 @@ public class TempMatterDemand extends BaseEntity {
     /**
      * 审核状态
      */
-    @Column(name = "auditState", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核状态'")
+    @Column(name = "auditState", columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核状态'")
     private AuditState auditState;
 
     /**
@@ -104,6 +104,47 @@ public class TempMatterDemand extends BaseEntity {
     @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255) COMMENT '审核意见'")
     private String auditOpinion;
 
+    /**
+     * 库存是否满足
+     */
+    @Column(name = "ifStockSatisfy", columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '库存是否满足'")
+    private Boolean ifStockSatisfy;
+
+    /**
+     * 财务部审核
+     */
+    @Column(name = "ifFinanceAudit", columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '财务部审核'")
+    private Boolean ifFinanceAudit;
+
+    /**
+     * 财务部审核通过数量
+     */
+    @Column(name = "adoptNum", columnDefinition = "INT(11) COMMENT '财务部审核通过数量'")
+    private Integer adoptNum;
+
+    public Boolean getIfFinanceAudit() {
+        return ifFinanceAudit;
+    }
+
+    public void setIfFinanceAudit(Boolean ifFinanceAudit) {
+        this.ifFinanceAudit = ifFinanceAudit;
+    }
+
+    public Boolean getIfStockSatisfy() {
+        return ifStockSatisfy;
+    }
+
+    public void setIfStockSatisfy(Boolean ifStockSatisfy) {
+        this.ifStockSatisfy = ifStockSatisfy;
+    }
+
+    public Integer getAdoptNum() {
+        return adoptNum;
+    }
+
+    public void setAdoptNum(Integer adoptNum) {
+        this.adoptNum = adoptNum;
+    }
 
     public String getArea() {
         return area;

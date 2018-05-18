@@ -1,11 +1,13 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.service.WorkRangeSer;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
+import com.bjike.goddess.organize.to.WorkRangeFlatTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,5 +123,55 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     @Override
     public List<OpinionBO> findThawOpinion() throws SerException {
         return workRangeSer.findThawOpinion();
+    }
+
+    @Override
+    public List<WorkRangeBO> findByStatus(Status status) throws SerException {
+        return workRangeSer.findByStatus(status);
+    }
+
+    @Override
+    public List<String> findWorkScope() throws SerException {
+        return workRangeSer.findWorkScope();
+    }
+
+    @Override
+    public List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        return workRangeSer.getFlatList(dto);
+    }
+
+    @Override
+    public void flatAdd(WorkRangeFlatTO to) throws SerException {
+        workRangeSer.flatAdd(to);
+    }
+
+    @Override
+    public List<WorkRangeFlatBO> findByFlatDirection(String direction) throws SerException {
+        return workRangeSer.findByFlatDirection(direction);
+    }
+
+    @Override
+    public void faltDelete(String direction) throws SerException {
+        workRangeSer.faltDelete(direction);
+    }
+
+    @Override
+    public void flatUpdate(WorkRangeFlatTO to) throws SerException {
+        workRangeSer.flatUpdate(to);
+    }
+
+    @Override
+    public void flatClose(String direction) throws SerException {
+        workRangeSer.flatClose(direction);
+    }
+
+    @Override
+    public void flatOpen(String direction) throws SerException {
+        workRangeSer.flatOpen(direction);
+    }
+
+    @Override
+    public Long getFlatTotal() throws SerException {
+        return workRangeSer.getFlatTotal();
     }
 }

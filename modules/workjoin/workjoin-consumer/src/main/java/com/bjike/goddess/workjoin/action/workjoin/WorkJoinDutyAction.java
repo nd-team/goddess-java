@@ -13,6 +13,7 @@ import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinDutyBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDutyDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDutyTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
 import com.bjike.goddess.workjoin.vo.WorkJoinDutyVO;
@@ -40,6 +41,29 @@ public class WorkJoinDutyAction {
     @Autowired
     private WorkJoinDutyAPI workJoinDutyAPI;
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = workJoinDutyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 工作交接责任义务列表总条数
      *
      * @param workJoinDutyDTO 工作交接责任义务dto
@@ -59,7 +83,7 @@ public class WorkJoinDutyAction {
     /**
      * 一个工作交接责任义务
      *
-     * @param id
+     * @param id 工作交接id
      * @return class WorkJoinDutyVO
      * @des 获取一个工作交接责任义务
      * @version v1

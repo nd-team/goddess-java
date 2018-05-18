@@ -10,7 +10,9 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.storage.api.FileAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,6 +97,9 @@ public class BankRecordCollectAct extends BaseFileAction {
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             BankRecordInfoVO vo = BeanTransform.copyProperties(bankRecordAPI.find(id), BankRecordInfoVO.class, request);
+            if (vo != null && StringUtils.isNotBlank(vo.getRecordDate())) {
+                vo.setRecordDate(vo.getRecordDate().replace("T", " "));
+            }
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -196,6 +203,26 @@ public class BankRecordCollectAct extends BaseFileAction {
             BankRecordCompareVO vo = BeanTransform.copyProperties(bankRecordAPI.compare(year, month), BankRecordCompareVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result year() throws ActException {
+        try {
+            List<Integer> list = new ArrayList<>();
+            Integer year = LocalDate.now().getYear();
+            for (int i = year - 5; i < year + 5; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

@@ -9,12 +9,16 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
+import com.bjike.goddess.datastore.to.NumSpecificationTO;
+import com.bjike.goddess.datastore.vo.NumSpecificationVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.workjoin.api.JoinInfoAPI;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDeleteFileTO;
 import com.bjike.goddess.workjoin.vo.JoinInfoVO;
@@ -46,6 +50,29 @@ public class JoinInfoAction extends BaseFileAction{
     private JoinInfoAPI joinInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = joinInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 交接资料列表总条数
@@ -67,7 +94,7 @@ public class JoinInfoAction extends BaseFileAction{
     /**
      * 一个交接资料
      *
-     * @param id
+     * @param id 交接资料id
      * @return class JoinInfoVO
      * @des 获取一个交接资料
      * @version v1
@@ -243,6 +270,25 @@ public class JoinInfoAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(),workJoinDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 获取制度文件夹编号和经验总结编号
+     * @return class NumSpecificationVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/specification")
+    public Result findSpecification() throws ActException{
+        try {
+            List<NumSpecificationBO> boList = joinInfoAPI.findNumSepecification();
+            List<NumSpecificationVO> voList = BeanTransform.copyProperties(boList,NumSpecificationVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 

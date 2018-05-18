@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.ReHierarchyBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
@@ -142,16 +143,15 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
         return null;
     }
 
+    List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException;
+
     /**
      * 列表
      *
-     * @param dto 岗位详细数据传输
      * @return
      * @throws SerException
      */
-    default List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
-        return null;
-    }
+    List<ReHierarchyBO> list() throws SerException;
 
     /**
      * 查询未冻结职位选项
@@ -216,4 +216,48 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     default PositionDetailBO findByPosition(String position) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据层级ｉｄ查询所有的岗位
+     *
+     * @return
+     */
+    default List<String> getPositions(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取真实编号
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String number(PositionDetailTO to) throws SerException;
+
+    /**
+     * 根据时间获取岗位名称数量
+     */
+    default Long getPositionNum(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * <<<<<<< Updated upstream
+     * chenjunhao
+     * 查找所有正常状态的岗位名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> positionNames() throws SerException;
+
+    /*
+    * 根据时间,地区,项目组获取岗位名称数量
+    */
+    default Long getPositionNum(String startTime, String endTime, String project) throws SerException {
+        return null;
+    }
+
 }

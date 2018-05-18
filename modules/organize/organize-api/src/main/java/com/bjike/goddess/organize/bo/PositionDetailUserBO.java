@@ -1,6 +1,9 @@
 package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.organize.enums.StaffStatus;
+
+import java.util.List;
 
 /**
  * 用户职位业务传输对象
@@ -14,68 +17,63 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class PositionDetailUserBO extends BaseBO {
 
     /**
-     * 用户信息
-     */
-    private String userId;
-
-    /**
      * 员工名称
      */
-    private String username;
+    private String name;
 
     /**
      * 员工编号
      */
-    private String employeesNumber;
+    private String number;
+
+//    /**
+//     * 职位
+//     */
+//    private String position;
+//
+//    /**
+//     * 职位id
+//     */
+//    private String positionIds;
 
     /**
-     * 职位
+     * 人员状态
      */
-    private String position;
-
+    private StaffStatus staffStatus;
     /**
-     * 职位id
+     * 详细信息
      */
-    private String positionIds;
+    private List<PositionUserDetailBO> detailS;
 
-
-    public String getUserId() {
-        return userId;
+    public List<PositionUserDetailBO> getDetailS() {
+        return detailS;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setDetailS(List<PositionUserDetailBO> detailS) {
+        this.detailS = detailS;
     }
 
-    public String getPosition() {
-        return position;
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
     }
 
-    public String getPositionIds() {
-        return positionIds;
+    public String getName() {
+        return name;
     }
 
-    public void setPositionIds(String positionIds) {
-        this.positionIds = positionIds;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNumber() {
+        return number;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmployeesNumber() {
-        return employeesNumber;
-    }
-
-    public void setEmployeesNumber(String employeesNumber) {
-        this.employeesNumber = employeesNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

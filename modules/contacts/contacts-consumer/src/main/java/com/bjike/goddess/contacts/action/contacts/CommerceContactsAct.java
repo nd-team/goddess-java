@@ -10,12 +10,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contacts.api.CommerceContactsAPI;
+import com.bjike.goddess.contacts.bo.MobileCommerceContactsBO;
 import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import com.bjike.goddess.contacts.to.DeleteFileTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.vo.CommerceContactsVO;
+import com.bjike.goddess.contacts.vo.MobileCommerceContactsVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -301,5 +303,52 @@ public class CommerceContactsAct extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
+    /**
+     * 移动端获取列表
+     *
+     * @return class MobileCommerceContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/list")
+    public Result mobileList(CommerceContactsDTO dto) throws ActException {
+        try {
+            List<MobileCommerceContactsBO> mobileCommerceContactsBOs = commerceContactsAPI.mobileList(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(mobileCommerceContactsBOs, MobileCommerceContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 移动端总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/mobile/total")
+    public Result getMobileTotal(CommerceContactsDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(commerceContactsAPI.getMobileTotal(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取移动端数据
+     *
+     * @return class MobileCommerceContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/findByID/{id}")
+    public Result findByMobileID(@PathVariable String id) throws ActException {
+        try {
+            MobileCommerceContactsBO bo = commerceContactsAPI.findByMobileID(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, MobileCommerceContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

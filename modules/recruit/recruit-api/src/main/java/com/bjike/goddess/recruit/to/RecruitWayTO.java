@@ -3,6 +3,7 @@ package com.bjike.goddess.recruit.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,10 +18,18 @@ import javax.validation.constraints.NotNull;
  */
 public class RecruitWayTO extends BaseTO {
     /**
+     * 渠道开发时间
+     */
+    private String channelTime;
+    /**
      * 招聘渠道
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "招聘渠道不能为空")
     private String recruitName;
+    /**
+     * 招聘网站
+     */
+    private String recruitSite;
 
     /**
      * 会员名
@@ -71,11 +80,87 @@ public class RecruitWayTO extends BaseTO {
      * 效果评价
      */
     private String effect;
+    /**
+     * 收费情况
+     */
+    private String chargeCase;
+    /**
+     * 剩余职位发布数
+     */
+    private Integer postNum;
+    /**
+     * 剩余简历下载数
+     */
+    private Integer resumeNum;
+    /**
+     * 适用招聘岗位
+     */
+    private String[] suitPosition;
+    /**
+     * 状态
+     */
+    private Status status;
 
     /**
      * 备注
      */
     private String remarks;
+
+    public String getRecruitSite() {
+        return recruitSite;
+    }
+
+    public void setRecruitSite(String recruitSite) {
+        this.recruitSite = recruitSite;
+    }
+
+    public String getChannelTime() {
+        return channelTime;
+    }
+
+    public void setChannelTime(String channelTime) {
+        this.channelTime = channelTime;
+    }
+
+    public String getChargeCase() {
+        return chargeCase;
+    }
+
+    public void setChargeCase(String chargeCase) {
+        this.chargeCase = chargeCase;
+    }
+
+    public Integer getPostNum() {
+        return postNum;
+    }
+
+    public void setPostNum(Integer postNum) {
+        this.postNum = postNum;
+    }
+
+    public Integer getResumeNum() {
+        return resumeNum;
+    }
+
+    public void setResumeNum(Integer resumeNum) {
+        this.resumeNum = resumeNum;
+    }
+
+    public String[] getSuitPosition() {
+        return suitPosition;
+    }
+
+    public void setSuitPosition(String[] suitPosition) {
+        this.suitPosition = suitPosition;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getRecruitName() {
         return recruitName;

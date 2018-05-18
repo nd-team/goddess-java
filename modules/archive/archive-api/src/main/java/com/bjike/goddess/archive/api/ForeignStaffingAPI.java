@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.api;
 import com.bjike.goddess.archive.bo.ForeignStaffingBO;
 import com.bjike.goddess.archive.dto.ForeignStaffingDTO;
 import com.bjike.goddess.archive.to.ForeignStaffingTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ForeignStaffingAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -80,6 +96,36 @@ public interface ForeignStaffingAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取毕业时间
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getTime() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取毕业学校
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getSchool() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取qq号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getQQ() throws SerException {
         return null;
     }
 }

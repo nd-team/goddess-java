@@ -10,12 +10,9 @@ import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.user.api.UserAPI;
-import org.mengyun.tcctransaction.Compensable;
-import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -93,18 +90,15 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
                 scheduleSer.stop(scheduleJob);
             }
             scheduleJob.setEnable(enable);
+            super.update(scheduleJob);
         } else {
             throw new SerException("该任务调度不存在");
         }
-        super.update(scheduleJob);
     }
 
     @Override
     public List<ScheduleJob> findScheduleJobs() throws SerException {
-        ScheduleJobDTO dto = new ScheduleJobDTO();
-        dto.getConditions().add(Restrict.eq("scheduleJobGroup.enable", 1));
-        dto.getConditions().add(Restrict.eq("enable", 1));
-        return findByCis(dto);
+        return findAll();
     }
 
     @Override
@@ -158,10 +152,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
     public boolean parameterTypesExists(Method method) {
         try {
             Class<?>[] cc = method.getParameterTypes();
-            if (0 == cc.length) {
-                return true;
-            }
-            return false;
+            return 0 == cc.length;
         } catch (SecurityException e) {
             return false;
         }

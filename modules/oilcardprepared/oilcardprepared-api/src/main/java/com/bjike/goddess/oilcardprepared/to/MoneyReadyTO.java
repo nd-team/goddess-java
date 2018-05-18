@@ -53,12 +53,12 @@ public class MoneyReadyTO extends BaseTO {
     @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "比例分配必须大于0")
     private Double prorate;
 
-    /**
-     * 准备金
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "准备金不能为空")
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "准备金必须大于0")
-    private Double reserve;
+//    /**
+//     * 准备金
+//     */
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "准备金不能为空")
+//    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "准备金必须大于0")
+//    private Double reserve;
 
     /**
      * 年份
@@ -114,14 +114,14 @@ public class MoneyReadyTO extends BaseTO {
     public void setProrate(Double prorate) {
         this.prorate = prorate;
     }
-
-    public Double getReserve() {
-        return reserve;
-    }
-
-    public void setReserve(Double reserve) {
-        this.reserve = reserve;
-    }
+//
+//    public Double getReserve() {
+//        return reserve;
+//    }
+//
+//    public void setReserve(Double reserve) {
+//        this.reserve = reserve;
+//    }
 
     public Integer getYear() {
         return year;

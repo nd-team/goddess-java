@@ -8,11 +8,12 @@ import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityScheme;
 import com.bjike.goddess.staffactivity.service.ActivitySchemeSer;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * 活动方案业务接口实现
@@ -102,7 +103,7 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 运营商务部意见
      *
-     * @param id 活动方案id
+     * @param id        活动方案id
      * @param yYOpinion 运营商务部意见
      * @throws SerException
      */
@@ -114,9 +115,9 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 总经办意见
      *
-     * @param id 活动方案唯一标识
+     * @param id           活动方案唯一标识
      * @param ifSchemePass 方案是否通过
-     * @param zjbOpinion 总经办意见
+     * @param zjbOpinion   总经办意见
      * @throws SerException
      */
     @Override
@@ -133,8 +134,8 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 是否持续开展
      *
-     * @param id 活动方案唯一标识
-     * @param ifNeedContinue 是否有必要持续开展
+     * @param id               活动方案唯一标识
+     * @param ifNeedContinue   是否有必要持续开展
      * @param reasonAndOpinion 原因及意见
      * @throws SerException
      */
@@ -146,9 +147,9 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 运营资金评价
      *
-     * @param id 活动方案唯一标识
+     * @param id                    活动方案唯一标识
      * @param ifTotalOutlayRational 活动总支出是否合理
-     * @param fundProposal 经费建议
+     * @param fundProposal          经费建议
      * @throws SerException
      */
     @Override
@@ -159,7 +160,7 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 监督者评价
      *
-     * @param id 活动方案id
+     * @param id           活动方案id
      * @param ifFlowDefect 活动流程是否存在缺陷
      * @param flowProposal 活动流程建议
      * @throws SerException
@@ -172,9 +173,9 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     /**
      * 总经办评价
      *
-     * @param id 活动方案唯一标识
+     * @param id             活动方案唯一标识
      * @param activityEffect 活动效应
-     * @param zjbEvaluate 总经办评价及建议
+     * @param zjbEvaluate    总经办评价及建议
      * @throws SerException
      */
     @Override
@@ -193,5 +194,30 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     @Override
     public List<ActivityFundSummaryBO> activityFundSummary(String startDate, String endDate) throws SerException {
         return activitySchemeSer.activityFundSummary(startDate, endDate);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activitySchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activitySchemeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allTheme() throws SerException {
+        return activitySchemeSer.allTheme();
+    }
+
+    @Override
+    public String findIdByTheme(String theme) throws SerException {
+        return activitySchemeSer.findIdByTheme(theme);
+    }
+
+    @Override
+    public Set<String> themes() throws SerException {
+        return activitySchemeSer.themes();
     }
 }

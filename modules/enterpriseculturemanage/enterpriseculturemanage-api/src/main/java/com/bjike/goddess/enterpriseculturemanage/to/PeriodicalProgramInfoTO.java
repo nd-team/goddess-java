@@ -3,7 +3,7 @@ package com.bjike.goddess.enterpriseculturemanage.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -34,25 +34,25 @@ public class PeriodicalProgramInfoTO extends BaseTO {
     /**
      * 发刊形式
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
-    private String way;
+    @NotNull(message = "发刊形式不能为空", groups = {ADD.class, EDIT.class})
+    private PublicizeWay way;
 
     /**
      * 发刊规格
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "发刊规格不能为空", groups = {ADD.class, EDIT.class})
     private String standard;
 
     /**
      * 执笔人
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "执笔人不能为空", groups = {ADD.class, EDIT.class})
     private String executer;
 
     /**
      * 刊物名称
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "刊物名称不能为空", groups = {ADD.class, EDIT.class})
     private String periodicalName;
 
     /**
@@ -94,11 +94,11 @@ public class PeriodicalProgramInfoTO extends BaseTO {
         this.ida = ida;
     }
 
-    public String getWay() {
+    public PublicizeWay getWay() {
         return way;
     }
 
-    public void setWay(String way) {
+    public void setWay(PublicizeWay way) {
         this.way = way;
     }
 

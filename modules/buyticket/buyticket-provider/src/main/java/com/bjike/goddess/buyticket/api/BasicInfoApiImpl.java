@@ -2,16 +2,13 @@ package com.bjike.goddess.buyticket.api;
 
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
-import com.bjike.goddess.buyticket.entity.BasicInfo;
 import com.bjike.goddess.buyticket.service.BasicInfoSer;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,6 +24,17 @@ import java.util.List;
 public class BasicInfoApiImpl implements BasicInfoAPI {
     @Autowired
     private BasicInfoSer basicInfoSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return basicInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return basicInfoSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countBasicInfo(BasicInfoDTO basicInfoDTO) throws SerException {
         return basicInfoSer.countBasicInfo(basicInfoDTO);
@@ -56,4 +64,33 @@ public class BasicInfoApiImpl implements BasicInfoAPI {
         basicInfoSer.removeBasicInfo(id);
     }
 
+    @Override
+    public List<String> findAllTicketCause() throws SerException {
+        return basicInfoSer.findAllTicketCause();
+    }
+
+    @Override
+    public List<String> findAllTicketType() throws SerException {
+        return basicInfoSer.findAllTicketType();
+    }
+
+    @Override
+    public List<String> findAllBuyPattern() throws SerException {
+        return basicInfoSer.findAllBuyPattern();
+    }
+
+    @Override
+    public List<String> findAllSummaryType() throws SerException {
+        return basicInfoSer.findAllSummaryType();
+    }
+
+    @Override
+    public List<String> findAllSummaryCycle() throws SerException {
+        return basicInfoSer.findAllSummaryCycle();
+    }
+
+    @Override
+    public List<String> findAllDataAggregationType() throws SerException {
+        return basicInfoSer.findAllDataAggregationType();
+    }
 }

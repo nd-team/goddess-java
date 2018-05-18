@@ -5,6 +5,7 @@ import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.entity.DisciplineRecord;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRecordDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -172,6 +188,70 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
      * @throws SerException
      */
     default Long getPushTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区
+     *
+     * @return
+     */
+    List<String> getarea() throws SerException;
+
+    /**
+     * 获取项目组
+     *
+     * @return
+     */
+    List<String> getGroup() throws SerException;
+
+    /**
+     * 获得指标名称
+     *
+     * @return
+     */
+    List<String> getTarget() throws SerException;
+
+    /**
+     * 根据姓名获取处罚总次数
+     *
+     * @param userName
+     * @return
+     */
+    Integer getPushNum(String userName) throws SerException;
+
+
+    /**
+     * 根据姓名获取奖励总次数
+     */
+    Integer getRewardNum(String userName) throws SerException;
+
+    /**
+     * 根据姓名获取奖励和处罚总分数
+     */
+    ScoreBO getRePuTotal(String userName) throws SerException;
+
+    /**
+     * 根据姓名获取奖励总分
+     */
+    default String getRewardBallot(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取惩罚总分
+     */
+    default String getPushBallot(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 首页项目奖金包图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBonusBO annular() throws SerException {
         return null;
     }
 }

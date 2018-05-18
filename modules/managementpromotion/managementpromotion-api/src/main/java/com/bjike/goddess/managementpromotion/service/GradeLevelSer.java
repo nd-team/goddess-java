@@ -6,6 +6,8 @@ import com.bjike.goddess.managementpromotion.bo.GradeLevelBO;
 import com.bjike.goddess.managementpromotion.dto.GradeLevelDTO;
 import com.bjike.goddess.managementpromotion.entity.GradeLevel;
 import com.bjike.goddess.managementpromotion.to.GradeLevelTO;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managementpromotion.vo.SonPermissionObject;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,20 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface GradeLevelSer extends Ser<GradeLevel, GradeLevelDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

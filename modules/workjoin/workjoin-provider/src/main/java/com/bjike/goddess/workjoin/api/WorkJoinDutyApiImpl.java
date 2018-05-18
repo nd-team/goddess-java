@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.workjoin.bo.WorkJoinDutyBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDutyDTO;
 import com.bjike.goddess.workjoin.service.WorkJoinDutySer;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDutyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,15 @@ public class WorkJoinDutyApiImpl implements WorkJoinDutyAPI {
 
     @Autowired
     private WorkJoinDutySer workJoinDutySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return workJoinDutySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return workJoinDutySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countWorkJoinDuty(WorkJoinDutyDTO workJoinDutyDTO) throws SerException {

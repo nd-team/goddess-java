@@ -1,5 +1,6 @@
 package com.bjike.goddess.receivable.vo;
 
+import com.bjike.goddess.receivable.bo.ContractorBO;
 import com.bjike.goddess.receivable.entity.Contractor;
 
 /**
@@ -31,6 +32,14 @@ public class ReceivableSubsidiaryVO {
      * 派工单编号
      */
     private String taskNum;
+    /**
+     * 派工合同号
+     */
+    private String contractNum;
+    /**
+     * 外包合同号
+     */
+    private String outsourcingNum;
 
     /**
      * 派工单价
@@ -193,6 +202,12 @@ public class ReceivableSubsidiaryVO {
     private ContractorVO contractorVO;
 
     /**
+     * 承包商
+     */
+    private ContractorBO contractorBO;
+
+
+    /**
      * 是否已支付
      */
     private Boolean pay;
@@ -212,6 +227,13 @@ public class ReceivableSubsidiaryVO {
      */
     private Boolean flow;
 
+    public ContractorBO getContractorBO() {
+        return contractorBO;
+    }
+
+    public void setContractorBO(ContractorBO contractorBO) {
+        this.contractorBO = contractorBO;
+    }
 
     public String getId() {
         return id;
@@ -275,6 +297,22 @@ public class ReceivableSubsidiaryVO {
 
     public void setPactSize(Double pactSize) {
         this.pactSize = pactSize;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getOutsourcingNum() {
+        return outsourcingNum;
+    }
+
+    public void setOutsourcingNum(String outsourcingNum) {
+        this.outsourcingNum = outsourcingNum;
     }
 
     public Double getTaskMoney() {

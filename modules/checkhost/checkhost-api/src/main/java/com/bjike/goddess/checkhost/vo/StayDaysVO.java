@@ -1,5 +1,7 @@
 package com.bjike.goddess.checkhost.vo;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+
 /**
  * 员工住宿天数汇总表现层对象
  *
@@ -99,16 +101,28 @@ public class StayDaysVO {
      */
     private Boolean employeeVerify;
 
-    /**
-     * 综合资源部核实
-     */
-    private String comprehensiveVerify;
+//    /**
+//     * 综合资源部核实
+//     */
+//    private String comprehensiveVerify;
 
     /**
      * 备注
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getId() {
         return id;
@@ -254,13 +268,13 @@ public class StayDaysVO {
         this.employeeVerify = employeeVerify;
     }
 
-    public String getComprehensiveVerify() {
-        return comprehensiveVerify;
-    }
-
-    public void setComprehensiveVerify(String comprehensiveVerify) {
-        this.comprehensiveVerify = comprehensiveVerify;
-    }
+//    public String getComprehensiveVerify() {
+//        return comprehensiveVerify;
+//    }
+//
+//    public void setComprehensiveVerify(String comprehensiveVerify) {
+//        this.comprehensiveVerify = comprehensiveVerify;
+//    }
 
     public String getRemark() {
         return remark;

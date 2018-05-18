@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 资金准备审核业务接口实现
@@ -53,11 +54,6 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     }
 
     @Override
-    public List<MoneyReadyCountBO> count(Integer month) throws SerException {
-        return moneyReadySer.count(month);
-    }
-
-    @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return moneyReadySer.sonPermission();
     }
@@ -65,5 +61,55 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return moneyReadySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Long countSum(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.countSum(dto);
+    }
+
+    @Override
+    public List<MoneyReadyBO> delList(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.delList(dto);
+    }
+
+    @Override
+    public Long delCount(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.delCount(dto);
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        moneyReadySer.quartz();
+    }
+
+    @Override
+    public List<MoneyReadyCountBO> departCount(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.departCount(dto);
+    }
+
+    @Override
+    public List<MoneyReadyCountBO> areaCount(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.areaCount(dto);
+    }
+
+    @Override
+    public void reback(String id) throws SerException {
+        moneyReadySer.reback(id);
+    }
+
+    @Override
+    public List<MoneyReadyBO> details(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.details(dto);
+    }
+
+    @Override
+    public Set<String> findAllGroupTeams() throws SerException {
+        return moneyReadySer.findAllGroupTeams();
+    }
+
+    @Override
+    public Set<String> areas() throws SerException {
+        return moneyReadySer.areas();
     }
 }

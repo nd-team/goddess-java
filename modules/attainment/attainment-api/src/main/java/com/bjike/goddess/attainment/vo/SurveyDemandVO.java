@@ -35,11 +35,6 @@ public class SurveyDemandVO {
     private String demandName;
 
     /**
-     * 是否定期
-     */
-    private Boolean regular;
-
-    /**
      * 调研需求类型id
      */
     private String demandId;
@@ -53,11 +48,6 @@ public class SurveyDemandVO {
      * 调研目的
      */
     private String purpose;
-
-    /**
-     * 调研范围
-     */
-    private ScopeType scope;
 
     /**
      * 调研对象
@@ -98,6 +88,10 @@ public class SurveyDemandVO {
      * 关闭原因
      */
     private String closeReason;
+    /**
+     * 调研范围
+     */
+    private ScopeType scope;
 
     public String getId() {
         return id;
@@ -131,14 +125,6 @@ public class SurveyDemandVO {
         this.demandName = demandName;
     }
 
-    public Boolean isRegular() {
-        return regular;
-    }
-
-    public void isRegular(Boolean regular) {
-        this.regular = regular;
-    }
-
     public String getDemandId() {
         return demandId;
     }
@@ -161,14 +147,6 @@ public class SurveyDemandVO {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
-    }
-
-    public ScopeType getScope() {
-        return scope;
-    }
-
-    public void setScope(ScopeType scope) {
-        this.scope = scope;
     }
 
     public String getScopeName() {
@@ -233,5 +211,13 @@ public class SurveyDemandVO {
 
     public void setCloseReason(String closeReason) {
         this.closeReason = closeReason;
+    }
+
+    public ScopeType getScope() {
+        return scope;
+    }
+
+    public void setScope(ScopeType scope) {
+        this.scope = scope;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.service.BeforeRemoveEmployeeSer;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,10 +51,10 @@ public class BeforeRemoveEmployeeApiImpl implements BeforeRemoveEmployeeAPI {
         beforeRemoveEmployeeSer.send();
     }
 
-    @Override
-    public void quartz() throws SerException {
-        beforeRemoveEmployeeSer.quartz();
-    }
+//    @Override
+//    public void quartz() throws SerException {
+//        beforeRemoveEmployeeSer.quartz();
+//    }
 
     @Override
     public Long count(BeforeRemoveEmployeeDTO dto) throws SerException {
@@ -68,5 +69,15 @@ public class BeforeRemoveEmployeeApiImpl implements BeforeRemoveEmployeeAPI {
     @Override
     public void edit(BeforeRemoveEmployeeTO to) throws SerException {
         beforeRemoveEmployeeSer.edit(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return beforeRemoveEmployeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return beforeRemoveEmployeeSer.guidePermission(guidePermissionTO);
     }
 }

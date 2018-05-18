@@ -25,13 +25,13 @@ public class PositionIndexSetExcel extends BaseTO {
      * 年份
      */
     @ExcelHeader(name = "年份",notNull = true)
-    private String year;
+    private Integer year;
 
     /**
      * 月份
      */
     @ExcelHeader(name = "月份",notNull = true)
-    private String month;
+    private Integer month;
 
     /**
      * 指标类型
@@ -45,17 +45,19 @@ public class PositionIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "维度",notNull = true)
     private String dimension;
 
-    /**
-     * 总指标权重
-     */
-    @ExcelHeader(name = "总指标权重",notNull = true)
-    private Double describtion;
+
 
     /**
      * 责任部门
      */
     @ExcelHeader(name = "责任部门",notNull = true)
     private String department;
+
+    /**
+     * 总指标权重
+     */
+    @ExcelHeader(name = "总指标权重",notNull = true)
+    private Double describtion;
 
     /**
      * 部门年度指标权重
@@ -80,6 +82,12 @@ public class PositionIndexSetExcel extends BaseTO {
      */
     @ExcelHeader(name = "责任人",notNull = true)
     private String positioner;
+
+    /**
+     * 责任人工号
+     */
+    @ExcelHeader(name = "责任人工号",notNull = true)
+    private String positionerNumber;
 
     /**
      * 岗位指标权重
@@ -168,20 +176,20 @@ public class PositionIndexSetExcel extends BaseTO {
     /**
      * 岗位指标添加时间
      */
-    @ExcelHeader(name = "岗位指标添加时间",notNull = true)
-    private String posionIndexTime;
+//    @ExcelHeader(name = "岗位指标添加时间",notNull = true)
+//    private String posionIndexTime;
 
     /**
      * 是否由分解得来状态
      */
-    @ExcelHeader(name = "是否由分解得来状态",notNull = true)
-    private SeperateComeStatus seperateComeStatus;
+//    @ExcelHeader(name = "是否由分解得来状态",notNull = true)
+//    private SeperateComeStatus seperateComeStatus;
 
     /**
      * 部门月度指标设置id
      */
-    @ExcelHeader(name = "部门月度指标设置id",notNull = true)
-    private String departMonIndexSetId;
+//    @ExcelHeader(name = "部门月度指标设置id",notNull = true)
+//    private String departMonIndexSetId;
 
     public String getIndexName() {
         return indexName;
@@ -191,19 +199,19 @@ public class PositionIndexSetExcel extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
@@ -380,30 +388,38 @@ public class PositionIndexSetExcel extends BaseTO {
     }
 
     public void setPosionIndexPersion(String posionIndexPersion) {
+
         this.posionIndexPersion = posionIndexPersion;
     }
 
-    public String getPosionIndexTime() {
-        return posionIndexTime;
+    public String getPositionerNumber() {
+        return positionerNumber;
     }
 
-    public void setPosionIndexTime(String posionIndexTime) {
-        this.posionIndexTime = posionIndexTime;
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
+    //    public String getPosionIndexTime() {
+//        return posionIndexTime;
+//    }
+//
+//    public void setPosionIndexTime(String posionIndexTime) {
+//        this.posionIndexTime = posionIndexTime;
+//    }
+//
+//    public SeperateComeStatus getSeperateComeStatus() {
+//        return seperateComeStatus;
+//    }
+//
+//    public void setSeperateComeStatus(SeperateComeStatus seperateComeStatus) {
+//        this.seperateComeStatus = seperateComeStatus;
+//    }
 
-    public SeperateComeStatus getSeperateComeStatus() {
-        return seperateComeStatus;
-    }
-
-    public void setSeperateComeStatus(SeperateComeStatus seperateComeStatus) {
-        this.seperateComeStatus = seperateComeStatus;
-    }
-
-    public String getDepartMonIndexSetId() {
-        return departMonIndexSetId;
-    }
-
-    public void setDepartMonIndexSetId(String departMonIndexSetId) {
-        this.departMonIndexSetId = departMonIndexSetId;
-    }
+//    public String getDepartMonIndexSetId() {
+//        return departMonIndexSetId;
+//    }
+//
+//    public void setDepartMonIndexSetId(String departMonIndexSetId) {
+//        this.departMonIndexSetId = departMonIndexSetId;
+//    }
 }

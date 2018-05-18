@@ -9,6 +9,7 @@ import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -22,6 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EnterpriseCultureInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加企业文化信息
@@ -60,7 +74,7 @@ public interface EnterpriseCultureInfoAPI {
      * @param id
      * @return
      */
-    PublicizeProgramInfoBO findPublicize(String id) throws SerException;
+    List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException;
 
     /**
      * 查询刊物方案信息
@@ -84,5 +98,10 @@ public interface EnterpriseCultureInfoAPI {
      */
     Long count(EnterpriseCultureInfoDTO dto) throws SerException;
 
+    /**
+     * 查询所有解冻状态的企业文化信息
+     * @return
+     * @throws SerException
+     */
     List<EnterpriseCultureInfoBO> infos() throws SerException;
 }

@@ -3,7 +3,6 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.FirstSubjectBO;
 import com.bjike.goddess.financeinit.dto.FirstSubjectDTO;
-import com.bjike.goddess.financeinit.entity.FirstSubject;
 import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.service.FirstSubjectSer;
 import com.bjike.goddess.financeinit.to.FirstSubjectTO;
@@ -91,6 +90,11 @@ public class FirstSubjectApiImpl implements FirstSubjectAPI {
     @Override
     public byte[] templateExport() throws SerException {
         return firstSubjectSer.templateExport();
+    }
+
+    @Override
+    public List<String> listAllFirstAndCode() throws SerException {
+        return firstSubjectSer.listAllFirstAndCode();
     }
 
 

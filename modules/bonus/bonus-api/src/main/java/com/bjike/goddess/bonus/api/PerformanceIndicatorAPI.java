@@ -2,6 +2,8 @@ package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.PerformanceIndicatorBO;
 import com.bjike.goddess.bonus.dto.PerformanceIndicatorDTO;
+import com.bjike.goddess.bonus.excel.SonPermissionObject;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.bonus.to.PerformanceIndicatorTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -17,6 +19,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PerformanceIndicatorAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加
@@ -116,4 +133,12 @@ public interface PerformanceIndicatorAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 获取指标名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getIndicatorName() throws SerException;
 }

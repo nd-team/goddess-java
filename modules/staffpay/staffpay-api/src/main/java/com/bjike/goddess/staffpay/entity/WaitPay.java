@@ -177,7 +177,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 是否缴纳个人所得税
      */
-    @Column(name = "is_incomeTax", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否缴纳个人所得税'", insertable = false)
+    @Column(name = "is_incomeTax", columnDefinition = "TINYINT(1)  COMMENT '是否缴纳个人所得税'")
     private Boolean incomeTax;
 
     /**
@@ -207,13 +207,13 @@ public class WaitPay extends BaseEntity {
     /**
      * 是否确认第一次工资发放记录
      */
-    @Column(name = "confirmFirstSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认第一次工资发放记录(是/否)'")
+    @Column(name = "confirmFirstSalary", columnDefinition = "TINYINT(2)   COMMENT '是否确认第一次工资发放记录(是/否)'")
     private ConfirmStatus confirmFirstSalary;
 
     /**
      * 是否确认工资
      */
-    @Column(name = "confirmSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认工资(是/否)'")
+    @Column(name = "confirmSalary", columnDefinition = "TINYINT(2)   COMMENT '是否确认工资(是/否)'")
     private ConfirmStatus confirmSalary;
 
     /**

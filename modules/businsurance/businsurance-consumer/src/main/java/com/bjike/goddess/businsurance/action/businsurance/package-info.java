@@ -1,5 +1,5 @@
 /**
- * 商业保险方案业务接口
- * Created by tanghaixiang on 2017-04-21 09:44.
+ * 各类交流沟通模块业务接口
+ * Created by lijuntao on 2017-09-28 05:36.
  */
 package com.bjike.goddess.businsurance.action.businsurance;

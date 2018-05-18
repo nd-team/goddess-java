@@ -75,7 +75,11 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "stayDay", columnDefinition = "DECIMAL(10,2)   COMMENT '住宿天数'")
     private Double stayDay;
-
+    /**
+     * 房租
+     */
+    @Column(name = "rent", columnDefinition = "DECIMAL(10,2)   COMMENT '房租'")
+    private Double rent;
     /**
      * 房租公司缴纳
      */
@@ -107,6 +111,13 @@ public class StayUtilities extends BaseEntity {
     private Double waterStaffPay;
 
     /**
+     * 水费员工预缴
+     */
+    @Column(name = "waterStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '水费员工预缴'")
+    private Double waterStaffPrepay;
+
+
+    /**
      * 当月应缴电费总额
      */
     @Column(name = "energyAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴电费总额'")
@@ -117,6 +128,12 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "energyCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费公司缴纳'")
     private Double energyCompanyPay;
+
+    /**
+     * 电费员工预缴
+     */
+    @Column(name = "energyStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费员工预缴'")
+    private Double energyStaffPrepay;
 
     /**
      * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
@@ -135,6 +152,12 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "gasCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费公司缴纳'")
     private Double gasCompanyPay;
+
+    /**
+     * 燃气费员工预缴
+     */
+    @Column(name = "gasStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费员工预缴'")
+    private Double gasStaffPrepay;
 
     /**
      * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
@@ -188,6 +211,14 @@ public class StayUtilities extends BaseEntity {
 
     public void setSumDays(Integer sumDays) {
         this.sumDays = sumDays;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getArea() {
@@ -388,5 +419,29 @@ public class StayUtilities extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
     }
 }

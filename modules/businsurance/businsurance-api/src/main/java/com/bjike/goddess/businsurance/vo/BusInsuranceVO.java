@@ -16,6 +16,14 @@ public class BusInsuranceVO {
      */
     private String id;
     /**
+     * 制作方案时间
+     */
+    private String makeDate;
+    /**
+     * 制作方案人
+     */
+    private String maker;
+    /**
      * 保险公司
      */
     private String insureComapny;
@@ -117,6 +125,22 @@ public class BusInsuranceVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getMakeDate() {
+        return makeDate;
+    }
+
+    public void setMakeDate(String makeDate) {
+        this.makeDate = makeDate;
+    }
+
+    public String getMaker() {
+        return maker;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
     }
 
     public String getInsureComapny() {

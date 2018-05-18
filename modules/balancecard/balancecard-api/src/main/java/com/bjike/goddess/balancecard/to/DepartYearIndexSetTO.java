@@ -20,20 +20,35 @@ import java.util.List;
  */
 public class DepartYearIndexSetTO extends BaseTO {
 
-    public interface TestAdd{}
-    public interface TestSer{}
+    public interface TestAdd {
+    }
+
+    public interface TestSer {
+    }
 
     /**
      * 指标名称
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "指标名称不能为空")
     private String indexName;
+
+    /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+
 
     /**
      * 年份
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "年份不能为空")
-    private String year;
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年份不能为空")
+    private Integer year;
 
     /**
      * 指标类型
@@ -46,27 +61,29 @@ public class DepartYearIndexSetTO extends BaseTO {
     private String dimension;
 
     /**
+     * 责任部门
+     */
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "责任部门不能为空")
+    private String department;
+
+    /**
      * 总指标权重
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "总指标权重不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "总指标权重不能为空")
     private Double describtion;
 
     /**
      * 年度目标值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "年度目标值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年度目标值不能为空")
     private Double yearTarget;
 
-    /**
-     * 责任部门
-     */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "责任部门不能为空")
-    private String department;
+
 
     /**
      * 部门年度指标权重
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "部门年度指标权重不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门年度指标权重不能为空")
     private Double departYearWeight;
 
     /**
@@ -77,13 +94,13 @@ public class DepartYearIndexSetTO extends BaseTO {
     /**
      * 目标值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "目标值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "目标值不能为空")
     private Double target;
 
     /**
      * 对赌值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "对赌值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "对赌值不能为空")
     private Double wager;
 
     /**
@@ -169,8 +186,13 @@ public class DepartYearIndexSetTO extends BaseTO {
     /**
      * 部门月度分解数据
      */
-    @NotNull(groups = {DepartYearIndexSetTO.TestSer.class} , message = "部门月度分解数据不能为空")
+    @NotNull(groups = {DepartYearIndexSetTO.TestSer.class}, message = "部门月度分解数据不能为空")
     private List<DepartMonSerperateTO> departMonSerperateTOList;
+
+    /**
+     * 是否重新分解
+     */
+    private Boolean ifAgain;
 
 
     public String getIndexName() {
@@ -181,11 +203,11 @@ public class DepartYearIndexSetTO extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -395,5 +417,29 @@ public class DepartYearIndexSetTO extends BaseTO {
 
     public void setDepartMonSerperateTOList(List<DepartMonSerperateTO> departMonSerperateTOList) {
         this.departMonSerperateTOList = departMonSerperateTOList;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Boolean getIfAgain() {
+        return ifAgain;
+    }
+
+    public void setIfAgain(Boolean ifAgain) {
+        this.ifAgain = ifAgain;
     }
 }

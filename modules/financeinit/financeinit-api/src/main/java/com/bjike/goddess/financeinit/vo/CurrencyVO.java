@@ -1,11 +1,11 @@
 package com.bjike.goddess.financeinit.vo;
 
 /**
- * 币别表现层对象
+ * 设置币别表现层对象
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别表现层对象 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -31,14 +31,9 @@ public class CurrencyVO {
     private Double rate;
 
     /**
-     * 创建时间
+     * 是否本位币
      */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
+    private Boolean standardMoney;
 
 
     public String getId() {
@@ -73,19 +68,11 @@ public class CurrencyVO {
         this.rate = rate;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public Boolean getStandardMoney() {
+        return standardMoney;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setStandardMoney(Boolean standardMoney) {
+        this.standardMoney = standardMoney;
     }
 }

@@ -33,7 +33,9 @@
 	<dubbo:service interface="com.bjike.goddess.bidding.api.BidOpeningInfoAPI" ref="bidOpeningInfoApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.bidding.api.BiddingAnswerQuestionsAPI" ref="biddingAnswerQuestionsApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.bidding.api.TenderInfoAPI" ref="tenderInfoApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.bidding.api.CollectEmailAPI" ref="collectEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.bidding.api.CollectEmailAPI" ref="biddingEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.bidding.api.BiddingAcceptAPI" ref="biddingAcceptApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.bidding.api.BiddingTypeAPI" ref="biddingTypeApiImpl"/>
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionOperateAPI" />
 

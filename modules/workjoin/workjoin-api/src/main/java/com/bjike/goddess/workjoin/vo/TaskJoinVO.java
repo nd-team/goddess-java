@@ -16,6 +16,10 @@ public class TaskJoinVO {
      */
     private String id;
     /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
+    /**
      * 任务名称
      */
     private String taskName;
@@ -67,6 +71,14 @@ public class TaskJoinVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
     }
 
     public String getTaskName() {

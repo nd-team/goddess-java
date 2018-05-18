@@ -2,8 +2,10 @@ package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
+import com.bjike.goddess.annual.excel.SonPermissionObject;
 import com.bjike.goddess.annual.service.AnnualStandardSer;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,16 @@ public class AnnualStandardApiImpl implements AnnualStandardAPI {
 
     @Autowired
     private AnnualStandardSer annualStandardSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return annualStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return annualStandardSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public AnnualStandardBO save(AnnualStandardTO to) throws SerException {

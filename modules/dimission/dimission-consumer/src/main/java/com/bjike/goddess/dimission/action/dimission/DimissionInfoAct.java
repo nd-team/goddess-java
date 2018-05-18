@@ -1,5 +1,8 @@
 package com.bjike.goddess.dimission.action.dimission;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -10,15 +13,22 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
 import com.bjike.goddess.dimission.enums.DimissionType;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
+import com.bjike.goddess.dimission.vo.DataVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoCollectVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoVO;
 import com.bjike.goddess.dimission.vo.DimissionReasonVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -28,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +58,84 @@ public class DimissionInfoAct extends BaseFileAction {
     private DimissionInfoAPI dimissionInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private UserAPI userAPI;
+
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+            List<SonPermissionObject> hasPermissionList = dimissionInfoAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dimissionInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -58,7 +147,7 @@ public class DimissionInfoAct extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/apply")
-    public Result apply(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    public Result apply(@Validated(ADD.class) DimissionInfoAddEditTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.apply(to), DimissionInfoVO.class));
         } catch (SerException e) {
@@ -67,16 +156,16 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 编辑
+     * 申请离职编辑
      *
      * @param to 离职信息传输对象
      * @return class DimissionInfoVO
      * @version v1
      */
-    @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    @PutMapping("v1/applyUpdate/{id}")
+    public Result applyUpdate(@Validated(EDIT.class) DimissionInfoAddEditTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.update(to), DimissionInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.applyUpdate(to), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -90,9 +179,25 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/presume")
-    public Result presume(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    public Result presume(@Validated(ADD.class) FromInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.presume(to), DimissionInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 自离信息编辑
+     *
+     * @param to 离职信息传输对象
+     * @return class DimissionInfoVO
+     * @version v1
+     */
+    @PutMapping("v1/preUpdate/{id}")
+    public Result update(@Validated(EDIT.class) FromInfoTO to, BindingResult result) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.preUpdate(to), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -239,6 +344,7 @@ public class DimissionInfoAct extends BaseFileAction {
     @GetMapping("v1/presumeList")
     public Result presumeList(DimissionInfoDTO dto) throws ActException {
         try {
+            dimissionInfoAPI.presumeList(dto);
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.presumeList(dto), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -489,7 +595,7 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 获取总条数
+     * 获取离职信息总条数
      *
      * @version v1
      */
@@ -502,5 +608,103 @@ public class DimissionInfoAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 获取自离信息总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getSelfTotal")
+    public Result getSelfTotal() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getSelfTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有的用户名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getAllName")
+    public Result getAllName() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getAllName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部岗位
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getPosition")
+    public Result getPosition() throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(positionDetailUserAPI.getAllPosition());
+            } else {
+                return ActResult.initialize(null);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部部门
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getDepartment")
+    public Result getDepartment() throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(positionDetailUserAPI.getAllDepartment());
+            } else {
+                return ActResult.initialize(null);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据离职人员姓名获取地区部门员工编号岗位岗位层级学历联系电话入职时间在司工龄
+     *
+     * @param name 离职人员姓名
+     * @return class DataVO
+     * @version v1
+     */
+    @GetMapping("v1/findDataByName")
+    public Result findDataByName(@RequestParam String name) throws ActException {
+        try {
+            DataBO dataBOs = dimissionInfoAPI.findDataByName(name);
+            return ActResult.initialize(BeanTransform.copyProperties(dataBOs, DataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取自离信息的人员姓名
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/findName")
+    public Result findName(HttpServletRequest request) throws ActException {
+        try {
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+            UserBO userBO = userAPI.currentUser(userToken);
+            RpcContext.getContext().set(RpcCommon.USER_TOKEN, userToken);
+            return ActResult.initialize(userBO.getUsername());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

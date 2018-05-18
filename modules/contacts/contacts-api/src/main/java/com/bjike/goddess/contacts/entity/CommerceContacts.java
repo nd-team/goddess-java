@@ -1,7 +1,6 @@
 package com.bjike.goddess.contacts.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
@@ -71,7 +70,7 @@ public class CommerceContacts extends BaseEntity {
      * 客户级别
      */
     @Column(name = "customerLevel_id", columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
-    private String customerLevel;
+    private String customerLevelName;
 
     /**
      * 客户来源
@@ -134,6 +133,66 @@ public class CommerceContacts extends BaseEntity {
     @Column(name = "workRight", columnDefinition = "VARCHAR(255)   COMMENT '职权'")
     private String workRight;
 
+    /**
+     * 备注
+     */
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    private String remark;
+    /**
+     * 联系电话1
+     */
+    @Column(name = "phoneNumberA", columnDefinition = "VARCHAR(255)   COMMENT '联系电话1'")
+    private String phoneNumberA;
+    /**
+     * 联系电话2
+     */
+    @Column(name = "phoneNumberB", columnDefinition = "VARCHAR(255)   COMMENT '联系电话2'")
+    private String phoneNumberB;
+
+    /**
+     * 联系电话3
+     */
+    @Column(name = "phoneNumberC", columnDefinition = "VARCHAR(255)   COMMENT '联系电话3'")
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    @Column(name = "phoneNumberD", columnDefinition = "VARCHAR(255)   COMMENT '联系电话4'")
+    private String phoneNumberD;
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
+
     public String getCustomerNum() {
         return customerNum;
     }
@@ -190,12 +249,12 @@ public class CommerceContacts extends BaseEntity {
         this.relation = relation;
     }
 
-    public String getCustomerLevel() {
-        return customerLevel;
+    public String getCustomerLevelName() {
+        return customerLevelName;
     }
 
-    public void setCustomerLevel(String customerLevel) {
-        this.customerLevel = customerLevel;
+    public void setCustomerLevelName(String customerLevelName) {
+        this.customerLevelName = customerLevelName;
     }
 
     public String getOrigin() {
@@ -276,5 +335,13 @@ public class CommerceContacts extends BaseEntity {
 
     public void setWorkRight(String workRight) {
         this.workRight = workRight;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

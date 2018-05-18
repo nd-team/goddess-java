@@ -54,11 +54,11 @@ public interface IncomeCostAnalysisAPI {
     /**
      * 收入成本分析
      *
-     * @param incomeCostAnalysisDTO 收入成本分析dto
+     * @param dto 收入成本分析dto
      * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
+    default List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
         return null;
     }
 
@@ -66,11 +66,9 @@ public interface IncomeCostAnalysisAPI {
      * 添加收入成本分析
      *
      * @param incomeCostAnalysisTO 收入成本分析数据to
-     * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return null;
+    default void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
     }
 
     /**
@@ -80,8 +78,7 @@ public interface IncomeCostAnalysisAPI {
      * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default IncomeCostAnalysisBO editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return null;
+    default void editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
     }
 
     /**

@@ -206,10 +206,21 @@ public class ContractQuoteDataSerImpl extends ServiceImpl<ContractQuoteData, Con
     @Transactional(rollbackFor = SerException.class)
     public List<ContractQuoteDataBO> list(ContractQuoteDataDTO dto) throws SerException {
         checkPermission();
+        condiy(dto);
         List<ContractQuoteData> list = super.findByPage(dto);
         List<ContractQuoteDataBO> boList = BeanTransform.copyProperties(list, ContractQuoteDataBO.class);
         return boList;
     }
+
+    public void condiy(ContractQuoteDataDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getAreas())){
+            dto.getConditions().add(Restrict.eq("area",dto.getAreas()));
+        }
+        if(StringUtils.isNotBlank(dto.getCustomerName())){
+            dto.getConditions().add(Restrict.eq("customerName",dto.getCustomerName()));
+        }
+    }
+
 
     /**
      * 保存合同单价资料信息
@@ -379,5 +390,6 @@ public class ContractQuoteDataSerImpl extends ServiceImpl<ContractQuoteData, Con
 
         return boList;
     }
+
 
 }

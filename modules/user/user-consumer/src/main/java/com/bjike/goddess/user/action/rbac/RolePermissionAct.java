@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @LoginAuth
 @DefaultProperties
 @RestController
-@RequestMapping("role-permission")
+@RequestMapping("role/permission")
 public class RolePermissionAct {
 
     @Autowired
     private RolePermissionAPI rolePermissionAPI;
 
     /**
-     * 添加角色权限
+     * 添加
      *
      * @param rolePermissionTO 角色权限信息
      * @return class RolePermissionVO

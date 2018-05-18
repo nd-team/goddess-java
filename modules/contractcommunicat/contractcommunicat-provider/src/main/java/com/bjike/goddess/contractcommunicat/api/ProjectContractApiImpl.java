@@ -1,11 +1,11 @@
 package com.bjike.goddess.contractcommunicat.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.ProjectContractSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
@@ -57,7 +57,6 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     }
 
 
-
     @Override
     public ProjectContractBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(projectContractSer.findById(id), ProjectContractBO.class);
@@ -96,5 +95,20 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     @Override
     public byte[] exportExcelModule() throws SerException {
         return projectContractSer.exportExcelModule();
+    }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        return projectContractSer.listBaseInfoManage();
+    }
+
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        return projectContractSer.findProject();
+//    }
+
+    @Override
+    public List<String> getCommunicateUser() throws SerException {
+        return projectContractSer.getCommunicateUser();
     }
 }

@@ -2,11 +2,16 @@ package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.entity.CusPermissionOperate;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.service.OilCardReceiveSer;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.organize.bo.AreaBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +44,8 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
-        oilCardReceiveSer.audit(id, auditSuggestion, oilCardReceiveResult);
+    public void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException {
+        oilCardReceiveSer.audit(id, auditSuggestion, auditResult);
     }
 
     @Override
@@ -59,12 +64,38 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public OilCardReceiveBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardReceiveSer.findById(id), OilCardReceiveBO.class);
+    public OilCardReceiveBO findOne(String id) throws SerException {
+        return oilCardReceiveSer.findOne(id);
     }
 
     @Override
     public Long count(OilCardReceiveDTO dto) throws SerException {
         return oilCardReceiveSer.count(dto);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return oilCardReceiveSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return oilCardReceiveSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<String> findOilCard() throws SerException {
+        return oilCardReceiveSer.findOilCard();
+    }
+
+    @Override
+    public List<AreaBO> findArea() throws SerException {
+        return oilCardReceiveSer.findArea();
+    }
+
+    @Override
+    public List<String> findOperate() throws SerException {
+        return oilCardReceiveSer.findOperate();
+    }
+
 }

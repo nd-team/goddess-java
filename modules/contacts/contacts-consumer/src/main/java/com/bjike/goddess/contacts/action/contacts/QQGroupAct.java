@@ -23,6 +23,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +71,7 @@ public class QQGroupAct extends BaseFileAction{
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) QQGroupTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.save(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.update(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -85,7 +87,7 @@ public class QQGroupAct extends BaseFileAction{
     @DeleteMapping("v1/delete/{id}")
     public Result delete(QQGroupTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.update(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.delete(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -101,7 +103,7 @@ public class QQGroupAct extends BaseFileAction{
     @PutMapping("v1/close/{id}")
     public Result close(QQGroupTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.delete(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.close(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -202,6 +204,25 @@ public class QQGroupAct extends BaseFileAction{
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务通讯录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "qq群导入模板.xlsx";
+            super.writeOutFile(response, qqGroupAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 }

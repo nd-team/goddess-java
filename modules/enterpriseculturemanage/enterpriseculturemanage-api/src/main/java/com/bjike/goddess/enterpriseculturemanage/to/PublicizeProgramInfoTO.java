@@ -47,8 +47,8 @@ public class PublicizeProgramInfoTO extends BaseTO {
     /**
      * 执行费用
      */
-    @NotBlank(message = "执行费用不能为空",groups = {ADD.class, EDIT.class})
-    private String executeCost;
+    @NotNull(message = "执行费用不能为空",groups = {ADD.class, EDIT.class})
+    private Double executeCost;
 
     /**
      * 企业文化信息Id
@@ -88,11 +88,11 @@ public class PublicizeProgramInfoTO extends BaseTO {
         this.executeCycle = executeCycle;
     }
 
-    public String getExecuteCost() {
+    public Double getExecuteCost() {
         return executeCost;
     }
 
-    public void setExecuteCost(String executeCost) {
+    public void setExecuteCost(Double executeCost) {
         this.executeCost = executeCost;
     }
 

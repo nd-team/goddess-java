@@ -33,7 +33,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他支出
@@ -183,15 +185,14 @@ public class OtherSpendAction extends BaseFileAction {
      * 汇总
      *
      * @param to 其他支出数据to
-     * @return class OtherSpendVO
      * @des 汇总其他支出
      * @version v1
      */
     @GetMapping("v1/collect")
     public Result collect(@Validated OtherSpendCollectTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<OtherSpendVO> otherSpendVOS = BeanTransform.copyProperties(otherSpendAPI.collect(to), OtherSpendVO.class);
-            return ActResult.initialize(otherSpendVOS);
+            LinkedHashMap<String,String> map = otherSpendAPI.collect(to);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

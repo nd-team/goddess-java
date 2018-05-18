@@ -19,6 +19,8 @@
 	<dubbo:reference  validation="true" id="contractorApiImpl" interface="com.bjike.goddess.receivable.api.ContractorAPI" />
 	<dubbo:reference  validation="true" id="receivableSubsidiaryApiImpl" interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" />
 	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.receivable.api.CollectEmailAPI" />
+	<dubbo:reference  validation="true" id="mainIncomeApiImpl" interface="com.bjike.goddess.receivable.api.MainIncomeAPI" />
+	<dubbo:reference  validation="true" id="backProgressApiImpl" interface="com.bjike.goddess.receivable.api.BackProgressAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.receivable.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.receivable.api.CusPermissionOperateAPI" />
 
@@ -31,7 +33,6 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
-	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 
 </beans>

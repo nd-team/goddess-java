@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
 import com.bjike.goddess.rotation.dto.CoverRotationOpinionDTO;
 import com.bjike.goddess.rotation.service.CoverRotationOpinionSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,15 @@ public class CoverRotationOpinionApiImpl implements CoverRotationOpinionAPI {
     @Override
     public Long getTotal(String id) throws SerException {
         return coverRotationOpinionSer.getTotal(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return coverRotationOpinionSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return coverRotationOpinionSer.guidePermission(guidePermissionTO);
     }
 }

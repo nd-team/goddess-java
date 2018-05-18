@@ -1,12 +1,11 @@
 package com.bjike.goddess.contractcommunicat.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
@@ -56,10 +55,10 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
         return projectOutsourcingSer.collect(to);
     }
 
-    @Override
-    public void setCollectSend(QuartzCycleType cycleType) throws SerException {
-        throw new SerException("该功能尚未添加。");
-    }
+//    @Override
+//    public void setCollectSend(QuartzCycleType cycleType) throws SerException {
+//        projectOutsourcingSer.setCollectSend(cycleType);
+//    }
 
     @Override
     public Long count(ProjectOutsourcingDTO dto) throws SerException {
@@ -87,7 +86,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     }
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
+    public Boolean sonPermission() throws SerException {
         return projectOutsourcingSer.sonPermission();
     }
 
@@ -100,4 +99,14 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     public byte[] exportExcelModule() throws SerException {
         return projectOutsourcingSer.exportExcelModule();
     }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        return projectOutsourcingSer.listBaseInfoManage();
+    }
+
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        return projectOutsourcingSer.findProject();
+//    }
 }

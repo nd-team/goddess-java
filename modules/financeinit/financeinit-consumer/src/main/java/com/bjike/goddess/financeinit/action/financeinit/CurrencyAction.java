@@ -1,5 +1,7 @@
 package com.bjike.goddess.financeinit.action.financeinit;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.CurrencyAPI;
 import com.bjike.goddess.financeinit.bo.CurrencyBO;
 import com.bjike.goddess.financeinit.dto.CurrencyDTO;
+import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.to.CurrencyTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.vo.CurrencyVO;
@@ -18,27 +21,22 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 币别
+ * 设置币别
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
 @RequestMapping("currency")
 public class CurrencyAction {
-
-
     @Autowired
     private CurrencyAPI currencyAPI;
-
-
     /**
      * 功能导航权限
      *
@@ -61,20 +59,17 @@ public class CurrencyAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
-
     /**
-     * 币别列表总条数
+     * 列表总条数
      *
-     * @param customerBaseInfoDTO 币别信息dto
-     * @des 获取所有币别信息总条数
+     * @param currencyDTO 公司基本信息dto
+     * @des 获取所有公司基本信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(CurrencyDTO customerBaseInfoDTO) throws ActException {
+    public Result count(CurrencyDTO currencyDTO) throws ActException {
         try {
-            Long count = currencyAPI.countCurrency(customerBaseInfoDTO);
+            Long count = currencyAPI.countCurren(currencyDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -82,19 +77,19 @@ public class CurrencyAction {
     }
 
     /**
-     * 一个币别
+     * 获取单个币别
      *
-     * @param id 项目币别信息id
-     * @des 根据id获取项目币别信息
-     * @return  class CurrencyVO
+     * @param id 币别id
+     * @return class CurrencyVO
+     * @des 获取单个币别
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            CurrencyVO projectCarryVO = BeanTransform.copyProperties(
+            CurrencyVO currencyVO = BeanTransform.copyProperties(
                     currencyAPI.getOneById(id), CurrencyVO.class);
-            return ActResult.initialize(projectCarryVO);
+            return ActResult.initialize(currencyVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -103,36 +98,36 @@ public class CurrencyAction {
     /**
      * 币别列表
      *
-     * @param currencyDTO 币别信息dto
-     * @des 获取所有币别信息
-     * @return  class CurrencyVO
+     * @param currencyDTO 币别dto
+     * @return class CurrencyVO
+     * @des 币别列表
      * @version v1
      */
-    @GetMapping("v1/listCurrency")
-    public Result findListCurrency(CurrencyDTO currencyDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listAccount")
+    public Result findListAccount(CurrencyDTO currencyDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<CurrencyVO> currencyVOList = BeanTransform.copyProperties(
-                    currencyAPI.listCurrency(currencyDTO), CurrencyVO.class , request);
-            return ActResult.initialize(currencyVOList);
+            List<CurrencyVO> companyBasicInfoVOS = BeanTransform.copyProperties(
+                    currencyAPI.listCurren(currencyDTO), CurrencyVO.class, request);
+            return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 添加币别
+     * 添加币别信息
      *
-     * @param currencyTO 币别基本信息数据to
+     * @param currencyTO 币别to
+     * @return class CurrencyVO
      * @des 添加币别
-     * @return  class CurrencyVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCurrency(@Validated CurrencyTO currencyTO, BindingResult bindingResult) throws ActException {
+    public Result addAccount(@Validated(value = ADD.class) CurrencyTO currencyTO, BindingResult bindingResult) throws ActException {
         try {
-            CurrencyBO currencyBO1 = currencyAPI.addCurrency(currencyTO);
-            return ActResult.initialize(BeanTransform.copyProperties(currencyBO1,CurrencyVO.class));
+            CurrencyBO currencyBO = currencyAPI.addCurren(currencyTO);
+            return ActResult.initialize(BeanTransform.copyProperties(currencyBO, CurrencyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -142,17 +137,17 @@ public class CurrencyAction {
     /**
      * 编辑币别
      *
-     * @param currencyTO 币别基本信息数据bo
-     * @des 添加币别
-     * @return  class CurrencyVO
+     * @param currencyTO 币别bo
+     * @return class CurrencyVO
+     * @des 编辑币别
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCurrency(@Validated CurrencyTO currencyTO) throws ActException {
+    public Result editAccount(@Validated(value = EDIT.class) CurrencyTO currencyTO, BindingResult bindingResult) throws ActException {
         try {
-            CurrencyBO currencyBO1 = currencyAPI.editCurrency(currencyTO);
-            return ActResult.initialize(BeanTransform.copyProperties(currencyBO1,CurrencyVO.class));
+            CurrencyBO currencyBO = currencyAPI.editCurren(currencyTO);
+            return ActResult.initialize(BeanTransform.copyProperties(currencyBO, CurrencyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -162,17 +157,17 @@ public class CurrencyAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除币别信息记录
+     * @des 根据id删除币别
      * @version v1
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteCurrency(@PathVariable String id) throws ActException {
+    public Result deleteAccount(@PathVariable String id) throws ActException {
         try {
-            currencyAPI.deleteCurrency(id);
+            currencyAPI.deleteCurren(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
+            throw new ActException("删除失败：" + e.getMessage());
         }
     }
 }

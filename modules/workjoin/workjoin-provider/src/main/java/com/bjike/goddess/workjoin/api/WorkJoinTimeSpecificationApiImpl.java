@@ -6,6 +6,7 @@ import com.bjike.goddess.workjoin.bo.WorkJoinTimeSpecificationBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinTimeSpecificationDTO;
 import com.bjike.goddess.workjoin.entity.WorkJoinTimeSpecification;
 import com.bjike.goddess.workjoin.service.WorkJoinTimeSpecificationSer;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTimeSpecificationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,15 @@ public class WorkJoinTimeSpecificationApiImpl implements WorkJoinTimeSpecificati
 
     @Autowired
     private WorkJoinTimeSpecificationSer workJoinTimeSpecificationSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return workJoinTimeSpecificationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return workJoinTimeSpecificationSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countWorkJoinTimeSpecification(WorkJoinTimeSpecificationDTO workJoinTimeSpecificationDTO) throws SerException {
         return workJoinTimeSpecificationSer.countWorkJoinTimeSpecification(workJoinTimeSpecificationDTO);

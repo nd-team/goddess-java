@@ -1,8 +1,10 @@
 package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 
 import java.util.List;
@@ -17,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TaskJoinAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 任务交接列表总条数
@@ -70,11 +86,16 @@ public interface TaskJoinAPI {
     /**
      * 根据id删除任务交接
      *
-     * @param id
      * @throws SerException
      */
     default void removeTaskJoin(String id) throws SerException {
 
     }
+
+    /**
+     * 查询汇报对象
+     */
+    List<PositionInstructionBO> findPosition() throws SerException;
+
 
 }

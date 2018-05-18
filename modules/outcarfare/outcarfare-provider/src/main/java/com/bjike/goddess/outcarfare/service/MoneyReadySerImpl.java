@@ -1,9 +1,11 @@
 package com.bjike.goddess.outcarfare.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.outcarfare.bo.MoneyReadyBO;
 import com.bjike.goddess.outcarfare.bo.MoneyReadyCountBO;
 import com.bjike.goddess.outcarfare.dto.MoneyReadyDTO;
@@ -19,11 +21,12 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 资金准备审核业务实现
@@ -193,6 +196,9 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public MoneyReadyBO save(MoneyReadyTO to) throws SerException {
         checkAddIdentity();
         MoneyReady m = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        m.setReserve(m.getTotalReserve() * m.getProrate());
+        m.setTime(DateUtil.getStartDayOfMonth(m.getYear(), m.getMonth()));
+        m.setIsDel(false);
         super.save(m);
         return BeanTransform.copyProperties(m, MoneyReadyBO.class);
     }
@@ -203,10 +209,12 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         checkAddIdentity();
         MoneyReady moneyReady = super.findById(to.getId());
         LocalDateTime a = moneyReady.getCreateTime();
-        LocalDateTime b = moneyReady.getModifyTime();
         moneyReady = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        moneyReady.setReserve(moneyReady.getTotalReserve() * moneyReady.getProrate());
+        moneyReady.setTime(DateUtil.getStartDayOfMonth(moneyReady.getYear(), moneyReady.getMonth()));
+        moneyReady.setIsDel(false);
         moneyReady.setCreateTime(a);
-        moneyReady.setModifyTime(b);
+        moneyReady.setModifyTime(LocalDateTime.now());
         super.update(moneyReady);
     }
 
@@ -214,12 +222,17 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        super.remove(id);
+        MoneyReady moneyReady = super.findById(id);
+        moneyReady.setIsDel(true);
+        moneyReady.setDelTime(LocalDate.now());
+        moneyReady.setModifyTime(LocalDateTime.now());
+        super.update(moneyReady);
     }
 
     @Override
     public List<MoneyReadyBO> list(MoneyReadyDTO dto) throws SerException {
         checkSeeIdentity();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
         List<MoneyReady> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, MoneyReadyBO.class);
     }
@@ -231,72 +244,353 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     }
 
     @Override
-    public List<MoneyReadyCountBO> count(Integer month) throws SerException {
+    public List<MoneyReadyBO> delList(MoneyReadyDTO dto) throws SerException {
         checkSeeIdentity();
-        Integer year = LocalDateTime.now().getYear();
-        Set<String> groupTeams = findAllGroupTeams();
+        dto.getSorts().add("delTime=asc");
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        List<MoneyReady> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, MoneyReadyBO.class);
+    }
+
+    @Override
+    public Long delCount(MoneyReadyDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        return super.count(dto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public void quartz() throws SerException {
         MoneyReadyDTO dto = new MoneyReadyDTO();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        List<MoneyReady> list = super.findByCis(dto);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            long now = simpleDateFormat.parse(DateUtil.dateToString(LocalDate.now())).getTime();
+            for (MoneyReady m : list) {
+                LocalDate a = m.getDelTime().plusDays(30);
+                long delTime = simpleDateFormat.parse(DateUtil.dateToString(a)).getTime();
+                if (now - delTime >= 0) {
+                    super.remove(m);
+                }
+            }
+        } catch (ParseException e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<MoneyReadyCountBO> departCount(MoneyReadyDTO dto) throws SerException {
+        checkSeeIdentity();
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        String[] groupTeams = dto.getGroupTeams();
+        int startYear = Integer.valueOf(startTime.substring(0, 4));
+        int startMonth = 0;
+        int endMonth = 0;
+        String a = String.valueOf(startTime.charAt(startTime.length() - 2));
+        if ("0".equals(a)) {
+            startMonth = Integer.valueOf(String.valueOf(startTime.charAt(startTime.length() - 1)));
+        } else {
+            String s = String.valueOf(startTime.charAt(startTime.length() - 2)) + String.valueOf(startTime.charAt(startTime.length() - 1));
+            startMonth = Integer.valueOf(s);
+        }
+        int endYear = Integer.valueOf(endTime.substring(0, 4));
+        String b = String.valueOf(endTime.charAt(endTime.length() - 2));
+        if ("0".equals(b)) {
+            endMonth = Integer.valueOf(String.valueOf(endTime.charAt(endTime.length() - 1)));
+        } else {
+            String s = String.valueOf(endTime.charAt(endTime.length() - 2)) + String.valueOf(endTime.charAt(endTime.length() - 1));
+            endMonth = Integer.valueOf(s);
+        }
+        LocalDate start = DateUtil.getStartDayOfMonth(startYear, startMonth);
+        LocalDate end = DateUtil.getEndDaYOfMonth(endYear, endMonth);
+        String time = startTime + "至" + endTime;
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.between("time", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.in("groupTeam", groupTeams));
         List<MoneyReady> list = super.findByCis(dto);
         List<MoneyReadyCountBO> boList = new ArrayList<MoneyReadyCountBO>();
-        Double currentMonthReserveSum = 0.00;
-        Double lastMonthReserveSum = 0.00;
-        if (month != 1) {
-            for (String groupTeam : groupTeams) {
-                for (MoneyReady m : list) {
-                    if (m.getGroupTeam().equals(groupTeam) && m.getYear().equals(year) && m.getMonth().equals(month)) {
-                        currentMonthReserveSum += m.getReserve();
-                    }
-                    if (m.getGroupTeam().equals(groupTeam) && m.getYear().equals(year) && m.getMonth().equals(month - 1)) {
-                        lastMonthReserveSum += m.getReserve();
-                    }
-                }
-                if ((currentMonthReserveSum != 0) || (lastMonthReserveSum != 0)) {
-                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
-                    bo.setGroupTeam(groupTeam);
-                    bo.setMonth(month);
-                    bo.setCurrentMonthReserveSum(currentMonthReserveSum);
-                    bo.setLastMonthReserveSum(lastMonthReserveSum);
-                    bo.setDifferences(currentMonthReserveSum - lastMonthReserveSum);
-                    if (lastMonthReserveSum != 0) {
-                        bo.setGrowth((currentMonthReserveSum - lastMonthReserveSum) / lastMonthReserveSum);
-                    } else {
-                        bo.setGrowth(1.00);
-                    }
-                    boList.add(bo);
-                    currentMonthReserveSum = 0.00;
-                    lastMonthReserveSum = 0.00;    //置为0
-                }
-            }
-            return boList;
-        } else {
-            for (String groupTeam : groupTeams) {
-                for (MoneyReady m : list) {
-                    if (m.getGroupTeam().equals(groupTeam) && m.getYear().equals(year) && m.getMonth().equals(month)) {
-                        currentMonthReserveSum += m.getReserve();
-                    }
-                    if (m.getGroupTeam().equals(groupTeam) && m.getYear().equals(year - 1) && m.getMonth().equals(12)) {
-                        lastMonthReserveSum += m.getReserve();
-                    }
-                }
-                if ((currentMonthReserveSum != 0) || (lastMonthReserveSum != 0)) {
-                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
-                    bo.setGroupTeam(groupTeam);
-                    bo.setMonth(month);
-                    bo.setCurrentMonthReserveSum(currentMonthReserveSum);
-                    bo.setLastMonthReserveSum(lastMonthReserveSum);
-                    bo.setDifferences(currentMonthReserveSum - lastMonthReserveSum);
-                    if (lastMonthReserveSum != 0) {
-                        bo.setGrowth((currentMonthReserveSum - lastMonthReserveSum) / lastMonthReserveSum);
-                    } else {
-                        bo.setGrowth(1.00);
-                    }
-                    boList.add(bo);
-                    currentMonthReserveSum = 0.00;
-                    lastMonthReserveSum = 0.00;    //置为0
-                }
-            }
-            return boList;
+        double currentSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+        for (String groupTeam : groupTeams) {
+            double currentMonthReserveSum = list.stream().filter(moneyReady -> groupTeam.equals(moneyReady.getGroupTeam())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+            MoneyReadyCountBO bo = new MoneyReadyCountBO();
+            bo.setGroupTeam(groupTeam);
+            bo.setTime(time);
+            bo.setCurrentMonthReserveSum(currentMonthReserveSum);
+            boList.add(bo);
         }
+        MoneyReadyCountBO bo = new MoneyReadyCountBO();
+        bo.setGroupTeam("合计");
+        bo.setTime(time);
+        bo.setCurrentMonthReserveSum(currentSum);
+        boList.add(bo);
+        List<MoneyReadyCountBO> lastBO = last(startYear, startMonth, groupTeams, "groupTeams");
+        for (MoneyReadyCountBO current : boList) {
+            for (MoneyReadyCountBO last : lastBO) {
+                if (current.getGroupTeam().equals(last.getGroupTeam())) {
+                    double lastMonthReserveSum = last.getLastMonthReserveSum();
+                    current.setLastMonthReserveSum(lastMonthReserveSum);
+                    double differences = current.getCurrentMonthReserveSum() - lastMonthReserveSum;
+                    current.setDifferences(differences);
+                    if (lastMonthReserveSum != 0) {
+                        current.setGrowth(new BigDecimal(differences / lastMonthReserveSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                    }
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<MoneyReadyCountBO> areaCount(MoneyReadyDTO dto) throws SerException {
+        checkSeeIdentity();
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        String[] areas = dto.getAreas();
+        int startYear = Integer.valueOf(startTime.substring(0, 4));
+        int startMonth = 0;
+        int endMonth = 0;
+        String a = String.valueOf(startTime.charAt(startTime.length() - 2));
+        if ("0".equals(a)) {
+            startMonth = Integer.valueOf(String.valueOf(startTime.charAt(startTime.length() - 1)));
+        } else {
+            String s = String.valueOf(startTime.charAt(startTime.length() - 2)) + String.valueOf(startTime.charAt(startTime.length() - 1));
+            startMonth = Integer.valueOf(s);
+        }
+        int endYear = Integer.valueOf(endTime.substring(0, 4));
+        String b = String.valueOf(endTime.charAt(endTime.length() - 2));
+        if ("0".equals(b)) {
+            endMonth = Integer.valueOf(String.valueOf(endTime.charAt(endTime.length() - 1)));
+        } else {
+            String s = String.valueOf(endTime.charAt(endTime.length() - 2)) + String.valueOf(endTime.charAt(endTime.length() - 1));
+            endMonth = Integer.valueOf(s);
+        }
+        LocalDate start = DateUtil.getStartDayOfMonth(startYear, startMonth);
+        LocalDate end = DateUtil.getEndDaYOfMonth(endYear, endMonth);
+        String time = startTime + "至" + endTime;
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.between("time", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.in("area", areas));
+        List<MoneyReady> list = super.findByCis(dto);
+        List<MoneyReadyCountBO> boList = new ArrayList<MoneyReadyCountBO>();
+        double currentSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+        for (String area : areas) {
+            double currentMonthReserveSum = list.stream().filter(moneyReady -> area.equals(moneyReady.getArea())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+            MoneyReadyCountBO bo = new MoneyReadyCountBO();
+            bo.setArea(area);
+            bo.setTime(time);
+            bo.setCurrentMonthReserveSum(currentMonthReserveSum);
+            boList.add(bo);
+        }
+        MoneyReadyCountBO bo = new MoneyReadyCountBO();
+        bo.setArea("合计");
+        bo.setTime(time);
+        bo.setCurrentMonthReserveSum(currentSum);
+        boList.add(bo);
+        List<MoneyReadyCountBO> lastBO = last(startYear, startMonth, areas, "areas");
+        for (MoneyReadyCountBO current : boList) {
+            for (MoneyReadyCountBO last : lastBO) {
+                if (current.getArea().equals(last.getArea())) {
+                    double lastMonthReserveSum = last.getLastMonthReserveSum();
+                    current.setLastMonthReserveSum(lastMonthReserveSum);
+                    double differences = current.getCurrentMonthReserveSum() - lastMonthReserveSum;
+                    current.setDifferences(differences);
+                    if (lastMonthReserveSum != 0) {
+                        current.setGrowth(new BigDecimal(differences / lastMonthReserveSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                    }
+                }
+            }
+        }
+        return boList;
+    }
+
+    /**
+     * 上月汇总
+     *
+     * @param year
+     * @param month
+     * @param strings
+     * @param type
+     * @return
+     * @throws SerException
+     */
+    private List<MoneyReadyCountBO> last(int year, int month, String[] strings, String type) throws SerException {
+        MoneyReadyDTO dto = new MoneyReadyDTO();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        List<MoneyReadyCountBO> boList = new ArrayList<>();
+        if ("groupTeams".equals(type)) {
+            dto.getConditions().add(Restrict.in("groupTeam", strings));
+            if (month != 1) {
+                dto.getConditions().add(Restrict.eq("year", year));
+                dto.getConditions().add(Restrict.eq("month", month - 1));
+                List<MoneyReady> list = super.findByCis(dto);
+                double lastSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                for (String s : strings) {
+                    double lastMonthReserveSum = list.stream().filter(moneyReady -> s.equals(moneyReady.getGroupTeam())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                    bo.setGroupTeam(s);
+                    bo.setLastMonthReserveSum(lastMonthReserveSum);
+                    boList.add(bo);
+                }
+                MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                bo.setGroupTeam("合计");
+                bo.setLastMonthReserveSum(lastSum);
+                boList.add(bo);
+            } else {
+                dto.getConditions().add(Restrict.eq("year", year - 1));
+                dto.getConditions().add(Restrict.eq("month", 12));
+                List<MoneyReady> list = super.findByCis(dto);
+                double lastSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                for (String s : strings) {
+                    double lastMonthReserveSum = list.stream().filter(moneyReady -> s.equals(moneyReady.getGroupTeam())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                    bo.setGroupTeam(s);
+                    bo.setLastMonthReserveSum(lastMonthReserveSum);
+                    boList.add(bo);
+                }
+                MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                bo.setGroupTeam("合计");
+                bo.setLastMonthReserveSum(lastSum);
+                boList.add(bo);
+            }
+        } else if ("areas".equals(type)) {
+            dto.getConditions().add(Restrict.in("area", strings));
+            if (month != 1) {
+                dto.getConditions().add(Restrict.eq("year", year));
+                dto.getConditions().add(Restrict.eq("month", month - 1));
+                List<MoneyReady> list = super.findByCis(dto);
+                double lastSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                for (String s : strings) {
+                    double lastMonthReserveSum = list.stream().filter(moneyReady -> s.equals(moneyReady.getArea())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                    bo.setArea(s);
+                    bo.setLastMonthReserveSum(lastMonthReserveSum);
+                    boList.add(bo);
+                }
+                MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                bo.setArea("合计");
+                bo.setLastMonthReserveSum(lastSum);
+                boList.add(bo);
+            } else {
+                dto.getConditions().add(Restrict.eq("year", year - 1));
+                dto.getConditions().add(Restrict.eq("month", 12));
+                List<MoneyReady> list = super.findByCis(dto);
+                double lastSum = list.stream().mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                for (String s : strings) {
+                    double lastMonthReserveSum = list.stream().filter(moneyReady -> s.equals(moneyReady.getArea())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                    MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                    bo.setArea(s);
+                    bo.setLastMonthReserveSum(lastMonthReserveSum);
+                    boList.add(bo);
+                }
+                MoneyReadyCountBO bo = new MoneyReadyCountBO();
+                bo.setArea("合计");
+                bo.setLastMonthReserveSum(lastSum);
+                boList.add(bo);
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public void reback(String id) throws SerException {
+        checkAddIdentity();
+        MoneyReady entity = super.findById(id);
+        entity.setDelTime(null);
+        entity.setIsDel(false);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public List<MoneyReadyBO> details(MoneyReadyDTO dto) throws SerException {
+        checkSeeIdentity();
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        String[] groupTeams = dto.getGroupTeams();
+        String[] areas = dto.getAreas();
+        int startYear = Integer.valueOf(startTime.substring(0, 4));
+        int startMonth = 0;
+        int endMonth = 0;
+        String a = String.valueOf(startTime.charAt(startTime.length() - 2));
+        if ("0".equals(a)) {
+            startMonth = Integer.valueOf(String.valueOf(startTime.charAt(startTime.length() - 1)));
+        } else {
+            String s = String.valueOf(startTime.charAt(startTime.length() - 2)) + String.valueOf(startTime.charAt(startTime.length() - 1));
+            startMonth = Integer.valueOf(s);
+        }
+        int endYear = Integer.valueOf(endTime.substring(0, 4));
+        String b = String.valueOf(endTime.charAt(endTime.length() - 2));
+        if ("0".equals(b)) {
+            endMonth = Integer.valueOf(String.valueOf(endTime.charAt(endTime.length() - 1)));
+        } else {
+            String s = String.valueOf(endTime.charAt(endTime.length() - 2)) + String.valueOf(endTime.charAt(endTime.length() - 1));
+            endMonth = Integer.valueOf(s);
+        }
+        LocalDate start = DateUtil.getStartDayOfMonth(startYear, startMonth);
+        LocalDate end = DateUtil.getEndDaYOfMonth(endYear, endMonth);
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.between("time", new LocalDate[]{start, end}));
+        List<MoneyReadyBO> boList = new LinkedList<>();
+        if (null != areas) {
+            dto.getSorts().add("area=asc");
+            dto.getConditions().add(Restrict.in("area", areas));
+            List<MoneyReady> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, MoneyReadyBO.class);
+            }
+            for (String area : areas) {
+                double totalReserve = list.stream().filter(moneyReady -> area.equals(moneyReady.getArea())).mapToDouble((MoneyReady m) -> m.getTotalReserve()).sum();
+                double reserve = list.stream().filter(moneyReady -> area.equals(moneyReady.getArea())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                ListIterator<MoneyReadyBO> iterator = boList.listIterator();
+                boolean b1 = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (area.equals(iterator.next().getArea())) {
+                        b1 = true;
+                        num = iterator.nextIndex();
+                    }
+                }
+                if (b1) {
+                    MoneyReadyBO bo = new MoneyReadyBO();
+                    bo.setArea(area);
+                    bo.setCategory("合计");
+                    bo.setTotalReserve(totalReserve);
+                    bo.setReserve(reserve);
+                    boList.add(num, bo);
+                }
+            }
+        } else if (null != groupTeams) {
+            dto.getSorts().add("groupTeam=asc");
+            dto.getConditions().add(Restrict.in("groupTeam", groupTeams));
+            List<MoneyReady> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, MoneyReadyBO.class);
+            }
+            for (String groupTeam : groupTeams) {
+                double totalReserve = list.stream().filter(moneyReady -> groupTeam.equals(moneyReady.getGroupTeam())).mapToDouble((MoneyReady m) -> m.getTotalReserve()).sum();
+                double reserve = list.stream().filter(moneyReady -> groupTeam.equals(moneyReady.getGroupTeam())).mapToDouble((MoneyReady m) -> m.getReserve()).sum();
+                ListIterator<MoneyReadyBO> iterator = boList.listIterator();
+                boolean b1 = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (groupTeam.equals(iterator.next().getGroupTeam())) {
+                        b1 = true;
+                        num = iterator.nextIndex();
+                    }
+                }
+                if (b1) {
+                    MoneyReadyBO bo = new MoneyReadyBO();
+                    bo.setGroupTeam(groupTeam);
+                    bo.setCategory("合计");
+                    bo.setTotalReserve(totalReserve);
+                    bo.setReserve(reserve);
+                    boList.add(num, bo);
+                }
+            }
+        }
+        return boList;
     }
 
     /**
@@ -305,7 +599,8 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
      * @return class String
      * @throws SerException
      */
-    private Set<String> findAllGroupTeams() throws SerException {
+    @Override
+    public Set<String> findAllGroupTeams() throws SerException {
         List<MoneyReady> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (MoneyReady m : list) {
@@ -314,33 +609,19 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         return set;
     }
 
-//    /**
-//     * 获取所有年份
-//     *
-//     * @return class Integer
-//     * @throws SerException
-//     */
-//    private Set<Integer> findAllYears() throws SerException {
-//        List<MoneyReady> list = super.findAll();
-//        Set<Integer> set = new HashSet<Integer>();
-//        for (MoneyReady m : list) {
-//            set.add(m.getYear());
-//        }
-//        return set;
-//    }
-//
-//    /**
-//     * 获取所有月份
-//     *
-//     * @return class Integer
-//     * @throws SerException
-//     */
-//    private Set<Integer> findAllMonths() throws SerException {
-//        List<MoneyReady> list = super.findAll();
-//        Set<Integer> set = new HashSet<Integer>();
-//        for (MoneyReady m : list) {
-//            set.add(m.getMonth());
-//        }
-//        return set;
-//    }
+    @Override
+    public Set<String> areas() throws SerException {
+        List<MoneyReady> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (MoneyReady m : list) {
+            set.add(m.getArea());
+        }
+        return set;
+    }
+
+    @Override
+    public Long countSum(MoneyReadyDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        return super.count(dto);
+    }
 }

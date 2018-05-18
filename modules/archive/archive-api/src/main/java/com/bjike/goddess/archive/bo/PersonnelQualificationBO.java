@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class PersonnelQualificationBO extends BaseBO {
 
     /**
+     * 更新时间
+     */
+    private String modifyTime;
+
+    /**
      * 姓名
      */
     private String username;
@@ -194,5 +199,13 @@ public class PersonnelQualificationBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

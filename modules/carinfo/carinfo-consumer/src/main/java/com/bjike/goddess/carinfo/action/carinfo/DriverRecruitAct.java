@@ -1,8 +1,10 @@
 package com.bjike.goddess.carinfo.action.carinfo;
 
 import com.bjike.goddess.carinfo.api.DriverRecruitAPI;
+import com.bjike.goddess.carinfo.bo.DriverRecruitBO;
 import com.bjike.goddess.carinfo.dto.DriverRecruitDTO;
 import com.bjike.goddess.carinfo.to.DriverRecruitTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.carinfo.vo.DriverRecruitVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -37,6 +39,29 @@ public class DriverRecruitAct {
     private DriverRecruitAPI driverRecruitAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = driverRecruitAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 新增
      *
      * @param to 司机信息
@@ -47,8 +72,8 @@ public class DriverRecruitAct {
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) DriverRecruitTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DriverRecruitVO voList = BeanTransform.copyProperties(driverRecruitAPI.save(to), DriverRecruitVO.class, request);
-            return ActResult.initialize(voList);
+            driverRecruitAPI.save(to);
+            return new ActResult("新增成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -115,7 +140,8 @@ public class DriverRecruitAct {
     @GetMapping("v1/find/{id}")
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            DriverRecruitVO vo = BeanTransform.copyProperties(driverRecruitAPI.findById(id), DriverRecruitVO.class, request);
+            DriverRecruitBO driverRecruitBO = driverRecruitAPI.findOne(id);
+            DriverRecruitVO vo = BeanTransform.copyProperties(driverRecruitBO,DriverRecruitVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -132,7 +158,8 @@ public class DriverRecruitAct {
     @GetMapping("v1/list")
     public Result pageList(DriverRecruitDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<DriverRecruitVO> voList = BeanTransform.copyProperties(driverRecruitAPI.pageList(dto), DriverRecruitVO.class, request);
+            List<DriverRecruitBO> boList = driverRecruitAPI.pageList(dto);
+            List<DriverRecruitVO> voList = BeanTransform.copyProperties(boList, DriverRecruitVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

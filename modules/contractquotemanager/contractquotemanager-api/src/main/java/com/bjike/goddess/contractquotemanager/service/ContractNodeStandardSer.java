@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
+import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
@@ -59,6 +60,17 @@ public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, Contr
         return null;
     }
 
+
+    /**
+     * 根据地区和项目组
+     *
+     * @param dto
+     * @return class ContractNodeStandardDTO
+     * @throws SerException
+     */
+    default void condiy(ContractNodeStandardDTO dto) throws SerException {
+        return;
+    }
     /**
      * 编辑合同节点标准信息
      *
@@ -131,5 +143,25 @@ public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, Contr
     default List<ContractNodeStandardBO> findByTo(FilterTO to) throws SerException {
         return null;
     }
+    /**
+     * 导出excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+
+    /**
+     *  导入
+     * @param contractProjectInfoTOS
+     */
+    void importExcel(List<ContractNodeStandardTO> contractProjectInfoTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

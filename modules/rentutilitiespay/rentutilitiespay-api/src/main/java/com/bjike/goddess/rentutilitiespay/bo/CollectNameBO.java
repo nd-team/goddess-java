@@ -47,7 +47,22 @@ public class CollectNameBO extends BaseBO{
      * 平摊的燃气费
      */
     private Double gasStaffPay;
-   
+
+    /**
+     * 预缴水费
+     */
+    private Double waterStaffPrepay;
+
+    /**
+     * 预缴电费
+     */
+    private Double energyStaffPrepay;
+
+    /**
+     * 预缴燃气费
+     */
+    private Double gasStaffPrepay;
+
     /**
      * 合计
      */
@@ -131,5 +146,29 @@ public class CollectNameBO extends BaseBO{
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
     }
 }

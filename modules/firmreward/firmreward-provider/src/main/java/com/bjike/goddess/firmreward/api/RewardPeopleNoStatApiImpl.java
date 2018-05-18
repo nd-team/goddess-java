@@ -7,7 +7,9 @@ import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
 import com.bjike.goddess.firmreward.service.RewardPeopleNoStatSer;
+import com.bjike.goddess.firmreward.to.PeopleNoStatTO;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +106,7 @@ public class RewardPeopleNoStatApiImpl implements RewardPeopleNoStatAPI {
      * @throws SerException
      */
     @Override
-    public void addAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void addAwardDetails(PeopleNoStatTO to) throws SerException {
         rewardPeopleNoStatSer.addAwardDetails(to);
     }
 
@@ -115,7 +117,7 @@ public class RewardPeopleNoStatApiImpl implements RewardPeopleNoStatAPI {
      * @throws SerException
      */
     @Override
-    public void updateAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void updateAwardDetails(PeopleNoStatTO to) throws SerException {
         rewardPeopleNoStatSer.updateAwardDetails(to);
     }
 
@@ -129,5 +131,15 @@ public class RewardPeopleNoStatApiImpl implements RewardPeopleNoStatAPI {
     @Override
     public List<AwardDetailBO> checkAwardDetails(String statId) throws SerException {
         return rewardPeopleNoStatSer.checkAwardDetails(statId);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rewardPeopleNoStatSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rewardPeopleNoStatSer.guidePermission(guidePermissionTO);
     }
 }

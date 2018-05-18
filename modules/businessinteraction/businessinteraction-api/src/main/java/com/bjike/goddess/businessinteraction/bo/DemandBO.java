@@ -1,24 +1,28 @@
 package com.bjike.goddess.businessinteraction.bo;
 
+import com.bjike.goddess.businessinteraction.enums.Origin;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
- * 互动平台需求描述业务传输对象
+ * 需求信息业务传输对象
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:21 ]
- * @Description: [ 互动平台需求描述业务传输对象 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 11:18 ]
+ * @Description: [ 需求信息业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class DemandBO extends BaseBO {
 
     /**
+     * 需求提出时间
+     */
+    private String demandDate;
+
+    /**
      * 需求者来源
      */
-    private String origin;
+    private Origin origin;
 
     /**
      * 需求者姓名
@@ -31,12 +35,12 @@ public class DemandBO extends BaseBO {
     private String work;
 
     /**
-     * 需求者所在公司名称
+     * 需求者在职公司名称
      */
     private String companyName;
 
     /**
-     * 需求者所在公司类型
+     * 需求者在职公司类型
      */
     private String companyType;
 
@@ -46,12 +50,12 @@ public class DemandBO extends BaseBO {
     private String contactWay;
 
     /**
-     * 地区
+     * 需求者所在地区
      */
     private String area;
 
     /**
-     * 业务方向
+     * 业务类型
      */
     private String businessTarget;
 
@@ -71,14 +75,14 @@ public class DemandBO extends BaseBO {
     private String device;
 
     /**
-     * 工时
+     * 服务费用
      */
-    private String workTime;
+    private Double serviceFee;
 
     /**
-     * 价格
+     * 中介费用
      */
-    private String price;
+    private Double intermediaryFee;
 
     /**
      * 专业
@@ -86,21 +90,78 @@ public class DemandBO extends BaseBO {
     private String profession;
 
     /**
-     * 创建时间
+     * 是否反馈需求者
      */
-    private String createTime;
+    private Boolean feedbackDemand;
 
     /**
-     * 修改时间
+     * 反馈时间
      */
-    private String modifyTime;
+    private String feedbackDate;
 
+    /**
+     * 市场信息编号
+     */
+    private String markerNum;
 
-    public String getOrigin() {
+    /**
+     * 初步分析时间
+     */
+    private String initialAnalysisDate;
+
+    /**
+     * 是否初步分析
+     */
+    private Boolean initialAnalysis;
+
+    /**
+     * 项目测算时间
+     */
+    private String projectEstimatesDate;
+
+    /**
+     * 是否进行测算
+     */
+    private Boolean projectEstimates;
+
+    /**
+     * 测算是否通过
+     */
+    private Boolean projectEstimatesThrought;
+
+    /**
+     * 洽谈时间
+     */
+    private String discussDate;
+
+    /**
+     * 是否进行洽谈
+     */
+    private Boolean discuss;
+
+    /**
+     * 我司是否达成合作
+     */
+    private Boolean reachedCoop;
+
+    /**
+     * 是否介绍给别的承包商
+     */
+    private Boolean introduceContra;
+
+    public String getDemandDate() {
+        return demandDate;
+    }
+
+    public void setDemandDate(String demandDate) {
+        this.demandDate = demandDate;
+    }
+
+    public Origin getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Origin origin) {
         this.origin = origin;
     }
 
@@ -184,20 +245,20 @@ public class DemandBO extends BaseBO {
         this.device = device;
     }
 
-    public String getWorkTime() {
-        return workTime;
+    public Double getServiceFee() {
+        return serviceFee;
     }
 
-    public void setWorkTime(String workTime) {
-        this.workTime = workTime;
+    public void setServiceFee(Double serviceFee) {
+        this.serviceFee = serviceFee;
     }
 
-    public String getPrice() {
-        return price;
+    public Double getIntermediaryFee() {
+        return intermediaryFee;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setIntermediaryFee(Double intermediaryFee) {
+        this.intermediaryFee = intermediaryFee;
     }
 
     public String getProfession() {
@@ -208,19 +269,99 @@ public class DemandBO extends BaseBO {
         this.profession = profession;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public Boolean getFeedbackDemand() {
+        return feedbackDemand;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setFeedbackDemand(Boolean feedbackDemand) {
+        this.feedbackDemand = feedbackDemand;
     }
 
-    public String getModifyTime() {
-        return modifyTime;
+    public String getFeedbackDate() {
+        return feedbackDate;
     }
 
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setFeedbackDate(String feedbackDate) {
+        this.feedbackDate = feedbackDate;
+    }
+
+    public String getMarkerNum() {
+        return markerNum;
+    }
+
+    public void setMarkerNum(String markerNum) {
+        this.markerNum = markerNum;
+    }
+
+    public String getInitialAnalysisDate() {
+        return initialAnalysisDate;
+    }
+
+    public void setInitialAnalysisDate(String initialAnalysisDate) {
+        this.initialAnalysisDate = initialAnalysisDate;
+    }
+
+    public Boolean getInitialAnalysis() {
+        return initialAnalysis;
+    }
+
+    public void setInitialAnalysis(Boolean initialAnalysis) {
+        this.initialAnalysis = initialAnalysis;
+    }
+
+    public String getProjectEstimatesDate() {
+        return projectEstimatesDate;
+    }
+
+    public void setProjectEstimatesDate(String projectEstimatesDate) {
+        this.projectEstimatesDate = projectEstimatesDate;
+    }
+
+    public Boolean getProjectEstimates() {
+        return projectEstimates;
+    }
+
+    public void setProjectEstimates(Boolean projectEstimates) {
+        this.projectEstimates = projectEstimates;
+    }
+
+    public Boolean getProjectEstimatesThrought() {
+        return projectEstimatesThrought;
+    }
+
+    public void setProjectEstimatesThrought(Boolean projectEstimatesThrought) {
+        this.projectEstimatesThrought = projectEstimatesThrought;
+    }
+
+    public String getDiscussDate() {
+        return discussDate;
+    }
+
+    public void setDiscussDate(String discussDate) {
+        this.discussDate = discussDate;
+    }
+
+    public Boolean getDiscuss() {
+        return discuss;
+    }
+
+    public void setDiscuss(Boolean discuss) {
+        this.discuss = discuss;
+    }
+
+    public Boolean getReachedCoop() {
+        return reachedCoop;
+    }
+
+    public void setReachedCoop(Boolean reachedCoop) {
+        this.reachedCoop = reachedCoop;
+    }
+
+    public Boolean getIntroduceContra() {
+        return introduceContra;
+    }
+
+    public void setIntroduceContra(Boolean introduceContra) {
+        this.introduceContra = introduceContra;
     }
 }

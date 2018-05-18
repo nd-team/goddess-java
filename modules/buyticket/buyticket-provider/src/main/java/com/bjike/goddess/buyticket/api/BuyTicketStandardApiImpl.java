@@ -4,6 +4,7 @@ import com.bjike.goddess.buyticket.bo.BuyTicketStandardBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketStandardDTO;
 import com.bjike.goddess.buyticket.service.BuyTicketStandardSer;
 import com.bjike.goddess.buyticket.to.BuyTicketStandardTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class BuyTicketStandardApiImpl implements BuyTicketStandardAPI {
 
     @Autowired
     private BuyTicketStandardSer buyTicketStandardSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return buyTicketStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return buyTicketStandardSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countBuyTicketStandard(BuyTicketStandardDTO buyTicketStandardDTO) throws SerException {

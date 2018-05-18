@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.ForeignStaffingBO;
 import com.bjike.goddess.archive.dto.ForeignStaffingDTO;
 import com.bjike.goddess.archive.service.ForeignStaffingSer;
 import com.bjike.goddess.archive.to.ForeignStaffingTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class ForeignStaffingApiImpl implements ForeignStaffingAPI {
     @Autowired
     private ForeignStaffingSer foreignStaffingSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return foreignStaffingSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return foreignStaffingSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public ForeignStaffingBO save(ForeignStaffingTO to) throws SerException {
         return foreignStaffingSer.save(to);
@@ -53,5 +64,20 @@ public class ForeignStaffingApiImpl implements ForeignStaffingAPI {
     @Override
     public Long getTotal() throws SerException {
         return foreignStaffingSer.getTotal();
+    }
+
+    @Override
+    public List<String> getTime() throws SerException {
+        return foreignStaffingSer.getTime();
+    }
+
+    @Override
+    public List<String> getSchool() throws SerException {
+        return foreignStaffingSer.getSchool();
+    }
+
+    @Override
+    public List<String> getQQ() throws SerException {
+        return foreignStaffingSer.getQQ();
     }
 }

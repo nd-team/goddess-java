@@ -5,10 +5,14 @@ import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.service.DisciplineRecordSer;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +29,18 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
 
     @Autowired
     private DisciplineRecordSer disciplineRecordSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return disciplineRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return disciplineRecordSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
@@ -104,5 +120,60 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
     @Override
     public Long getPushTotal() throws SerException {
         return disciplineRecordSer.getPushTotal();
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+        if(null != userBOList && userBOList.size() > 0){
+            for(UserBO userBO : userBOList){
+                list.add(userBO.getUsername());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getarea() throws SerException {
+        return disciplineRecordSer.getarea();
+    }
+
+    @Override
+    public List<String> getGroup() throws SerException {
+        return disciplineRecordSer.getGroup();
+    }
+
+    @Override
+    public List<String> getTarget() throws SerException {
+        return disciplineRecordSer.getTarget();
+    }
+
+    @Override
+    public Integer getPushNum(String userName) throws SerException {
+        return disciplineRecordSer.getPushNum(userName);
+    }
+
+    @Override
+    public Integer getRewardNum(String userName) throws SerException {
+        return disciplineRecordSer.getRewardNum(userName);
+    }
+
+    @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        return disciplineRecordSer.getRePuTotal(userName);
+    }
+    public String getRewardBallot(String name) throws SerException {
+        return disciplineRecordSer.getRewardBallot(name);
+    }
+
+    @Override
+    public String getPushBallot(String name) throws SerException {
+        return disciplineRecordSer.getPushBallot(name);
+    }
+
+    @Override
+    public OptionBonusBO annular() throws SerException {
+        return disciplineRecordSer.annular();
     }
 }

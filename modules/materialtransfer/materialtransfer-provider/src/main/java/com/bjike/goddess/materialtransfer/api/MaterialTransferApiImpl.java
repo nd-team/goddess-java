@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
 import com.bjike.goddess.materialtransfer.entity.MaterialTransfer;
+import com.bjike.goddess.materialtransfer.excel.SonPermissionObject;
 import com.bjike.goddess.materialtransfer.service.MaterialTransferSer;
+import com.bjike.goddess.materialtransfer.to.GuidePermissionTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,18 @@ public class MaterialTransferApiImpl implements MaterialTransferAPI {
 
     @Autowired
     private MaterialTransferSer materialTransferSer;
+
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return materialTransferSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialTransferSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资调动
@@ -133,5 +147,25 @@ public class MaterialTransferApiImpl implements MaterialTransferAPI {
     @Override
     public void wealModConfirm(String id, String recipient, Boolean confirmDeploy, String finishDeployTime) throws SerException {
         materialTransferSer.wealModConfirm(id, recipient, confirmDeploy, finishDeployTime);
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialTransferSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return materialTransferSer.findallMonUser();
+    }
+
+    @Override
+    public List<String> findModel() throws SerException {
+        return materialTransferSer.findModel();
+    }
+
+    @Override
+    public List<String> findUnit() throws SerException {
+        return materialTransferSer.findUnit();
     }
 }

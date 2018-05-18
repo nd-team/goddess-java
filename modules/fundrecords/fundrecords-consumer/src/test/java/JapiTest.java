@@ -14,8 +14,7 @@ import com.dounine.japi.core.impl.ProjectImpl;
 public class JapiTest {
 
     public static void main(String[] args) {
-//                JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/home/ike/xiexiaoting/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/fundrecords/fundrecords-consumer");//主项目位置

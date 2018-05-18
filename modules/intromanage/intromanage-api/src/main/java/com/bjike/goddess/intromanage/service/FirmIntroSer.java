@@ -2,13 +2,17 @@ package com.bjike.goddess.intromanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.intromanage.bo.BussinesBO;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
+import com.bjike.goddess.intromanage.excel.FirmIntroExcel;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
+import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介业务接口
@@ -22,12 +26,34 @@ import java.util.List;
 public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 分页查询公司简介
      *
      * @return class FirmIntroBO
      * @throws SerException
      */
     List<FirmIntroBO> list(FirmIntroDTO dto) throws SerException;
+
+    /**
+     * 一个公司简介
+     *
+     * @return class FirmIntroBO
+     * @throws SerException
+     */
+    FirmIntroBO findByFirmId(String id) throws SerException;
 
     /**
      * 保存公司简介
@@ -63,4 +89,78 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
      */
     void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException;
 
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 获取所有公司名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> firmNames() throws SerException;
+
+    /**
+     * chenjunhao
+     * 根据公司名称获取注册资金和员工数量
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    Set<BussinesBO> moneyByName(String name) throws SerException;
+
+    /**
+     * 冻结公司简介
+     *
+     * @param id id
+     */
+    default void congealFirmin(String id) throws SerException {
+        return;
+    }
+
+
+    /**
+     * 解冻公司简介
+     *
+     * @param id id
+     */
+    default void thawFirmin(String id) throws SerException {
+        return;
+    }
+    /**
+     * 获取最早时间
+     *
+     */
+    default String getDate() throws SerException {
+        return null;
+    }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param firmIntroTOS 公司简介
+     */
+    void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException;
 }

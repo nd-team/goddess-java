@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.CreditorsInvestBO;
 import com.bjike.goddess.moneyside.dto.CreditorsInvestDTO;
 import com.bjike.goddess.moneyside.service.CreditorsInvestSer;
 import com.bjike.goddess.moneyside.to.CreditorsInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,15 @@ public class CreditorsInvestApiImpl implements CreditorsInvestAPI {
 
     @Autowired
     private CreditorsInvestSer creditorsInvestSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return creditorsInvestSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return creditorsInvestSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countCreditorsInvest(CreditorsInvestDTO creditorsInvestDTO) throws SerException {
         return creditorsInvestSer.countCreditorsInvest(creditorsInvestDTO);

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!-- 发布接口 -->
+
+    <!-- 项目信息API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.ProjectInfoAPI" ref="projectInfoApiImpl"/>
+
+    <!-- 进度表API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.ProgressTableAPI" ref="progressTableApiImpl"/>
+
+    <!-- 进度表表头API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TableHeadAPI" ref="tableHeadApiImpl"/>
+
+    <!-- 项目节点API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.ProgressNodeAPI" ref="progressNodeApiImpl"/>
+
+    <!-- 项目节点表头API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.NodeHeadAPI" ref="nodeHeadApiImpl"/>
+
+    <!-- 项目节点表头API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TableHeadValueAPI" ref="tableHeadValueApiImpl"/>
+
+    <!--进度表行标记API -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI" ref="tableHeadRowSignApiImpl"/>
+
+    <!-- 节点表头行标记 -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.NodeHeadRowSignAPI" ref="nodeHeadRowSignApiImpl"/>
+
+    <!-- 节点表头行标记 -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TaskReceiveAPI" ref="taskReceiveApiImpl"/>
+
+    <!-- 注册接口 -->
+
+    <!-- userAPI -->
+
+    <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <!-- 组织结构API -->
+    <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+
+    <!--
+
+    &lt;!&ndash; 进度表APi &ndash;&gt;
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.ProgressTableAPI" ref="progressTableAPIApiImpl"/>
+
+    &lt;!&ndash; 进度表表头API &ndash;&gt;
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TableHeadAPI" ref="tableHeadApiImpl"/>
+
+    &lt;!&ndash; 进度节点API &ndash;&gt;
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.ProgressNodeAPI" ref="progressNodeApiImpl"/>
+
+    &lt;!&ndash; 节点表头API &ndash;&gt;
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.NodeHeadAPI" ref="nodeHeadApiImpl"/>
+-->
+
+
+</beans>

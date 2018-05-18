@@ -1,9 +1,11 @@
 package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
 import com.bjike.goddess.workjoin.to.DeviceJoinTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DeviceJoinAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 设备交接列表总条数
      */
@@ -76,5 +91,10 @@ public interface DeviceJoinAPI {
 
     }
 
+
+    /**
+     * 查询设备编号
+     */
+    List<MaterialInStockBO> findMaterial() throws SerException;
 
 }

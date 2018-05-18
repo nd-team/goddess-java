@@ -2,11 +2,13 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
 import com.bjike.goddess.workjoin.entity.DeviceJoin;
 import com.bjike.goddess.workjoin.service.DeviceJoinSer;
 import com.bjike.goddess.workjoin.to.DeviceJoinTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,15 @@ import java.util.List;
 public class DeviceJoinApiImpl implements DeviceJoinAPI {
     @Autowired
     private DeviceJoinSer deviceJoinSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return deviceJoinSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return deviceJoinSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countDeviceJoin(DeviceJoinDTO deviceJoinDTO) throws SerException {
         return deviceJoinSer.countDeviceJoin(deviceJoinDTO);
@@ -57,4 +68,8 @@ public class DeviceJoinApiImpl implements DeviceJoinAPI {
 
     }
 
+    @Override
+    public List<MaterialInStockBO> findMaterial() throws SerException {
+        return deviceJoinSer.findMaterial();
+    }
 }

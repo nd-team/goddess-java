@@ -71,7 +71,19 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "firstSubject_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '一级科目'")
     private FirstSubject firstSubject;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     public String getCode() {
         return code;

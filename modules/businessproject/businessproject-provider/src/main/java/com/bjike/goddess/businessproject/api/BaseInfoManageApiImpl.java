@@ -66,7 +66,6 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     public void deleteBaseInfoManage(String id) throws SerException {
         baseInfoManageSer.deleteBaseInfoManage(id);
     }
-
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         return baseInfoManageSer.getInfoByInnerProjectNum(innerProjectNum);
@@ -93,6 +92,11 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     }
 
     @Override
+    public Set<String> outerProjects() throws SerException {
+        return baseInfoManageSer.outerProjects();
+    }
+
+    @Override
     public byte[] exportExcel(BaseInfoManageDTO dto) throws SerException {
         return baseInfoManageSer.exportExcel(dto);
     }
@@ -105,5 +109,30 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Override
     public byte[] templateExcel() throws SerException {
         return baseInfoManageSer.templateExcel();
+    }
+
+    @Override
+    public List<BaseInfoManageBO> getgetAll() throws SerException {
+        return baseInfoManageSer.getgetAll();
+    }
+
+    @Override
+    public Long getInterProject(String startTime, String endTime) throws SerException {
+        return baseInfoManageSer.getInterProject(startTime, endTime);
+    }
+
+    @Override
+    public List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        return baseInfoManageSer.getInterProjectName(startTime, endTime);
+    }
+
+    @Override
+    public List<String> getArea(String projectNane) throws SerException {
+        return baseInfoManageSer.getArea(projectNane);
+    }
+
+    @Override
+    public Double contractScale(String project) throws SerException {
+        return baseInfoManageSer.contractScale(project);
     }
 }

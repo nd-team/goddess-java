@@ -38,7 +38,7 @@ dependencies {
     }
 
     compile project(":modules:coststandard:coststandard-api")
-
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile project(":modules:organize:organize-api")
     compile project(":modules:user:user-api")
 

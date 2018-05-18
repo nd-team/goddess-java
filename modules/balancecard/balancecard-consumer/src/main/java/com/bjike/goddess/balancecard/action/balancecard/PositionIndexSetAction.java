@@ -3,21 +3,30 @@ package com.bjike.goddess.balancecard.action.balancecard;
 import com.bjike.goddess.balancecard.api.PositionIndexSetAPI;
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
+import com.bjike.goddess.balancecard.excel.PositionIndexSetExcel;
+import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.balancecard.vo.PositionIndexSetVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -31,15 +40,40 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("positionindexset")
-public class PositionIndexSetAction {
+public class PositionIndexSetAction extends BaseFileAction {
 
 
 
     @Autowired
     private PositionIndexSetAPI positionIndexSetAPI;
 
+
     /**
-     *  列表总条数
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = positionIndexSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 列表总条数
      *
      * @param positionIndexSetDTO  岗位指标信息dto
      * @des 获取所有岗位指标信息总条数
@@ -74,7 +108,6 @@ public class PositionIndexSetAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 一个岗位指标
      *
@@ -93,7 +126,6 @@ public class PositionIndexSetAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 添加岗位指标
      *
@@ -152,7 +184,7 @@ public class PositionIndexSetAction {
     }
 
     /**
-     *  查看本月指标总条数
+     * 查看本月指标总条数
      *
      * @param positionIndexSetDTO  岗位指标信息dto
      * @des 获取本月所有岗位指标信息总条数
@@ -188,18 +220,15 @@ public class PositionIndexSetAction {
         }
     }
 
-
-
-
     /**
-     *  我的指标列表总条数
+     * 我的指标列表总条数
      *
      * @param positionIndexSetDTO  岗位指标信息dto
      * @des 获取所有我的指标信息总条数
      * @version v1
      */
     @GetMapping("v1/countSelf")
-    public Result countSelf(PositionIndexSetDTO positionIndexSetDTO) throws ActException {
+    public Result countSelf(PositionIndexSetDTO positionIndexSetDTO,BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             Long count = positionIndexSetAPI.countSelf(positionIndexSetDTO);
             return ActResult.initialize(count);
@@ -286,5 +315,69 @@ public class PositionIndexSetAction {
             throw new ActException("删除失败："+e.getMessage());
         }
     }
-    
+
+    /**
+     * 导入Excel
+     *
+     * @param request id
+     * @des 导入Excel
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/leadExcel")
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<PositionIndexSetExcel> tos = ExcelUtil.excelToClazz(is, PositionIndexSetExcel.class, excel);
+            List<PositionIndexSetTO> toList = BeanTransform.copyProperties(tos,PositionIndexSetTO.class);
+            positionIndexSetAPI.leadExcel(toList);
+            return new ActResult("上传成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @param to 导出条件
+     * @version v1
+     */
+    @GetMapping("v1/positionReport")
+    public Result positionReport(ExportExcelPositTO to, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位指标.xlsx";
+            super.writeOutFile(response, positionIndexSetAPI.positionReport(to), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1){
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板岗位指标
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位指标导入模板.xlsx";
+            super.writeOutFile(response, positionIndexSetAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+
+
 }

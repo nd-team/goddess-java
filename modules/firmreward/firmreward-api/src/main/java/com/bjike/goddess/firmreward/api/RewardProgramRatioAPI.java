@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.RewardProgramRatioDTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatioTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -67,5 +68,18 @@ public interface RewardProgramRatioAPI {
      * @throws SerException
      */
     void update(RewardProgramRatioTO to) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

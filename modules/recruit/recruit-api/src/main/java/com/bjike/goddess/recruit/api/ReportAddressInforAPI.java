@@ -3,9 +3,11 @@ package com.bjike.goddess.recruit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
 import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 报道地址信息
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface ReportAddressInforAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询报道地址信息
@@ -68,4 +83,12 @@ public interface ReportAddressInforAPI {
      * @throws SerException
      */
     void update(ReportAddressInforTO reportAddressInforTO) throws SerException;
+
+    /**
+     * 获取所有入职报道地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 }

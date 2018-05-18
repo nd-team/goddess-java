@@ -70,7 +70,7 @@ public class WaitPayAct {
      */
     @LoginAuth
     @PutMapping("v1/confirmPay")
-    public Result confirmPay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
+    public Result confirmPay(@Validated({WaitPayTO.ConfirmPay.class}) WaitPayTO to, BindingResult result) throws ActException {
         try {
             waitPayAPI.confirmPay(to);
             return new ActResult("编辑成功!");
@@ -116,6 +116,64 @@ public class WaitPayAct {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 添加
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/save")
+    public Result save(@Validated({WaitPayTO.TestAdd.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.save(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 编辑
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result edit(@Validated({WaitPayTO.TestEdit.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.edit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 删除
+     *
+     * @param id 等待付款id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            waitPayAPI.delete(id);
+            return new ActResult("删除成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 汇总

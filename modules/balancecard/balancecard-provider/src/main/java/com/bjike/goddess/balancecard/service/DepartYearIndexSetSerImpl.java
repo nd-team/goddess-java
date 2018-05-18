@@ -8,15 +8,18 @@ import com.bjike.goddess.balancecard.entity.DepartMonIndexSet;
 import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
 import com.bjike.goddess.balancecard.entity.PositionIndexSet;
 import com.bjike.goddess.balancecard.entity.YearIndexSet;
+import com.bjike.goddess.balancecard.enums.GuideAddrStatus;
 import com.bjike.goddess.balancecard.enums.SeparateStatus;
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
 import com.bjike.goddess.balancecard.excel.DepartYearIndexSetExcel;
 import com.bjike.goddess.balancecard.to.DepartMonSerperateTO;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -25,6 +28,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -64,6 +68,89 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
     @Autowired
     private YearIndexSetSer yearIndexSetSer;
 
+    @Autowired
+    private BalancecardPermissionSer cusPermissionSer;
+
+    @Autowired
+    private UserDetailAPI userDetailAPI;
+
+    /**
+     * 核对是否为管理层权限（部门级别）
+     */
+    private Boolean checkManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+            if (!flag) {
+                RpcTransmit.transmitUserToken(userToken);
+                return false;
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        return true;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+            return true;
+    }
+    //功能导航权限
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = true;
+                break;
+            case ADD:
+                flag = true;
+                break;
+            case EDIT:
+                flag = true;
+                break;
+            case AUDIT:
+                flag = true;
+                break;
+            case DELETE:
+                flag = true;
+                break;
+            case COLLECT:
+                flag = true;
+                break;
+            case IMPORT:
+                flag = true;
+                break;
+            case EXPORT:
+                flag = true;
+                break;
+            case UPLOAD:
+                flag = true;
+                break;
+            case DOWNLOAD:
+                flag = true;
+                break;
+            case SEE:
+                flag = true;
+                break;
+            case SEEFILE:
+                flag = true;
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countDepartYearIndexSet(DepartYearIndexSetDTO departYearIndexSetDTO) throws SerException {
         if (StringUtils.isNotBlank(departYearIndexSetDTO.getIndexName())) {
@@ -89,27 +176,54 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         return bo;
     }
 
+    /**
+     * 加入部门查看权限,管理层和决策层能查看所有,执行层只能查看自己的部门
+     *
+     * @param departYearIndexSetDTO
+     * @return
+     * @throws SerException
+     */
     @Override
     public List<DepartYearIndexSetBO> listDepartYearIndexSet(DepartYearIndexSetDTO departYearIndexSetDTO) throws SerException {
-        if (StringUtils.isNotBlank(departYearIndexSetDTO.getIndexName())) {
-            departYearIndexSetDTO.getConditions().add(Restrict.like("indexName", departYearIndexSetDTO.getIndexName()));
-        }
-        if (StringUtils.isNotBlank(departYearIndexSetDTO.getYear())) {
-            departYearIndexSetDTO.getConditions().add(Restrict.like("year", departYearIndexSetDTO.getYear()));
-        }
-        if (StringUtils.isNotBlank(departYearIndexSetDTO.getDepartment())) {
-            departYearIndexSetDTO.getConditions().add(Restrict.like("department", departYearIndexSetDTO.getDepartment()));
-        }
+        //先看是不是可以查看自己的部门指标
+        //如果可以看（1.管理层和决策层权限，那么就可以查看列表所有数据
+        // 2.只能查看自己部门的）
+        if (checkManageIdentity()) {
+            if (StringUtils.isNotBlank(departYearIndexSetDTO.getDepartment())) {
+                departYearIndexSetDTO.getConditions().add(Restrict.like("department", departYearIndexSetDTO.getDepartment()));
+            }
+            List<DepartYearIndexSet> list = super.findByCis(departYearIndexSetDTO, true);
+            List<DepartYearIndexSetBO> listBO = BeanTransform.copyProperties(list, DepartYearIndexSetBO.class);
+            return listBO;
+        } else {
+                String userId = userAPI.currentUser().getId();
+                String department = userDetailAPI.findByUserId(userId).getDepartmentName();
+                if(StringUtils.isNotBlank( department)){
+                    departYearIndexSetDTO.setDepartment(department);
+                    departYearIndexSetDTO.getConditions().add(Restrict.like("department",departYearIndexSetDTO.getDepartment()));
+                    List<DepartYearIndexSet> list = super.findByCis(departYearIndexSetDTO, true);
+                    List<DepartYearIndexSetBO> listBO = BeanTransform.copyProperties(list, DepartYearIndexSetBO.class);
+                    return listBO;
+                }else{
+                    throw new SerException("您不存在任何部门中，没有权限查看");
+                }
 
-        List<DepartYearIndexSet> list = super.findByCis(departYearIndexSetDTO, true);
-        List<DepartYearIndexSetBO> listBO = BeanTransform.copyProperties(list, DepartYearIndexSetBO.class);
-        return listBO;
+        }
     }
 
     @Override
     public DepartYearIndexSetBO addDepartYearIndexSet(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
         UserBO userBO = userAPI.currentUser();
         DepartYearIndexSet temp = BeanTransform.copyProperties(departYearIndexSetTO, DepartYearIndexSet.class, true);
+        //查询部门年度指标编号最大值
+        String yearIndexNumber = super.findByMaxField("yearIndexNumber", DepartYearIndexSet.class);
+        if (yearIndexNumber != null) {
+            temp.setYearIndexNumber(Integer.parseInt(yearIndexNumber) + 1);
+        } else {
+            temp.setYearIndexNumber(1);
+        }
+        //为部门年度模块自己添加的数据设置年度指标为0
+        temp.setIndexNumber(0);
         temp.setDepartWeightSum(100d);
         temp.setComplete(0d);
         temp.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
@@ -133,52 +247,119 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         }
         DepartYearIndexSet departYearIndexSet = super.findById(departYearIndexSetTO.getId());
         Double oldYearComplete = departYearIndexSet.getComplete();
+        if(departYearIndexSet.getSeparateStatus() == SeparateStatus.SEPERATE){
+            if(departYearIndexSetTO.getIfAgain() !=null && departYearIndexSetTO.getIfAgain() == true) {
+                DepartMonIndexSetDTO monIndexSetDTO = new DepartMonIndexSetDTO();
+                monIndexSetDTO.getConditions().add(Restrict.eq("departYearIndexSetId", departYearIndexSet.getId()));
+                List<DepartMonIndexSet> monIndexSetList = departMonIndexSetSer.findByCis(monIndexSetDTO);
+                if (monIndexSetList != null && monIndexSetList.size() > 0) {
+                    List<String> dmIdList = monIndexSetList.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
+                    PositionIndexSetDTO positionIndexSetDTO = new PositionIndexSetDTO();
+                    String[] dmIdStrings = new String[dmIdList.size()];
+                    dmIdStrings = dmIdList.toArray(dmIdStrings);
+                    positionIndexSetDTO.getConditions().add(Restrict.in("departMonIndexSetId", dmIdStrings));
+                    List<PositionIndexSet> positionIndexSetList = positionIndexSetSer.findByCis(positionIndexSetDTO);
+                    if (positionIndexSetList != null && positionIndexSetList.size() > 0) {
+                        positionIndexSetSer.remove(positionIndexSetList);
+                    }
+                    departMonIndexSetSer.remove(monIndexSetList);
+                }
+                departYearIndexSet.setSeparateStatus(SeparateStatus.NONE);
+            }else {
+                //没有分解过
+                departYearIndexSet.setIndexName(departYearIndexSetTO.getIndexName());
+                departYearIndexSet.setYear(departYearIndexSetTO.getYear());
+                departYearIndexSet.setIndexType(departYearIndexSetTO.getIndexType());
+                departYearIndexSet.setDimension(departYearIndexSetTO.getDimension());
+                departYearIndexSet.setDescribtion(departYearIndexSetTO.getDescribtion());
+                departYearIndexSet.setYearTarget(departYearIndexSetTO.getYearTarget());
+                departYearIndexSet.setDepartment(departYearIndexSetTO.getDepartment());
+                departYearIndexSet.setDepartYearWeight(departYearIndexSetTO.getDepartYearWeight());
+                departYearIndexSet.setDepartWeightSum(departYearIndexSetTO.getDepartWeightSum());
+                departYearIndexSet.setTarget(departYearIndexSet.getTarget());
+                if(departYearIndexSetTO.getWager() >=1) {
+                    departYearIndexSet.setWager(departYearIndexSetTO.getWager());
+                }else{
+                    throw new SerException("对赌值不能小于1");
+                }
+                departYearIndexSet.setComplete(departYearIndexSetTO.getComplete());
+                departYearIndexSet.setExamWay(departYearIndexSetTO.getExamWay());
+                departYearIndexSet.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
+                departYearIndexSet.setStandardRate(departYearIndexSetTO.getComplete() / departYearIndexSetTO.getWager());
+                departYearIndexSet.setExamScore(departYearIndexSet.getStandardRate() * departYearIndexSet.getDepartYearWeight());
+                departYearIndexSet.setExamDepart(departYearIndexSetTO.getExamDepart());
+                departYearIndexSet.setDataOrigin(departYearIndexSetTO.getDataOrigin());
+                departYearIndexSet.setExamDuring(departYearIndexSetTO.getExamDuring());
+                departYearIndexSet.setModifyTime(LocalDateTime.now());
+                //判断分解状态 已分解：重新分解下面的 且 判断是否由上面分解下来的，要修改上面的
+                //若是 未分解的话，直接修改
+                if (departYearIndexSet.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
+                    //修改重新分解部门月度
+                    List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(departYearIndexSet);
+                    //修改重新分解岗位指标
+                    if (listDMon != null && listDMon.size() > 0) {
+                        List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+                    }
+                }
+            }
+            //若是由年指标分解下来的，那就重新修改年指标完成值
+            if (departYearIndexSet.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
+                //修改年指标完成值
+                editYearComplete(oldYearComplete, departYearIndexSet);
 
-        //没有分解过
-        departYearIndexSet.setIndexName(departYearIndexSetTO.getIndexName());
-        departYearIndexSet.setYear(departYearIndexSetTO.getYear());
-        departYearIndexSet.setIndexType(departYearIndexSetTO.getIndexType());
-        departYearIndexSet.setDimension(departYearIndexSetTO.getDimension());
-        departYearIndexSet.setDescribtion(departYearIndexSetTO.getDescribtion());
-        departYearIndexSet.setYearTarget(departYearIndexSetTO.getYearTarget());
-        departYearIndexSet.setDepartment(departYearIndexSetTO.getDepartment());
-        departYearIndexSet.setDepartYearWeight(departYearIndexSetTO.getDepartYearWeight());
-        departYearIndexSet.setDepartWeightSum(departYearIndexSetTO.getDepartWeightSum());
-        departYearIndexSet.setTarget(departYearIndexSetTO.getTarget());
-        departYearIndexSet.setWager(departYearIndexSetTO.getWager());
-        departYearIndexSet.setComplete(departYearIndexSetTO.getComplete());
-        departYearIndexSet.setExamWay(departYearIndexSetTO.getExamWay());
-        departYearIndexSet.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
-        departYearIndexSet.setStandardRate(departYearIndexSetTO.getComplete() / departYearIndexSetTO.getWager());
-        departYearIndexSet.setExamScore(departYearIndexSet.getStandardRate() * departYearIndexSet.getDepartYearWeight());
-        departYearIndexSet.setExamDepart(departYearIndexSetTO.getExamDepart());
-        departYearIndexSet.setDataOrigin(departYearIndexSetTO.getDataOrigin());
-        departYearIndexSet.setExamDuring(departYearIndexSetTO.getExamDuring());
-        departYearIndexSet.setModifyTime(LocalDateTime.now());
-        //判断分解状态 已分解：重新分解下面的 且 判断是否由上面分解下来的，要修改上面的
-        //若是 未分解的话，直接修改
-        if (departYearIndexSet.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
-            //修改重新分解部门月度
-            List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(departYearIndexSet);
-            //修改重新分解岗位指标
-            if (listDMon != null && listDMon.size() > 0) {
-                List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+            }
+            super.update(departYearIndexSet);
+            return BeanTransform.copyProperties(departYearIndexSet, DepartYearIndexSetBO.class);
+        }else {
+            //没有分解过
+            departYearIndexSet.setIndexName(departYearIndexSetTO.getIndexName());
+            departYearIndexSet.setYear(departYearIndexSetTO.getYear());
+            departYearIndexSet.setIndexType(departYearIndexSetTO.getIndexType());
+            departYearIndexSet.setDimension(departYearIndexSetTO.getDimension());
+            departYearIndexSet.setDescribtion(departYearIndexSetTO.getDescribtion());
+            departYearIndexSet.setYearTarget(departYearIndexSetTO.getYearTarget());
+            departYearIndexSet.setDepartment(departYearIndexSetTO.getDepartment());
+            departYearIndexSet.setDepartYearWeight(departYearIndexSetTO.getDepartYearWeight());
+            departYearIndexSet.setDepartWeightSum(departYearIndexSetTO.getDepartWeightSum());
+            departYearIndexSet.setTarget(departYearIndexSet.getTarget());
+            if(departYearIndexSetTO.getWager() >=1) {
+                departYearIndexSet.setWager(departYearIndexSetTO.getWager());
+            }else{
+                throw new SerException("对赌值不能小于1");
+            }
+            departYearIndexSet.setComplete(departYearIndexSetTO.getComplete());
+            departYearIndexSet.setExamWay(departYearIndexSetTO.getExamWay());
+            departYearIndexSet.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
+            departYearIndexSet.setStandardRate(departYearIndexSetTO.getComplete() / departYearIndexSetTO.getWager());
+            departYearIndexSet.setExamScore(departYearIndexSet.getStandardRate() * departYearIndexSet.getDepartYearWeight());
+            departYearIndexSet.setExamDepart(departYearIndexSetTO.getExamDepart());
+            departYearIndexSet.setDataOrigin(departYearIndexSetTO.getDataOrigin());
+            departYearIndexSet.setExamDuring(departYearIndexSetTO.getExamDuring());
+            departYearIndexSet.setModifyTime(LocalDateTime.now());
+            //判断分解状态 已分解：重新分解下面的 且 判断是否由上面分解下来的，要修改上面的
+            //若是 未分解的话，直接修改
+            if (departYearIndexSet.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
+                //修改重新分解部门月度
+                List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(departYearIndexSet);
+                //修改重新分解岗位指标
+                if (listDMon != null && listDMon.size() > 0) {
+                    List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+                }
             }
         }
+            //若是由年指标分解下来的，那就重新修改年指标完成值
+            if (departYearIndexSet.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
+                //修改年指标完成值
+                editYearComplete(oldYearComplete, departYearIndexSet);
 
-        //若是由年指标分解下来的，那就重新修改年指标完成值
-        if (departYearIndexSet.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
-            //修改年指标完成值
-            editYearComplete( oldYearComplete,  departYearIndexSet );
-
-        }
-
+            }
         super.update(departYearIndexSet);
         return BeanTransform.copyProperties(departYearIndexSet, DepartYearIndexSetBO.class);
     }
 
     /**
      * 修改年指标完成值
+     *
      * @param oldYearComplete
      * @param dYear
      * @throws SerException
@@ -249,6 +430,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
 
         listDMon.stream().forEach(str -> {
             str.setIndexName(departYearIndexSet.getIndexName());
+            str.setIndexNumber(departYearIndexSet.getIndexNumber());
             str.setYear(departYearIndexSet.getYear());
             str.setIndexType(departYearIndexSet.getIndexType());
             str.setDimension(departYearIndexSet.getDimension());
@@ -298,6 +480,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         super.remove(id);
     }
 
+    //分解年度部门指标
     @Override
     public DepartYearIndexSetBO seperateDepartYear(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
         if (StringUtils.isBlank(departYearIndexSetTO.getId())) {
@@ -305,73 +488,96 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         }
         UserBO userBO = userAPI.currentUser();
         DepartYearIndexSet temp = super.findById(departYearIndexSetTO.getId());
-        //分解成部门数据
-        List<DepartMonSerperateTO> list = departYearIndexSetTO.getDepartMonSerperateTOList();
-        Double targerSum = 0d;
-        if (list != null && list.size() > 0) {
-            targerSum = list.stream().filter(str -> null != str.getSerparateTarget()).mapToDouble(DepartMonSerperateTO::getSerparateTarget).sum();
-            if (!targerSum.equals(temp.getTarget())) {
-                throw new SerException("分解失败,分解目标值必须加起来等于目标值");
+        if(temp.getSeparateStatus().equals(SeparateStatus.NONE)) {
+            if(temp.getWager() >= 1) {
+                //分解成部门数据
+                List<DepartMonSerperateTO> list = departYearIndexSetTO.getDepartMonSerperateTOList();
+                Double targerSum = 0d;
+                if (list != null && list.size() > 0) {
+                    targerSum = list.stream().filter(str -> null != str.getSerparateTarget()).mapToDouble(DepartMonSerperateTO::getSerparateTarget).sum();
+                    if (!targerSum.equals(temp.getTarget())) {
+                        throw new SerException("分解失败,分解目标值必须加起来等于目标值");
+                    }
+                    //查询出部门月度指标编号最大值
+                    String monthIndexNumber = departMonIndexSetSer.findByMaxField("monthIndexNumber", DepartMonIndexSet.class);
+                    List<DepartMonIndexSet> saveList = new ArrayList<>();
+                    for (DepartMonSerperateTO str : list) {
+                            DepartMonIndexSet departMonIndexSet = new DepartMonIndexSet();
+                            departMonIndexSet.setIndexName(temp.getIndexName());
+                            departMonIndexSet.setIndexNumber(temp.getIndexNumber());
+                            departMonIndexSet.setYearIndexNumber(temp.getYearIndexNumber());
+                            //判断部门月度指标编号最大值是否为空
+                            if (monthIndexNumber != null) {
+                                departMonIndexSet.setMonthIndexNumber(Integer.parseInt(monthIndexNumber) + 1);
+                            } else if (saveList.size() >= 1) {
+                                departMonIndexSet.setMonthIndexNumber(saveList.size() + 1);
+                            } else {
+                                departMonIndexSet.setMonthIndexNumber(1);
+                            }
+                            departMonIndexSet.setYear(temp.getYear());
+                            departMonIndexSet.setMonth(str.getMonthValue());
+                            departMonIndexSet.setIndexType(temp.getIndexType());
+                            departMonIndexSet.setDimension(temp.getDimension());
+                            departMonIndexSet.setDescribtion(temp.getDescribtion());
+                            departMonIndexSet.setDepartment(temp.getDepartment());
+                            departMonIndexSet.setDepartYearWeight(temp.getDepartYearWeight());
+                            departMonIndexSet.setDepartYearWager(temp.getWager());
+                            departMonIndexSet.setWeight(str.getSerparateTarget() / temp.getWager() * 100d);
+                            departMonIndexSet.setTarget(str.getSerparateTarget());
+                            departMonIndexSet.setWager(temp.getWager());
+                            departMonIndexSet.setComplete(0d);
+                            departMonIndexSet.setExamWay("");
+                            departMonIndexSet.setWhetherStandar(departMonIndexSet.getComplete() > departMonIndexSet.getTarget() ? "是" : "否");
+                            departMonIndexSet.setStandardRate(0d);
+                            departMonIndexSet.setExamScore(0d);
+                            departMonIndexSet.setWritePerson(userBO.getUsername());
+                            departMonIndexSet.setExamDepart(temp.getExamDepart());
+                            departMonIndexSet.setDataOrigin(temp.getDataOrigin());
+                            departMonIndexSet.setExamDuring(temp.getExamDuring());
+                            departMonIndexSet.setYearPersion(userBO.getUsername());
+                            departMonIndexSet.setYearIndexTime(LocalDate.now());
+                            departMonIndexSet.setSeparateStatus(SeparateStatus.NONE);
+                            departMonIndexSet.setSeperateComeStatus(SeperateComeStatus.DEPARTYEAR);
+                            departMonIndexSet.setDepartYearIndexSetId(departYearIndexSetTO.getId());
+                            departMonIndexSet.setCreateTime(LocalDateTime.now());
+                            departMonIndexSet.setModifyTime(LocalDateTime.now());
+                            saveList.add(departMonIndexSet);
+                    }
+                    if (saveList != null && saveList.size() > 0) {
+                        //更新
+                        temp.setSeparateStatus(SeparateStatus.SEPERATE);
+                        super.update(temp);
+                        departMonIndexSetSer.save(saveList);
+                    }
+                }
+            }else {
+                throw new SerException("对赌值不能小于1");
             }
-            List<DepartMonIndexSet> saveList = new ArrayList<>();
-            for (DepartMonSerperateTO str : list) {
-                DepartMonIndexSet departMonIndexSet = new DepartMonIndexSet();
-                departMonIndexSet.setIndexName(temp.getIndexName());
-                departMonIndexSet.setYear(temp.getYear());
-                departMonIndexSet.setMonth(str.getMonthValue());
-                departMonIndexSet.setIndexType(temp.getIndexType());
-                departMonIndexSet.setDimension(temp.getDimension());
-                departMonIndexSet.setDescribtion(temp.getDescribtion());
-                departMonIndexSet.setDepartment(temp.getDepartment());
-                departMonIndexSet.setDepartYearWeight(temp.getDepartYearWeight());
-                departMonIndexSet.setDepartYearWager(temp.getWager());
-                departMonIndexSet.setWeight(str.getSerparateTarget() / temp.getWager() * 100d);
-                departMonIndexSet.setTarget(str.getSerparateTarget());
-                departMonIndexSet.setWager(0d);
-                departMonIndexSet.setComplete(0d);
-                departMonIndexSet.setExamWay("");
-                departMonIndexSet.setWhetherStandar(departMonIndexSet.getComplete() > departMonIndexSet.getTarget() ? "是" : "否");
-                departMonIndexSet.setStandardRate(0d);
-                departMonIndexSet.setExamScore(0d);
-                departMonIndexSet.setWritePerson(userBO.getUsername());
-                departMonIndexSet.setExamDepart(temp.getExamDepart());
-                departMonIndexSet.setDataOrigin("");
-                departMonIndexSet.setExamDuring("");
-                departMonIndexSet.setYearPersion(userBO.getUsername());
-                departMonIndexSet.setYearIndexTime(LocalDate.now());
-                departMonIndexSet.setSeparateStatus(SeparateStatus.NONE);
-                departMonIndexSet.setSeperateComeStatus(SeperateComeStatus.DEPARTYEAR);
-                departMonIndexSet.setDepartYearIndexSetId(departYearIndexSetTO.getId());
-                departMonIndexSet.setCreateTime(LocalDateTime.now());
-                departMonIndexSet.setModifyTime(LocalDateTime.now());
-                saveList.add(departMonIndexSet);
-            }
-
-            departMonIndexSetSer.save(saveList);
+        }else{
+            throw new SerException("该数据已经分解过了");
         }
-
         return BeanTransform.copyProperties(temp, DepartYearIndexSetBO.class);
     }
 
     @Override
     public byte[] departYearReport(ExportExcelDepartTO to) throws SerException {
         DepartYearIndexSetDTO dto = new DepartYearIndexSetDTO();
-        if(StringUtils.isNotBlank(to.getDepart())){
-            dto.getConditions().add(Restrict.between("department", to.getDepart() ));
+        if (StringUtils.isNotBlank(to.getDepart())) {
+            dto.getConditions().add(Restrict.eq("department", to.getDepart()));
         }
-        if(StringUtils.isNotBlank(to.getIndexType())){
-            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        if (StringUtils.isNotBlank(to.getIndexType())) {
+            dto.getConditions().add(Restrict.eq("indexType", to.getIndexType()));
         }
-        if(StringUtils.isNotBlank(to.getDimension())){
-            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        if (StringUtils.isNotBlank(to.getDimension())) {
+            dto.getConditions().add(Restrict.eq("dimension", to.getDimension()));
         }
-        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
-            LocalDate start  = LocalDate.parse(to.getStartTime());
+        if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+            LocalDate start = LocalDate.parse(to.getStartTime());
             LocalDate end = LocalDate.parse(to.getEndTime());
             String startYear = String.valueOf(start.getYear());
             String endYear = String.valueOf(end.getYear());
-            String [] years = new String[]{startYear,endYear};
-            dto.getConditions().add(Restrict.between("year", years ));
+            String[] years = new String[]{startYear, endYear};
+            dto.getConditions().add(Restrict.between("year", years));
         }
 
         List<DepartYearIndexSet> list = super.findByCis(dto);
@@ -390,7 +596,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
     public List<String> listArea() throws SerException {
         List<String> areaList = new ArrayList<>();
         List<AreaBO> list = departmentDetailAPI.findArea();
-        if( list != null && list.size()>0 ){
+        if (list != null && list.size() > 0) {
             areaList = list.stream().map(AreaBO::getArea).collect(Collectors.toList());
         }
         return areaList;
@@ -400,7 +606,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
     public List<String> listDepart() throws SerException {
         List<String> departList = new ArrayList<>();
         List<OpinionBO> list = departmentDetailAPI.findAllOpinion();
-        if( list != null && list.size()>0 ){
+        if (list != null && list.size() > 0) {
             departList = list.stream().map(OpinionBO::getValue).collect(Collectors.toList());
         }
         return departList;
@@ -410,9 +616,129 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
     public List<String> listEmp() throws SerException {
         List<String> empList = new ArrayList<>();
         List<UserBO> list = positionDetailUserAPI.findUserList();
-        if( list != null && list.size()>0 ){
+        if (list != null && list.size() > 0) {
             empList = list.stream().map(UserBO::getUsername).collect(Collectors.toList());
         }
         return empList;
+    }
+
+    // 导入 excel
+    @Override
+    public void leadExcel(List<DepartYearIndexSetTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        for (int i = 1; i <= toList.size(); i++) {
+            isExist(toList.get(i - 1), i);
+        }
+        String yearIndexNumber = super.findByMaxField("yearIndexNumber", DepartYearIndexSet.class);
+        List<DepartYearIndexSet> list = BeanTransform.copyProperties(toList, DepartYearIndexSet.class, true);
+        list.stream().forEach(str -> {
+            str.setIndexNumber(0);
+            str.setYearPersion(userBO.getUsername());
+            str.setYearIndexTime(LocalDate.now());
+            str.setSeparateStatus(SeparateStatus.NONE);
+            str.setSeperateComeStatus(SeperateComeStatus.FILL);
+            if (yearIndexNumber != null) {
+                str.setYearIndexNumber(Integer.parseInt(yearIndexNumber) + 1);
+            } else if (list.size() > 1) {
+                str.setYearIndexNumber(list.size() + 1);
+            } else {
+                str.setYearIndexNumber(1);
+            }
+            str.setComplete(null == str.getComplete() ? 0d : str.getComplete());
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+
+        super.save(list);
+    }
+
+    //校验字段是否存在
+    private void isExist(DepartYearIndexSetTO to, Integer row) throws SerException {
+        if (StringUtils.isBlank(to.getIndexName())) {
+            throw new SerException("第" + row + "行的指标名称不能为空");
+        }
+        if (to.getYear() != null) {
+            throw new SerException("第" + row + "行的年份不能为空");
+        }
+        if (null == to.getDescribtion()) {
+            throw new SerException("第" + row + "行的指标权重不能为空");
+        }
+        if (null == to.getYearTarget()) {
+            throw new SerException("第" + row + "行的年度目标值不能为空");
+        }
+    }
+
+    // 导出excel
+    @Override
+    public byte[] exportExcel(ExportExcelDepartTO to) throws SerException {
+        DepartYearIndexSetDTO dto = new DepartYearIndexSetDTO();
+        if (StringUtils.isNotBlank(to.getDepart())) {
+            dto.getConditions().add(Restrict.eq("deDepart", to.getDepart()));
+        }
+        if (StringUtils.isNotBlank(to.getDimension())) {
+            dto.getConditions().add(Restrict.gt("dimension", to.getDimension()));
+        }
+
+        List<DepartYearIndexSet> list = super.findByCis(dto);
+        List<DepartYearIndexSetExcel> toList = new ArrayList<DepartYearIndexSetExcel>();
+        for (DepartYearIndexSet model : list) {
+            DepartYearIndexSetExcel excel = new DepartYearIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    /**
+     * 树状图查询方法
+     */
+    @Override
+    public List<DepartYearIndexSetBO> dendrogram(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        YearIndexSet temp = yearIndexSetSer.findById(id);
+        DepartYearIndexSetDTO dto = new DepartYearIndexSetDTO();
+        if (temp.getSeparateStatus() == SeparateStatus.SEPERATE) {
+            dto.getConditions().add(Restrict.eq("indexNumber", temp.getIndexNumber()));
+        }
+        List<DepartYearIndexSet> list = super.findByCis(dto);
+
+        List<DepartYearIndexSetBO> bolist = BeanTransform.copyProperties(list, DepartYearIndexSetBO.class);
+        return bolist;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<DepartYearIndexSetExcel> yearIndexExports = new ArrayList<>();
+
+        DepartYearIndexSetExcel excel = new DepartYearIndexSetExcel();
+        excel.setIndexName("指标名称");
+        excel.setYear(2017);
+        excel.setIndexType("指标类型");
+        excel.setDimension("维度");
+        excel.setDepartment("责任部门");
+        excel.setDescribtion(12d);
+        excel.setYearTarget(12d);
+        excel.setDepartYearWeight(13d);
+        excel.setDepartWeightSum(12d);
+        excel.setTarget(100d);
+        excel.setWager(10d);
+        excel.setComplete(10d);
+        excel.setExamWay("考核方式");
+        excel.setWhetherStandar("是否达标");
+        excel.setStandardRate(0.1d);
+        excel.setExamScore(19d);
+        excel.setWritePerson("填报人员");
+        excel.setExamDepart("考核部门");
+        excel.setDataOrigin("数据来源");
+        excel.setExamDuring("考核周期" );
+        yearIndexExports.add( excel );
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(yearIndexExports, exce);
+        return bytes;
     }
 }

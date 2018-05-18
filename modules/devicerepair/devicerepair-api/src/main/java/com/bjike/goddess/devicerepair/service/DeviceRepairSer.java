@@ -5,10 +5,13 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.devicerepair.bo.DeviceRepairBO;
 import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
 import com.bjike.goddess.devicerepair.entity.DeviceRepair;
+import com.bjike.goddess.devicerepair.excel.SonPermissionObject;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
+import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
+import com.bjike.goddess.devicerepair.type.MaterialState;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,20 @@ import java.util.Map;
  */
 public interface DeviceRepairSer extends Ser<DeviceRepair, DeviceRepairDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询设备维修
      *
@@ -92,4 +109,96 @@ public interface DeviceRepairSer extends Ser<DeviceRepair, DeviceRepairDTO> {
      */
     void fetchDevice(FetchDeviceTO to) throws SerException;
 
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有维修状态
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MaterialState> findDeviceStatus(String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreaByStatus(String[] intervalTime,MaterialState materialState) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态地区获取部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjectByStaAnAr(String[] intervalTime,MaterialState materialState,String area) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态地区获取信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DeviceRepairBO> findByStaAnAr(String[] intervalTime,MaterialState materialState,String area,String projectGroup) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有是否为保修期状态
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<Boolean> findBool(String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态查询地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreaByBool(String[] intervalTime,Boolean whetherWarranty) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态和地区查询部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjByBoArea(String[] intervalTime,String area,Boolean whetherWarranty) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态和地区和部门查询信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DeviceRepairBO> findByBoAnArDep(String[] intervalTime,String area,Boolean whetherWarranty,String projectGroup) throws SerException {
+        return null;
+    }
 }

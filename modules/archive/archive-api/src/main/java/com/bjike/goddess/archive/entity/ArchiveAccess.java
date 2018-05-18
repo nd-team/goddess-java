@@ -1,6 +1,6 @@
 package com.bjike.goddess.archive.entity;
 
-import com.bjike.goddess.annual.enums.AuditType;
+import com.bjike.goddess.archive.enums.AuditType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;

@@ -110,4 +110,11 @@ public interface QualificationsCollectAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有的资质名称
+     */
+    default List<String> findAllQualifications() throws SerException {
+        return null;
+    }
 }

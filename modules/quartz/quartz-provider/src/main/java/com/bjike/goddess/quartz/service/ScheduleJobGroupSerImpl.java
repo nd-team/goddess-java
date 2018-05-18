@@ -38,8 +38,6 @@ public class ScheduleJobGroupSerImpl extends ServiceImpl<ScheduleJobGroup, Sched
     @Autowired
     private ScheduleSer scheduleSer;
 
-    @Autowired
-    private UserAPI userAPI;
 
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")

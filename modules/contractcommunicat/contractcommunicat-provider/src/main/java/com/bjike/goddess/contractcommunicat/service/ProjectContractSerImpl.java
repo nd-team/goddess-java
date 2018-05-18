@@ -1,5 +1,9 @@
 package com.bjike.goddess.contractcommunicat.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -13,7 +17,6 @@ import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectContract;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.GuideAddrStatus;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
@@ -53,13 +56,24 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Autowired
     private ProjectOutsourcingSer projectOutsourcingSer;
 
+    @Autowired
+    private ContractCollectEmailSer contractCollectEmailSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
 
         getCusPermission();
 
-        isExist(to, null);
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
         to.setId(model.getId());
@@ -261,14 +275,39 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-
+        String userToken = RpcTransmit.getUserToken();
         Boolean flagAddSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("contract");
         obj.setDescribesion("项目承包洽谈");
         if (flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = contractCollectEmailSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("邮件发送");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagOutsourcing = projectOutsourcingSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("项目外包洽谈");
+        if (flagOutsourcing) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -328,6 +367,16 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         list.add(new ProjectContractExcel());
         byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> getCommunicateUser() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<ProjectContract> projectContracts = super.findAll();
+        for (ProjectContract entity : projectContracts) {
+            list.add(entity.getCommunicateUser());
+        }
+        return list;
     }
 
     /**
@@ -402,11 +451,45 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//
+//        if (!permission) {
+//            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+//        }
     }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        List<BaseInfoManageBO> list = new ArrayList<>(0);
+//        if(moduleAPI.isCheck("businessproject")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            BaseInfoManageDTO dto = new BaseInfoManageDTO();
+            list = baseInfoManageAPI.listBaseInfoManage(dto);
+//        }
+        return list;
+    }
+
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        List<MarketInfoBO> list = new ArrayList<>(0);
+////        if(moduleAPI.isCheck("market")){
+//            String userToken = RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            MarketInfoDTO dto = new MarketInfoDTO();
+//            list = marketInfoAPI.findListMarketInfo(dto);
+////        }
+//        return list;
+//    }
 }

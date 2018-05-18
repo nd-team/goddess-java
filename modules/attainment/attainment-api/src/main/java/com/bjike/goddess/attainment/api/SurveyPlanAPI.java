@@ -1,8 +1,12 @@
 package com.bjike.goddess.attainment.api;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
+import com.bjike.goddess.attainment.entity.SurveyPlan;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
+import com.bjike.goddess.attainment.to.SurveyActualizesTO;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionUsersTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SurveyPlanAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加
@@ -91,6 +109,52 @@ public interface SurveyPlanAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研计划
+     */
+    default List<SurPlanBO> getSurveyPlan() throws SerException {
+        return null;
+    }
+
+    /**
+     * 建立问卷
+     */
+    default List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查看问卷
+     */
+    default List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 问卷调研
+     */
+    default List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改问卷
+     */
+    default List<SurveyActualizesBO> edit(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    default List<SurPlanBO> getPlanId() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研表名称
+     */
+    default List<String> getName() throws SerException {
         return null;
     }
 }

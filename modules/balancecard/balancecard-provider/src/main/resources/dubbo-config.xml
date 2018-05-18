@@ -27,15 +27,24 @@
 	<dubbo:service  ref="indexTypeSetApiImpl" interface="com.bjike.goddess.balancecard.api.IndexTypeSetAPI" />
 	<dubbo:service  ref="positionIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.PositionIndexSetAPI" />
 	<dubbo:service  ref="yearIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.YearIndexSetAPI" />
+	<dubbo:service  ref="balancecardPermissionApiImpl" interface="com.bjike.goddess.balancecard.api.BalancecardPermissionAPI" />
+	<dubbo:service  ref="balancecardPermissionOperateApiImpl" interface="com.bjike.goddess.balancecard.api.BalancecardPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="userDetailApiImpl" interface="com.bjike.goddess.user.api.UserDetailAPI" />
+
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
 	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 
 </beans>

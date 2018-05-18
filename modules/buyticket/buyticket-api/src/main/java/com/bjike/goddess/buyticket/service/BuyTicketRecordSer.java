@@ -1,10 +1,10 @@
 package com.bjike.goddess.buyticket.service;
 
-import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.bo.BuyTicketRecordBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketRecordDTO;
 import com.bjike.goddess.buyticket.entity.BuyTicketRecord;
 import com.bjike.goddess.buyticket.to.BuyTicketRecordTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +21,19 @@ import java.util.List;
  */
 public interface BuyTicketRecordSer extends Ser<BuyTicketRecord, BuyTicketRecordDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 车票购买记录列表总条数
      */
@@ -77,12 +90,4 @@ public interface BuyTicketRecordSer extends Ser<BuyTicketRecord, BuyTicketRecord
     }
 
 
-    /**
-     * 发送邮件
-     *
-     * @return class BuyTicketApplyBO
-     */
-    default BuyTicketRecordBO sendBuyTicketRecord(BuyTicketRecordTO buyTicketRecordTO) throws SerException {
-        return null;
-    }
 }

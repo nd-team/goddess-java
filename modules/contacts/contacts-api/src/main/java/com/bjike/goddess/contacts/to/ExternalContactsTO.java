@@ -16,6 +16,10 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class ExternalContactsTO extends BaseTO {
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
     /**
      * 地区
@@ -102,6 +106,13 @@ public class ExternalContactsTO extends BaseTO {
      */
     private boolean isSend;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getArea() {
         return area;

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rotation.bo.RecommendRotationBO;
 import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
 import com.bjike.goddess.rotation.entity.RecommendRotation;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RecommendRotationTO;
 
 import java.util.List;
@@ -105,6 +106,20 @@ public interface RecommendRotationSer extends Ser<RecommendRotation, RecommendRo
      * @throws SerException
      */
     default List<RecommendRotationBO> findByUserArrangement(String username, String arrangementId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

@@ -1,8 +1,9 @@
 package com.bjike.goddess.budget.api;
 
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
-import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
@@ -83,6 +84,17 @@ public interface ProjectWeekAPI {
     }
 
     /**
+     * 项目收入周列表
+     *
+     * @param dto 项目收入周列表
+     * @return class ProjectWeekBO
+     * @throws SerException
+     */
+    default List<ProjectWeekListBO> listProject(ProjectWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
      * 分项目汇总
      *
      * @param dto1 dto
@@ -112,6 +124,13 @@ public interface ProjectWeekAPI {
     }
 
     /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
      * 下拉导航权限
      */
     Boolean sonPermission() throws SerException;
@@ -120,4 +139,35 @@ public interface ProjectWeekAPI {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总时获取地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
+        return null;
+    }
 }

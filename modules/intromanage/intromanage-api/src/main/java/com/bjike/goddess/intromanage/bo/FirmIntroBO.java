@@ -1,7 +1,10 @@
 package com.bjike.goddess.intromanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.intromanage.type.DemandType;
+
+import java.util.List;
 
 /**
  * 公司简介业务传输对象
@@ -98,6 +101,42 @@ public class FirmIntroBO extends BaseBO {
      * 需求类型
      */
     private DemandType demandType;
+    /**
+     * 更新（制作）时间
+     */
+    private String updateDate;
+
+    /**
+     * 战略定位
+     */
+    private String positioning;
+
+    /**
+     * 状态
+     */
+    private Status status;
+    /**
+     * 荣誉与资质
+     */
+    private List<HonorAndQualityBO> honorAndQualityBOS;
+    /**
+     * 主业介绍
+     */
+    private List<MainBusinessIntroBO> mainBusinessIntroBOS;
+    /**
+     * 成功案例
+     */
+    private List<SuccessStoriesBO> successStoriesBOS;
+
+    /**
+     * 客户及合作伙伴
+     */
+    private List<CustomerAndPartnerBO> customerAndPartnerBOS;
+
+    /**
+     * 通讯途径
+     */
+    private List<CommunicationPathBO> communicationPathBOS;
 
 
     public String getFirmName() {
@@ -234,5 +273,69 @@ public class FirmIntroBO extends BaseBO {
 
     public void setDemandType(DemandType demandType) {
         this.demandType = demandType;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getPositioning() {
+        return positioning;
+    }
+
+    public void setPositioning(String positioning) {
+        this.positioning = positioning;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<HonorAndQualityBO> getHonorAndQualityBOS() {
+        return honorAndQualityBOS;
+    }
+
+    public void setHonorAndQualityBOS(List<HonorAndQualityBO> honorAndQualityBOS) {
+        this.honorAndQualityBOS = honorAndQualityBOS;
+    }
+
+    public List<MainBusinessIntroBO> getMainBusinessIntroBOS() {
+        return mainBusinessIntroBOS;
+    }
+
+    public void setMainBusinessIntroBOS(List<MainBusinessIntroBO> mainBusinessIntroBOS) {
+        this.mainBusinessIntroBOS = mainBusinessIntroBOS;
+    }
+
+    public List<SuccessStoriesBO> getSuccessStoriesBOS() {
+        return successStoriesBOS;
+    }
+
+    public void setSuccessStoriesBOS(List<SuccessStoriesBO> successStoriesBOS) {
+        this.successStoriesBOS = successStoriesBOS;
+    }
+
+    public List<CustomerAndPartnerBO> getCustomerAndPartnerBOS() {
+        return customerAndPartnerBOS;
+    }
+
+    public void setCustomerAndPartnerBOS(List<CustomerAndPartnerBO> customerAndPartnerBOS) {
+        this.customerAndPartnerBOS = customerAndPartnerBOS;
+    }
+
+    public List<CommunicationPathBO> getCommunicationPathBOS() {
+        return communicationPathBOS;
+    }
+
+    public void setCommunicationPathBOS(List<CommunicationPathBO> communicationPathBOS) {
+        this.communicationPathBOS = communicationPathBOS;
     }
 }

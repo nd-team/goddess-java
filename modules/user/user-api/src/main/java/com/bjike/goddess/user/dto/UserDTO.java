@@ -2,6 +2,7 @@ package com.bjike.goddess.user.dto;
 
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 用户数据传输
@@ -13,5 +14,32 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class UserDTO extends BaseDTO {
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "limit=" + limit +
+                ", page=" + page +
+                ", username='" + username + '\'' +
+                ", sorts=" + sorts +
+                ", conditions=" + conditions +
+                ", conditionsJson='" + conditionsJson + '\'' +
+                '}';
+    }
 
+    public interface NAME {
+    }
+
+    /**
+     * 用户名
+     */
+    @NotBlank(groups = {UserDTO.NAME.class},message = "用户名不能为空")
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

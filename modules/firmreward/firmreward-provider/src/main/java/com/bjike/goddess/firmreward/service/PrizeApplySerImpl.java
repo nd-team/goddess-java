@@ -3,14 +3,22 @@ package com.bjike.goddess.firmreward.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.firmreward.api.AwardDetailAPI;
 import com.bjike.goddess.firmreward.bo.*;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.dto.PrizeDetailDTO;
 import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.entity.PrizeDetail;
+import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
+import com.bjike.goddess.firmreward.to.ApplyDetailTO;
+import com.bjike.goddess.firmreward.to.DetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,6 +44,153 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
 
     @Autowired
     private PrizeDetailSer prizeDetailSer;
+    @Autowired
+    private AwardDetailAPI awardDetailAPI;
+    @Autowired
+    private UserAPI userAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     /**
      * 分页查询奖品申请
@@ -45,6 +200,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      */
     @Override
     public List<PrizeApplyBO> list(PrizeApplyDTO dto) throws SerException {
+        checkSeeIdentity();
         List<PrizeApply> list = super.findByPage(dto);
         List<PrizeApplyBO> listBO = BeanTransform.copyProperties(list, PrizeApplyBO.class);
         return listBO;
@@ -117,11 +273,13 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
     /**
      * 更新奖品申请
      *
-     * @param to 奖品申请to
+     * @param to    奖品申请to
      * @param model 奖品申请
      */
     private void updatePrizeApply(PrizeApplyTO to, PrizeApply model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, PrizeApply.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
@@ -133,23 +291,17 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
-    public void addPrizeDetails(PrizeApplyTO to) throws SerException {
+    public void addPrizeDetails(ApplyDetailTO to) throws SerException {
         String prizeApplyId = to.getId();//奖品申请id
-        String[] prizeDetails = to.getPrizeDetails();//奖品明细
-        String[] prizeBuyWays = to.getPrizeBuyWays();//奖品购置途径
-        String[] prizeIssueForms = to.getPrizeIssueForms();//奖品发放形式
-        String[] awardTimes = to.getAwardTimes();//颁奖时间
-
-        boolean prizeDetailNotEmpty = (prizeDetails != null) && (prizeDetails.length > 0);
-        if (StringUtils.isNotEmpty(prizeApplyId) && (prizeDetailNotEmpty)) {
+        List<DetailTO> detailTOS = to.getDetailTOS();
+        if (detailTOS != null && detailTOS.size() > 0 && StringUtils.isNotEmpty(prizeApplyId)) {
             List<PrizeDetail> list = new ArrayList<>(0);
-            int len = prizeBuyWays.length;
-            for (int i = 0; i < len; i ++) {
+            for (DetailTO detailTO : detailTOS) {
                 PrizeDetail model = new PrizeDetail();
-                model.setPrizeDetail(prizeDetails[i]);
-                model.setPrizeBuyWay(prizeBuyWays[i]);
-                model.setPrizeIssueForm(prizeIssueForms[i]);
-                model.setAwardTime(DateUtil.parseDate(awardTimes[i]));
+                model.setPrizeDetail(detailTO.getPrizeDetails());//奖品明细
+                model.setPrizeBuyWay(detailTO.getPrizeBuyWays());//奖品购置途径
+                model.setPrizeIssueForm(detailTO.getPrizeIssueForms());//奖品发放形式
+                model.setAwardTime(DateUtil.parseDate(detailTO.getAwardTimes()));//颁奖时间
                 model.setPrizeApplyId(prizeApplyId);
                 list.add(model);
             }
@@ -164,7 +316,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
-    public void updatePrizeDetails(PrizeApplyTO to) throws SerException {
+    public void updatePrizeDetails(ApplyDetailTO to) throws SerException {
         String prizeApplyId = to.getId();//奖品申请id
         List<PrizeDetail> list = getPrizeDetailsByApplyId(prizeApplyId);
         prizeDetailSer.remove(list);
@@ -192,7 +344,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      */
     @Override
     public List<StaffRewardCollectBO> staffRewardCollect() throws SerException {
-        // TODO: 17-4-14  
+        // TODO: 17-4-14
         return null;
     }
 

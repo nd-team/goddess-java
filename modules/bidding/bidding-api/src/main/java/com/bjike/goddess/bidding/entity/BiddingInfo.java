@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -39,31 +40,47 @@ public class BiddingInfo extends BaseEntity {
      */
     @Column(name = "url", columnDefinition = "VARCHAR(255)   COMMENT '网址'")
     private String url;
+    /**
+     * 年份
+     */
+    @Column(name = "year", columnDefinition = "INT(11)   COMMENT '年份'")
+    private Integer year;
+    /**
+     * 月份
+     */
+    @Column(name = "month", columnDefinition = "INT(11)   COMMENT '月份'")
+    private Integer month;
+
 
     /**
      * 招投标类型
      */
-    @Column(name = "biddingType", columnDefinition = "TINYINT(2)   COMMENT '招投标类型'")
-    private BiddingType biddingType;
+    @Column(name = "biddingType", columnDefinition = "VARCHAR(255)   COMMENT '招投标类型'")
+    private String biddingType;
 
 
     /**
      * 业务类型
      */
-    @Column(name = "businessType", columnDefinition = "TINYINT(2)   COMMENT '业务类型'")
-    private BusinessType businessType;
+    @Column(name = "businessType", columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+    private String businessType;
 
     /**
      * 业务方向科目
      */
     @Column(name = "businessDirectionSubject", columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
     private String businessDirectionSubject;
-
     /**
      * 标书模块
      */
     @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
     private String tenderModule;
+
+    /**
+     * 标书类型
+     */
+    @Column(name = "tenderType", columnDefinition = "VARCHAR(255)   COMMENT '标书类型'")
+    private String tenderType;
 
 
     /**
@@ -73,16 +90,21 @@ public class BiddingInfo extends BaseEntity {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    @Column(name = "registrationTime", columnDefinition = "DATE   COMMENT '报名时间'")
-    private LocalDate registrationTime;
+    @Column(name = "registrationStartTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
+    private LocalDateTime registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    @Column(name = "registrationEndTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
+    private LocalDateTime registrationEndTime;
 
     /**
      * 投标时间
      */
-    @Column(name = "biddingTime", columnDefinition = "DATE   COMMENT '投标时间'")
-    private LocalDate biddingTime;
+    @Column(name = "biddingTime", columnDefinition = "DATETIME   COMMENT '投标时间'")
+    private LocalDateTime biddingTime;
 
     /**
      * 投标资格要求
@@ -130,7 +152,7 @@ public class BiddingInfo extends BaseEntity {
      * 状态
      */
     @Column(columnDefinition = "VARCHAR(255)   COMMENT '状态'")
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
@@ -139,7 +161,7 @@ public class BiddingInfo extends BaseEntity {
     private LocalDate buyTenderTime;
 
     /**
-     * 价格
+     * 标书价格
      */
     @Column(name = "price", columnDefinition = "DECIMAL(10,2)   COMMENT '价格'")
     private Double price;
@@ -155,6 +177,16 @@ public class BiddingInfo extends BaseEntity {
      */
     @Column(name = "marginTime", columnDefinition = "DATE   COMMENT '交保证金时间'")
     private LocalDate marginTime;
+    /**
+     * 保证金金额
+     */
+    @Column(name = "marginPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '保证金金额'")
+    private Double marginPrice;
+    /**
+     * 退回保证金金额
+     */
+    @Column(name = "returnMarginPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '退回保证金金额'")
+    private Double returnMarginPrice;
 
     /**
      * 交保证金方式
@@ -167,12 +199,130 @@ public class BiddingInfo extends BaseEntity {
      */
     @Column(name = "backTimeDeposit", columnDefinition = "DATE   COMMENT '保证金退回时间'")
     private LocalDate backTimeDeposit;
+    /**
+     * 竞争对手数量
+     */
+    @Column(name = "contendNum", columnDefinition = "INT(1)   COMMENT '竞争对手数量'")
+    private Integer contendNum;
+    /**
+     * 是否进行项目测算
+     */
+    @Column(name = "is_projectEstimates", columnDefinition = "TINYINT(1)   COMMENT '是否进行项目测算'")
+    private Boolean projectEstimates;
+    /**
+     * 项目测算是否通过
+     */
+    @Column(name = "is_passProjectEstimates", columnDefinition = "TINYINT(1)   COMMENT '项目测算是否通过'")
+    private Boolean passProjectEstimates;
+    /**
+     * 规模数量
+     */
+    @Column(name = "scale", columnDefinition = "INT(11)   COMMENT '规模数量'")
+    private Integer scale;
+    /**
+     * 是否转为商机
+     */
+    @Column(name = "is_opportunity", columnDefinition = "TINYINT(1)   COMMENT '是否转为商机'")
+    private Boolean opportunity;
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
 
     /**
      * 备注
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+
+    public String getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String tenderType) {
+        this.tenderType = tenderType;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Double getMarginPrice() {
+        return marginPrice;
+    }
+
+    public void setMarginPrice(Double marginPrice) {
+        this.marginPrice = marginPrice;
+    }
+
+    public Double getReturnMarginPrice() {
+        return returnMarginPrice;
+    }
+
+    public void setReturnMarginPrice(Double returnMarginPrice) {
+        this.returnMarginPrice = returnMarginPrice;
+    }
+
+    public Integer getContendNum() {
+        return contendNum;
+    }
+
+    public void setContendNum(Integer contendNum) {
+        this.contendNum = contendNum;
+    }
+
+    public Boolean getProjectEstimates() {
+        return projectEstimates;
+    }
+
+    public void setProjectEstimates(Boolean projectEstimates) {
+        this.projectEstimates = projectEstimates;
+    }
+
+    public Boolean getPassProjectEstimates() {
+        return passProjectEstimates;
+    }
+
+    public void setPassProjectEstimates(Boolean passProjectEstimates) {
+        this.passProjectEstimates = passProjectEstimates;
+    }
+
+    public Integer getScale() {
+        return scale;
+    }
+
+    public void setScale(Integer scale) {
+        this.scale = scale;
+    }
+
+    public Boolean getOpportunity() {
+        return opportunity;
+    }
+
+    public void setOpportunity(Boolean opportunity) {
+        this.opportunity = opportunity;
+    }
 
     public String getBiddingNumber() {
         return biddingNumber;
@@ -198,19 +348,19 @@ public class BiddingInfo extends BaseEntity {
         this.url = url;
     }
 
-    public BiddingType getBiddingType() {
+    public String getBiddingType() {
         return biddingType;
     }
 
-    public void setBiddingType(BiddingType biddingType) {
+    public void setBiddingType(String biddingType) {
         this.biddingType = biddingType;
     }
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(BusinessType businessType) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
 
@@ -239,19 +389,27 @@ public class BiddingInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDate getRegistrationTime() {
-        return registrationTime;
+    public LocalDateTime getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(LocalDate registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(LocalDateTime registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
     }
 
-    public LocalDate getBiddingTime() {
+    public LocalDateTime getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(LocalDateTime registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
+    }
+
+    public LocalDateTime getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDate biddingTime) {
+    public void setBiddingTime(LocalDateTime biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -311,11 +469,11 @@ public class BiddingInfo extends BaseEntity {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -67,6 +67,12 @@ public class User extends BaseEntity {
     private String employeeNumber;
 
     /**
+     * 企业/团体名称
+     */
+    @Column(unique = true,  columnDefinition = "VARCHAR(255) COMMENT '企业/团体名称'")
+    private String enterpriseName;
+
+    /*
      * 用户状态
      */
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户状态'", nullable = false)
@@ -77,6 +83,29 @@ public class User extends BaseEntity {
      */
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户类型' ", nullable = false)
     private UserType userType;
+
+    /**
+     * 用户积分；
+     */
+    @Column(name = "integral", columnDefinition = "VARCHAR(255)   COMMENT '用户积分；'")
+    private String integral;
+
+    /**
+     * 父级ID.
+     *      对应 systemNO
+     *      如果为母公司，该字段为null
+     *      如果为子公司，该字段为母公司的systemNO
+     */
+    @Column(columnDefinition = "VARCHAR(12) COMMENT '父级ID' ")
+    private String fatherId;
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
 
     public String getSystemNO() {
         return systemNO;
@@ -142,6 +171,14 @@ public class User extends BaseEntity {
         this.status = status;
     }
 
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
     public String getEmployeeNumber() {
         return employeeNumber;
     }
@@ -156,5 +193,13 @@ public class User extends BaseEntity {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
     }
 }

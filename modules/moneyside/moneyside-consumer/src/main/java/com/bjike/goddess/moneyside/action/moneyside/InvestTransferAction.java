@@ -14,6 +14,7 @@ import com.bjike.goddess.moneyside.bo.InvestFormBO;
 import com.bjike.goddess.moneyside.bo.InvestTransferBO;
 import com.bjike.goddess.moneyside.dto.InvestFormDTO;
 import com.bjike.goddess.moneyside.dto.InvestTransferDTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestFormTO;
 import com.bjike.goddess.moneyside.to.InvestTransferTO;
 import com.bjike.goddess.moneyside.to.MoneySideDeleteFileTO;
@@ -22,6 +23,8 @@ import com.bjike.goddess.moneyside.vo.InvestTransferVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -49,6 +52,28 @@ public class InvestTransferAction extends BaseFileAction{
     private InvestTransferAPI investTransferAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = investTransferAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 投资转让列表总条数
      *
@@ -243,6 +268,25 @@ public class InvestTransferAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(), moneySideDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 查询所有投资转让人
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/user")
+    public Result findUser() throws ActException{
+        try {
+            List<UserBO> bos = investTransferAPI.findUserListInOrgan();
+            List<UserVO> vos = BeanTransform.copyProperties(bos,UserVO.class);
+            return ActResult.initialize(vos);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 

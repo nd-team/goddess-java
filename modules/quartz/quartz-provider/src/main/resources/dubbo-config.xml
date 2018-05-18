@@ -1,27 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/context
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
           http://code.alibabatech.com/schema/dubbo 
 		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<context:property-placeholder location="classpath:dubbo.properties"/>
+    <context:property-placeholder location="classpath:dubbo.properties"/>
 
-	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
-	<dubbo:consumer check="false" timeout="15000" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
-	<dubbo:registry address="${dubbo.registry.address}" />
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}" filter="userFilter"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
 
-	<!--发布接口,供其他模块调用-->
-	<dubbo:service  ref="scheduleJobApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobAPI" />
-	<dubbo:service  ref="scheduleJobGroupApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI" />
+    <!--发布接口,供其他模块调用-->
+    <dubbo:service ref="scheduleJobApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobAPI"/>
+    <dubbo:service ref="scheduleJobGroupApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI"/>
 
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>-->
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" id="collectEmailAPI"/>-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+
+
+    <!-- 薪资确认-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI"
+                     id="salaryConfirmAPI"/>
+
+    <!-- 客户信息-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>
+    <!-- 商务合同-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI"
+                     id="businessprojectEmail"/>
+    <!-- 招投标-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.bidding.api.CollectEmailAPI"
+                     id="collectEmailApiImpl"/>
+    <!-- 商业能力-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.capability.api.CollectEmailAPI"
+                     id="capabilityEmailApiImpl"/>
+    <!-- 商务洽谈-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contractcommunicat.api.ContractCollectEmailAPI"
+                     id="contractCollectEmailApiImpl"/>
+    <!-- 社保管理-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.BeforeAddAPI" id="beforeAddApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI"
+                     id="beforeRemoveEmployeeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.AttachedEndAPI" id="attachedEndApiImpl"/>
+    <!-- 商务评估-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI"
+                     id="businessEvaluateEmailApiImpl"/>
+    <!-- 市场活动-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeSummaryAPI"
+                     id="marketServeSummaryEmailApiImpl"/>
+    <!-- 竞争对手-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI"
+                     id="competitormanageEmailApiImpl"/>
+
+    <!-- 组织结构-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.EmailAPI"
+                     id="emailApiImpl"/>
+    <!-- 物资汇总-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.SendEmailAPI" id="sendEmailApiImpl"/>
+	<!--待办事件-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+
+	<!-- 出车费准备与支付 -->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.MoneyReadyAPI" id="moneyReadyApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.WaitPayAPI" id="waitPayApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" id="confirmCountEmailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" id="finishCountEmailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" id="taskRemindApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" id="timeSetApiImpl"/>
+    <!-- 租车协议-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" id="carSendEmailApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.PhoneRemindAPI" id="phoneRemindApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.CaseCountSetAPI" id="caseCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.DayCountSetAPI" id="dayCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.FinanceSetAPI" id="financeSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.OverWorkCountSetAPI" id="overWorkCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.VacateCountSetAPI" id="vacateCountSetApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CollectSchemeAPI" id="collectSchemeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.managementpromotion.api.PromotionApplyAPI" id="promotionApplyApiImpl"/>
 
 </beans>

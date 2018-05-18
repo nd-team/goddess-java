@@ -18,60 +18,57 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class InterviewInforTO extends BaseTO {
-
     /**
-     * 电访日期
+     * 日期
      */
     private String date;
 
     /**
-     * 姓名
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
-    private String name;
-
-    /**
      * 简历来源
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "简历来源不能为空")
     private String resumeResource;
-
     /**
-     * 应聘岗位
+     * 岗位
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘岗位不能为空")
     private String position;
-
-    /**
-     * 应聘部门
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘部门不能为空")
-    private String department;
-
     /**
      * 应聘地区
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘地区不能为空")
     private String area;
+
+    /**
+     * 应聘部门/项目组
+     */
+    private String department;
+
+    /**
+     * 姓名
+     */
+    private String name;
 
     /**
      * 性别
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
     private Gender gender;
 
     /**
-     * 联系电话
+     * 联系方式
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
     private String phone;
+    /**
+     * 简历筛选是否通过
+     */
+    private Boolean whetherPass;
 
     /**
      * 电子邮箱
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "电子邮箱不能为空")
     private String email;
 
+    /**
+     * 是否有相关工作经验
+     */
+    private Boolean workingExperience;
     /**
      * 第一次电访了解到的情况
      */
@@ -83,24 +80,29 @@ public class InterviewInforTO extends BaseTO {
     private Boolean whetherFirstQuestionCorrect;
 
     /**
-     * 初试时间
+     * 邀约初试时间
      */
     private String firstTestTime;
-
-    /**
-     * 初试是否是面试
-     */
-    private Boolean whetherFaceTest;
-
     /**
      * 初试负责人
      */
     private String firstTestPrincipal;
-
+    /**
+     * 初试地点
+     */
+    private String firstPlace;
     /**
      * 初试意见
      */
     private String firstTestAdvice;
+    /**
+     * 是否初试
+     */
+    private Boolean whetherFaceTest;
+    /**
+     * 未应约初试原因
+     */
+    private String notFirstCase;
 
     /**
      * 初试是否通过
@@ -141,46 +143,41 @@ public class InterviewInforTO extends BaseTO {
      * 薪资面谈负责人
      */
     private String salaryFacePrincipal;
-
     /**
-     * 是否已进行薪资面谈
+     * 面谈意见
      */
-    private Boolean whetherSalaryFace;
-
+    private String faceAdvice;
     /**
-     * 薪资面谈情况
+     * 总经办
      */
-    private String salaryFaceSituation;
+    private String boss;
 
     /**
-     * 总经办审核是否录取
-     */
-    private Boolean whetherPassBoss;
-
-    /**
-     * 总经办审批意见
+     * 总经办意见
      */
     private String bossAdvice;
+    /**
+     * 是否同意录用
+     */
+    private Boolean agreedEmployed;
+
+    /**
+     * 审批时间
+     */
+    private String auditTime;
 
     /**
      * 是否接受录取
      */
     private Boolean whetherAcceptAdmit;
-
-    /**
-     * 联络人
-     */
-    private String contactPerson;
-
-    /**
-     * 入职报道地址
-     */
-    private String entryAddress;
-
     /**
      * 未接受录取原因
      */
     private String denyAdmitReason;
+    /**
+     * 入职时间
+     */
+    private String entryTime;
 
     /**
      * 是否住宿
@@ -190,8 +187,12 @@ public class InterviewInforTO extends BaseTO {
     /**
      * 是否使用公司电脑
      */
-    private Boolean whetherUseFirmPC;
 
+    private Boolean whetherUseFirmPC;
+    /**
+     * 入职地址
+     */
+    private String entryAddress;
     /**
      * 是否入职
      */
@@ -201,21 +202,10 @@ public class InterviewInforTO extends BaseTO {
      * 未入职原因
      */
     private String denyEntryReason;
-
-    /**
-     * 入职时间
-     */
-    private String entryTime;
-
     /**
      * 备注
      */
     private String comment;
-
-    /**
-     * 是否服从调动安排
-     */
-    private Boolean whetherObeyTransfer;
 
     public String getDate() {
         return date;
@@ -223,14 +213,6 @@ public class InterviewInforTO extends BaseTO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getResumeResource() {
@@ -249,6 +231,14 @@ public class InterviewInforTO extends BaseTO {
         this.position = position;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getDepartment() {
         return department;
     }
@@ -257,12 +247,12 @@ public class InterviewInforTO extends BaseTO {
         this.department = department;
     }
 
-    public String getArea() {
-        return area;
+    public String getName() {
+        return name;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Gender getGender() {
@@ -281,12 +271,28 @@ public class InterviewInforTO extends BaseTO {
         this.phone = phone;
     }
 
+    public Boolean getWhetherPass() {
+        return whetherPass;
+    }
+
+    public void setWhetherPass(Boolean whetherPass) {
+        this.whetherPass = whetherPass;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getWorkingExperience() {
+        return workingExperience;
+    }
+
+    public void setWorkingExperience(Boolean workingExperience) {
+        this.workingExperience = workingExperience;
     }
 
     public String getFirstPhoneSituation() {
@@ -313,14 +319,6 @@ public class InterviewInforTO extends BaseTO {
         this.firstTestTime = firstTestTime;
     }
 
-    public Boolean getWhetherFaceTest() {
-        return whetherFaceTest;
-    }
-
-    public void setWhetherFaceTest(Boolean whetherFaceTest) {
-        this.whetherFaceTest = whetherFaceTest;
-    }
-
     public String getFirstTestPrincipal() {
         return firstTestPrincipal;
     }
@@ -329,12 +327,36 @@ public class InterviewInforTO extends BaseTO {
         this.firstTestPrincipal = firstTestPrincipal;
     }
 
+    public String getFirstPlace() {
+        return firstPlace;
+    }
+
+    public void setFirstPlace(String firstPlace) {
+        this.firstPlace = firstPlace;
+    }
+
     public String getFirstTestAdvice() {
         return firstTestAdvice;
     }
 
     public void setFirstTestAdvice(String firstTestAdvice) {
         this.firstTestAdvice = firstTestAdvice;
+    }
+
+    public Boolean getWhetherFaceTest() {
+        return whetherFaceTest;
+    }
+
+    public void setWhetherFaceTest(Boolean whetherFaceTest) {
+        this.whetherFaceTest = whetherFaceTest;
+    }
+
+    public String getNotFirstCase() {
+        return notFirstCase;
+    }
+
+    public void setNotFirstCase(String notFirstCase) {
+        this.notFirstCase = notFirstCase;
     }
 
     public Boolean getWhetherFirstTestPass() {
@@ -401,28 +423,20 @@ public class InterviewInforTO extends BaseTO {
         this.salaryFacePrincipal = salaryFacePrincipal;
     }
 
-    public Boolean getWhetherSalaryFace() {
-        return whetherSalaryFace;
+    public String getFaceAdvice() {
+        return faceAdvice;
     }
 
-    public void setWhetherSalaryFace(Boolean whetherSalaryFace) {
-        this.whetherSalaryFace = whetherSalaryFace;
+    public void setFaceAdvice(String faceAdvice) {
+        this.faceAdvice = faceAdvice;
     }
 
-    public String getSalaryFaceSituation() {
-        return salaryFaceSituation;
+    public String getBoss() {
+        return boss;
     }
 
-    public void setSalaryFaceSituation(String salaryFaceSituation) {
-        this.salaryFaceSituation = salaryFaceSituation;
-    }
-
-    public Boolean getWhetherPassBoss() {
-        return whetherPassBoss;
-    }
-
-    public void setWhetherPassBoss(Boolean whetherPassBoss) {
-        this.whetherPassBoss = whetherPassBoss;
+    public void setBoss(String boss) {
+        this.boss = boss;
     }
 
     public String getBossAdvice() {
@@ -433,6 +447,22 @@ public class InterviewInforTO extends BaseTO {
         this.bossAdvice = bossAdvice;
     }
 
+    public Boolean getAgreedEmployed() {
+        return agreedEmployed;
+    }
+
+    public void setAgreedEmployed(Boolean agreedEmployed) {
+        this.agreedEmployed = agreedEmployed;
+    }
+
+    public String getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(String auditTime) {
+        this.auditTime = auditTime;
+    }
+
     public Boolean getWhetherAcceptAdmit() {
         return whetherAcceptAdmit;
     }
@@ -441,28 +471,20 @@ public class InterviewInforTO extends BaseTO {
         this.whetherAcceptAdmit = whetherAcceptAdmit;
     }
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
-
-    public String getEntryAddress() {
-        return entryAddress;
-    }
-
-    public void setEntryAddress(String entryAddress) {
-        this.entryAddress = entryAddress;
-    }
-
     public String getDenyAdmitReason() {
         return denyAdmitReason;
     }
 
     public void setDenyAdmitReason(String denyAdmitReason) {
         this.denyAdmitReason = denyAdmitReason;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
     }
 
     public Boolean getWhetherAccommodation() {
@@ -481,6 +503,14 @@ public class InterviewInforTO extends BaseTO {
         this.whetherUseFirmPC = whetherUseFirmPC;
     }
 
+    public String getEntryAddress() {
+        return entryAddress;
+    }
+
+    public void setEntryAddress(String entryAddress) {
+        this.entryAddress = entryAddress;
+    }
+
     public Boolean getWhetherEntry() {
         return whetherEntry;
     }
@@ -497,27 +527,11 @@ public class InterviewInforTO extends BaseTO {
         this.denyEntryReason = denyEntryReason;
     }
 
-    public String getEntryTime() {
-        return entryTime;
-    }
-
-    public void setEntryTime(String entryTime) {
-        this.entryTime = entryTime;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Boolean getWhetherObeyTransfer() {
-        return whetherObeyTransfer;
-    }
-
-    public void setWhetherObeyTransfer(Boolean whetherObeyTransfer) {
-        this.whetherObeyTransfer = whetherObeyTransfer;
     }
 }

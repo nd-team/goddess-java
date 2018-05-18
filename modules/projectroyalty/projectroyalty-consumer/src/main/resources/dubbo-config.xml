@@ -29,5 +29,29 @@
                      id="targetAuotaApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.WeightAllocationAPI"
                      id="weightAllocationApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.WeightalAPI"
+                     id="weightalApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.WeightalsAPI"
+                     id="weightalsApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"
+                     id="userSetPermissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.CusPermissionAPI"
+                     id="cusPermissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"
+                     id="departmentDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI"
+                     id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.rbac.PermissionAPI"
+                     id="permissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.ProjectFactorsAPI"
+                     id="projectFactorsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI"
+                     id="moduleApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.SiginManageAPI"
+                     id="siginManageApiImpl"/>
+
 
 </beans>

@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
+import com.bjike.goddess.competitormanage.bo.CompetitorCollectsBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
@@ -109,6 +110,13 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 model.setOperateUser(userAPI.currentUser().getUsername());
+                String[] sendUsers = to.getSendUsers();
+                String sendUser = new String();
+                for (String user : sendUsers) {
+                    sendUser = user + ";" + sendUser;
+                }
+                sendUser = sendUser.substring(0, sendUser.length() - 1);
+                model.setSendUser(sendUser);
                 super.update(model);
             } else {
                 throw new SerException("更新对象不能为空!");
@@ -195,6 +203,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
             CollectionTotalBO bo = new CollectionTotalBO();
             bo.setArea(competitor.getArea());
 
+            Long areaCompetitor = 0l;
             Long areaCommunicate = 0l;
             Long areaSoftware = 0l;
             Long areaMarketingplan = 0l;
@@ -206,6 +215,8 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
 
             for (Competitor model : list) {
                 if (competitor.getArea().equals(model.getArea())) {
+                    //竞争对手名称--zhuangkaiqin
+                    areaCompetitor++;
 
                     if (model.getBusinessType() == BusinessType.COMMUNICATE) {
                         areaCommunicate++;
@@ -225,6 +236,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
                         areaFood++;
                     }
                 }
+                bo.setCompetitor(areaCompetitor);
                 bo.setCommunicate(areaCommunicate);
                 bo.setSoftware(areaSoftware);
                 bo.setMarketingplan(areaMarketingplan);
@@ -238,6 +250,8 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         }
 
         if (!returnList.isEmpty()) {
+            //zhuangkaiqin
+            Long toalCompetitor = returnList.stream().filter(p -> null != p.getCompetitor()).mapToLong(p -> p.getCompetitor()).sum();
 
             Long toalCommunicate = returnList.stream().filter(p -> null != p.getCommunicate()).mapToLong(p -> p.getCommunicate()).sum();
             Long toalSoftware = returnList.stream().filter(p -> null != p.getSoftware()).mapToLong(p -> p.getSoftware()).sum();
@@ -248,11 +262,11 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
             Long toalFinancial = returnList.stream().filter(p -> null != p.getFinancial()).mapToLong(p -> p.getFinancial()).sum();
             Long toalFood = returnList.stream().filter(p -> null != p.getFood()).mapToLong(p -> p.getFood()).sum();
 
-            CollectionTotalBO totalBO = new CollectionTotalBO("合计", toalCommunicate, toalSoftware, toalMarketingplan, toalIntelligentize,
+            CollectionTotalBO totalBO = new CollectionTotalBO("合计", toalCompetitor, toalCommunicate, toalSoftware, toalMarketingplan, toalIntelligentize,
                     toalElectroniccommerce, toalRealty, toalFinancial, toalFood);
             returnList.add(totalBO);
         } else {
-            CollectionTotalBO totalBO = new CollectionTotalBO("合计", 0l, 0l, 0l, 0l,
+            CollectionTotalBO totalBO = new CollectionTotalBO("合计", 0l, 0l, 0l, 0l, 0l,
                     0l, 0l, 0l, 0l);
             returnList.add(totalBO);
         }
@@ -270,6 +284,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         //遍历所有未冻结汇总定时器,
         for (CompetitorCollect model : list) {
             validate(model);
+            model.setLastSendTime(LocalDateTime.now());
         }
     }
 
@@ -480,25 +495,83 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
             }
             //结束
             sb.append("</table>");
+        }else{
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            sb.append("<tr>");
+
+            sb.append("<td>地区</td>");
+            sb.append("<td>通讯类</td>");
+            sb.append("<td>软件类</td>");
+            sb.append("<td>营销策划类</td>");
+            sb.append("<td>智能化类</td>");
+            sb.append("<td>电子商务类</td>");
+            sb.append("<td>房地产类</td>");
+            sb.append("<td>理财类</td>");
+            sb.append("<td>食品类</td>");
+
+            sb.append("<tr>");
+            //结束
+            sb.append("</table>");
         }
         return sb.toString();
     }
 
+    //zhuangkaiqin
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
+    public List<CompetitorCollectsBO> pageList(CompetitorCollectDTO dto) throws SerException {
         getCusPermission();
         dto.getSorts().add("createTime=desc");
         List<CompetitorCollect> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, CompetitorCollectBO.class);
+        List<CompetitorCollectsBO> competitorCollectsBOs = new ArrayList<>();
+        if (null != list && list.size() > 0) {
+            List<CompetitorCollectBO> competitorCollectBOs = BeanTransform.copyProperties(list, CompetitorCollectBO.class);
+            competitorCollectsBOs = BeanTransform.copyProperties(competitorCollectBOs, CompetitorCollectsBO.class, "sendIntervalType", "sendInterval");
+            for (CompetitorCollectsBO bo : competitorCollectsBOs) {
+                for (CompetitorCollectBO module : competitorCollectBOs) {
+                    if (module.getId().equals(bo.getId())) {
+                        bo.setSendInterval(module.getSendInterval().toString() + getStringType(module));
+                    }
+                }
+            }
+        }
+        return competitorCollectsBOs;
     }
 
     public void getCusPermission() throws SerException {
-
+        //zhuangkaiqin
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ("admin".equals(userBO.getUsername())) {
+            permission = true;
+        }
 
         if (!permission) {
             throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无没有权限");
         }
+    }
+
+    //zhuangkaiqin
+    private String getStringType(CompetitorCollectBO module) throws SerException {
+        String field = "";
+        if (module.getSendIntervalType() == SendIntervalType.MINUTE) {
+            field = "分钟";
+        } else if (module.getSendIntervalType() == SendIntervalType.HOUR) {
+            field = "小时";
+        } else if (module.getSendIntervalType() == SendIntervalType.DAY) {
+            field = "天";
+        } else if (module.getSendIntervalType() == SendIntervalType.WEEK) {
+            field = "周";
+        } else if (module.getSendIntervalType() == SendIntervalType.MONTH) {
+            field = "月";
+        } else if (module.getSendIntervalType() == SendIntervalType.QUARTER) {
+            field = "季度";
+        } else if (module.getSendIntervalType() == SendIntervalType.YEAR) {
+            field = "年";
+        }
+        return field;
     }
 }

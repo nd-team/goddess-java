@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
@@ -20,6 +21,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 import com.bjike.goddess.marketactivitymanage.type.CycleType;
 import com.bjike.goddess.marketactivitymanage.type.GuideAddrStatus;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -102,16 +104,81 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     /**
-     * 核对审核权限（模块级别）
+     * 核对审核权限(运营商务部)
+     *
+     * @throws SerException
      */
-    private Boolean guideAuditMIdentity() throws SerException {
+    private void checkBusinPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是运营商务部人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对审核权限(层次)
+     *
+     * @throws SerException
+     */
+    private void checkAuditAPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是决策层人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideBusinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
@@ -135,39 +202,22 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         return flag;
     }
 
-    /**
-     * 导航检查权限
-     *
-     * @throws SerException
-     */
-    private Boolean guildPermission() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag =  cusPermissionSer.busCusPermission("1");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSummSeeSign = guildPermission();
+        Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSummMISign = guideAuditMIdentity();
-        Boolean flagSummAISign = guideAuditAIdentity();
+        Boolean flagAuditA = guideAuditAIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditB = guideBusinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("marketservesummary");
         obj.setDescribesion("市场活动招待记录汇总及发送邮件");
-        if (flagSummSeeSign || flagSummMISign || flagSummAISign) {
+        if (flagSee || flagAuditA || flagAuditB) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -212,46 +262,46 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case ADD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case EDIT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case DELETE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case CONGEL:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case THAW:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case COLLECT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case UPLOAD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case DOWNLOAD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case IMPORT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case EXPORT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case SEE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case SEEFILE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideBusinIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -291,11 +341,32 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Transactional(rollbackFor = SerException.class)
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
         checkPermission();
+        if (to.getSendInterval() < 0) {
+            throw new SerException("发送间隔不能小于0");
+        }
+        if (to.getSendInterval() < 30 && to.getCycle().equals(CycleType.MINUTE)) {
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if (to.getSendInterval() > to.getSendInterval().longValue() && to.getSendInterval() < (to.getSendInterval().longValue() + 1)) {
+            throw new SerException("发送间隔不能为小数");
+        }
+
+        String[] sendObject = to.getEmails();
+        StringBuffer emails = new StringBuffer("");
+        if (sendObject != null && sendObject.length > 0) {
+            for (String emailStr : sendObject) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱书写不正确");
+                }
+                emails.append(emailStr + ",");
+            }
+        }
         String sb = getProjectGroup(to);
         String curUsername = userAPI.currentUser().getUsername();
         MarketServeSummary marketServeSummary = BeanTransform.copyProperties(to, MarketServeSummary.class, true, "emails");
         marketServeSummary.setStatus(Status.THAW);
-        marketServeSummary.setEmails(StringUtils.join(to.getEmails(), ","));
+        marketServeSummary.setEmails(emails.toString());
         marketServeSummary.setCreateUser(curUsername);
         marketServeSummary.setProjectGroups(sb);
         marketServeSummary.setUpdateTime(LocalDateTime.now());
@@ -305,12 +376,11 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         return bo;
     }
 
-    private String getProjectGroup(MarketServeSummaryTO to) {
+    private String getProjectGroup(MarketServeSummaryTO to) throws SerException{
         String[] projectGroups = to.getProjects();
         boolean projectGroupNotEmpty = (projectGroups != null) && (projectGroups.length > 0);
         StringBuilder sb = new StringBuilder();
         if (projectGroupNotEmpty) {
-
             for (int i = 0; i < projectGroups.length; i++) {
                 if (i < projectGroups.length - 1) {
                     sb.append(projectGroups[i]).append(",");
@@ -353,8 +423,29 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     private void updateMarketServeSummary(MarketServeSummaryTO to, MarketServeSummary model) throws SerException {
+        if (to.getSendInterval() < 0) {
+            throw new SerException("发送间隔不能小于0");
+        }
+        if (to.getSendInterval() < 30 && to.getCycle().equals(CycleType.MINUTE)) {
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if (to.getSendInterval() > to.getSendInterval().longValue() && to.getSendInterval() < (to.getSendInterval().longValue() + 1)) {
+            throw new SerException("发送间隔不能为小数");
+        }
+        String[] sendObject = to.getEmails();
+        StringBuffer emails = new StringBuffer("");
+        if (sendObject != null && sendObject.length > 0) {
+            for (String emailStr : sendObject) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱书写不正确");
+                }
+                emails.append(emailStr + ",");
+            }
+        }
         String sb = getProjectGroup(to);
-        BeanTransform.copyProperties(to, model, true);
+        BeanTransform.copyProperties(to, model, true,"emails");
+        model.setEmails(emails.toString());
         model.setModifyTime(LocalDateTime.now());
         model.setProjectGroups(sb);
         model.setUpdateTime(LocalDateTime.now());
@@ -396,23 +487,38 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待汇总
      *
-     * @param type            汇总类型
-     * @param projectGroups   部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString   结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
     @Override
-    public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
-        //checkPermission();
-        if(type==null){
+    public List<ServeSummaryBO> summarize(SummaryTO summaryTO) throws SerException {
+        checkPermission();
+        if(summaryTO.getType()==null){
             throw new SerException("汇总类型不能为空");
         }else {
-            if (type) {
-                return summarizePlan(projectGroups, startTimeString, endTimeString);
+            if (summaryTO.getType()) {
+                return summarizePlan(summaryTO);
             } else {
-                return summarizeActual(projectGroups, startTimeString, endTimeString);
+                return summarizeActual(summaryTO);
+            }
+        }
+    }
+/**
+     * 市场招待汇总
+     *
+     * @param summaryTO
+     * @return class MarketServeSummaryVO
+     * @throws SerException
+     */
+    private List<ServeSummaryBO> summarize2(SummaryTO summaryTO) throws SerException {
+        if(summaryTO.getType()==null){
+            throw new SerException("汇总类型不能为空");
+        }else {
+            if (summaryTO.getType()) {
+                return summarizePlan(summaryTO);
+            } else {
+                return summarizeActual(summaryTO);
             }
         }
     }
@@ -420,30 +526,28 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待记录汇总
      *
-     * @param projectGroups
-     * @param startTimeString
-     * @param endTimeString
+     * @param summaryTO
      * @return
      * @throws SerException
      */
-    private List<ServeSummaryBO> summarizeActual(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    private List<ServeSummaryBO> summarizeActual(SummaryTO summaryTO) throws SerException {
         LocalDateTime[] actualActivityTiming = null;
-        if (StringUtils.isNotBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)) {
-            LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
-            LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
+        if (StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())) {
+            LocalDateTime startTime = DateUtil.parseDateTime(summaryTO.getStartTimeString());//起始时间
+            LocalDateTime endTime = DateUtil.parseDateTime(summaryTO.getEndTimeString());//结束时间
             actualActivityTiming = new LocalDateTime[]{startTime, endTime};
-        }else if(StringUtils.isNotBlank(startTimeString) && StringUtils.isBlank(endTimeString)){
+        }else if(StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
-        }else if(StringUtils.isBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)){
+        }else if(StringUtils.isBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
         }
-        if(projectGroups==null || projectGroups.length<=0){
-            throw new SerException("项目组不能为空");
+        if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
+            throw new SerException("项目名称不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 
             //按照项目组查询
-            for (String projectGroup : projectGroups) {
+            for (String projectGroup : summaryTO.getProjectGroups()) {
                 MarketServeRecordDTO dto = new MarketServeRecordDTO();
                 dto.getConditions().add(Restrict.eq("projectName", projectGroup));
                 if (actualActivityTiming != null) {
@@ -458,7 +562,10 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     //遍历集合查询
                     for (MarketServeRecord obj : marketServeRecordList) {
                         String clientName = getClientName(obj);
-                        String actualActivityTimingStr = obj.getActualActivityTiming().toString().replace("T", " ").substring(0, 19);
+                        String actualActivityTimingStr = "";
+                        if(obj.getActualActivityTiming()!=null){
+                            actualActivityTimingStr = obj.getActualActivityTiming().toString().replace("T", " ");
+                        }
                         String whetherTemporaryServe = getWhetherTemporaryServe(obj);
 
                         ServeSummaryBO serveSummaryBO = new ServeSummaryBO();
@@ -724,33 +831,32 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         return clientNameString;
     }
 
+
     /**
      * 市场招待记录申请汇总
      *
-     * @param projectGroups
-     * @param startTimeString
-     * @param endTimeString
+     * @param summaryTO
      * @return
      * @throws SerException
      */
-    private List<ServeSummaryBO> summarizePlan(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    private List<ServeSummaryBO> summarizePlan(SummaryTO summaryTO) throws SerException {
         LocalDateTime[] planActivityTiming = null;
-        if (StringUtils.isNotBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)) {
-            LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
-            LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
+        if (StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())) {
+            LocalDateTime startTime =  LocalDateTime.parse(summaryTO.getStartTimeString());//起始时间
+            LocalDateTime endTime =  LocalDateTime.parse(summaryTO.getEndTimeString());//结束时间
             planActivityTiming = new LocalDateTime[]{startTime, endTime};
-        }else if(StringUtils.isNotBlank(startTimeString) && StringUtils.isBlank(endTimeString)){
+        }else if(StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
-        }else if(StringUtils.isBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)){
+        }else if(StringUtils.isBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
         }
-        if(projectGroups==null || projectGroups.length<=0){
-            throw new SerException("项目组不能为空");
+        if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
+            throw new SerException("项目名称不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 
         //按照项目组查询
-        for (String projectGroup : projectGroups) {
+        for (String projectGroup : summaryTO.getProjectGroups()) {
             MarketServeApplyDTO dto = new MarketServeApplyDTO();
             dto.getConditions().add(Restrict.eq("projectName", projectGroup));
             if (planActivityTiming != null) {
@@ -766,7 +872,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 //遍历查询集合
                 for (MarketServeApply obj : marketServeApplyList) {
                     String clientName = getClientName(obj);
-                    String planActivityTimingStr = obj.getPlanActivityTiming().toString().replace("T", " ").substring(0, 19);
+                    String planActivityTimingStr = obj.getPlanActivityTiming().toString().replace("T", " ");
                     String whetherTemporaryServe = getWhetherTemporaryServe(obj);
 
                     ServeSummaryBO serveSummaryBO = new ServeSummaryBO();
@@ -1102,46 +1208,54 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
+
                     }
                     break;
                 case HOUR:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
             }
@@ -1160,23 +1274,23 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
 
     private String htmlSummary(List<ServeSummaryBO> summaryBOList) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if (summaryBOList != null && summaryBOList.size() > 0) {
-            sb = new StringBuffer("<h4>市场活动汇总:</h4>");
-            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
-            //拼表头
-            ServeSummaryBO title = summaryBOList.get(summaryBOList.size() - 1);
-            sb.append("<tr>");
-            sb.append("<td>项目名称</td>");
-            sb.append("<td>地区</td>");
-            sb.append("<td>招待负责人</td>");
-            sb.append("<td>客户姓名</td>");
-            sb.append("<td>计划/实际活动类型</td>");
-            sb.append("<td>计划/实际活动时间点</td>");
-            sb.append("<td>否临时招待</td>");
-            sb.append("<td>参加人数</td>");
-            sb.append("<td>费用</td>");
+        sb = new StringBuffer("<h4>市场活动汇总:</h4>");
+        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+        //拼表头
+//        ServeSummaryBO title = summaryBOList.get(summaryBOList.size() - 1);
+        sb.append("<tr>");
+        sb.append("<td>项目名称</td>");
+        sb.append("<td>地区</td>");
+        sb.append("<td>招待负责人</td>");
+        sb.append("<td>客户姓名</td>");
+        sb.append("<td>计划/实际活动类型</td>");
+        sb.append("<td>计划/实际活动时间点</td>");
+        sb.append("<td>否临时招待</td>");
+        sb.append("<td>参加人数</td>");
+        sb.append("<td>费用</td>");
 
-            sb.append("<tr>");
+        sb.append("</tr>");
+        if (summaryBOList != null && summaryBOList.size() > 0) {
 
             //拼body部分
             for (ServeSummaryBO bo : summaryBOList) {
@@ -1191,18 +1305,30 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 sb.append("<td>" + bo.getAttendPeopleNo() + "</td>");
                 sb.append("<td>" + bo.getCharge() + "</td>");
 
-                sb.append("<tr>");
+                sb.append("</tr>");
             }
 
-            //结束
-            sb.append("</table>");
+        }else{
+            sb.append("<tr>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+
+            sb.append("</tr>");
         }
+        //结束
+        sb.append("</table>");
         return sb.toString();
     }
 
 
     private List<MarketServeSummary> sendObject(List<MarketServeSummary> summaryEmails) throws SerException {
-        String userToken = RpcTransmit.getUserToken();
         List<MarketServeSummary> allEmails = new ArrayList<>();
         //市场活动汇总
 
@@ -1213,23 +1339,21 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 String projectName = sign.getProjectGroups();
                 String[] condis = projectName.split(",");
                 //处理汇总间隔
-                /*Integer collectTime = sign.getDetailInterval();//汇总间隔数
-                CyclePerType cyclePerType = sign.getDetailCycle();//汇总间隔单位　年
-                switch (cyclePerType){
-                    case DAY:
-                }
-                int year  = LocalDate.now().getYear();
-                DateTimeFormatter fotmatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                startTime = String.valueOf(LocalDate.parse( year+"-01-01", fotmatter));
-                endTime = String.valueOf(LocalDate.now());*/
                 String startTime ="";
                 String endTime ="";
                 if(sign.getStartTime()!=null && sign.getEndTime()!=null){
-                    startTime = String.valueOf(sign.getStartTime()).replace("T", " ").substring(0, 19);
-                    endTime = String.valueOf(sign.getEndTime()).replace("T", " ").substring(0, 19);
+//                    startTime = String.valueOf(sign.getStartTime()).replace("T", " ").substring(0, 19);
+//                    endTime = String.valueOf(sign.getEndTime()).replace("T", " ").substring(0, 19);
+                    startTime = String.valueOf(sign.getStartTime());
+                    endTime = String.valueOf(sign.getEndTime());
                 }
+                SummaryTO summaryTO = new SummaryTO();
+                summaryTO.setType(type);
+                summaryTO.setProjectGroups(condis);
+                summaryTO.setStartTimeString(startTime);
+                summaryTO.setEndTimeString(endTime);
 
-                List<ServeSummaryBO> measureBOList = marketServeSummarySer.summarize(type, condis, startTime, endTime);
+                List<ServeSummaryBO> measureBOList = summarize2(summaryTO);
                 //拼表格
                 String content = htmlSummary(measureBOList);
 

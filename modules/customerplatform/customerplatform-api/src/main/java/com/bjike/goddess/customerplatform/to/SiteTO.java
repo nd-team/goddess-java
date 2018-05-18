@@ -1,0 +1,246 @@
+package com.bjike.goddess.customerplatform.to;
+
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+/**
+ * 站点
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-12-30 11:29 ]
+ * @Description: [ 站点 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class SiteTO extends BaseTO {
+
+    /**
+     * 站点名称
+     */
+    @NotBlank(message = "站点名称不能为空", groups = {ADD.class, EDIT.class})
+    private String siteName;
+    /**
+     * 省份
+     */
+    @NotBlank(message = "省份不能为空", groups = {ADD.class, EDIT.class})
+    private String provinces;
+    /**
+     * 市
+     */
+    @NotBlank(message = "市不能为空", groups = {ADD.class, EDIT.class})
+    private String city;
+    /**
+     * 区
+     */
+    @NotBlank(message = "区不能为空", groups = {ADD.class, EDIT.class})
+    private String area;
+
+    /**
+     * 站点类型
+     */
+    @NotBlank(message = "站点类型不能为空", groups = {ADD.class, EDIT.class})
+    private String siteType;
+    /**
+     * 站点经度
+     */
+    @NotBlank(message = "站点经度不能为空", groups = {ADD.class, EDIT.class})
+    private String siteLatitude;
+    /**
+     * 站点纬度
+     */
+    @NotBlank(message = "站点纬度不能为空", groups = {ADD.class, EDIT.class})
+    private String siteLongitude;
+    /**
+     * 归属运营商
+     */
+    @NotBlank(message = "归属运营商不能为空", groups = {ADD.class, EDIT.class})
+    private String ownershipOperator;
+
+    /**
+     * 联系人姓名
+     */
+    @NotBlank(message = "联系人姓名不能为空", groups = {ADD.class, EDIT.class})
+    private String name;
+
+    /**
+     * 联系人性别
+     */
+    @NotBlank(message = "联系人性别不能为空", groups = {ADD.class, EDIT.class})
+    private String sex;
+
+    /**
+     * 联系人职位
+     */
+    @NotBlank(message = "联系人职位不能为空", groups = {ADD.class, EDIT.class})
+    private String position;
+
+    /**
+     * 联系人电话
+     */
+    @NotBlank(message = "联系人电话不能为空", groups = {ADD.class, EDIT.class})
+    private String phone;
+
+    /**
+     * 联系人微信
+     */
+    private String wechat;
+
+    /**
+     * 联系人邮箱
+     */
+    private String email;
+
+    /**
+     * 需求类型
+     */
+    private String demandType;
+
+    /**
+     * 需求说明
+     */
+    private String description;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+
+    public String getSiteLatitude() {
+        return siteLatitude;
+    }
+
+    public void setSiteLatitude(String siteLatitude) {
+        this.siteLatitude = siteLatitude;
+    }
+
+    public String getSiteLongitude() {
+        return siteLongitude;
+    }
+
+    public void setSiteLongitude(String siteLongitude) {
+        this.siteLongitude = siteLongitude;
+    }
+
+    public String getOwnershipOperator() {
+        return ownershipOperator;
+    }
+
+    public void setOwnershipOperator(String ownershipOperator) {
+        this.ownershipOperator = ownershipOperator;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public String getSiteType() {
+        return siteType;
+    }
+
+    public void setSiteType(String siteType) {
+        this.siteType = siteType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDemandType() {
+        return demandType;
+    }
+
+    public void setDemandType(String demandType) {
+        this.demandType = demandType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+}

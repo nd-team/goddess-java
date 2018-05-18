@@ -32,6 +32,11 @@ public class InfoForOilCardVO {
     private String oilCardNumber;
 
     /**
+     * 地区
+     */
+    private String area;
+
+    /**
      * 加油量
      */
     private Double addOilAmount;
@@ -105,5 +110,13 @@ public class InfoForOilCardVO {
 
     public void setOilAmount(Double oilAmount) {
         this.oilAmount = oilAmount;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

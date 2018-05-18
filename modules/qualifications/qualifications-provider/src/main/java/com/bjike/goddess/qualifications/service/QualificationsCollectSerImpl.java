@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资质办理进度汇总业务实现
@@ -93,6 +94,8 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
             QualificationsCollect entity = super.findById(to.getId());
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
+            entity.setMaterial(to.getMaterial());
+            entity.setRecord(to.getRecord());
             super.update(entity);
             return BeanTransform.copyProperties(entity, QualificationsCollectBO.class);
         } catch (SerException e) {
@@ -142,8 +145,8 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
+        List<SonPermissionObject> list = new ArrayList<>();
         Boolean flagSeeSign = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAddSign = guideAddIdentity();
@@ -388,7 +391,15 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
         return flag;
     }
 
-
+    @Override
+    public List<String> findAllQualifications() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<QualificationsCollect> qualificationsCollects = super.findAll();
+        if(null != qualificationsCollects && qualificationsCollects.size() > 0){
+            list = qualificationsCollects.stream().map(QualificationsCollect::getQualifications).distinct().collect(Collectors.toList());
+        }
+        return list;
+    }
 
 
 }

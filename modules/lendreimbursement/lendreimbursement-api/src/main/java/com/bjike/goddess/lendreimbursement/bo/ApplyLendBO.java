@@ -1,9 +1,9 @@
 package com.bjike.goddess.lendreimbursement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.LendRetunStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
-
-import javax.persistence.Column;
 
 /**
  * 申请借款业务传输对象
@@ -137,6 +137,11 @@ public class ApplyLendBO extends BaseBO {
     private String chargerPass;
 
     /**
+     * 负责人审核时间
+     */
+    private String chargerPassTime;
+
+    /**
      * 财务运营部
      */
     private String finacer;
@@ -150,6 +155,11 @@ public class ApplyLendBO extends BaseBO {
      * 财务运营部是否通过
      */
     private String fincerPass;
+
+    /**
+     * 财务运营部审核时间
+     */
+    private String fincerPassTime;
 
     /**
      * 总经办
@@ -167,12 +177,17 @@ public class ApplyLendBO extends BaseBO {
     private String managerPass;
 
     /**
+     * 总经办审核时间
+     */
+    private String managerPassTime;
+
+    /**
      * 代理审核备注
      */
     private String proxyAuditRemark;
 
     /**
-     * 是否付款
+     * 是否付款（是/否）
      */
     private String payCondition;
 
@@ -230,6 +245,16 @@ public class ApplyLendBO extends BaseBO {
      * 归还账户
      */
     private String returnAccount;
+    /**
+     * 还款说明
+     */
+    private String returnRemark;
+
+
+    /**
+     * 收件人
+     */
+    private String sendRecevier;
 
     /**
      * 寄件人
@@ -245,6 +270,11 @@ public class ApplyLendBO extends BaseBO {
      * 寄件情况
      */
     private String sendCondition;
+
+    /**
+     * 收件地区(寄件的时候填的地区)
+     */
+    private String receiveArea;
 
     /**
      * 收件地址
@@ -285,7 +315,10 @@ public class ApplyLendBO extends BaseBO {
      * 核对内容
      */
     private String checkcontent;
-
+    /**
+     * 还款核对状态
+     */
+    private LendRetunStatus lendRetunStatus;
     /**
      * 状态
      */
@@ -295,6 +328,16 @@ public class ApplyLendBO extends BaseBO {
      * 是否已收款（是/否）
      */
     private String receivePay;
+
+    /**
+     * 确认已收款时间
+     */
+    private String receivePayTime;
+    /**
+     * 提交时间（填单人）
+     */
+    private String commitTime;
+
     /**
      * 申请单有误状态标识
      */
@@ -314,6 +357,21 @@ public class ApplyLendBO extends BaseBO {
      * 查询数量
      */
     private Double counts;
+
+    /**
+     * 手机端的数据状态
+     */
+    private LendPhoneSelectStatus lendPhoneSelectStatus;
+
+    /**
+     * 分析人
+     */
+    private String analysiser;
+
+    /**
+     * 是否分析(是/否)
+     */
+    private String analyse;
 
 
     public String getEstimateLendDate() {
@@ -772,6 +830,22 @@ public class ApplyLendBO extends BaseBO {
         this.receivePay = receivePay;
     }
 
+    public String getReceivePayTime() {
+        return receivePayTime;
+    }
+
+    public void setReceivePayTime(String receivePayTime) {
+        this.receivePayTime = receivePayTime;
+    }
+
+    public String getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(String commitTime) {
+        this.commitTime = commitTime;
+    }
+
     public String getCreateTime() {
         return createTime;
     }
@@ -794,5 +868,85 @@ public class ApplyLendBO extends BaseBO {
 
     public void setCounts(Double counts) {
         this.counts = counts;
+    }
+
+    public String getReturnRemark() {
+        return returnRemark;
+    }
+
+    public void setReturnRemark(String returnRemark) {
+        this.returnRemark = returnRemark;
+    }
+
+    public String getSendRecevier() {
+        return sendRecevier;
+    }
+
+    public void setSendRecevier(String sendRecevier) {
+        this.sendRecevier = sendRecevier;
+    }
+
+    public String getReceiveArea() {
+        return receiveArea;
+    }
+
+    public void setReceiveArea(String receiveArea) {
+        this.receiveArea = receiveArea;
+    }
+
+    public String getChargerPassTime() {
+        return chargerPassTime;
+    }
+
+    public void setChargerPassTime(String chargerPassTime) {
+        this.chargerPassTime = chargerPassTime;
+    }
+
+    public String getFincerPassTime() {
+        return fincerPassTime;
+    }
+
+    public void setFincerPassTime(String fincerPassTime) {
+        this.fincerPassTime = fincerPassTime;
+    }
+
+    public String getManagerPassTime() {
+        return managerPassTime;
+    }
+
+    public void setManagerPassTime(String managerPassTime) {
+        this.managerPassTime = managerPassTime;
+    }
+
+    public LendRetunStatus getLendRetunStatus() {
+        return lendRetunStatus;
+    }
+
+    public void setLendRetunStatus(LendRetunStatus lendRetunStatus) {
+        this.lendRetunStatus = lendRetunStatus;
+    }
+
+    public LendPhoneSelectStatus getLendPhoneSelectStatus() {
+        return lendPhoneSelectStatus;
+    }
+
+    public void setLendPhoneSelectStatus(LendPhoneSelectStatus lendPhoneSelectStatus) {
+        this.lendPhoneSelectStatus = lendPhoneSelectStatus;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

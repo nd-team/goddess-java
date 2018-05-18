@@ -196,7 +196,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<WaitPayBO> waitPays(WaitPayDTO dto) throws SerException {
         checkSeeIdentity();
-        int page=dto.getPage()+1;
+        int page = dto.getPage() + 1;
         ApplyLendDTO applyLendDTO = new ApplyLendDTO();
         BeanUtils.copyProperties(dto, applyLendDTO);
         applyLendDTO.setPage(page);
@@ -232,8 +232,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     public void pay(WaitPayTO to) throws SerException {
         checkAddIdentity();
-        String userToken=RpcTransmit.getUserToken();
-        String name=userAPI.currentUser().getUsername();
+        String userToken = RpcTransmit.getUserToken();
+        String name = userAPI.currentUser().getUsername();
         if ("借款".equals(to.getType())) {
             ApplyLendTO applyLendTO = BeanTransform.copyProperties(to, ApplyLendTO.class);
             applyLendTO.setPayDate(DateUtil.dateToString(LocalDate.now()));
@@ -265,17 +265,18 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public byte[] waitPayExport(WaitPayDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         ApplyLendDTO applyLendDTO = new ApplyLendDTO();
         BeanUtils.copyProperties(dto, applyLendDTO);
         ReimburseRecordDTO reimburseRecordDTO = new ReimburseRecordDTO();
         BeanUtils.copyProperties(dto, reimburseRecordDTO);
-        List<ExportExcel> list1 = BeanTransform.copyProperties(applyLendAPI.waitPayExport(applyLendDTO),ExportExcel.class,true);
-        List<ExportExcel> list2 = BeanTransform.copyProperties(reimburseRecordAPI.exportExcelCjh(reimburseRecordDTO),ExportExcel.class,true);
+        List<ExportExcel> list1 = BeanTransform.copyProperties(applyLendAPI.waitPayExport(applyLendDTO), ExportExcel.class, true);
+        List<ExportExcel> list2 = BeanTransform.copyProperties(reimburseRecordAPI.exportExcelCjh(reimburseRecordDTO), ExportExcel.class, true);
         List<ExportExcel> list = new ArrayList<>();
-        if (list1!=null) {
+        if (list1 != null) {
             list.addAll(list1);
-        }if (list2!=null) {
+        }
+        if (list2 != null) {
             list.addAll(list2);
         }
         Excel excel = new Excel(0, 2);
@@ -285,7 +286,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public byte[] payExport(WaitPayDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
         if (StringUtils.isNotBlank(dto.getStartTime())) {
@@ -301,9 +302,9 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
         List<WaitPay> list = super.findByCis(dto);
         List<ExportExcel> toList = new ArrayList<>();
-        if (list == null || list.isEmpty()) {
-            throw new SerException("该时间段没有数据可导出");
-        }
+//        if (list == null || list.isEmpty()) {
+//            throw new SerException("该时间段没有数据可导出");
+//        }
         for (WaitPay pay : list) {
             ExportExcel exportExcel = BeanTransform.copyProperties(pay, ExportExcel.class, true);
             exportExcel.setPayStatus(PayStatus.HAVEPAY);
@@ -481,6 +482,26 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         BeanUtils.copyProperties(dto, applyLendDTO);
         ReimburseRecordDTO reimburseRecordDTO = new ReimburseRecordDTO();
         BeanUtils.copyProperties(dto, reimburseRecordDTO);
-        return applyLendAPI.countWaitPay(applyLendDTO) + reimburseRecordAPI.countWaitPay(reimburseRecordDTO);
+        return applyLendAPI.countWaitPayCJH(applyLendDTO) + reimburseRecordAPI.countWaitPayCJH(reimburseRecordDTO);
+    }
+
+    @Override
+    public WaitPayBO findWait(String id) throws SerException {
+        ApplyLendBO applyLendBO = applyLendAPI.getApplyApplyError(id);
+        if (applyLendBO != null) {
+            WaitPayBO waitPayBO = BeanTransform.copyProperties(applyLendBO, WaitPayBO.class);
+            waitPayBO.setPayStatus(PayStatus.WAITPAY);
+            waitPayBO.setType("借款");
+            return waitPayBO;
+        } else {
+            ReimburseRecordBO reimburseRecordBO = reimburseRecordAPI.getOneById(id);
+            WaitPayBO waitPayBO = BeanTransform.copyProperties(reimburseRecordBO, WaitPayBO.class);
+            waitPayBO.setLendDate(reimburseRecordBO.getOccureDate());
+            waitPayBO.setLendMoney(reimburseRecordBO.getReimMoney());
+            waitPayBO.setPayDate(reimburseRecordBO.getBudgetPayTime());
+            waitPayBO.setPayStatus(PayStatus.WAITPAY);
+            waitPayBO.setType("报销");
+            return waitPayBO;
+        }
     }
 }

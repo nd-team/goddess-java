@@ -38,6 +38,15 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
     void upload(BankRecordTO to) throws SerException;
 
     /**
+     * 汇总
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    Long count(BankRecordDTO dto) throws SerException;
+
+    /**
      * 列表
      *
      * @param dto 分页条件或查询条件
@@ -104,11 +113,11 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
 
     /**
      * 查询所有银行的余额
-     * @param year 年份
-     * @param month 月份
+     * @param startTime 年份
+     * @param endTime 月份
      * @return 余额
      */
-    Double balanceByMonth(Integer year, Integer month) throws SerException;
+    Double balanceByMonth(String startTime,String endTime) throws SerException;
 
     Boolean sonPermission() throws SerException;
 

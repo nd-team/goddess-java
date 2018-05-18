@@ -65,24 +65,46 @@ public class WaitPayAct {
         }
     }
 
-//    /**
-//     * 添加
-//     *
-//     * @param to      等待付款信息
-//     * @param request 请求对象
-//     * @return class WaitPayVO
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @PostMapping("v1/save")
-//    public Result save(@Validated({ADD.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
-//        try {
-//            WaitPayBO bo = waitPayAPI.save(to);
-//            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 添加
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/save")
+    public Result save(@Validated({WaitPayTO.TestAdd.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.save(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result edit(@Validated({WaitPayTO.TestEdit.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.edit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 确认付款
@@ -102,22 +124,23 @@ public class WaitPayAct {
         }
     }
 
-//    /**
-//     * 删除
-//     *
-//     * @param id 等待付款id
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @DeleteMapping("v1/delete/{id}")
-//    public Result delete(@PathVariable String id) throws ActException {
-//        try {
-//            waitPayAPI.delete(id);
-//            return new ActResult("删除成功!");
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 删除
+     *
+     * @param id 等待付款id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            waitPayAPI.delete(id);
+            return new ActResult("删除成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 等待付款列表
@@ -158,7 +181,7 @@ public class WaitPayAct {
     }
 
     /**
-     * 司机汇总
+     * 已付款的司机汇总
      *
      * @param request 请求对象
      * @return class DriverCountVO
@@ -166,9 +189,9 @@ public class WaitPayAct {
      * @version v1
      */
     @GetMapping("v1/driverCount")
-    public Result driverCount(HttpServletRequest request) throws ActException {
+    public Result driverCount(@Validated(WaitPayDTO.DRIVER.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<DriverCountBO> list = waitPayAPI.driverCount();
+            List<DriverCountBO> list = waitPayAPI.driverCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, DriverCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -176,7 +199,7 @@ public class WaitPayAct {
     }
 
     /**
-     * 地区汇总
+     * 已付款的地区汇总
      *
      * @param request 请求对象
      * @return class ArrivalCountVO
@@ -184,9 +207,9 @@ public class WaitPayAct {
      * @version v1
      */
     @GetMapping("v1/arrivalCount")
-    public Result arrivalCount(HttpServletRequest request) throws ActException {
+    public Result arrivalCount(@Validated(WaitPayDTO.Arrival.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<ArrivalCountBO> list = waitPayAPI.arrivalCount();
+            List<ArrivalCountBO> list = waitPayAPI.arrivalCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -194,7 +217,7 @@ public class WaitPayAct {
     }
 
     /**
-     * 用车人汇总
+     * 已付款的用车人汇总
      *
      * @param request 请求对象
      * @return class CarUserCountVO
@@ -202,10 +225,100 @@ public class WaitPayAct {
      * @version v1
      */
     @GetMapping("v1/carUserCount")
-    public Result carUserCount(HttpServletRequest request) throws ActException {
+    public Result carUserCount(@Validated(WaitPayDTO.CARUSER.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<CarUserCountBO> list = waitPayAPI.carUserCount();
+            List<CarUserCountBO> list = waitPayAPI.carUserCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, CarUserCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 等待付款的司机汇总
+     *
+     * @param request 请求对象
+     * @return class DriverCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitDriverCount")
+    public Result waitDriverCount(@Validated(WaitPayDTO.DRIVER.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<DriverCountBO> list = waitPayAPI.waitDriverCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, DriverCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 等待付款的地区汇总
+     *
+     * @param request 请求对象
+     * @return class ArrivalCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitArrivalCount")
+    public Result waitArrivalCount(@Validated(WaitPayDTO.Arrival.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<ArrivalCountBO> list = waitPayAPI.waitArrivalCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 等待付款的用车人汇总
+     *
+     * @param request 请求对象
+     * @return class CarUserCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitCarUserCount")
+    public Result waitCarUserCount(@Validated(WaitPayDTO.CARUSER.class) WaitPayDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<CarUserCountBO> list = waitPayAPI.waitCarUserCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, CarUserCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 等待付款汇总明细
+     *
+     * @param dto dto
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitDetails")
+    public Result waitDetails(WaitPayDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<WaitPayBO> list = waitPayAPI.waitDetails(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 已付款汇总明细
+     *
+     * @param dto dto
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/details")
+    public Result details(WaitPayDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<WaitPayBO> list = waitPayAPI.details(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -246,6 +359,41 @@ public class WaitPayAct {
     }
 
     /**
+     * 删除列表
+     *
+     * @param dto dto
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/delList")
+    public Result delList(WaitPayDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<WaitPayBO> list = waitPayAPI.delList(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 撤销删除
+     *
+     * @param id id
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/reback/{id}")
+    public Result reback(@PathVariable String id) throws ActException {
+        try {
+            waitPayAPI.reback(id);
+            return new ActResult("撤销删除成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 查找已付款总记录数
      *
      * @param dto dto
@@ -256,6 +404,67 @@ public class WaitPayAct {
     public Result payCountSum(WaitPayDTO dto) throws ActException {
         try {
             return ActResult.initialize(waitPayAPI.payCountSum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除列表总条数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/delCount")
+    public Result delCount(WaitPayDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.delCount(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有司机
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/drivers")
+    public Result drivers() throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.findAllDrivers());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/arrivals")
+    public Result arrivals() throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.findAllArrivals());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有用车人
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/carUsers")
+    public Result carUsers() throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.findAllCarUsers());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,9 +1,10 @@
 package com.bjike.goddess.individualvision.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.individualvision.bo.IndividualVisionPlanBO;
 import com.bjike.goddess.individualvision.dto.IndividualVisionPlanDTO;
+import com.bjike.goddess.individualvision.excel.SonPermissionObject;
+import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 
 import java.util.List;
@@ -18,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface IndividualVisionPlanAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 个人愿景计划列表总条数
      */
@@ -75,6 +90,7 @@ public interface IndividualVisionPlanAPI {
     default void removeIndividualVisionPlan(String id) throws SerException {
 
     }
+
     /**
      * 审核
      *

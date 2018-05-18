@@ -2,12 +2,12 @@ package com.bjike.goddess.managepromotion.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
+import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
-import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
-import com.bjike.goddess.managepromotion.to.SkillGradingTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 
 import java.util.List;
@@ -24,16 +24,34 @@ import java.util.List;
 public interface SkillPromotionApplySer extends Ser<SkillPromotionApply, SkillPromotionApplyDTO> {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 技能晋升申请列表总条数
      */
     default Long countSkillPromotionApply(SkillPromotionApplyDTO skillPromotionApplyDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个技能晋升申请
+     *
      * @return class SkillPromotionApplyBO
      */
-    default SkillPromotionApplyBO getOne(String id) throws SerException {return null;}
+    default SkillPromotionApplyBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 技能晋升申请
@@ -67,6 +85,7 @@ public interface SkillPromotionApplySer extends Ser<SkillPromotionApply, SkillPr
     default SkillPromotionApplyBO editSkillPromotionApply(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         return null;
     }
+
     /**
      * 负责人审核
      *
@@ -90,9 +109,9 @@ public interface SkillPromotionApplySer extends Ser<SkillPromotionApply, SkillPr
     }
 
     /**
-     * 预算审核
+     * 项目经理审核
      *
-     * @param skillPromotionApplyTO 预算审核数据to
+     * @param skillPromotionApplyTO 项目经理数据to
      * @return class SkillPromotionApplyBO
      * @throws SerException
      */
@@ -110,6 +129,7 @@ public interface SkillPromotionApplySer extends Ser<SkillPromotionApply, SkillPr
     default SkillPromotionApplyBO planAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         return null;
     }
+
     /**
      * 总经办审核
      *
@@ -118,6 +138,76 @@ public interface SkillPromotionApplySer extends Ser<SkillPromotionApply, SkillPr
      * @throws SerException
      */
     default SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
-        return  null;
+        return null;
     }
+
+    /**
+     * 技能等级晋升管理日汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> dayLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能等级晋升管理周汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能等级晋升管理月汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能等级晋升管理累计汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取已晋升次数月汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer monthPromotedNum(SkillLevelCollectTO to) throws SerException;
+    /**
+     * 获取已晋升次数季度汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer quartPromotedNum(SkillLevelCollectTO to) throws SerException;
+    /**
+     * 获取已晋升次数年汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer yearPromotedNum(SkillLevelCollectTO to) throws SerException;
+
 }

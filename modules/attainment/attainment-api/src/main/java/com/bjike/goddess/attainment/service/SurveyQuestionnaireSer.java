@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaire;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SurveyQuestionnaireSer extends Ser<SurveyQuestionnaire, SurveyQuestionnaireDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -63,4 +79,6 @@ public interface SurveyQuestionnaireSer extends Ser<SurveyQuestionnaire, SurveyQ
     default List<SurveyQuestionnaireBO> findByActualize(String actualize_id) throws SerException {
         return null;
     }
+
+
 }

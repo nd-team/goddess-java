@@ -6,6 +6,7 @@ import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
 import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EmployeeFunctionLevelAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 员工职能定级列表总条数

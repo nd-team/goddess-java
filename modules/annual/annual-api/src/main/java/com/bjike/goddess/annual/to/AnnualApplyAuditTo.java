@@ -2,6 +2,7 @@ package com.bjike.goddess.annual.to;
 
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,9 +18,9 @@ import javax.validation.constraints.NotNull;
 public class AnnualApplyAuditTo extends BaseTO {
 
     /**
+
      * 请假人
      */
-    @NotNull(message = "请假人不能为空", groups = EDIT.class)
     private String infoUsername;
 
     /**
@@ -33,14 +34,6 @@ public class AnnualApplyAuditTo extends BaseTO {
     @NotNull(message = "审核结果不能为空", groups = EDIT.class)
     private Boolean fruit;
 
-    public String getInfoUsername() {
-        return infoUsername;
-    }
-
-    public void setInfoUsername(String infoUsername) {
-        this.infoUsername = infoUsername;
-    }
-
     public String getOpinion() {
         return opinion;
     }
@@ -49,11 +42,19 @@ public class AnnualApplyAuditTo extends BaseTO {
         this.opinion = opinion;
     }
 
-    public Boolean isFruit() {
+    public Boolean getFruit() {
         return fruit;
     }
 
-    public void isFruit(Boolean fruit) {
+    public void setFruit(Boolean fruit) {
         this.fruit = fruit;
+    }
+
+    public String getInfoUsername() {
+        return infoUsername;
+    }
+
+    public void setInfoUsername(String infoUsername) {
+        this.infoUsername = infoUsername;
     }
 }

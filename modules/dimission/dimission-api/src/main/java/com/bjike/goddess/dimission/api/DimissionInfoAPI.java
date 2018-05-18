@@ -1,11 +1,14 @@
 package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
+import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.DimissionType;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
 
 import java.util.List;
@@ -22,24 +25,38 @@ import java.util.List;
 public interface DimissionInfoAPI {
 
     /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 申请离职
      *
      * @param to 离职信息传输对象
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
         return null;
     }
 
     /**
-     * 编辑
+     * 编辑申请离职
      *
      * @param to 离职信息传输对象
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO update(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
         return null;
     }
 
@@ -50,7 +67,18 @@ public interface DimissionInfoAPI {
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO presume(FromInfoTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑自离信息
+     *
+     * @param to 离职信息传输对象
+     * @return
+     * @throws SerException
+     */
+    default DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
         return null;
     }
 
@@ -263,4 +291,63 @@ public interface DimissionInfoAPI {
         return null;
     }
 
+    /**
+     * 获取全部用户名
+     */
+    default List<String> getAllName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取最早时间
+     * lijuntao
+     */
+    default String getDate() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据员工姓名查询离职信息　　－－jiangzaixuan 2017/08/17 11:30
+     */
+    List<DimissionInfo> findByName(String userName) throws SerException;
+
+    /**
+     * 根据时间获取离职人数
+     * lijuntao
+     */
+    default Integer getDimissionNum(String[] date) throws SerException {
+        return null;
+    }
+
+    /**
+     * <<<<<<< Updated upstream
+     * chenjunhao
+     * 获取某员工的离职时间
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    String getTime(String name) throws SerException;
+
+    /**
+     * 获取自离信息总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getSelfTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据当前离职姓名获取地区,部门,员工编号,岗位,岗位层级,学历,联系电话，入职时间,在司工龄
+     *
+     * @return
+     * @throws SerException
+     */
+    default DataBO findDataByName(String name) throws SerException {
+        return null;
+    }
 }

@@ -1,6 +1,8 @@
 package com.bjike.goddess.user.config;
 
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
+import com.bjike.goddess.user.utils.SeqUtil;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,5 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AppComponents extends JpaComponents {
+
+
 
 }

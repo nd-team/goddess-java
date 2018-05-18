@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 通讯途径业务实现
@@ -80,5 +82,17 @@ public class CommunicationPathSerImpl extends ServiceImpl<CommunicationPath, Com
     @Transactional
     public void remove(String id) throws SerException {
         super.remove(id);
+    }
+
+    @Override
+    //chenjunhao
+    public Set<String> address() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<CommunicationPath> list = super.findAll();
+        for (CommunicationPath communicationPath : list) {
+            set.add(communicationPath.getBranchAddress());
+            set.add(communicationPath.getHeadOfficeAddress());
+        }
+        return set;
     }
 }

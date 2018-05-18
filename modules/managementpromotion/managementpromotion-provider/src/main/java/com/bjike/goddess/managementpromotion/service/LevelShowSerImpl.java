@@ -1,15 +1,24 @@
 package com.bjike.goddess.managementpromotion.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.dto.LevelShowDTO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managementpromotion.enums.GuideAddrStatus;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.LevelShowTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +35,131 @@ import java.util.List;
 @CacheConfig(cacheNames = "managementpromotionSerCache")
 @Service
 public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> implements LevelShowSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public LevelShowBO save(LevelShowTO to) throws SerException {
+        checkAddIdentity();
         LevelShow entity = BeanTransform.copyProperties(to, LevelShow.class, true);
         super.save(entity);
         return BeanTransform.copyProperties(entity, LevelShowBO.class);
@@ -36,6 +167,7 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
 
     @Override
     public List<LevelShowBO> find(LevelShowDTO dto) throws SerException {
+        checkSeeIdentity();
         return BeanTransform.copyProperties(super.findByCis(dto, true), LevelShowBO.class);
     }
 
@@ -57,11 +189,12 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void update(LevelShowTO to) throws SerException {
+        checkAddIdentity();
         LevelShow entity = super.findById(to.getId());
-        if (entity==null){
+        if (entity == null) {
             throw new SerException("对象不存在");
         }
-        LocalDateTime a=entity.getCreateTime();
+        LocalDateTime a = entity.getCreateTime();
         entity = BeanTransform.copyProperties(to, LevelShow.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
@@ -69,18 +202,48 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
     }
 
     @Override
-    public LevelShow findBySql(String employeeId) throws SerException {
+    public LevelShow findByEmployeeId(String employeeId) throws SerException {
         String[] strings = new String[]{employeeId};
         List<LevelShow> list = null;
         for (String s : strings) {
-            String sql = "SELECT id from managementpromotion_levelshow\n" +
+            String sql = "SELECT id,promotionNum from managementpromotion_levelshow\n" +
                     "where employeeId='" + s + "'";
-            String[] fileds = new String[]{"id"};
+            String[] fileds = new String[]{"id", "promotionNum"};
             list = super.findBySql(sql, LevelShow.class, fileds);
         }
         if ((list != null) && (list.size() != 0)) {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public LevelShow findByName(String name) throws SerException {
+        LevelShowDTO levelShowDTO = new LevelShowDTO();
+        levelShowDTO.getConditions().add(Restrict.eq("name", name));
+        List<LevelShow> levelShows = super.findByCis(levelShowDTO);
+        if (!CollectionUtils.isEmpty(levelShows)) {
+            return levelShows.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        LevelShowDTO dto = new LevelShowDTO();
+        dto.getConditions().add(Restrict.eq("employeeId",employeeId));
+        LevelShow levelShow = super.findOne(dto);
+        return BeanTransform.copyProperties(levelShow,LevelShowBO.class);
+    }
+
+    @Override
+    public LevelShowBO findByName() throws SerException {
+        String sql = "SELECT\n" +
+                "  currentLevel,\n" +
+                "  promotionNum\n" +
+                "FROM managementpromotion_levelshow";
+        String[] fields = {"currentLevel", "promotionNum"};
+        List<LevelShowBO> list = super.findBySql(sql, LevelShowBO.class, fields);
+        return list.get(0);
     }
 }

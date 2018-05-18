@@ -17,20 +17,29 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class YearIndexSetTO extends BaseTO {
-    public interface TestAdd{}
-    public interface TestSer{}
+    public interface TestAdd {
+    }
+
+    public interface TestSer {
+    }
 
     /**
      * 指标名称
      */
-    @NotBlank(groups = {YearIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {YearIndexSetTO.TestAdd.class}, message = "指标名称不能为空")
     private String indexName;
+
+    /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
 
     /**
      * 年份
      */
-    @NotBlank(groups = {YearIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
-    private String year;
+    @NotNull(groups = {YearIndexSetTO.TestAdd.class}, message = "年份名称不能为空")
+    private Integer year;
 
     /**
      * 指标类型
@@ -45,13 +54,13 @@ public class YearIndexSetTO extends BaseTO {
     /**
      * 指标权重
      */
-    @NotNull(groups = {YearIndexSetTO.TestAdd.class} , message = "指标权重不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestAdd.class}, message = "指标权重不能为空")
     private Double describtion;
 
     /**
      * 年度目标值
      */
-    @NotNull(groups = {YearIndexSetTO.TestAdd.class} , message = "年度目标值不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestAdd.class}, message = "年度目标值不能为空")
     private Double yearTarget;
 
     /**
@@ -98,8 +107,13 @@ public class YearIndexSetTO extends BaseTO {
     /**
      * 部门项目组分解数据
      */
-    @NotNull(groups = {YearIndexSetTO.TestSer.class} , message = "部门项目组分解数据不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestSer.class}, message = "部门项目组分解数据不能为空")
     private List<DepartSerperateTO> departSerperateTOS;
+
+    /**
+     * 是否重新分解
+     */
+    private Boolean ifAgain;
 
 
     public String getIndexName() {
@@ -110,11 +124,11 @@ public class YearIndexSetTO extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -221,5 +235,21 @@ public class YearIndexSetTO extends BaseTO {
 
     public void setDepartSerperateTOS(List<DepartSerperateTO> departSerperateTOS) {
         this.departSerperateTOS = departSerperateTOS;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Boolean getIfAgain() {
+        return ifAgain;
+    }
+
+    public void setIfAgain(Boolean ifAgain) {
+        this.ifAgain = ifAgain;
     }
 }

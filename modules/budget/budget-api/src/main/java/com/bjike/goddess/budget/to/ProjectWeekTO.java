@@ -28,7 +28,7 @@ public class ProjectWeekTO extends BaseTO {
     private String arrival;
 
     /**
-     * 项目
+     * 所属项目
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目不能为空")
     private String project;
@@ -64,8 +64,8 @@ public class ProjectWeekTO extends BaseTO {
     /**
      * 实际完工量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "实际完工量不能为空")
-    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "实际完工量必须大于0")
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "实际完工量不能为空")
+//    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "实际完工量必须大于0")
     private Integer actualWork;
 
     private Integer workDifferences;
@@ -87,12 +87,16 @@ public class ProjectWeekTO extends BaseTO {
     /**
      * 计划收入
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划收入不能为空")
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "计划收入必须大于0")
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划收入不能为空")
+//    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "计划收入必须大于0")
     private Double planIncome;
 
     private Double incomeDifferences;
 
+    /**
+     * 内部项目名称
+     */
+    private String projectName;
 
     public Integer getYear() {
         return year;
@@ -188,5 +192,13 @@ public class ProjectWeekTO extends BaseTO {
 
     public void setIncomeDifferences(Double incomeDifferences) {
         this.incomeDifferences = incomeDifferences;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

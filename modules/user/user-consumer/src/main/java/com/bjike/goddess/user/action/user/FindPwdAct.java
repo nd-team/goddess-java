@@ -45,7 +45,7 @@ public class FindPwdAct {
     }
 
     /**
-     * 发送手机验证码
+     * 发送验证码
      *
      * @param nickname 昵称
      * @version v1

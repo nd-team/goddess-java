@@ -7,6 +7,7 @@ import com.bjike.goddess.voucher.enums.TransferStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 /**
@@ -49,7 +50,7 @@ public class VoucherGenerate extends BaseEntity {
     /**
      * 二级科目
      */
-    @Column(name = "secondSubject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
+    @Column(name = "secondSubject", columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
     private String secondSubject;
 
     /**
@@ -61,13 +62,13 @@ public class VoucherGenerate extends BaseEntity {
     /**
      * 借方金额
      */
-    @Column(name = "borrowMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '借方金额'")
+    @Column(name = "borrowMoney", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '借方金额'")
     private Double borrowMoney;
 
     /**
      * 贷方金额
      */
-    @Column(name = "loanMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '贷方金额'")
+    @Column(name = "loanMoney", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '贷方金额'")
     private Double loanMoney;
 
     /**
@@ -75,6 +76,12 @@ public class VoucherGenerate extends BaseEntity {
      */
     @Column(name = "sumary", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
     private String sumary;
+
+    /**
+     * 来源
+     */
+    @Column(name = "source" , nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '来源'")
+    private String source;
 
     /**
      * 地区
@@ -142,6 +149,38 @@ public class VoucherGenerate extends BaseEntity {
      */
     @Column(name = "totalId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合计id'")
     private String totalId;
+
+    /**
+     * 凭证唯一id(一个凭证多个科目的uId一样)
+     */
+    @Column(name = "uId", nullable = false, columnDefinition = "VARCHAR(60)   COMMENT '凭证唯一id(一个凭证多个科目的uId一样)'")
+    private String uId;
+
+    /**
+     * 一级科目code
+     */
+    @Column(name = "firstSubjectCode", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '一级科目code'")
+    private String firstSubjectCode;
+
+    /**
+     * 二级科目code
+     */
+    @Column(name = "secondSubjectCode", columnDefinition = "VARCHAR(255)   COMMENT '二级科目code'")
+    private String secondSubjectCode;
+
+    /**
+     * 三级科目code
+     */
+    @Column(name = "thirdSubjectCode",  columnDefinition = "VARCHAR(255)   COMMENT '三级科目code'")
+    private String thirdSubjectCode;
+
+//    private Double moneyTotal;
+
+    /**
+     * 类别
+     */
+    @Column(name = "type",  columnDefinition = "VARCHAR(8)   COMMENT '类别'")
+    private String type;
 
 
     public String getVoucherWord() {
@@ -302,5 +341,53 @@ public class VoucherGenerate extends BaseEntity {
 
     public void setTotalId(String totalId) {
         this.totalId = totalId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public String getFirstSubjectCode() {
+        return firstSubjectCode;
+    }
+
+    public void setFirstSubjectCode(String firstSubjectCode) {
+        this.firstSubjectCode = firstSubjectCode;
+    }
+
+    public String getSecondSubjectCode() {
+        return secondSubjectCode;
+    }
+
+    public void setSecondSubjectCode(String secondSubjectCode) {
+        this.secondSubjectCode = secondSubjectCode;
+    }
+
+    public String getThirdSubjectCode() {
+        return thirdSubjectCode;
+    }
+
+    public void setThirdSubjectCode(String thirdSubjectCode) {
+        this.thirdSubjectCode = thirdSubjectCode;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.api;
 
+import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
@@ -7,8 +9,8 @@ import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同签订与立项管理业务接口
@@ -20,7 +22,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SiginManageAPI {
-
 
 
     /**
@@ -137,16 +138,18 @@ public interface SiginManageAPI {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(SiginManageDTO dto ) throws SerException;
+    byte[] exportExcel(SiginManageDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
     /**
@@ -155,6 +158,81 @@ public interface SiginManageAPI {
      * @return class String
      */
     default List<String> listInnerProject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称查询数据
+     */
+    default SiginManageBO findByProject(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据项目名称获取是否完工
+     *
+     * @param projectName
+     * @return
+     * @throws SerException
+     */
+    default Boolean findCompleteStatus(String projectName) throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 获取所有立项情况
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> makeProjects() throws SerException;
+
+    /**
+     * 合同签订与立项周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO monthCollectFigure(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项年汇总
+     *
+     * @param year
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO yearCollectFigure(Integer year) throws SerException {
         return null;
     }
 }

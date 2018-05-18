@@ -96,4 +96,12 @@ public class AnalyzeBO extends BaseBO {
     public void setMonth(Integer month) {
         this.month = month;
     }
+
+    public Double getCycleEarlyMoney() {
+        return cycleEarlyMoney;
+    }
+
+    public void setCycleEarlyMoney(Double cycleEarlyMoney) {
+        this.cycleEarlyMoney = cycleEarlyMoney;
+    }
 }

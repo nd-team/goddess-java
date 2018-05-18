@@ -109,7 +109,9 @@ public class ScheduleSerImpl implements ScheduleSer {
 
             try {
                 scheduler.scheduleJob(jobDetail, trigger);
-
+                if(!scheduleJob.getEnable()){
+                    stop(scheduleJob);
+                }
             } catch (SchedulerException e) {
                 throw new SerException(e.getMessage());
             }
@@ -128,6 +130,7 @@ public class ScheduleSerImpl implements ScheduleSer {
                 throw new SerException("trigger执行失败.");
             }
         }
+
     }
 
     public void stop(ScheduleJob scheduleJob) throws SerException {

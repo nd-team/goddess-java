@@ -10,6 +10,7 @@ import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 回款明细业务接口
@@ -96,7 +97,7 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @param auditTime
      */
-    default List<String> auditTime(String auditTime) throws SerException {
+    default Map<String,String> auditTime(String auditTime) throws SerException {
         return null;
     }
 
@@ -105,7 +106,7 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @param countTime
      */
-    default List<String> countTime(String countTime) throws SerException {
+    default Map<String,String> countTime(String countTime) throws SerException {
         return null;
     }
 
@@ -114,7 +115,7 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @param billTime
      */
-    default List<String> billTime(String billTime) throws SerException {
+    default Map<String,String> billTime(String billTime) throws SerException {
         return null;
     }
 
@@ -123,9 +124,10 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @param planTime
      */
-    default String planTime(String planTime) throws SerException {
+    default Map<String,String> planTime(String planTime) throws SerException {
         return null;
     }
+
 
     /**
      * 时间
@@ -261,6 +263,22 @@ public interface ReceivableSubsidiaryAPI {
     default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
+    /**
+     * 导入
+     *
+     * @param id id
+     * @param receivableSubsidiaryTOS 回款管理
+     * @return class ReceivableSubsidiaryBO
+     */
+    default ReceivableSubsidiaryBO importExcelBack(String id,List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return null;
+    }
+    /**
+     * Excel下载模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExportBack() throws SerException;
     /**
      *  导入
      * @param receivableSubsidiaryTOS 回款管理

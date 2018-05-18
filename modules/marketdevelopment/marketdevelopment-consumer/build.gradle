@@ -38,11 +38,8 @@ dependencies {
     }
 
     compile project(":modules:marketdevelopment:marketdevelopment-api")
-    compile project(":modules:user:user-api")
-    compile project(":modules:organize:organize-api")
-    compile project(":modules:storage:storage-api")
+    compile project(":modules:businessproject:businessproject-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
-
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

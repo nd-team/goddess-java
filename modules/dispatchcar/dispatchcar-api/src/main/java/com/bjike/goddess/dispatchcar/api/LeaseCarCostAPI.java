@@ -3,7 +3,10 @@ package com.bjike.goddess.dispatchcar.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 
@@ -17,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface LeaseCarCostAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增租车费用基本信息
@@ -58,4 +74,14 @@ public interface LeaseCarCostAPI {
     Long count(LeaseCarCostDTO dto) throws SerException;
 
     LeaseCarCostBO findById(String id) throws SerException ;
+
+    /**
+     * 查出所有未冻结的部门
+     */
+    List<OpinionBO> findDeapartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
 }

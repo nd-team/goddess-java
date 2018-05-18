@@ -9,13 +9,17 @@ import com.bjike.goddess.moneyside.api.CustomerInfoCollectAPI;
 import com.bjike.goddess.moneyside.bo.CustomerInfoCollectBO;
 import com.bjike.goddess.moneyside.dto.CustomerInfoCollectDTO;
 import com.bjike.goddess.moneyside.service.CustomerInfoCollectSer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.vo.CustomerInfoCollectVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,6 +37,28 @@ public class CustomerInfoCollectAction {
     @Autowired
     private CustomerInfoCollectAPI customerInfoCollectAPI;
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = customerInfoCollectAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 客户信息汇总
      *
      * @param dto
@@ -46,6 +72,21 @@ public class CustomerInfoCollectAction {
             List<CustomerInfoCollectVO> customerInfoCollectVOS = BeanTransform.copyProperties(
                     customerInfoCollectAPI.collect(dto), CustomerInfoCollectVO.class);
             return ActResult.initialize(customerInfoCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有投资人
+     *
+     * @des 获取所有投资人
+     * @version v1
+     */
+    @GetMapping("v1/investor")
+    public Result investor() throws ActException {
+        try {
+            List<String> boList = customerInfoCollectAPI.getInvestor();
+            return ActResult.initialize(boList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

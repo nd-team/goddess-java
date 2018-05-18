@@ -2,12 +2,20 @@ package com.bjike.goddess.materialbuy.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.DeviceTypeBO;
 import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.entity.DeviceType;
+import com.bjike.goddess.materialbuy.enums.GuideAddrStatus;
 import com.bjike.goddess.materialbuy.to.DeviceTypeTO;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +35,138 @@ import java.util.*;
 @CacheConfig(cacheNames = "materialbuySerCache")
 @Service
 public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> implements DeviceTypeSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     /**
      * 分页查询设备类型
@@ -36,8 +176,18 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
      */
     @Override
     public List<DeviceTypeBO> list(DeviceTypeDTO dto) throws SerException {
+        checkSeeIdentity();
         List<DeviceType> list = super.findByPage(dto);
         List<DeviceTypeBO> listBO = BeanTransform.copyProperties(list, DeviceTypeBO.class);
+        if (listBO != null) {
+            Comparator<DeviceTypeBO> comparator = new Comparator<DeviceTypeBO>() {
+                @Override
+                public int compare(DeviceTypeBO o1, DeviceTypeBO o2) {
+                    return o2.getCreateTime().compareTo(o1.getCreateTime());
+                }
+            };
+            listBO = Ordering.from(comparator).sortedCopy(listBO);
+        }
         return listBO;
     }
 
@@ -50,6 +200,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
      */
     @Override
     public DeviceTypeBO save(DeviceTypeTO to) throws SerException {
+        checkAddIdentity();
         DeviceType entity = BeanTransform.copyProperties(to, DeviceType.class, true);
         entity = super.save(entity);
         DeviceTypeBO bo = BeanTransform.copyProperties(entity, DeviceTypeBO.class);
@@ -64,6 +215,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
      */
     @Override
     public void remove(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 
@@ -75,7 +227,8 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
      */
     @Override
     public void update(DeviceTypeTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        checkAddIdentity();
+        if (StringUtils.isNotEmpty(to.getId())) {
             DeviceType model = super.findById(to.getId());
             if (model != null) {
                 updateDeviceType(to, model);
@@ -90,12 +243,12 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
     /**
      * 更新设备类型
      *
-     * @param to 设备类型to
+     * @param to    设备类型to
      * @param model 设备类型
      * @throws SerException
      */
     private void updateDeviceType(DeviceTypeTO to, DeviceType model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        BeanUtils.copyProperties(to, model);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
@@ -118,8 +271,12 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
                 set.add(deviceType.getType());
             }
         }
-
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public Long count(DeviceTypeDTO dto) throws SerException {
+        return super.count(dto);
     }
 
 }

@@ -1,47 +1,62 @@
 package com.bjike.goddess.marketdevelopment.vo;
 
-import com.bjike.goddess.common.api.type.Status;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * 业务方向科目表现层对象
+ * 业务方向科目业务传输对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-03-22 07:21 ]
- * @Description: [ 业务方向科目表现层对象 ]
+ * @Description: [ 业务方向科目业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessCourseVO {
+public class BusinessCourseVO implements Serializable {
 
     /**
      * id
      */
     private String id;
-    /**
-     * 业务类型id
-     */
-    private String typeId;
 
     /**
-     * 业务类型
+     * 业务方向编号
      */
-    private String typeName;
+    private String businessNum;
 
     /**
-     * 业务方向科目
+     * 业务方向分类
      */
-    private String course;
+    private String businessType;
 
     /**
-     * 描述
+     * 业务方向科目集合
      */
-    private String description;
+    private List<BusinessSubjectVO> businessSubjectVOs;
 
-    /**
-     * 状态
-     */
-    private Status status;
+    public String getBusinessNum() {
+        return businessNum;
+    }
 
+    public void setBusinessNum(String businessNum) {
+        this.businessNum = businessNum;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public List<BusinessSubjectVO> getBusinessSubjectVOs() {
+        return businessSubjectVOs;
+    }
+
+    public void setBusinessSubjectVOs(List<BusinessSubjectVO> businessSubjectVOs) {
+        this.businessSubjectVOs = businessSubjectVOs;
+    }
 
     public String getId() {
         return id;
@@ -49,45 +64,5 @@ public class BusinessCourseVO {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

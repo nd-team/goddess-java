@@ -18,96 +18,125 @@ import javax.validation.constraints.NotNull;
  */
 public class PositionIndexSetTO extends BaseTO {
 
-    public interface TestAdd{}
+    public interface TestAdd {
+    }
 
     /**
      * 指标名称
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "指标名称不能为空")
     private String indexName;
+
+    /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    private Integer monthIndexNumber;
+
+    /**
+     * 岗位指标编号
+     */
+    private Integer postIndexNumber;
+
+
 
     /**
      * 年份
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "年份不能为空")
-    private String year;
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "年份不能为空")
+    private Integer year;
 
     /**
      * 月份
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "月份不能为空")
-    private String month;
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "月份不能为空")
+    private Integer month;
 
     /**
      * 指标类型
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "指标类型不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "指标类型不能为空")
     private String indexType;
 
     /**
      * 维度
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "维度不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "维度不能为空")
     private String dimension;
 
     /**
      * 总指标权重
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "总指标权重不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "总指标权重不能为空")
     private Double describtion;
 
     /**
      * 责任部门
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "责任部门不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "责任部门不能为空")
     private String department;
+
 
     /**
      * 部门年度指标权重
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "部门年度指标权重不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "部门年度指标权重不能为空")
     private Double departYearWeight;
 
     /**
      * 部门月度对赌值
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "部门月度对赌值不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "部门月度对赌值不能为空")
     private Double departYearWager;
 
     /**
      * 责任岗位
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "责任岗位不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "责任岗位不能为空")
     private String position;
 
     /**
      * 责任人
      */
-    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class} , message = "责任人不能为空")
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "责任人不能为空")
     private String positioner;
 
     /**
+     * 责任人工号
+     */
+    @NotBlank(groups = {PositionIndexSetTO.TestAdd.class}, message = "责任人工号不能为空")
+    private String positionerNumber;
+    /**
      * 岗位指标权重
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "岗位指标权重不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "岗位指标权重不能为空")
     private Double weight;
 
     /**
      * 岗位指标权重之和
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "岗位指标权重之和不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "岗位指标权重之和不能为空")
     private Double weightSum;
 
     /**
      * 岗位指标目标值
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "岗位指标目标值不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "岗位指标目标值不能为空")
     private Double target;
 
     /**
      * 对赌值
      */
-    @NotNull(groups = {PositionIndexSetTO.TestAdd.class} , message = "对赌值不能为空")
+    @NotNull(groups = {PositionIndexSetTO.TestAdd.class}, message = "对赌值不能为空")
     private Double wager;
 
     /**
@@ -194,19 +223,19 @@ public class PositionIndexSetTO extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
@@ -424,5 +453,46 @@ public class PositionIndexSetTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
+    }
+
+    public Integer getPostIndexNumber() {
+        return postIndexNumber;
+    }
+
+    public void setPostIndexNumber(Integer postIndexNumber) {
+
+        this.postIndexNumber = postIndexNumber;
+    }
+
+    public String getPositionerNumber() {
+        return positionerNumber;
+    }
+
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
 }

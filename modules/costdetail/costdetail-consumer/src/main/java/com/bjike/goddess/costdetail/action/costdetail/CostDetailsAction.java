@@ -177,17 +177,17 @@ public class CostDetailsAction {
     }
 
     /**
-     * 查看成本明细详情
+     * 列表详情
      *
-     * @param id 成本明细id
-     * @return class CostDetailsVO
+     * @param costDetailsDTO 成本明细dto
+     * @return class CostDetailsAddEditVO
      * @des 根据id成本明细
      * @version v1
      */
-    @GetMapping("v1/seeDetail/{id}")
-    public Result seeDetail(@PathVariable String id) throws ActException {
+    @GetMapping("v1/listDetail")
+    public Result seeDetail(CostDetailsDTO costDetailsDTO) throws ActException {
         try {
-            CostDetailsAddEditBO costDetailsAddEditBO = costDetailsAPI.seeDetail(id);
+            CostDetailsAddEditBO costDetailsAddEditBO = costDetailsAPI.listDetail(costDetailsDTO);
             CostDetailsAddEditVO costDetailsAddEditVO = new CostDetailsAddEditVO();
             List<LaborCostDetailBO> laborCostDetailBOList = costDetailsAddEditBO.getLaborCostDetailList();
             List<CompanyBorrowedDetailBO> companyBorrowedDetailBOList = costDetailsAddEditBO.getCompanyBorrowedDetailList();
@@ -316,16 +316,30 @@ public class CostDetailsAction {
     /**
      * 添加中所有的部门
      *
-     * @return class CostDetailsAddReturnVO
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
             List<String> detail = new ArrayList<>();
             detail = costDetailsAPI.findAddAllDetails();
             return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有时间接口
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allDate")
+    public Result allDate() throws ActException {
+        try {
+            List<String> date = new ArrayList<>();
+            date = costDetailsAPI.findDate();
+            return ActResult.initialize(date);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

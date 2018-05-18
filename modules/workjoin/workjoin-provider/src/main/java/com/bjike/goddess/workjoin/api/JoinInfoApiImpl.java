@@ -2,10 +2,12 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.entity.JoinInfo;
 import com.bjike.goddess.workjoin.service.JoinInfoSer;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 import org.hibernate.annotations.AttributeAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,15 @@ import java.util.List;
 public class JoinInfoApiImpl implements JoinInfoAPI {
     @Autowired
     private JoinInfoSer joinInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return joinInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return joinInfoSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countJoinInfo(JoinInfoDTO joinInfoDTO) throws SerException {
         return joinInfoSer.countJoinInfo(joinInfoDTO);
@@ -57,4 +68,8 @@ public class JoinInfoApiImpl implements JoinInfoAPI {
         joinInfoSer.removeJoinInfo(id);
     }
 
+    @Override
+    public List<NumSpecificationBO> findNumSepecification() throws SerException {
+        return joinInfoSer.findNumSepecification();
+    }
 }

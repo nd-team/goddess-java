@@ -49,6 +49,16 @@ public class FundRecordBO extends BaseBO {
     private Double expenditure;
 
     /**
+     * 余额
+     */
+    private Double amount;
+
+    /**
+     * 记账凭证导入资金流水对应的数据id
+     */
+    private String voucherGenerateId;
+
+    /**
      * 数据来源
      */
     private String dataSource;
@@ -120,6 +130,22 @@ public class FundRecordBO extends BaseBO {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getVoucherGenerateId() {
+        return voucherGenerateId;
+    }
+
+    public void setVoucherGenerateId(String voucherGenerateId) {
+        this.voucherGenerateId = voucherGenerateId;
     }
 
     public String getCreateTime() {

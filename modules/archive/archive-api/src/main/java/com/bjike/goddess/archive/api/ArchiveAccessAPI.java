@@ -2,8 +2,10 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
+import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -91,7 +93,63 @@ public interface ArchiveAccessAPI {
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException {
+    default Long getTotal(ArchiveAccessDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(ArchiveAccessDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void  upload(List<ArchiveAccessTO> tos) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出时获取的姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUserName() throws SerException {
         return null;
     }
 }

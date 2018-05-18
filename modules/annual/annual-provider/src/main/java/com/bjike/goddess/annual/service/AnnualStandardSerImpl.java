@@ -1,20 +1,29 @@
 package com.bjike.goddess.annual.service;
 
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
+import com.bjike.goddess.annual.dto.AnnualArrangementStandardDTO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
+import com.bjike.goddess.annual.entity.AnnualArrangementStandard;
 import com.bjike.goddess.annual.entity.AnnualStandard;
+import com.bjike.goddess.annual.enums.GuideAddrStatus;
+import com.bjike.goddess.annual.excel.SonPermissionObject;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,10 +41,215 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
 
     @Autowired
     private AnnualArrangementStandardSer annualArrangementStandardSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AnnualApplySer annualApplySer;
+    @Autowired
+    private AnnualInfoSer annualInfoSer;
+
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(项目经理)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.positCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是该岗位人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.positCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        {
+            List<SonPermissionObject> list = new ArrayList<>();
+            String userToken = RpcTransmit.getUserToken();
+            Boolean flagInvenDai = guideIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInvenPosinDai = guidePosinIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+
+            SonPermissionObject obj = new SonPermissionObject();
+
+            obj = new SonPermissionObject();
+            obj.setName("annualstandard");
+            obj.setDescribesion("年假标准管理");
+            if (flagInvenDai || flagInvenPosinDai) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInfo = annualInfoSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("annualinfo");
+            obj.setDescribesion("年假信息记录");
+            if (flagInfo) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagApply = annualApplySer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("annualapply");
+            obj.setDescribesion("年假申请记录");
+            if (flagApply) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            return list;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case AUDIT:
+                flag = guidePosinIdentity();
+                break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case XXLIST:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXADD:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXAPPLY:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXSEE:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXMYSELF:
+                flag = guideAllTrueIdentity();
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO save(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = BeanTransform.copyProperties(to, AnnualStandard.class);
         entity.setStatus(Status.THAW);
         List<AnnualStandardBO> bos = this.findThaw();
@@ -51,11 +265,13 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO update(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
@@ -63,11 +279,17 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO delete(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
-        if (annualArrangementStandardSer.findByStandard(entity.getId()).size() != 0)
-            throw new SerException("存在依赖关系无法删除");
+        if (annualArrangementStandardSer.findByStandard(entity.getId()).size() != 0) {
+            AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
+            dto.getConditions().add(Restrict.eq("standard.id", entity.getId()));
+            List<AnnualArrangementStandard> annualArrangementStandardList = annualArrangementStandardSer.findByCis(dto);
+            annualArrangementStandardSer.remove(annualArrangementStandardList);
+//            throw new SerException("存在依赖关系无法删除");
+        }
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
@@ -75,6 +297,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO congeal(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -86,6 +309,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO thaw(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -118,6 +342,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
 
     @Override
     public List<AnnualStandardBO> maps(AnnualStandardDTO dto) throws SerException {
+        checkPermission();
         dto.getSorts().add("status=asc");
         return BeanTransform.copyProperties(super.findByPage(dto), AnnualStandardBO.class);
     }

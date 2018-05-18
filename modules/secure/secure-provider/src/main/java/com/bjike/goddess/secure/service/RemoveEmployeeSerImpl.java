@@ -1,16 +1,28 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.CommonalityAPI;
+import com.bjike.goddess.contacts.bo.CommonalityBO;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.RemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.entity.RemoveEmployee;
+import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -18,7 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 减员名单业务实现
@@ -36,10 +51,208 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     private EmployeeSecureSer employeeSecureSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private CommonalityAPI commonalityAPI;
+    @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    //总经办
+    private void checkMIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+            if (!flag) {
+                throw new SerException("您不是总经理，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    //社保管理负责人
+    private void checkSBIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+            if (!flag) {
+                throw new SerException("您不是社保管理负责人，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    //总经办
+    private Boolean guideMIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    //社保管理负责人
+    private Boolean guideSBIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case BOSS:
+                flag = guideMIdentity();
+                break;
+            case CHARGE:
+                flag = guideSBIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEARCH:
+                flag = guideSBIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO save(RemoveEmployeeTO to) throws SerException {
+        checkAddIdentity();
         RemoveEmployee removeEmployee = BeanTransform.copyProperties(to, RemoveEmployee.class, true);
         super.save(removeEmployee);
         return BeanTransform.copyProperties(removeEmployee, RemoveEmployeeBO.class);
@@ -48,6 +261,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO edit(RemoveEmployeeTO to) throws SerException {
+        checkAddIdentity();
         RemoveEmployee removeEmployee = super.findById(to.getId());
         LocalDateTime a = removeEmployee.getCreateTime();
         removeEmployee = BeanTransform.copyProperties(to, RemoveEmployee.class);
@@ -59,6 +273,15 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
 
     @Override
     public List<RemoveEmployeeBO> find(RemoveEmployeeDTO dto) throws SerException {
+        checkSeeIdentity();
+        String removeName = dto.getRemoveName();
+        String employeeId = dto.getEmployeeId();
+        if (StringUtils.isNotBlank(removeName)) {
+            dto.getConditions().add(Restrict.eq("removeName", removeName));
+        }
+        if (StringUtils.isNotBlank(employeeId)) {
+            dto.getConditions().add(Restrict.eq("employeeId", employeeId));
+        }
         List<RemoveEmployee> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, RemoveEmployeeBO.class);
     }
@@ -72,14 +295,16 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO delete(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
         return null;
     }
 
     @Override
     public RemoveEmployeeBO findByNameAndId(RemoveEmployeeTO to) throws SerException {
-        String removeName=to.getRemoveName();
-        String employeeId=to.getEmployeeId();
+        checkSBIdentity();
+        String removeName = to.getRemoveName();
+        String employeeId = to.getEmployeeId();
         String[] names = new String[]{removeName};
         List<RemoveEmployeeBO> list = null;
         if ((removeName != null) && (employeeId != null) && (StringUtils.isNotBlank(employeeId))) {
@@ -105,14 +330,45 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
         }
     }
 
+    private String[] yyEmails() throws SerException {
+        Set<String> set = new HashSet<>();
+        String token = RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "运营商务部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
+            if (moduleAPI.isCheck("contacts")) {
+                RpcTransmit.transmitUserToken(token);
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
+                }
+            }
+        }
+        String[] strings = new String[set.size()];
+        strings = set.toArray(strings);
+        return strings;
+    }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void confirmRemove(String id) throws SerException {
+        checkSBIdentity();
+        String userToken = RpcTransmit.getUserToken();
         RemoveEmployee removeEmployee = super.findById(id);
         removeEmployee.setConfirmRemove(true);
         removeEmployee.setModifyTime(LocalDateTime.now());
         super.update(removeEmployee);
-        //todo:发邮件通知运营商务部
+        String name = removeEmployee.getRemoveName();
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle("有员工确认社保减员成功");
+        messageTO.setContent("员工编号为" + removeEmployee.getEmployeeId() + "的" + name + "确认社保减员成功");
+        messageTO.setReceivers(yyEmails());
+        if (yyEmails() != null && yyEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         EmployeeSecure entity = findByNumAndName(removeEmployee.getEmployeeId(), removeEmployee.getRemoveName());
         if (entity != null) {
 //            EmployeeSecure employeeSecure = new EmployeeSecure();
@@ -124,6 +380,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
             EmployeeSecureBO bo = employeeSecureSer.findByID(entity.getId());
             EmployeeSecureTO employeeSecureTO = BeanTransform.copyProperties(bo, EmployeeSecureTO.class);
             employeeSecureTO.setStatus("已减员成功");
+            RpcTransmit.transmitUserToken(userToken);
             employeeSecureSer.edit(employeeSecureTO);
         }
     }
@@ -136,6 +393,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
 
     @Override
     public Long count(RemoveEmployeeDTO dto) throws SerException {
+        String removeName = dto.getRemoveName();
+        String employeeId = dto.getEmployeeId();
+        if (StringUtils.isNotBlank(removeName)) {
+            dto.getConditions().add(Restrict.eq("removeName", removeName));
+        }
+        if (StringUtils.isNotBlank(employeeId)) {
+            dto.getConditions().add(Restrict.eq("employeeId", employeeId));
+        }
         return super.count(dto);
     }
 
@@ -170,5 +435,15 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<RemoveEmployee> list = super.findAll();
+        for (RemoveEmployee entity : list) {
+            set.add(entity.getRemoveName());
+        }
+        return set;
     }
 }

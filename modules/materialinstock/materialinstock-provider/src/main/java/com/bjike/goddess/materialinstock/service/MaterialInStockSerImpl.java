@@ -12,8 +12,12 @@ import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.type.GuideAddrStatus;
+import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +47,10 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 检查权限(部门)
@@ -168,7 +176,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      */
     @Override
     public List<MaterialInStockBO> findByState(MaterialState materialState, UseState useState, MaterialInStockDTO dto) throws SerException {
-        checkPermission();
         dto.getConditions().add(Restrict.eq("materialState", materialState));
         dto.getConditions().add(Restrict.eq("useState", useState));
         List<MaterialInStock> list = super.findByPage(dto);
@@ -186,7 +193,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialInStockBO findByMaterialCoding(String materialCoding) throws SerException {
-        checkPermission();
         MaterialInStockDTO dto = new MaterialInStockDTO();
         dto.getConditions().add(Restrict.eq("stockEncoding", materialCoding));
         MaterialInStock model = super.findOne(dto);
@@ -203,7 +209,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void updateUseState(String[] materialNum, UseState useState) throws SerException {
-        checkPermission();
         List<MaterialInStock> list = getMaterialInStocks(materialNum);
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -288,7 +293,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialInStockTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialInStock model = super.findById(to.getId());
             if (model != null) {
@@ -309,7 +314,9 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * @throws SerException
      */
     private void updateMaterialInStock(MaterialInStockTO to, MaterialInStock model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date =  model.getCreateTime();
+        model = BeanTransform.copyProperties(to, MaterialInStock.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
@@ -372,4 +379,186 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         return set;
     }
 
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            MaterialInStock model = super.findById(to.getId());
+            if (model != null) {
+                updateMaterialInStock(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS) {
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findallUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS) {
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<InstockType> findStockType(String[] intervalTime) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<InstockType> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            InstockType instockType = materialInStock.getInstockType();
+            if (materialInStock.getInstockType() != null) {
+                set.add(instockType);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAreaByType(InstockType instockType,String[] intervalTime) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            String storageArea = materialInStock.getStorageArea();
+            if (StringUtils.isNotBlank(materialInStock.getStorageArea())) {
+                set.add(storageArea);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findDepartByTyAnAr(InstockType instockType, String storageArea, String[] intervalTime) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
+        materialInStockDTO.getConditions().add(Restrict.eq("storageArea",storageArea));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            String projectGroup = materialInStock.getProjectGroup();
+            if (StringUtils.isNotBlank(materialInStock.getProjectGroup())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialInStockBO> findByTyAnAr(InstockType instockType, String storageArea,String projectGroup, String[] intervalTime) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
+        materialInStockDTO.getConditions().add(Restrict.eq("storageArea",storageArea));
+        materialInStockDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        return BeanTransform.copyProperties(materialInStocks,MaterialInStockBO.class);
+    }
+
+    @Override
+    public List<String> findAllArea(String[] intervalTime) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            String storageArea = materialInStock.getStorageArea();
+            if (StringUtils.isNotBlank(materialInStock.getStorageArea())) {
+                set.add(storageArea);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findProByAre(String[] intervalTime, String area) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("storageArea",area));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            String projectGroup = materialInStock.getProjectGroup();
+            if (StringUtils.isNotBlank(materialInStock.getProjectGroup())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialState> findStatusByAreAnpro(String[] intervalTime, String area, String projectGroup) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("storageArea",area));
+        materialInStockDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        if (CollectionUtils.isEmpty(materialInStocks)) {
+            return Collections.emptyList();
+        }
+        Set<MaterialState> set = new HashSet<>();
+        for (MaterialInStock materialInStock : materialInStocks) {
+            MaterialState materialState = materialInStock.getMaterialState();
+            if (materialInStock.getMaterialState()!=null) {
+                set.add(materialState);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialInStockBO> findByAreAnpro(String[] intervalTime,String area,String projectGroup,MaterialState materialState) throws SerException {
+        MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
+        materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
+        materialInStockDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        materialInStockDTO.getConditions().add(Restrict.eq("storageArea",area));
+        materialInStockDTO.getConditions().add(Restrict.eq("materialState",materialState.getCode()));
+        List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
+        return BeanTransform.copyProperties(materialInStocks,MaterialInStockBO.class);
+    }
 }

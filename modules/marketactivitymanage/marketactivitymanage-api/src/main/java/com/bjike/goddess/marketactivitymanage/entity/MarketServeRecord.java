@@ -31,7 +31,7 @@ public class MarketServeRecord extends BaseEntity {
     /**
      * 实际活动时间点
      */
-    @Column(name = "actualActivityTiming", nullable = false, columnDefinition = "DATETIME COMMENT '实际活动时间点'")
+    @Column(name = "actualActivityTiming", columnDefinition = "DATETIME COMMENT '实际活动时间点'")
     private LocalDateTime actualActivityTiming;
 
     /**
@@ -79,7 +79,7 @@ public class MarketServeRecord extends BaseEntity {
     /**
      * 实际参加人数
      */
-    @Column(name = "actualAttendNo", nullable = false, columnDefinition = "INT(11) COMMENT '实际参加人数'")
+    @Column(name = "actualAttendNo", columnDefinition = "INT(11) COMMENT '实际参加人数'")
     private Integer actualAttendNo;
 
     /**
@@ -91,7 +91,7 @@ public class MarketServeRecord extends BaseEntity {
     /**
      * 实际活动类型
      */
-    @Column(name = "actualActivityType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '实际活动类型'")
+    @Column(name = "actualActivityType", columnDefinition = "VARCHAR(255) COMMENT '实际活动类型'")
     private String actualActivityType;
 
     /**

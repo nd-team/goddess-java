@@ -1,6 +1,9 @@
 package com.bjike.goddess.customer.enums;
 
 
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 客户类别枚举
  * @Author: [tanghaixiang]
@@ -14,19 +17,28 @@ public enum CustomerType {
     /**
      * VIP客户
      */
+    @ExcelValue(name = "VIP客户")
     VIP(0),
     /**
      * 老客户
      */
+    @ExcelValue(name = "老客户")
     OLD(1),
     /**
      * 合作伙伴
      */
+    @ExcelValue(name = "合作伙伴")
     COOPERATOR(2),
     /**
      * 普通客户
      */
+    @ExcelValue(name = "普通客户")
     ORDINARY(3),
+    /**
+     * 其他
+     */
+    @ExcelValue(name = "其他")
+    OTHER(4)
     ;
 
     private int code;

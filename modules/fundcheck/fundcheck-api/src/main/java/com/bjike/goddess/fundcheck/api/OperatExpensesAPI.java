@@ -7,7 +7,9 @@ import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesCollectTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 营业费用业务接口
@@ -93,10 +95,9 @@ public interface OperatExpensesAPI {
      * 汇总
      *
      * @param to
-     * @return OperatExpensesBO
      * @throws SerException
      */
-    default List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
+    default LinkedHashMap<String,String> collect(OperatExpensesCollectTO to) throws SerException {
         return null;
     }
     /**

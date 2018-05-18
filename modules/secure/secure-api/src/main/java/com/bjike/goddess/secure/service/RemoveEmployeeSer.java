@@ -5,9 +5,11 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.RemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.RemoveEmployee;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 减员名单业务接口
@@ -19,6 +21,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RemoveEmployeeSer extends Ser<RemoveEmployee, RemoveEmployeeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -108,4 +119,10 @@ public interface RemoveEmployeeSer extends Ser<RemoveEmployee, RemoveEmployeeDTO
      * @throws SerException
      */
     Long count(RemoveEmployeeDTO dto) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 }

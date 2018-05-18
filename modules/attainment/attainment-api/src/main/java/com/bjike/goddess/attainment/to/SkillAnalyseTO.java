@@ -48,16 +48,6 @@ public class SkillAnalyseTO extends BaseTO {
     private String skillLevel;
 
     /**
-     * 填写人
-     */
-    private String writer;
-
-    /**
-     * 填写时间
-     */
-    private String writerTime;
-
-    /**
      * 备注
      */
     private String remark;
@@ -101,22 +91,6 @@ public class SkillAnalyseTO extends BaseTO {
 
     public void setSkillLevel(String skillLevel) {
         this.skillLevel = skillLevel;
-    }
-
-    public String getWriter() {
-        return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
-    }
-
-    public String getWriterTime() {
-        return writerTime;
-    }
-
-    public void setWriterTime(String writerTime) {
-        this.writerTime = writerTime;
     }
 
     public String getRemark() {

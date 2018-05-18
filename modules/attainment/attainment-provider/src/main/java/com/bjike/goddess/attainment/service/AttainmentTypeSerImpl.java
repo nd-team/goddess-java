@@ -4,19 +4,27 @@ import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
 import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.entity.AttainmentType;
+import com.bjike.goddess.attainment.enums.GuideAddrStatus;
+import com.bjike.goddess.attainment.excel.SonPermissionObject;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +42,34 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
 
     @Autowired
     private SurveyDemandSer surveyDemandSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private AttainmentWaySer attainmentWaySer;
+    @Autowired
+    private SkillAnalyseSer skillAnalyseSer;
+    @Autowired
+    private DemandTypeSer demandTypeSer;
+    @Autowired
+    private SurveyActualizeSer surveyActualizeSer;
+    @Autowired
+    private SurveyAnalyseSer surveyAnalyseSer;
+
+    @Autowired
+    private SurveyPlanAuditSer surveyPlanAuditSer;
+    @Autowired
+    private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private SurveyQuestionnaireOptionSer surveyQuestionnaireOptionSer;
+    @Autowired
+    private SurveyQuestionnaireOptionUserSer surveyQuestionnaireOptionUserSer;
+    @Autowired
+    private SurveyQuestionnaireSer surveyQuestionnaireSer;
+    @Autowired
+    private SurveyQuestionnaireUserSer surveyQuestionnaireUserSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -52,6 +88,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
                 AttainmentType entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
             } catch (Exception e) {
@@ -134,5 +171,301 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
     public Long getTotal() throws SerException {
         AttainmentTypeDTO dto = new AttainmentTypeDTO();
         return super.count(dto);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("attainmenttype");
+        obj.setDescribesion("调研类型");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = attainmentWaySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("attainmentway");
+        obj.setDescribesion("调研方式");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = demandTypeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("demandtype");
+        obj.setDescribesion("调研需求类型");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate1 = skillAnalyseSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("skillanalyse");
+        obj.setDescribesion("技能分析表");
+        if (flagSeeCate1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate2 = surveyActualizeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyactualize");
+        obj.setDescribesion("调研实施记录");
+        if (flagSeeCate2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate3 = surveyAnalyseSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyanalyse");
+        obj.setDescribesion("调研分析");
+        if (flagSeeCate3) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate4 = surveyDemandSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveydemand");
+        obj.setDescribesion("调研需求");
+        if (flagSeeCate4) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate5 = surveyPlanAuditSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyplanaudit");
+        obj.setDescribesion("调研计划审核记录");
+        if (flagSeeCate5) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate6 = surveyPlanSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyplan");
+        obj.setDescribesion("调研计划");
+        if (flagSeeCate6) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate7 = surveyQuestionnaireOptionSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyquestionnaireoption");
+        obj.setDescribesion("调研表问题选项");
+        if (flagSeeCate7) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate8 = surveyQuestionnaireOptionUserSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyquestionnaireoptionuserser");
+        obj.setDescribesion("问卷填写信息表");
+        if (flagSeeCate8) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate9 = surveyQuestionnaireSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyquestionnaire");
+        obj.setDescribesion("调研表问题");
+        if (flagSeeCate9) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCatesurvey = surveyQuestionnaireUserSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("surveyquestionnaireuser");
+        obj.setDescribesion("问卷调查历史记录");
+        if (flagSeeCatesurvey) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
     }
 }

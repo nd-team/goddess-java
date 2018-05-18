@@ -3,14 +3,20 @@ package com.bjike.goddess.festival.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.bo.*;
 import com.bjike.goddess.festival.dto.*;
 import com.bjike.goddess.festival.dto.HolidayProgrammeDTO;
 import com.bjike.goddess.festival.entity.*;
 import com.bjike.goddess.festival.entity.HolidayProgramme;
+import com.bjike.goddess.festival.excel.SonPermissionObject;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.to.HolidayProgrammeTO;
 import com.bjike.goddess.festival.to.HolidayWorkPlanTO;
+import com.bjike.goddess.festival.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +49,139 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     private WelfareSer welfareSer;
     @Autowired
     private NoticeThingSer noticeThingSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private CompanyFestivalTimeSer companyFestivalTimeSer;
+    @Autowired
+    private GiftStandardSer giftStandardSer;
 
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        {
+            List<SonPermissionObject> list = new ArrayList<>();
+            String userToken = RpcTransmit.getUserToken();
+            Boolean flagHolid = guideIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+
+            SonPermissionObject obj = new SonPermissionObject();
+
+            obj = new SonPermissionObject();
+            obj.setName("holidayprogramme");
+            obj.setDescribesion("法定节假日放假方案");
+            if (flagHolid ) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagCompany = companyFestivalTimeSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("companyfestivaltime");
+            obj.setDescribesion("公司放假时间安排");
+            if (flagCompany) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagGift = giftStandardSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("giftstandard");
+            obj.setDescribesion("节假日礼品标准");
+            if (flagGift) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            return list;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
         return super.count( holidayProgrammeDTO );
@@ -86,6 +224,9 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
 
     @Override
     public List<HolidayProgrammeBO> listHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
 
         holidayProgrammeDTO.getSorts().add("createTime=desc");
         List<HolidayProgramme> list = super.findByCis(holidayProgrammeDTO,true);
@@ -96,6 +237,10 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HolidayProgrammeBO addHolidayProgramme(HolidayProgrammeTO holidayProgrammeTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         HolidayProgramme holidayProgramme = BeanTransform.copyProperties(holidayProgrammeTO,HolidayProgramme.class,true);
         holidayProgramme.setCreateTime(LocalDateTime.now());
         if( holidayProgrammeTO.getHolidayWorkPlanTOList() != null && holidayProgrammeTO.getHolidayWorkPlanTOList().size()>0){
@@ -224,6 +369,10 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteHolidayProgramme(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

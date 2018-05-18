@@ -3,6 +3,8 @@ package com.bjike.goddess.receivable.excel;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.receivable.entity.Contractor;
 
+import java.time.LocalDate;
+
 /**
  * 回款明细表现层对象
  *
@@ -113,7 +115,103 @@ public class ReceivableSubsidiaryExcel {
      */
     @ExcelHeader(name = "是否已走结算流程",notNull = true)
     private String flow;
+    /**
+     * 完工时间
+     */
+    @ExcelHeader(name = "完工时间")
+    private LocalDate finishTime;
 
+    /**
+     * 验收交维时间
+     */
+    @ExcelHeader(name = "验收交维时间")
+    private LocalDate checkTime;
+
+    /**
+     * 签字审批时间
+     */
+    @ExcelHeader(name = "签字审批时间")
+    private LocalDate auditTime;
+
+    /**
+     * 结算审批时间
+     */
+    @ExcelHeader(name = "结算审批时间")
+    private LocalDate countTime;
+
+    /**
+     * 发票审核时间
+     */
+    @ExcelHeader(name = "发票审核时间")
+    private LocalDate billTime;
+
+    /**
+     * 预计支付时间
+     */
+    @ExcelHeader(name = "预计支付时间")
+    private LocalDate planTime;
+
+    /**
+     * 到账时间
+     */
+    @ExcelHeader(name = "到账时间")
+    private LocalDate accountTime;
+
+    public LocalDate getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(LocalDate finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public LocalDate getCheckTime() {
+        return checkTime;
+    }
+
+    public void setCheckTime(LocalDate checkTime) {
+        this.checkTime = checkTime;
+    }
+
+    public LocalDate getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(LocalDate auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public LocalDate getCountTime() {
+        return countTime;
+    }
+
+    public void setCountTime(LocalDate countTime) {
+        this.countTime = countTime;
+    }
+
+    public LocalDate getBillTime() {
+        return billTime;
+    }
+
+    public void setBillTime(LocalDate billTime) {
+        this.billTime = billTime;
+    }
+
+    public LocalDate getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(LocalDate planTime) {
+        this.planTime = planTime;
+    }
+
+    public LocalDate getAccountTime() {
+        return accountTime;
+    }
+
+    public void setAccountTime(LocalDate accountTime) {
+        this.accountTime = accountTime;
+    }
 
     public String getArea() {
         return area;

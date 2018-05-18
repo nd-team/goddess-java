@@ -4,6 +4,7 @@ import com.bjike.goddess.carinfo.bo.DriverRecruitBO;
 import com.bjike.goddess.carinfo.dto.DriverRecruitDTO;
 import com.bjike.goddess.carinfo.service.DriverRecruitSer;
 import com.bjike.goddess.carinfo.to.DriverRecruitTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,18 @@ public class DriverRecruitApiImpl implements DriverRecruitAPI {
     private DriverRecruitSer driverRecruitSer;
 
     @Override
-    public DriverRecruitBO save(DriverRecruitTO to) throws SerException {
-        return driverRecruitSer.insertModel(to);
+    public Boolean sonPermission() throws SerException {
+        return driverRecruitSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return driverRecruitSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void save(DriverRecruitTO to) throws SerException {
+         driverRecruitSer.insertModel(to);
     }
 
     @Override
@@ -46,8 +57,8 @@ public class DriverRecruitApiImpl implements DriverRecruitAPI {
     }
 
     @Override
-    public DriverRecruitBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(driverRecruitSer.findById(id), DriverRecruitBO.class);
+    public DriverRecruitBO findOne(String id) throws SerException {
+        return driverRecruitSer.findOne(id);
     }
 
     @Override

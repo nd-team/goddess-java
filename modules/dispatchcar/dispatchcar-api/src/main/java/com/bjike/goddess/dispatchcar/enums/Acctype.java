@@ -1,5 +1,7 @@
 package com.bjike.goddess.dispatchcar.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 科目类型
  *
@@ -14,14 +16,17 @@ public enum Acctype {
     /**
      * 主营业务成本
      */
+    @ExcelValue(name = "主营业务成本")
     MAIN(0),
     /**
      * 市场费
      */
+    @ExcelValue(name = "市场费")
     MARKET(1),
     /**
      * 培训费
      */
+    @ExcelValue(name = "培训费")
     TRAINING(2);
 
     private int code;

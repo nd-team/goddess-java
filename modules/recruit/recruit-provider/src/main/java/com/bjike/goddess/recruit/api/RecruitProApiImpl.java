@@ -1,13 +1,16 @@
 package com.bjike.goddess.recruit.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.entity.RecruitPro;
 import com.bjike.goddess.recruit.service.RecruitProSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +52,12 @@ public class RecruitProApiImpl implements RecruitProAPI {
      */
     @Override
     public Long count(RecruitProDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getRecruitSite())){
+            dto.getConditions().add(Restrict.like("recruitSite",dto.getRecruitSite()));
+        }
+        if(null != dto.getHaveContract()){
+            dto.getConditions().add(Restrict.eq("haveContract",dto.getHaveContract()));
+        }
         return recruitProSer.count(dto);
     }
 
@@ -115,11 +124,12 @@ public class RecruitProApiImpl implements RecruitProAPI {
      *
      * @param id 招聘方案唯一标识
      * @param yyOpinion 运营商务部意见
+     * @param moneyReady 是否有资金准备
      * @throws SerException
      */
     @Override
-    public void yyOpinion(String id, String yyOpinion) throws SerException {
-        recruitProSer.yyOpinion(id, yyOpinion);
+    public void yyOpinion(String id, String yyOpinion,Boolean moneyReady) throws SerException {
+        recruitProSer.yyOpinion(id, yyOpinion,moneyReady);
     }
 
     /**
@@ -135,4 +145,13 @@ public class RecruitProApiImpl implements RecruitProAPI {
         recruitProSer.zjbOpinion(id, zjbOpinion, auditType);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitProSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitProSer.guidePermission(guidePermissionTO);
+    }
 }

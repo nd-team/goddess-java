@@ -9,6 +9,7 @@ import com.bjike.goddess.materialbuy.api.DeviceTypeAPI;
 import com.bjike.goddess.materialbuy.bo.DeviceTypeBO;
 import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.to.DeviceTypeTO;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.vo.DeviceTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,30 @@ public class DeviceTypeAct {
     private DeviceTypeAPI deviceTypeAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = deviceTypeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 根据id查询设备类型
      *
      * @param id 设备类型唯一标识
@@ -56,7 +81,7 @@ public class DeviceTypeAct {
     /**
      * 分页查询设备类型
      *
-     * @param dto           设备类型dto
+     * @param dto 设备类型dto
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -75,7 +100,7 @@ public class DeviceTypeAct {
     /**
      * 添加设备类型
      *
-     * @param to     设备类型to
+     * @param to 设备类型to
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -111,7 +136,7 @@ public class DeviceTypeAct {
     /**
      * 编辑设备类型
      *
-     * @param to     设备类型to
+     * @param to 设备类型to
      * @throws ActException
      * @version v1
      */
@@ -120,6 +145,22 @@ public class DeviceTypeAct {
         try {
             deviceTypeAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DeviceTypeDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(deviceTypeAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

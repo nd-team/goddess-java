@@ -32,7 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他收入
@@ -182,15 +184,14 @@ public class OtherIncomeAction extends BaseFileAction{
      * 汇总
      *
      * @param to 其他收入数据to
-     * @return class OtherIncomeVO
      * @des 汇总其他收入
      * @version v1
      */
     @GetMapping("v1/collect")
     public Result collect(@Validated OtherIncomeCollectTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<OtherIncomeVO> otherIncomeVOS = BeanTransform.copyProperties(otherIncomeAPI.collect(to), OtherIncomeVO.class);
-            return ActResult.initialize(otherIncomeVOS);
+            LinkedHashMap<String,String> map  = otherIncomeAPI.collect(to);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

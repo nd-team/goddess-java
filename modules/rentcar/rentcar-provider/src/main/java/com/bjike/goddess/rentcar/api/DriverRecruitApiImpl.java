@@ -6,6 +6,7 @@ import com.bjike.goddess.rentcar.bo.DriverRecruitBO;
 import com.bjike.goddess.rentcar.dto.DriverRecruitDTO;
 import com.bjike.goddess.rentcar.service.DriverRecruitSer;
 import com.bjike.goddess.rentcar.to.DriverRecruitTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +21,21 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("driverRecruitApiImpl")
+@Service("driverRecruitApiImpl1")
 public class DriverRecruitApiImpl implements DriverRecruitAPI {
 
     @Autowired
     private DriverRecruitSer driverRecruitSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return driverRecruitSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return driverRecruitSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DriverRecruitBO save(DriverRecruitTO to) throws SerException {

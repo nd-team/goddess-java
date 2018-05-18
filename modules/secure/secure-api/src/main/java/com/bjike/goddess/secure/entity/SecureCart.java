@@ -6,6 +6,7 @@ import com.bjike.goddess.secure.enums.CartStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -72,8 +73,8 @@ public class SecureCart extends BaseEntity {
     /**
      * 曾补办时间
      */
-    @Column(name = "reapply", columnDefinition = "DATETIME   COMMENT '曾补办时间'")
-    private String reapply;
+    @Column(name = "reapply", columnDefinition = "DATE   COMMENT '曾补办时间'")
+    private LocalDate reapply;
 
     /**
      * 曾补办次数
@@ -151,11 +152,11 @@ public class SecureCart extends BaseEntity {
         this.location = location;
     }
 
-    public String getReapply() {
+    public LocalDate getReapply() {
         return reapply;
     }
 
-    public void setReapply(String reapply) {
+    public void setReapply(LocalDate reapply) {
         this.reapply = reapply;
     }
 

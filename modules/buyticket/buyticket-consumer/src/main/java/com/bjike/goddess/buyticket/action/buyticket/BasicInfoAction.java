@@ -4,6 +4,7 @@ import com.bjike.goddess.buyticket.api.BasicInfoAPI;
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BasicInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +38,28 @@ public class BasicInfoAction {
     @Autowired
     private BasicInfoAPI basicInfoAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = basicInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 基本信息设置列表总条数
      *
@@ -146,4 +170,101 @@ public class BasicInfoAction {
         }
     }
 
+    /**
+     * 查询所有购票原因
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findticketCause")
+    public Result findticketCause() throws ActException {
+        try {
+            List<String> ticketCause = new ArrayList<>();
+            ticketCause = basicInfoAPI.findAllTicketCause();
+            return ActResult.initialize(ticketCause);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有车票类型
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findTicketType")
+    public Result findTicketType() throws ActException {
+        try {
+            List<String> ticketType = new ArrayList<>();
+            ticketType = basicInfoAPI.findAllTicketType();
+            return ActResult.initialize(ticketType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有购买方式
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findBuyPattern")
+    public Result findBuyPattern() throws ActException {
+        try {
+            List<String> buyPattern = new ArrayList<>();
+            buyPattern = basicInfoAPI.findAllBuyPattern();
+            return ActResult.initialize(buyPattern);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有汇总类型
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findSummaryType")
+    public Result findSummaryType() throws ActException {
+        try {
+            List<String> summaryType = new ArrayList<>();
+            summaryType = basicInfoAPI.findAllSummaryType();
+            return ActResult.initialize(summaryType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有汇总周期
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findSummaryCycle")
+    public Result findSummaryCycle() throws ActException {
+        try {
+            List<String> summaryCycle = new ArrayList<>();
+            summaryCycle = basicInfoAPI.findAllSummaryCycle();
+            return ActResult.initialize(summaryCycle);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有数据汇总呈现类型
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/finDataAggregationType")
+    public Result findApplyAreas() throws ActException {
+        try {
+            List<String> dataAggregationType = new ArrayList<>();
+            dataAggregationType = basicInfoAPI.findAllDataAggregationType();
+            return ActResult.initialize(dataAggregationType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.MeetingLayDTO;
 import com.bjike.goddess.allmeeting.service.MeetingLaySer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MeetingLayTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -22,9 +23,24 @@ import java.util.List;
  */
 @Service("meetingLayApiImpl")
 public class MeetingLayApiImpl implements MeetingLayAPI {
-
     @Autowired
     private MeetingLaySer meetingLaySer;
+
+    @Override
+    public String[] get() throws SerException {
+        return meetingLaySer.get();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingLaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingLaySer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public MeetingLayBO add(MeetingLayTO to) throws SerException {

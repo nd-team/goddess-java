@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 回款明细业务接口实现
@@ -83,22 +80,22 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
 
 
     @Override
-    public List<String> auditTime(String auditTime) throws SerException {
+    public Map<String,String> auditTime(String auditTime) throws SerException {
         return receivableSubsidiarySer.auditTime(auditTime);
     }
 
     @Override
-    public List<String> countTime(String countTime) throws SerException {
+    public Map<String,String> countTime(String countTime) throws SerException {
         return receivableSubsidiarySer.countTime(countTime);
     }
 
     @Override
-    public List<String> billTime(String billTime) throws SerException {
+    public Map<String,String> billTime(String billTime) throws SerException {
         return receivableSubsidiarySer.billTime(billTime);
     }
 
     @Override
-    public String planTime(String planTime) throws SerException {
+    public Map<String,String> planTime(String planTime) throws SerException {
         return receivableSubsidiarySer.planTime(planTime);
     }
     @Override
@@ -157,6 +154,15 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     @Override
     public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return receivableSubsidiarySer.collectCompare(to);
+    }
+    @Override
+    public ReceivableSubsidiaryBO importExcelBack(String id, List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return receivableSubsidiarySer.importExcelBack(id,receivableSubsidiaryTOS);
+    }
+
+    @Override
+    public byte[] templateExportBack() throws SerException {
+        return receivableSubsidiarySer.templateExportBack();
     }
     @Override
     public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {

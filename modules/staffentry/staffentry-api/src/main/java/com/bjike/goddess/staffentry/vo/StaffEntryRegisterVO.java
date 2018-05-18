@@ -28,24 +28,59 @@ public class StaffEntryRegisterVO {
      */
     private String userName;
     /**
-     * 所属部门
+     * 所属部门/项目组
      */
     private String department;
+    /**
+     * 联系电话
+     */
+    private String contactNum;
 
     /**
-     * 角色列表
+     * 入职日期
      */
-    private String role;
+    private String entryDate;
+    /**
+     * 是否住宿
+     */
+    private Boolean lodge;
+    /**
+     * 是否使用公司电脑
+     */
+    private Boolean useCompanyComputer;
+    /**
+     * 入职地址
+     */
+    private String entryAddress;
+    /**
+     * 是否入职
+     */
+    private Boolean entry;
+    /**
+     * 未入职原因
+     */
+    private String noEntryCause;
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 是否通告
+     */
+    private Boolean notice;
+    /**
+     * 注册邮箱使用手机号
+     */
+    private String registerUseNum;
+    /**
+     * 更改后的邮箱密码
+     */
+    private String changeEmailPassword;
 
     /**
      * 职位
      */
     private String position;
-
-    /**
-     * 项目组
-     */
-    private String projectGroup;
 
     /**
      * 工作邮箱
@@ -115,12 +150,92 @@ public class StaffEntryRegisterVO {
         this.department = department;
     }
 
-    public String getRole() {
-        return role;
+    public String getContactNum() {
+        return contactNum;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setContactNum(String contactNum) {
+        this.contactNum = contactNum;
+    }
+
+    public String getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public Boolean getLodge() {
+        return lodge;
+    }
+
+    public void setLodge(Boolean lodge) {
+        this.lodge = lodge;
+    }
+
+    public Boolean getUseCompanyComputer() {
+        return useCompanyComputer;
+    }
+
+    public void setUseCompanyComputer(Boolean useCompanyComputer) {
+        this.useCompanyComputer = useCompanyComputer;
+    }
+
+    public String getEntryAddress() {
+        return entryAddress;
+    }
+
+    public void setEntryAddress(String entryAddress) {
+        this.entryAddress = entryAddress;
+    }
+
+    public Boolean getEntry() {
+        return entry;
+    }
+
+    public void setEntry(Boolean entry) {
+        this.entry = entry;
+    }
+
+    public String getNoEntryCause() {
+        return noEntryCause;
+    }
+
+    public void setNoEntryCause(String noEntryCause) {
+        this.noEntryCause = noEntryCause;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Boolean getNotice() {
+        return notice;
+    }
+
+    public void setNotice(Boolean notice) {
+        this.notice = notice;
+    }
+
+    public String getRegisterUseNum() {
+        return registerUseNum;
+    }
+
+    public void setRegisterUseNum(String registerUseNum) {
+        this.registerUseNum = registerUseNum;
+    }
+
+    public String getChangeEmailPassword() {
+        return changeEmailPassword;
+    }
+
+    public void setChangeEmailPassword(String changeEmailPassword) {
+        this.changeEmailPassword = changeEmailPassword;
     }
 
     public String getPosition() {
@@ -129,14 +244,6 @@ public class StaffEntryRegisterVO {
 
     public void setPosition(String position) {
         this.position = position;
-    }
-
-    public String getProjectGroup() {
-        return projectGroup;
-    }
-
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
     }
 
     public String getWorkEmail() {

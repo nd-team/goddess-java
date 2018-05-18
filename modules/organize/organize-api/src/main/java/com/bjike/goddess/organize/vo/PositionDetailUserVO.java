@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.organize.enums.StaffStatus;
+
 import java.util.List;
 
 /**
@@ -17,30 +19,26 @@ public class PositionDetailUserVO {
      * id
      */
     private String id;
-    /**
-     * 用户信息
-     */
-    private String userId;
 
     /**
      * 员工名称
      */
-    private String username;
+    private String name;
 
     /**
      * 员工编号
      */
-    private String employeesNumber;
+    private String number;
 
-    /**
-     * 职位
-     */
-    private String position;
-
-    /**
-     * 职位id
-     */
-    private String positionIds;
+//    /**
+//     * 职位
+//     */
+//    private String position;
+//
+//    /**
+//     * 职位id
+//     */
+//    private String positionIds;
 
     /**
      * 职位选项数据
@@ -51,7 +49,30 @@ public class PositionDetailUserVO {
      * 职位信息
      */
     private List<PositionDetailVO> positionDetails;
+    /**
+     * 详细信息
+     */
+    private List<PositionUserDetailVO> detailS;
+    /**
+     * 人员状态
+     */
+    private StaffStatus staffStatus;
 
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
+
+    public List<PositionUserDetailVO> getDetailS() {
+        return detailS;
+    }
+
+    public void setDetailS(List<PositionUserDetailVO> detailS) {
+        this.detailS = detailS;
+    }
 
     public String getId() {
         return id;
@@ -61,44 +82,20 @@ public class PositionDetailUserVO {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPosition() {
-        return position;
+    public String getNumber() {
+        return number;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getPositionIds() {
-        return positionIds;
-    }
-
-    public void setPositionIds(String positionIds) {
-        this.positionIds = positionIds;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmployeesNumber() {
-        return employeesNumber;
-    }
-
-    public void setEmployeesNumber(String employeesNumber) {
-        this.employeesNumber = employeesNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public List<UserPositionVO> getPositionVo() {

@@ -55,6 +55,31 @@ public class MoneyReadyVO {
      */
     private Integer month;
 
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 删除时间
+     */
+    private String delTime;
+
+    public String getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(String delTime) {
+        this.delTime = delTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getId() {
         return id;
     }

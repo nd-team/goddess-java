@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
 
 import java.util.List;
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface ManagementScoreSer extends Ser<ManagementScore, ManagementScoreDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询管理层评分
      *
@@ -52,5 +66,12 @@ public interface ManagementScoreSer extends Ser<ManagementScore, ManagementScore
      * @throws SerException
      */
     void update(ManagementScoreTO to) throws SerException;
+    /**
+     * 根据员工转正id查询所有管理层评分
+     *
+     * @param regularizationId 员工转正id
+     * @throws SerException
+     */
+    List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException;
 
 }

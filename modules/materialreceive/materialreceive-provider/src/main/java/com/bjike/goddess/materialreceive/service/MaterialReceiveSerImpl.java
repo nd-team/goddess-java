@@ -2,6 +2,7 @@ package com.bjike.goddess.materialreceive.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
@@ -10,10 +11,19 @@ import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
 import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
+import com.bjike.goddess.materialreceive.type.GuideAddrStatus;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -21,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资领用归还登记业务实现
@@ -37,11 +47,188 @@ import java.util.List;
 public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, MaterialReceiveDTO> implements MaterialReceiveSer {
 
     @Autowired
-    private UserAPI userAPI;
-
-    @Autowired
     private MaterialInStockAPI materialInStockAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(福利模块)
+     *
+     * @throws SerException
+     */
+    private void checkModPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是福利模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(岗位)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是项目经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对财务模块审核权限（模块级别）
+     */
+    private Boolean guideMondIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagMond = guideMondIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagPosin = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagMond || flagPosin) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case AUDIT:
+                flag = guideMondIdentity();
+                break;
+            case RECEIVE:
+                flag = guidePosinIdentity();
+                break;
+            case BREA:
+                flag = guidePosinIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     /**
      * 分页查询物资领用归还登记
@@ -51,6 +238,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
      */
     @Override
     public List<MaterialReceiveBO> list(MaterialReceiveDTO dto) throws SerException {
+        checkPermission();
         List<MaterialReceive> list = super.findByPage(dto);
         List<MaterialReceiveBO> listBO = BeanTransform.copyProperties(list, MaterialReceiveBO.class);
         return listBO;
@@ -66,6 +254,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialReceiveBO save(MaterialReceiveTO to) throws SerException {
+        checkPermission();
         Integer quantity = setReceive(to);//设置领用数量和领用编号
         return saveModel(to, quantity);
     }
@@ -147,6 +336,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 
@@ -159,6 +349,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialReceiveTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialReceive model = super.findById(to.getId());
             if (model != null) {
@@ -210,17 +401,12 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, AuditState auditState, String auditOpinion) throws SerException {
-        String curUsername = userAPI.currentUser().getUsername();
+        checkPonsPermission();
         if (StringUtils.isNotBlank(id)) {
             MaterialReceive model = super.findById(id);
-            boolean auditorIsNotEmpty = (model != null) && (StringUtils.isNotEmpty(model.getAuditor()));
-            if (auditorIsNotEmpty && (model.getAuditor().equals(curUsername))) {
-                model.setAuditState(auditState);
-                model.setAuditOpinion(auditOpinion);
-                super.update(model);
-            } else {
-                throw new SerException("审核人与当前用户不符,无法进行审核.");
-            }
+            model.setAuditState(auditState);
+            model.setAuditOpinion(auditOpinion);
+            super.update(model);
         } else {
             throw new SerException("更新id不能为空");
         }
@@ -235,6 +421,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void receiveOver(MaterialReceiveTO to) throws SerException {
+        checkModPermission();
         if (StringUtils.isNotBlank(to.getId())) {
             MaterialReceive model = super.findById(to.getId());
             model.setModel(to.getModel());
@@ -257,6 +444,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void materialReturn(MaterialReturnTO to) throws SerException {
+        checkModPermission();
         setUseStateToInStock(to);//更新使用状态为在库
         String id = to.getId();
         if (StringUtils.isBlank(id)) {
@@ -285,4 +473,35 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
         materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
     }
 
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }

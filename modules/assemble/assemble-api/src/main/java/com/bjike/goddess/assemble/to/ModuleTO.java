@@ -20,6 +20,11 @@ public class ModuleTO extends BaseTO {
      */
     @NotBlank(message = "模块名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
+    /**
+     * 模块英文名
+     */
+    @NotBlank(message = "模块英文名不能为空", groups = {ADD.class, EDIT.class})
+    private String moduleName;
 
 
     public String getName() {
@@ -30,4 +35,11 @@ public class ModuleTO extends BaseTO {
         this.name = name;
     }
 
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
 }

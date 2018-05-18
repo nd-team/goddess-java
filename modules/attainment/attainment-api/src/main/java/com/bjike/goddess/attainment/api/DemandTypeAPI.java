@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.api;
 import com.bjike.goddess.attainment.bo.DemandTypeBO;
 import com.bjike.goddess.attainment.dto.DemandTypeDTO;
 import com.bjike.goddess.attainment.to.DemandTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DemandTypeAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -115,4 +130,10 @@ public interface DemandTypeAPI {
         return null;
     }
 
+    /**
+     * 调研对象
+     */
+    default List<String> getObject() throws SerException {
+        return null;
+    }
 }

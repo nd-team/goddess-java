@@ -5,6 +5,7 @@ import com.bjike.goddess.commerce.dto.CommerceConferenceDTO;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.to.GuidePermissionTO;
 import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -134,4 +135,27 @@ public interface CommerceConferenceAPI {
     default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tocs 商务会议
+     * @return class CommerceConferenceBO
+     */
+    default CommerceConferenceBO importExcel(List<CommerceConferenceTO> tocs) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }

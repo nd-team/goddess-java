@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.CreditorsInvestBO;
 import com.bjike.goddess.moneyside.dto.CreditorsInvestDTO;
 import com.bjike.goddess.moneyside.entity.CreditorsInvest;
 import com.bjike.goddess.moneyside.to.CreditorsInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,7 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CreditorsInvestSer extends Ser<CreditorsInvest, CreditorsInvestDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 债权投资列表总条数
      */

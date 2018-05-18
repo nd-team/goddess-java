@@ -16,6 +16,9 @@ import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -27,9 +30,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资分析业务实现
@@ -50,6 +51,10 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 检查权限(部门)
@@ -178,7 +183,9 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagMond = guideMondIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagPosin = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (flagSee || flagMond || flagPosin) {
             return true;
         } else {
@@ -362,5 +369,35 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
         DecimalFormat df = new DecimalFormat("#.00");
         return df.format(d * 100) + "%";
     }
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }

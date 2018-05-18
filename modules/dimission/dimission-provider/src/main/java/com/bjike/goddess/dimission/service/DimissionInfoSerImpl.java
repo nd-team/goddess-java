@@ -1,20 +1,27 @@
 package com.bjike.goddess.dimission.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.dimission.api.InterviewAPI;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
 import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.*;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -22,10 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,47 +65,286 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private HandoverReferenceSer handoverReferenceSer;
+    @Autowired
+    private WorkHandoverSer workHandoverSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private InterviewAPI interviewSer;
+    @Autowired
+    private SituationSer situationSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("dimissioninfo");
+        obj.setDescribesion("离职信息");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = handoverReferenceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("handoverreference");
+        obj.setDescribesion("交接信息参考");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = workHandoverSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("workhandover");
+        obj.setDescribesion("工作交接");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate1 = interviewSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("interview");
+        obj.setDescribesion("离职管理面谈");
+        if (flagSeeCate1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate2 = situationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("situation");
+        obj.setDescribesion("离职办理节点情况");
+        if (flagSeeCate2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
 
     private DimissionInfoBO transformBO(DimissionInfo entity) throws SerException {
         DimissionInfoBO bo = BeanTransform.copyProperties(entity, DimissionInfoBO.class);
-        UserBO user = userAPI.findByUsername(entity.getUsername());
-        if (user != null) {
-            bo.setEmployeeNumber(user.getEmployeeNumber());
-            bo.setPhone(user.getPhone());
-            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-            bo.setArea("");
-            bo.setPosition("");
-            bo.setArrangement("");
-            bo.setDepartment("");
-            if (null != detailBO) {
-                List<PositionDetailBO> positionBOs = positionDetailAPI.findByPostIds(detailBO.getPositionIds().split(","));
-                String area = "", department = "", arrangement = "";
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
-                        .collect(Collectors.toList())) {
-                    bo.setPosition(position.getPosition() + "," + bo.getPosition());
-                    if (!arrangement.equals(position.getArrangementName())) {
-                        arrangement = position.getArrangementName();
-                        bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
-                    }
-                }
-
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                        .collect(Collectors.toList()))
-                    if (!department.equals(position.getDepartmentName())) {
-                        department = position.getDepartmentName();
-                        bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
-                    }
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                        .collect(Collectors.toList()))
-                    if (!area.equals(position.getArea())) {
-                        area = position.getArea();
-                        bo.setArea(position.getArea() + "," + bo.getArea());
-                    }
-            }
-        }
+//        UserBO user = userAPI.findByUsername(entity.getUsername());
+//        if (user != null) {
+////            bo.setEmployeeNumber(user.getEmployeeNumber());
+////            bo.setPhone(user.getPhone());
+//            if (moduleAPI.isCheck("archive")) {
+//                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
+//                if (null != staffRecordsBO) {
+//                    bo.setEntryTime(staffRecordsBO.getEntryTime());
+//                    bo.setEducation(staffRecordsBO.getEducation());
+//                    bo.setPhone(staffRecordsBO.getTelephone());
+//                }
+//            }
+//            if (moduleAPI.isCheck("organize")) {
+//                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+//                if (null != detailBO) {
+//                    bo.setEmployeeNumber(detailBO.getNumber());
+//                }
+//                bo.setArea("");
+//                bo.setPosition("");
+//                bo.setArrangement("");
+//                bo.setDepartment("");
+//                if (null != detailBO) {
+//                    List<PositionDetailBO> positionBOs = new ArrayList<>();
+//                    List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+//                    if (null != positionUserDetailBOSList) {
+//                        for (PositionUserDetailBO p : positionUserDetailBOSList) {
+//                            if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+//                                positionBOs = positionDetailAPI.findByPostIds(p.getPositionId().split(","));
+//                            }
+//                        }
+//                    }
+//                    String area = "", department = "", arrangement = "";
+//                    if (positionBOs != null) {
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
+//                                .collect(Collectors.toList())) {
+//                            bo.setPosition(position.getPosition() + "," + bo.getPosition());
+//                            if (!arrangement.equals(position.getArrangementName())) {
+//                                arrangement = position.getArrangementName();
+//                                bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+//                            }
+//                        }
+//
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+//                                .collect(Collectors.toList()))
+//                            if (!department.equals(position.getDepartmentName())) {
+//                                department = position.getDepartmentName();
+//                                bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
+//                            }
+//
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+//                                .collect(Collectors.toList()))
+//                            if (!area.equals(position.getArea())) {
+//                                area = position.getArea();
+//                                bo.setArea(position.getArea() + "," + bo.getArea());
+//                            }
+//                    }
+//                }
+//            }
+//        }
 
         return bo;
     }
@@ -106,11 +356,13 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
-        entity.setUsername(user.getUsername());
         entity.setType(DimissionType.NORMAL);
         entity.setApplyDate(LocalDate.now());
         entity.setDimission(DimissionStatus.APPLY);
@@ -126,7 +378,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DimissionInfoBO update(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据id不能为空");
         DimissionInfo entity = super.findById(to.getId());
@@ -141,20 +393,36 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO presume(FromInfoTO to) throws SerException {
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
         entity.setType(DimissionType.PRESUME);
         entity.setDimission(DimissionStatus.SUCCESS);
         entity.setHandle(HandleStatus.AFFIRM);
         entity.setDimissionConfirmation(ConfirmationType.NONE);
         entity.setSalaryConfirmation(ConfirmationType.NONE);
-
+        if (null == userAPI.findByUsername(to.getUsername()))
+            throw new SerException("该用户不存在");
         if (entity.getApplyDate() != null) {
             entity.setStatus(EmployeeStatus.FORMAL);
             entity.setDimissionDate(entity.getApplyDate().plusDays(30));
         }
 
         super.save(entity);
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据id不能为空");
+        DimissionInfo entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        if (null == userAPI.findByUsername(entity.getUsername()))
+            throw new SerException("该用户不存在");
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
         return this.transformBO(entity);
     }
 
@@ -534,6 +802,130 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     @Override
     public Long getTotal() throws SerException {
         DimissionInfoDTO dto = new DimissionInfoDTO();
+        List<DimissionInfo> dimissionInfos = super.findByCis(dto);
+        if (null != dimissionInfos && dimissionInfos.size() > 0) {
+            dimissionInfos = dimissionInfos.stream().filter(obj -> !"2".equals(obj.getType())).collect(Collectors.toList());
+        }
+        return Long.valueOf(dimissionInfos.size());
+    }
+
+    @Override
+    public List<String> getAllName() throws SerException {
+        if (moduleAPI.isCheck("organize")) {
+            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+            if (!CollectionUtils.isEmpty(userBOList)) {
+                List<String> list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                return list;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getDimissionNum(String[] date) throws SerException {
+        Integer number = 0;
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.between("dimissionDate", date));
+        List<DimissionInfo> dimissionInfos = super.findByCis(dimissionInfoDTO);
+        if (dimissionInfos != null && dimissionInfos.size() > 0) {
+            number = dimissionInfos.size();
+        }
+        return number;
+    }
+
+    @Override
+    public String getDate() throws SerException {
+        String sql = "select min(dimissionDate) as dimissionDate from " + getTableName(DimissionInfo.class);
+        List<Object> objects = super.findBySql(sql);
+        String startDate = "";
+        if (objects != null && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+        }
+        return startDate;
+    }
+
+    @Override
+    public List<DimissionInfo> findByName(String userName) throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        dto.getConditions().add(Restrict.eq("username", userName));
+        List<DimissionInfo> list = super.findByCis(dto);
+        return list;
+    }
+
+    @Override
+    public String getTime(String name) throws SerException {
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.eq("username", name));
+        List<DimissionInfo> list = super.findByCis(dimissionInfoDTO);
+        if (!list.isEmpty()) {
+            DimissionInfo dimissionInfo = list.get(0);
+            if ((null != dimissionInfo.getHandle()) && ConfirmationType.AFFIRM.equals(dimissionInfo.getHandle())) {
+                if ((null != dimissionInfo.getAdvance()) && (dimissionInfo.getAdvance())) {
+                    LocalDate advanceDate = dimissionInfo.getAdvanceDate();
+                    if (null != advanceDate) {
+                        return DateUtil.dateToString(advanceDate);   //提前离职
+                    }
+                } else {
+                    LocalDate dimissionDate = dimissionInfo.getDimissionDate();
+                    if (null != dimissionDate) {
+                        return DateUtil.dateToString(dimissionDate);   //正常离职
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public DataBO findDataByName(String name) throws SerException {
+        Boolean tar = false;
+        UserBO userBO = userAPI.findByUsername(name);
+        DataBO bo = new DataBO();
+        bo.setUsername(userBO.getUsername());
+        bo.setEmployeeNumber(userBO.getEmployeeNumber());
+        bo.setPhone(userBO.getPhone());
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getUsername());
+            if (null != positionDetailBOs && positionDetailBOs.size() > 0) {
+                bo.setArea(positionDetailBOs.get(0).getArea());
+                bo.setDepartment(positionDetailBOs.get(0).getDepartmentName());
+                bo.setPosition(positionDetailBOs.get(0).getPosition());
+                bo.setArrangement(positionDetailBOs.get(0).getArrangementName());
+            }
+        }
+        if (moduleAPI.isCheck("archive")) {
+            StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(userBO.getUsername());
+            if (null != staffRecordsBO) {
+                bo.setEntryTime(staffRecordsBO.getEntryTime());
+                bo.setEducation(staffRecordsBO.getEducation());
+                bo.setPhone(staffRecordsBO.getTelephone());
+                bo.setSeniority(String.valueOf(findSeniority(bo.getEntryTime(), DateUtil.dateToString(LocalDate.now()))));
+            }
+        }
+        return bo;
+    }
+
+    //得到在司工龄
+    private int findSeniority(String date1, String date2) throws SerException {
+        try {
+            int result = 0;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c1 = Calendar.getInstance();
+            Calendar c2 = Calendar.getInstance();
+            c1.setTime(sdf.parse(date1));
+            c2.setTime(sdf.parse(date2));
+            result = c1.get(Calendar.MONTH) - c2.get(Calendar.MONTH);
+            return result == 0 ? 1 : Math.abs(result);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Long getSelfTotal() throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        dto.getConditions().add(Restrict.eq("type", 2));
         return super.count(dto);
+
     }
 }

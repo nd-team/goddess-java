@@ -23,6 +23,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +87,8 @@ public class OtherContactsAct extends BaseFileAction{
     @DeleteMapping("v1/delete/{id}")
     public Result delete(OtherContactsTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.delete(to), OtherContactsVO.class));
+            otherContactsAPI.delete(to);
+            return ActResult.initialize("delete seccess");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -188,4 +191,24 @@ public class OtherContactsAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务通讯录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "其他通讯录导入模板.xlsx";
+            super.writeOutFile(response, otherContactsAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 }

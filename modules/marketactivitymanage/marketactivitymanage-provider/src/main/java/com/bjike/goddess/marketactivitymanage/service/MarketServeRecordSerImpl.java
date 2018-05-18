@@ -75,31 +75,31 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是相应模块人员,没有该操作权限");
+            throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
     }
 
     /**
-     * 核对审核权限(模块)
+     * 核对审核权限(运营商务部)
      *
      * @throws SerException
      */
-    private void checkAuditMPermission() throws SerException {
+    private void checkBusinPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是运营商务部人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -116,7 +116,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.arrCusPermission("3");
         } else {
@@ -128,6 +128,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -146,16 +147,16 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     }
 
     /**
-     * 核对审核权限（模块级别）
+     * 核对查看权限（部门级别）
      */
-    private Boolean guideAuditMIdentity() throws SerException {
+    private Boolean guideBusinIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
@@ -172,20 +173,23 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
         return flag;
     }
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditM = guideAuditMIdentity();
         Boolean flagAuditA = guideAuditAIdentity();
-        if (flagSee || flagAuditM || flagAuditA) {
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditB = guideBusinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAuditA || flagAuditB) {
             return true;
         } else {
             return false;
@@ -238,7 +242,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideBusinIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -251,7 +255,6 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
     /**
      * 分页查询市场招待记录
      *

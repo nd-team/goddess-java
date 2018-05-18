@@ -25,6 +25,31 @@ public class DriverRecruitTO extends BaseTO {
     private String area;
 
     /**
+     * 项目组
+     */
+    @NotBlank(message = "项目组不能为空",groups = {ADD.class, EDIT.class})
+    private String department;
+
+    /**
+     * 信息收集时间
+     */
+    @NotBlank(message = "信息收集时间不能为空",groups = {ADD.class, EDIT.class})
+    private String informationCollecttionTime;
+
+    /**
+     * 是否确定签订协议
+     */
+    @NotNull(message = "是否确定签订协议不能为空",groups = {ADD.class,EDIT.class})
+    private Boolean enSureAgreement;
+
+    /**
+     * 结算方式
+     */
+    @NotBlank(message = "结算方式不能为空",groups = {ADD.class,EDIT.class})
+    private String meansOfPayments;
+
+
+    /**
      * 司机名称
      */
     @NotBlank(message = "司机名称不能为空",groups = {ADD.class, EDIT.class})
@@ -296,5 +321,38 @@ public class DriverRecruitTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getInformationCollecttionTime() {
+        return informationCollecttionTime;
+    }
+
+    public void setInformationCollecttionTime(String informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public String getMeansOfPayments() {
+        return meansOfPayments;
+    }
+
+    public void setMeansOfPayments(String meansOfPayments) {
+        this.meansOfPayments = meansOfPayments;
     }
 }

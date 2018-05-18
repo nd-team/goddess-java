@@ -1,16 +1,20 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 
 /**
  * 油卡充值对外发布接口实现类
@@ -54,8 +58,8 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     }
 
     @Override
-    public OilCardRechargeBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardRechargeSer.findById(id), OilCardRechargeBO.class);
+    public OilCardRechargeBO findBy(String id) throws SerException {
+        return oilCardRechargeSer.findBy(id);
     }
 
     @Override
@@ -66,5 +70,65 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     @Override
     public AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException {
         return oilCardRechargeSer.analyze(oilCardCode, year, month);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return oilCardRechargeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return oilCardRechargeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        oilCardRechargeSer.delete(id);
+    }
+
+//    @Override
+//    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
+//        return oilCardRechargeSer.findDispatch(oilCardCode,startTime,endTime);
+//    }
+
+    @Override
+    public void updateInformation(String id, Double balance,Double pettyCash) throws SerException {
+        oilCardRechargeSer.updateInformation(id,balance,pettyCash);
+    }
+
+    @Override
+    public void updateRecharge(String id, Boolean ifRecharge, Double pettyCash,Double rechargeMoney, String rechargeDate) throws SerException {
+        oilCardRechargeSer.updateRecharge(id,ifRecharge,pettyCash,rechargeMoney,rechargeDate);
+    }
+
+    @Override
+    public void noticeRecharge(String id) throws SerException {
+        oilCardRechargeSer.noticeRecharge(id);
+    }
+
+    @Override
+    public void updateScreen(String id) throws SerException {
+        oilCardRechargeSer.updateScreen(id);
+    }
+
+    @Override
+    public void updatePrepaid(String id) throws SerException {
+        oilCardRechargeSer.updatePrepaid(id);
+    }
+
+    @Override
+    public void leadExcel(List<OilCardRechargeTO> toList) throws SerException {
+
+    }
+
+    @Override
+    public byte[] exportExcel(ExportOilcardRechargeTO to) throws SerException {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return new byte[0];
     }
 }

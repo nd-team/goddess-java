@@ -1,19 +1,45 @@
 package com.bjike.goddess.bidding.bo;
 
-import java.io.Serializable;
+import com.bjike.goddess.common.api.bo.BaseBO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ike on 17-5-5.
  */
-public class BiddingInfoCollectBO implements Serializable{
+public class BiddingInfoCollectBO extends BaseBO {
 
+    /**
+     * 招投标类型汇总集合
+     */
+    private List<Map<String, String>> biddingMap;
+    /**
+     * 业务类型汇总集合
+     */
+    private List<Map<String, String>> businessMap;
+    /**
+     * 个数
+     */
+    private Integer counts;
+
+    /**
+     * 地区
+     */
     private String cities;
-    private Object invite;
-    private Object openly;
-    private Object mobile;
-    private Object soft;
-    private Object system;
-    private Object plan;
+
+    /**
+     * remark
+     */
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getCities() {
         return cities;
@@ -23,51 +49,27 @@ public class BiddingInfoCollectBO implements Serializable{
         this.cities = cities;
     }
 
-    public Object getInvite() {
-        return invite;
+    public Integer getCounts() {
+        return counts;
     }
 
-    public void setInvite(Object invite) {
-        this.invite = invite;
+    public void setCounts(Integer counts) {
+        this.counts = counts;
     }
 
-    public Object getOpenly() {
-        return openly;
+    public List<Map<String, String>> getBiddingMap() {
+        return biddingMap;
     }
 
-    public void setOpenly(Object openly) {
-        this.openly = openly;
+    public void setBiddingMap(List<Map<String, String>> biddingMap) {
+        this.biddingMap = biddingMap;
     }
 
-    public Object getMobile() {
-        return mobile;
+    public List<Map<String, String>> getBusinessMap() {
+        return businessMap;
     }
 
-    public void setMobile(Object mobile) {
-        this.mobile = mobile;
-    }
-
-    public Object getSoft() {
-        return soft;
-    }
-
-    public void setSoft(Object soft) {
-        this.soft = soft;
-    }
-
-    public Object getSystem() {
-        return system;
-    }
-
-    public void setSystem(Object system) {
-        this.system = system;
-    }
-
-    public Object getPlan() {
-        return plan;
-    }
-
-    public void setPlan(Object plan) {
-        this.plan = plan;
+    public void setBusinessMap(List<Map<String, String>> businessMap) {
+        this.businessMap = businessMap;
     }
 }

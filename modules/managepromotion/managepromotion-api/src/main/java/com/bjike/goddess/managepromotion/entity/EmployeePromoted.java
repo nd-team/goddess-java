@@ -6,6 +6,7 @@ import com.bjike.goddess.managepromotion.enums.AuditStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -55,24 +56,24 @@ public class EmployeePromoted extends BaseEntity {
      * 时间
      */
     @Column(name = "times", columnDefinition = "DATE   COMMENT '时间'")
-    private String times;
+    private LocalDate times;
 
     /**
      * 晋升前（不包括各项补助）
      */
-    @Column(  columnDefinition = "VARCHAR(255)   COMMENT '晋升前（不包括各项补助）'")
-    private Integer promotionBefore;
+    @Column(  columnDefinition = "INT(11)   COMMENT '晋升前（不包括各项补助）'")
+    private String promotionBefore;
 
     /**
      * 晋升后（不包括各项补助）
      */
-    @Column(  columnDefinition = "VARCHAR(255)   COMMENT '晋升后（不包括各项补助）'")
-    private Integer promotionAfter;
+    @Column(  columnDefinition = "INT(11)  COMMENT '晋升后（不包括各项补助）'")
+    private String promotionAfter;
 
     /**
      * 幅度(晋升后-晋升前)
      */
-    @Column(columnDefinition = "VARCHAR(255)   COMMENT '幅度'")
+    @Column(columnDefinition = "INT(11)   COMMENT '幅度'")
     private Integer extent;
 
     /**
@@ -128,27 +129,27 @@ public class EmployeePromoted extends BaseEntity {
         this.channel = channel;
     }
 
-    public String getTimes() {
+    public LocalDate getTimes() {
         return times;
     }
 
-    public void setTimes(String times) {
+    public void setTimes(LocalDate times) {
         this.times = times;
     }
 
-    public Integer getPromotionBefore() {
+    public String getPromotionBefore() {
         return promotionBefore;
     }
 
-    public void setPromotionBefore(Integer promotionBefore) {
+    public void setPromotionBefore(String promotionBefore) {
         this.promotionBefore = promotionBefore;
     }
 
-    public Integer getPromotionAfter() {
+    public String getPromotionAfter() {
         return promotionAfter;
     }
 
-    public void setPromotionAfter(Integer promotionAfter) {
+    public void setPromotionAfter(String promotionAfter) {
         this.promotionAfter = promotionAfter;
     }
 

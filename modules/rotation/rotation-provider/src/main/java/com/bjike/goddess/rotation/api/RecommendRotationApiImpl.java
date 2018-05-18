@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.RecommendRotationBO;
 import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
 import com.bjike.goddess.rotation.service.RecommendRotationSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RecommendRotationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,15 @@ public class RecommendRotationApiImpl implements RecommendRotationAPI {
     @Override
     public Long getTotal() throws SerException {
         return recommendRotationSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendRotationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendRotationSer.guidePermission(guidePermissionTO);
     }
 }

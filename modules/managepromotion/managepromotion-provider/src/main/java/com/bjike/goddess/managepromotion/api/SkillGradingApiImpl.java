@@ -1,10 +1,15 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
-import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
+import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
+import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.service.SkillGradingSer;
-import com.bjike.goddess.managepromotion.to.SkillGradingTO;
+import com.bjike.goddess.managepromotion.to.CalculateTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,32 +31,52 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
     private SkillGradingSer skillGradingSer;
 
     @Override
-    public Long countSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
-        return skillGradingSer.countSkillGrading(skillGradingDTO);
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return skillGradingSer.sonPermission();
     }
 
     @Override
-    public SkillGradingBO getOne(String id) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return skillGradingSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Long countSkillGrading(SkillGradingCDTO skillGradingCDTO) throws SerException {
+        return skillGradingSer.countSkillGrading(skillGradingCDTO);
+    }
+
+    @Override
+    public SkillGradingABO getOne(String id) throws SerException {
         return skillGradingSer.getOne(id);
     }
 
     @Override
-    public List<SkillGradingBO> findListSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
-        return skillGradingSer.findListSkillGrading(skillGradingDTO);
+    public List<SkillGradingABO> findListSkillGrading(SkillGradingADTO skillGradingADTO) throws SerException {
+        return skillGradingSer.findListSkillGrading(skillGradingADTO);
     }
 
     @Override
-    public SkillGradingBO insertSkillGrading(SkillGradingTO skillGradingTO) throws SerException {
-        return skillGradingSer.insertSkillGrading(skillGradingTO);
+    public void insertSkillGrading(SkillGradingATO skillGradingATO) throws SerException {
+        skillGradingSer.insertSkillGrading(skillGradingATO);
     }
 
     @Override
-    public SkillGradingBO editSkillGrading(SkillGradingTO skillGradingTO) throws SerException {
-        return skillGradingSer.editSkillGrading(skillGradingTO);
+    public void editSkillGrading(SkillGradingATO skillGradingATO) throws SerException {
+        skillGradingSer.editSkillGrading(skillGradingATO);
     }
 
     @Override
     public void removeSkillGrading(String id) throws SerException {
         skillGradingSer.removeSkillGrading(id);
+    }
+
+    @Override
+    public List<String> getSkillLevel() throws SerException {
+        return skillGradingSer.getSkillLevel();
+    }
+
+    @Override
+    public List<CalculateBO> calculate(CalculateTO to, SkillGradingADTO dto) throws SerException {
+        return skillGradingSer.calculate(to, dto);
     }
 }

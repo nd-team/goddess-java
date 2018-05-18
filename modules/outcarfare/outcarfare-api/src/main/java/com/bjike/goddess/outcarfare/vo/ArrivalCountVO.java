@@ -14,10 +14,10 @@ public class ArrivalCountVO {
      * 地区
      */
     private String arrival;
-    /**
-     * 租车单价
-     */
-    private Double carPrice;
+//    /**
+//     * 租车单价
+//     */
+//    private Double carPrice;
     /**
      * 加班总费
      */
@@ -43,13 +43,13 @@ public class ArrivalCountVO {
         this.arrival = arrival;
     }
 
-    public Double getCarPrice() {
-        return carPrice;
-    }
-
-    public void setCarPrice(Double carPrice) {
-        this.carPrice = carPrice;
-    }
+//    public Double getCarPrice() {
+//        return carPrice;
+//    }
+//
+//    public void setCarPrice(Double carPrice) {
+//        this.carPrice = carPrice;
+//    }
 
     public Double getOvertimeFeeSum() {
         return overtimeFeeSum;

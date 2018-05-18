@@ -10,6 +10,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendSchemeAPI;
 import com.bjike.goddess.interiorrecommend.dto.RecommendSchemeDTO;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendSchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐方案
@@ -37,9 +39,33 @@ public class RecommendSchemeAct {
     private RecommendSchemeAPI recommendSchemeAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recommendSchemeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 新增
      *
      * @param to 推荐方案
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @LoginAuth
@@ -57,6 +83,7 @@ public class RecommendSchemeAct {
      * 编辑
      *
      * @param to 推荐方案
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @LoginAuth
@@ -70,62 +97,62 @@ public class RecommendSchemeAct {
         }
     }
 
-    /**
-     * 综合资源部意见
-     *
-     * @param id               id
-     * @param resourcesSuggest 意见
-     * @param resourcesAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/resourcesAudit/{id}")
-    public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
-        try {
-            recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
-            return new ActResult();
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 运营商务部意见
-     *
-     * @param id             推荐方案
-     * @param operateSuggest 意见
-     * @param operateAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/operateAudit/{id}")
-    public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
-        try {
-            recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
-            return new ActResult();
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 总经办意见
-     *
-     * @param id             推荐方案
-     * @param generalSuggest 意见
-     * @param generalAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/generalAudit/{id}")
-    public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
-        try {
-            recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
-            return new ActResult();
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 综合资源部意见
+//     *
+//     * @param id               id
+//     * @param resourcesSuggest 意见
+//     * @param resourcesAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/resourcesAudit/{id}")
+//    public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 运营商务部意见
+//     *
+//     * @param id             推荐方案
+//     * @param operateSuggest 意见
+//     * @param operateAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/operateAudit/{id}")
+//    public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 总经办意见
+//     *
+//     * @param id             推荐方案
+//     * @param generalSuggest 意见
+//     * @param generalAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/generalAudit/{id}")
+//    public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 删除
@@ -138,7 +165,7 @@ public class RecommendSchemeAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendSchemeAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -148,12 +175,13 @@ public class RecommendSchemeAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @GetMapping("v1/list")
     public Result pageList(RecommendSchemeDTO dto) throws ActException {
         try {
-            List<RecommendSchemeVO> voList = BeanTransform.copyProperties(recommendSchemeAPI.pageList(dto), RecommendSchemeVO.class);
+            List<RecommendSchemeVO> voList = BeanTransform.copyProperties(recommendSchemeAPI.pageList(dto), RecommendSchemeVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -192,5 +220,23 @@ public class RecommendSchemeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 获取所有推荐岗位
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/position")
+    public Result findPosition() throws ActException{
+        try {
+            Set<String> position = recommendSchemeAPI.findPosition();
+            return ActResult.initialize(position);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 }

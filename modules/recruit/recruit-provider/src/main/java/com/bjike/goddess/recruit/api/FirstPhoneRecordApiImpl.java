@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
@@ -7,11 +8,14 @@ import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
 import com.bjike.goddess.recruit.service.FirstPhoneRecordSer;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 第一次电访记录
@@ -49,6 +53,15 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
      */
     @Override
     public Long count(FirstPhoneRecordDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getPosition())){
+            dto.getConditions().add(Restrict.like("position",dto.getPosition()));
+        }
+        if(StringUtils.isNotBlank(dto.getName())){
+            dto.getConditions().add(Restrict.like("name",dto.getName()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartDate()) && StringUtils.isNotBlank(dto.getEndDate())){
+            dto.getConditions().add(Restrict.between("date",new String[]{dto.getStartDate(),dto.getEndDate()}));
+        }
         return firstPhoneRecordSer.count(dto);
     }
 
@@ -60,7 +73,6 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
      * @throws SerException
      */
     @Override
-    @Transactional
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         return firstPhoneRecordSer.list(dto);
     }
@@ -99,4 +111,36 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
     public void update(FirstPhoneRecordTO firstPhoneRecordTO) throws SerException {
         firstPhoneRecordSer.update(firstPhoneRecordTO);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return firstPhoneRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return firstPhoneRecordSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allFirstName() throws SerException {
+        return firstPhoneRecordSer.allFirstName();
+    }
+
+    @Override
+    public FirstPhoneRecordBO importExcel(List<FirstPhoneRecordTO> firstPhoneRecordTOS) throws SerException {
+        return firstPhoneRecordSer.importExcel(firstPhoneRecordTOS);
+    }
+
+    @Override
+    public byte[] exportExcel(FirstPhoneRecordDTO dto) throws SerException {
+        return firstPhoneRecordSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return firstPhoneRecordSer.templateExport();
+    }
+
+
 }

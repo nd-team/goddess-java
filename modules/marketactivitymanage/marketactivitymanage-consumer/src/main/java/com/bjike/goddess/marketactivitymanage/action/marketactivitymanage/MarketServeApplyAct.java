@@ -1,5 +1,6 @@
 package com.bjike.goddess.marketactivitymanage.action.marketactivitymanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -11,6 +12,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.market.api.MarketInfoRecordAPI;
 import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
@@ -23,6 +25,7 @@ import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import com.bjike.goddess.marketactivitymanage.vo.CustomerInfoVO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeApplyDetailVO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeApplyVO;
+import com.bjike.goddess.projectmarketfee.api.CostAnalysisAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -57,12 +60,18 @@ public class MarketServeApplyAct extends BaseFileAction {
 
     @Autowired
     private CustomerInfoAPI customerInfoAPI;
-
+    @Autowired
+    private MarketInfoRecordAPI marketInfoRecordAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private CostAnalysisAPI costAnalysisAPI;
     @Autowired
     private FileAPI fileAPI;
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -72,16 +81,17 @@ public class MarketServeApplyAct extends BaseFileAction {
         try {
 
             Boolean isHasPermission = marketServeApplyAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询市场招待申请
      *
@@ -393,9 +403,9 @@ public class MarketServeApplyAct extends BaseFileAction {
     /**
      * 导出Excel
      *
-     * @param areas 地区
+     * @param areas     地区
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @version v1
      */
     @LoginAuth
@@ -511,6 +521,44 @@ public class MarketServeApplyAct extends BaseFileAction {
             List<String> areas = new ArrayList<>();
             areas = marketServeApplyAPI.findAllAreas();
             return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加编辑中项目名称下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findMarket/projectname")
+    public Result findMarketPname() throws ActException {
+        try {
+            List<String> projectName = new ArrayList<>();
+            if (moduleAPI.isCheck("market")) {
+                projectName = marketInfoRecordAPI.findProjectName();
+            }
+            return ActResult.initialize(projectName);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加编辑功能的预计费用下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findProject/predictCharge")
+    public Result findProjectPcharge() throws ActException {
+        try {
+            List<Double> predictCharge = new ArrayList<>();
+            if (moduleAPI.isCheck("projectmarketfee")) {
+                predictCharge = costAnalysisAPI.allExMarketCost();
+            }
+            return ActResult.initialize(predictCharge);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

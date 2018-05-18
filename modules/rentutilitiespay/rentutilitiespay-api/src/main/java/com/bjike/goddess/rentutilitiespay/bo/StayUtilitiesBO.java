@@ -3,10 +3,6 @@ package com.bjike.goddess.rentutilitiespay.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
 
-import javax.persistence.Column;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 员工住宿水电费业务传输对象
  *
@@ -62,6 +58,10 @@ public class StayUtilitiesBO extends BaseBO {
      * 住宿天数
      */
     private Double stayDay;
+    /**
+     * 房租
+     */
+    private Double rent;
 
     /**
      * 房租公司缴纳
@@ -84,6 +84,11 @@ public class StayUtilitiesBO extends BaseBO {
     private Double waterCompanyPay;
 
     /**
+     * 水费员工预缴
+     */
+    private Double waterStaffPrepay;
+
+    /**
      * 水费员工缴纳
      */
     private Double waterStaffPay;
@@ -99,6 +104,11 @@ public class StayUtilitiesBO extends BaseBO {
     private Double energyCompanyPay;
 
     /**
+     * 电费员工预缴
+     */
+    private Double energyStaffPrepay;
+
+    /**
      * 电费员工缴纳
      */
     private Double energyStaffPay;
@@ -112,6 +122,11 @@ public class StayUtilitiesBO extends BaseBO {
      * 燃气费公司缴纳
      */
     private Double gasCompanyPay;
+
+    /**
+     * 燃气费员工预缴
+     */
+    private Double gasStaffPrepay;
 
     /**
      * 燃气费员工缴纳
@@ -165,6 +180,14 @@ public class StayUtilitiesBO extends BaseBO {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getAddress() {
@@ -343,4 +366,27 @@ public class StayUtilitiesBO extends BaseBO {
         this.remark = remark;
     }
 
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
+    }
 }

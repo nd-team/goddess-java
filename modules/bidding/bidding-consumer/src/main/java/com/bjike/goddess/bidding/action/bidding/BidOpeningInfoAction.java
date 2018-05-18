@@ -184,25 +184,6 @@ public class BidOpeningInfoAction extends BaseFileAction{
     }
 
     /**
-     * 搜索
-     *
-     * @param bidOpeningInfoDTO 开标信息dto
-     * @return class BidOpeningInfoVO
-     * @des 搜索获取所有开标信息
-     * @version v1
-     */
-    @GetMapping("v1/search")
-    public Result search(BidOpeningInfoDTO bidOpeningInfoDTO,HttpServletRequest request) throws ActException {
-        try {
-            List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.searchBidOpeningInfo(bidOpeningInfoDTO),BidOpeningInfoVO.class,request);
-            return ActResult.initialize(bidOpeningInfoVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 汇总开标信息
      *
      * @param cities 地市

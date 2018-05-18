@@ -4,8 +4,10 @@ import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
-import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.ProjectStatus;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
+import com.bjike.goddess.businessproject.excel.DispatchSheetExport;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -18,18 +20,18 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -61,7 +63,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -72,14 +74,14 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException{
+    private void checkAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -98,7 +100,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -111,7 +113,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -128,7 +130,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -207,6 +209,8 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
+        dispatchSheetDTO.getSorts().add("createTime=desc");
+
         searchCondition(dispatchSheetDTO);
 
         Long count = super.count(dispatchSheetDTO);
@@ -388,24 +392,24 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<DispatchSheetBO> getInfoByDispatchNum(String dispatchNum) throws SerException {
         DispatchSheetDTO dto = new DispatchSheetDTO();
-        if( StringUtils.isNotBlank(dispatchNum)){
-            dto.getConditions().add(Restrict.eq("dispatchNum",dispatchNum));
+        if (StringUtils.isNotBlank(dispatchNum)) {
+            dto.getConditions().add(Restrict.eq("dispatchNum", dispatchNum));
         }
-        List<DispatchSheet> list =  super.findByCis( dto );
-        return BeanTransform.copyProperties( list , DispatchSheetBO.class);
+        List<DispatchSheet> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, DispatchSheetBO.class);
     }
 
     @Override
     public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
         String[] innerProjects = dto.getInnerProjects();
-        List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();
+        List<DispatchSheetExport> toList = new ArrayList<DispatchSheetExport>();
         if ((innerProjects != null) && (innerProjects.length > 0)) {
             List<DispatchSheet> list = super.findByCis(dto);
             for (String s : innerProjects) {
                 if (StringUtils.isNotBlank(s)) {
                     for (DispatchSheet b : list) {
                         if (s.equals(b.getInnerProject())) {
-                            DispatchSheetExcel excel = new DispatchSheetExcel();
+                            DispatchSheetExport excel = new DispatchSheetExport();
                             BeanUtils.copyProperties(b, excel);
                             toList.add(excel);
                         }
@@ -415,7 +419,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         } else {
             List<DispatchSheet> list = super.findByCis(dto);
             for (DispatchSheet b : list) {
-                DispatchSheetExcel excel = new DispatchSheetExcel();
+                DispatchSheetExport excel = new DispatchSheetExport();
                 BeanUtils.copyProperties(b, excel);
                 toList.add(excel);
             }
@@ -455,9 +459,101 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     public byte[] templateExcel() throws SerException {
         List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();
         DispatchSheetExcel baseInfoManageLeadExcel = new DispatchSheetExcel();
+        baseInfoManageLeadExcel.setInnerProjectNum("test");
+        baseInfoManageLeadExcel.setBusinessType("test");
+        baseInfoManageLeadExcel.setBusinessSubject("test");
+        baseInfoManageLeadExcel.setOuterProject("test");
+        baseInfoManageLeadExcel.setOutProjectNum("test");
+        baseInfoManageLeadExcel.setSaleContractNum("test");
+        baseInfoManageLeadExcel.setBusinessCooperate("test");
+        baseInfoManageLeadExcel.setInnerProject("test");
+        baseInfoManageLeadExcel.setArea("test");
+        baseInfoManageLeadExcel.setProjectGroup("test");
+        baseInfoManageLeadExcel.setSiginTime(LocalDate.now());
+        baseInfoManageLeadExcel.setProjectCharge("test");
+        baseInfoManageLeadExcel.setDispatchProject("test");
+        baseInfoManageLeadExcel.setDispatchNum("test");
+        baseInfoManageLeadExcel.setMajorCompany("test");
+        baseInfoManageLeadExcel.setSubCompany("test");
+        baseInfoManageLeadExcel.setCustomerName("test");
+        baseInfoManageLeadExcel.setDispatchText("test");
+        baseInfoManageLeadExcel.setStartProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setEndProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setMoney(0d);
+        baseInfoManageLeadExcel.setCompleteProject("未完工");
+        baseInfoManageLeadExcel.setFileCondition("已归档");
+        baseInfoManageLeadExcel.setFileCount(0d);
+        baseInfoManageLeadExcel.setRemark("test");
+        baseInfoManageLeadExcel.setTempContractNum("test");
+        baseInfoManageLeadExcel.setMakeContract(MakeContract.HADMAKE);
+        baseInfoManageLeadExcel.setTaskNum("test");
+        baseInfoManageLeadExcel.setProjectStatus(ProjectStatus.APPROACH);
+        baseInfoManageLeadExcel.setContractScale(0d);
+        baseInfoManageLeadExcel.setScale(0d);
+        baseInfoManageLeadExcel.setMajor("test");
+
         toList.add(baseInfoManageLeadExcel);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public Set<String> nums() throws SerException {
+        List<DispatchSheet> list = super.findAll();
+        return list.stream().map(dispatchSheet -> dispatchSheet.getDispatchNum()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<String> areas() throws SerException {
+        List<DispatchSheet> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String area = model.getArea();
+            if (StringUtils.isNotBlank(model.getArea())) {
+                set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getProjectGroup(String area) throws SerException {
+        DispatchSheetDTO dispatchSheetDTO = new DispatchSheetDTO();
+        dispatchSheetDTO.getConditions().add(Restrict.eq("area",area));
+        List<DispatchSheet> list = super.findByCis(dispatchSheetDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String projectGroup = model.getProjectGroup();
+            if (StringUtils.isNotBlank(model.getProjectCharge())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getInnerName(String area, String projectGroup) throws SerException {
+        DispatchSheetDTO dispatchSheetDTO = new DispatchSheetDTO();
+        dispatchSheetDTO.getConditions().add(Restrict.eq("area",area));
+        dispatchSheetDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<DispatchSheet> list = super.findByCis(dispatchSheetDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String innerProject = model.getInnerProject();
+            if (StringUtils.isNotBlank(model.getInnerProject())) {
+                set.add(innerProject);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

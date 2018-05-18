@@ -56,11 +56,11 @@ public interface IncomeCostAnalysisSer extends Ser<IncomeCostAnalysis, IncomeCos
     /**
      * 收入成本分析
      *
-     * @param incomeCostAnalysisDTO 收入成本分析dto
+     * @param dto 收入成本分析dto
      * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
+    default List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
         return null;
     }
 
@@ -71,19 +71,16 @@ public interface IncomeCostAnalysisSer extends Ser<IncomeCostAnalysis, IncomeCos
      * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return null;
+    default void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
     }
 
     /**
      * 编辑收入成本分析
      *
      * @param incomeCostAnalysisTO 收入成本分析数据to
-     * @return class IncomeCostAnalysisBO
      * @throws SerException
      */
-    default IncomeCostAnalysisBO editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return null;
+    default void editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
     }
 
     /**
@@ -95,6 +92,7 @@ public interface IncomeCostAnalysisSer extends Ser<IncomeCostAnalysis, IncomeCos
     default void removeIncomeCostAnalysis(String id) throws SerException {
 
     }
+
     /**
      * 汇总
      *

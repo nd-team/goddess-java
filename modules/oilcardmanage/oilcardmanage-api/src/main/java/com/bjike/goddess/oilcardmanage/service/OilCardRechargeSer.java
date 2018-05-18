@@ -2,10 +2,14 @@ package com.bjike.goddess.oilcardmanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
 
 import java.util.List;
@@ -21,6 +25,20 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRechargeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 新增油卡充值信息
      *
@@ -61,4 +79,80 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRecharge
     List<OilCardRechargeBO> findByBasicId(String id) throws SerException;
 
     AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException;
+
+    /**
+     * 删除
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 根据Id查询油卡充值记录
+     *
+     * @param id
+     */
+    OilCardRechargeBO findBy(String id) throws SerException;
+
+//    /**
+//     * 油卡使用记录查询
+//     */
+//    List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException;
+
+
+
+    /**
+     * 更新信息
+     */
+    void updateInformation(String id,Double balance,Double pettyCash) throws SerException;
+
+    /**
+     * 充值信息更新
+     */
+    void updateRecharge(String id,Boolean ifRecharge,Double pettyCash,Double rechargeMoneh,String rechargeDate) throws SerException;
+
+
+    /**
+     * 通报充值
+     */
+    void noticeRecharge(String id) throws SerException;
+
+    /**
+     * 更新上传截图附件
+     */
+    void updateScreen(String id) throws SerException;
+
+    /**
+     * 更新上传充值后截图附件
+     */
+    void updatePrepaid(String id) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<OilCardRechargeTO> toList) throws SerException {
+        return;
+    }
+
+    ;
+
+    /**
+     * 导出
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportOilcardRechargeTO to) throws SerException;
+
+    /**
+     * 导出Excel模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
 }

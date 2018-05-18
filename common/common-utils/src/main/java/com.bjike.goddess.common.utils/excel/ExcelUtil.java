@@ -495,7 +495,7 @@ public class ExcelUtil {
      * @param color
      * @return
      */
-    private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
+    public static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中

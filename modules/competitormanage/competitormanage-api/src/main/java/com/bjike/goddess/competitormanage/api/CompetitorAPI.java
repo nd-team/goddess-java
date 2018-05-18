@@ -2,6 +2,7 @@ package com.bjike.goddess.competitormanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
+import com.bjike.goddess.competitormanage.bo.OrganizationBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
@@ -103,4 +104,21 @@ public interface CompetitorAPI {
     byte[] exportExcelModule() throws SerException;
 
     List<CompetitorBO> areas() throws SerException;
+
+    //zhuangkaiqin
+    OrganizationBO organizeList(String id) throws SerException;
+
+
+    /**
+     * 获取所有的竞争对手名称
+     * @return
+     * @throws SerException
+     */
+    List<String> findCompeName() throws SerException;
+
+//    /**
+//     * 获取项目名称
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
+
 }

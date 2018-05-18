@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.vo.MaterialInStockVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -16,6 +18,7 @@ import com.bjike.goddess.workjoin.api.DeviceJoinAPI;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
 import com.bjike.goddess.workjoin.to.DeviceJoinTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDeleteFileTO;
 import com.bjike.goddess.workjoin.vo.DeviceJoinVO;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +48,29 @@ public class DeviceJoinAction extends BaseFileAction{
     private DeviceJoinAPI deviceJoinAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = deviceJoinAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 设备交接列表总条数
@@ -66,7 +92,7 @@ public class DeviceJoinAction extends BaseFileAction{
     /**
      * 一个设备交接
      *
-     * @param id
+     * @param id 设备交接id
      * @return class DeviceJoinVO
      * @des 获取一个设备交接
      * @version v1
@@ -242,6 +268,24 @@ public class DeviceJoinAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(),workJoinDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 获取设备编号和设备名称
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/material")
+    public Result findMaterial() throws ActException{
+        try {
+            List<MaterialInStockBO> boList = deviceJoinAPI.findMaterial();
+            List<MaterialInStockVO> voList = BeanTransform.copyProperties(boList,MaterialInStockVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 

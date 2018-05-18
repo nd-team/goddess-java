@@ -70,4 +70,9 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
         return moneyReadySer.collectCompare(month);
     }
 
+    @Override
+    public List<CollectCompareBO> readyCollect(String date) throws SerException {
+        return moneyReadySer.readyCollect(date);
+    }
+
 }

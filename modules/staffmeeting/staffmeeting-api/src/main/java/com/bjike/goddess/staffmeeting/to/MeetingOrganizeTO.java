@@ -50,7 +50,7 @@ public class MeetingOrganizeTO extends BaseTO {
      * 计划参会人员
      */
     @NotBlank(message = "计划参会人员不能为空",groups = {ADD.class, EDIT.class})
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划参会时间
@@ -114,11 +114,11 @@ public class MeetingOrganizeTO extends BaseTO {
         this.content = content;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 

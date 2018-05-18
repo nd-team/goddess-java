@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -20,7 +21,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "contacts_external_contacts")
 public class ExternalContacts extends BaseEntity {
-
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
+    /**
+     * 录入人
+     */
+    @Column(name = "input", columnDefinition = "VARCHAR(255)   COMMENT '录入人'")
+    private String input;
     /**
      * 地区
      */
@@ -90,13 +100,13 @@ public class ExternalContacts extends BaseEntity {
     /**
      * 填写人
      */
-    @Column(name = "writer", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @Column(name = "writer", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
     private String writer;
 
     /**
      * 填写人编号
      */
-    @Column(name = "writeNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @Column(name = "writeNumber", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
     private String writeNumber;
 
     /**
@@ -110,7 +120,76 @@ public class ExternalContacts extends BaseEntity {
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+    /**
+     * 联系电话1
+     */
+    @Column(name = "phoneNumberA", columnDefinition = "VARCHAR(255)   COMMENT '联系电话1'")
+    private String phoneNumberA;
+    /**
+     * 联系电话2
+     */
+    @Column(name = "phoneNumberB", columnDefinition = "VARCHAR(255)   COMMENT '联系电话2'")
+    private String phoneNumberB;
 
+    /**
+     * 联系电话3
+     */
+    @Column(name = "phoneNumberC", columnDefinition = "VARCHAR(255)   COMMENT '联系电话3'")
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    @Column(name = "phoneNumberD", columnDefinition = "VARCHAR(255)   COMMENT '联系电话4'")
+    private String phoneNumberD;
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
+
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
 
     public String getArea() {
         return area;

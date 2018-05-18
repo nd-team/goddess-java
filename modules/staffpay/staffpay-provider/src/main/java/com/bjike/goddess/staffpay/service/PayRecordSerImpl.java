@@ -198,10 +198,10 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
         sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
-        sb.append(" WHERE area IN (%s) GROUP BY months,area ORDER BY area ");
+        sb.append(" WHERE area IN (%s) and findType = 2 GROUP BY months,area ORDER BY area ");
         String sql = sb.toString();
         sql = String.format(sql, areasStr);
-        String[] fields = new String[]{"area", "months", "staffWage", "computerHelp", "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+        String[] fields = new String[]{"area", "months", "staffWage", "computerHelp", "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<AreaCollectBO> areaCollectBOS = super.findBySql(sql, AreaCollectBO.class, fields);
@@ -211,7 +211,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getAreas() throws SerException {
         String[] fields = new String[]{"area"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct area from staffpay_waitpay group by area order by area asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct area from staffpay_waitpay where findType = 2 group by area order by area asc ", PayRecordBO.class, fields);
 
         List<String> areasList = payRecordBOS.stream().map(PayRecordBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -237,10 +237,10 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
         sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
-        sb.append(" WHERE department IN (%s) GROUP BY months,department ORDER BY department ");
+        sb.append(" WHERE department IN (%s) and findType = 2 GROUP BY months,department ORDER BY department ");
         String sql = sb.toString();
         sql = String.format(sql, departmentsStr);
-        String[] fields = new String[]{"department", "months", "staffWage", "computerHelp", "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+        String[] fields = new String[]{"department", "months", "staffWage", "computerHelp", "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<DepartmentCollectBO> departmentCollectBOS = super.findBySql(sql, DepartmentCollectBO.class, fields);
@@ -250,7 +250,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getDepartments() throws SerException {
         String[] fields = new String[]{"department"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct department from staffpay_waitpay group by department order by department asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct department from staffpay_waitpay where findType = 2 group by department order by department asc ", PayRecordBO.class, fields);
 
         List<String> departmentsList = payRecordBOS.stream().map(PayRecordBO::getDepartment)
                 .filter(department -> (department != null || !"".equals(department.trim()))).distinct().collect(Collectors.toList());
@@ -276,11 +276,11 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
         sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
-        sb.append(" WHERE name IN (%s) GROUP BY months,area,department,jobs,name ORDER BY name ");
+        sb.append(" WHERE name IN (%s) and findType = 2 GROUP BY months,area,department,jobs,name ORDER BY name ");
         String sql = sb.toString();
         sql = String.format(sql, namesStr);
         String[] fields = new String[]{"name", "months", "area", "department", "jobs", "staffWage", "computerHelp",
-                "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+                "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<NameCollectBO> nameCollectBOS = super.findBySql(sql, NameCollectBO.class, fields);
@@ -290,7 +290,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getNames() throws SerException {
         String[] fields = new String[]{"name"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct name from staffpay_waitpay group by name order by name asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct name from staffpay_waitpay where findType = 2 group by name order by name asc ", PayRecordBO.class, fields);
 
         List<String> namesList = payRecordBOS.stream().map(PayRecordBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());

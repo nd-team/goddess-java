@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,6 +158,52 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
     }
 
+
+    @Override
+    public List<String> currentSysNOs(Boolean bool) throws SerException {
+        List<String> sysNos = new ArrayList<>();
+        //获取当前的父级id
+        String fatherId =  currentUser().getFatherId();
+
+        //判断当前父级id 是否为空
+        if (StringUtils.isNotBlank(fatherId)){
+            //不为空的时候
+            if (bool){
+                //bool==true,表示子公司要获取父级公司的sysNo
+                sysNos.add(currentUser().getSystemNO());
+                String sysNO = currentUser().getSystemNO();
+                if (StringUtils.isNotBlank(sysNO)) {
+                    sysNos.add(sysNO);
+                    sysNos.add(fatherId);
+                } else {
+                    throw new SerException("当前用户系统号为空!");
+                }
+            }else {
+                sysNos.add(currentUser().getSystemNO());
+                String sysNO = currentUser().getSystemNO();
+                if (StringUtils.isNotBlank(sysNO)) {
+                    sysNos.add(sysNO);
+                } else {
+                    throw new SerException("当前用户系统号为空!");
+                }
+            }
+
+        }else{
+            //为空的时候，直接取当前sysNo
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
+            List<User> users = super.findByCis(userDTO);
+
+            for (User u : users){
+                sysNos.add(u.getSystemNO());
+            }
+            sysNos.add(currentUser().getSystemNO());
+
+        }
+
+        return sysNos;
+    }
+
     @Cacheable
     @Override
     public List<UserBO> findAllUser() throws SerException {
@@ -162,6 +212,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return userBOS;
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
@@ -242,6 +293,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return userBO;
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional
     @Override
     public void update(UserTO userTO) throws SerException {
@@ -265,7 +317,54 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
     }
 
-        @Override
+    @CacheEvict(value = "listCache", allEntries = true)
+    @Override
+    public void updatePassword(UserTO userTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        if (null == userBO) {
+            throw new SerException("不存在该用户");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        User user = super.findById(userBO.getId());
+        if (null == user) {
+            throw new SerException("该用户不存在");
+        }
+        try {
+            user.setPassword(PasswordHash.createHash(userTO.getPassword()));
+            super.update(user);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @CacheEvict(value = "listCache", allEntries = true)
+    @Override
+    public void updatePhone(UserTO userTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        if (null == userBO) {
+            throw new SerException("不存在该用户");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        User user = super.findById(userBO.getId());
+        if (null == user) {
+            throw new SerException("该用户不存在");
+        }
+        try {
+            user.setPhone(userTO.getPhone());
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+        super.update(user);
+    }
+
+    @Override
     public List<UserBO> findByGroup(String... groups) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.in("group.id", groups));
@@ -298,6 +397,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
     }
 
+    @Cacheable(value = {"listCache"}, key = "#dto.toString()")
     @Override
     public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
         List<User> list = super.findByPage(dto);
@@ -305,6 +405,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return boList;
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     public UserBO updateUser(UserTO userTO) throws SerException {
         if (StringUtils.isBlank(userTO.getId())) {
@@ -318,6 +419,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return userBO;
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public void deleteUser(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
@@ -328,8 +430,120 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public String maxUserEmpNumber() throws SerException {
-        String max = super.findByMaxField("employeeNumber", User.class);
+//        String max = super.findByMaxField("employeeNumber", User.class);
+        String[] fields = new String[]{"employeeNumber"};
+        String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE 'IKE%'  ";
+        List<User> list = super.findBySql(sql, User.class, fields);
+        String max = list != null && list.size() > 0 ? list.get(0).getEmployeeNumber() : "";
         String empNumber = SeqUtil.generateEmp(max);
         return empNumber;
     }
+
+    @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+//        empNum = empNum.substring ( 0, 5 );
+//        String[] fields = new String[]{"employeeNumber"};
+//        String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + empNum + "%'  ";
+//        List<User> list = super.findBySql ( sql, User.class, fields );
+//        String max = list != null && list.size () > 0 ? list.get ( 0 ).getEmployeeNumber () : "";
+//        String empNumber = SeqUtil.appGenerateEmp ( max );
+        String empNumber = "";
+        if (StringUtils.isNotBlank(empNum)) {
+            StringBuffer s = new StringBuffer();
+            for (int i = 0; i < empNum.length(); i++) {
+                char c = empNum.charAt(i);
+                if ((c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')) {
+                    s.append(c);
+                }
+            }
+            String[] fields = new String[]{"employeeNumber"};
+            String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + s.toString() + "%'  ";
+            List<User> list = super.findBySql(sql, User.class, fields);
+            String max = list != null && list.size() > 0 ? list.get(0).getEmployeeNumber() : "";
+            if (StringUtils.isNotBlank(max)) {
+                empNumber = SeqUtil.appGenerateEmp(max, true);
+            } else {
+                empNumber = SeqUtil.appGenerateEmp(empNum, false);
+            }
+        }
+        return empNumber;
+    }
+
+    @Override
+    //chenjunhao
+    public String findNameById(String id) throws SerException {
+        User user = super.findById(id);
+        if (user != null) {
+            return user.getUsername();
+        }
+        return null;
+    }
+
+    @Override
+    public List<UserBO> findByDept(String... department) throws SerException {
+        String depts = "'" + StringUtils.join(department, "','") + "'";
+        String sql = "  select a.id,a.username,a.email,a.phone,a.nickname,a.employeeNumber " +
+                " from user a,user_department b ,user_detail c where a.id =c.user_id and a.status=0 " +
+                " and c.department_id = b.id and (b.id in(" + depts + ") or b.name in(" + depts + "))";
+        String[] fields = new String[]{"id", "username", "email", "phone", "nickname", "employeeNumber"};
+        List<UserBO> list = super.findBySql(sql, UserBO.class, fields);
+        return list;
+    }
+
+    @Transactional
+    @Override
+    public void becomeEnterprise(UserTO userTO) throws SerException {
+        UserBO userBO = this.currentUser();
+        userBO.getUsername();
+        String token = RpcTransmit.getUserToken();
+        if (StringUtils.isNotBlank(token)) {
+            User user = super.findById(userTO.getId());
+            user.setUsername(userTO.getUsername());
+            user.setEmployeeNumber(userTO.getEmployeeNumber());
+            BeanTransform.copyProperties(userTO, user, true);
+            user.setModifyTime(LocalDateTime.now());
+            super.update(user);
+            //更新session及缓存
+            UserBO currentUser = currentUser(token);
+            if (currentUser .getId().equals(user.getId())) {
+                LoginUser loginUser = new LoginUser();
+                BeanUtils.copyProperties(user, loginUser);
+                redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
+                UserSession.put(token, loginUser);
+            }
+
+        } else {
+            throw new SerException("notLogin");
+        }
+    }
+
+    @Override
+    public List<UserDetailBO> myTeam() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = (userBO.getEmployeeNumber()).substring(0, 4);
+        String[] employeeNumbers = new String[]{employeeNumber};
+        String sql = "SELECT id,sex,realName,departmentName,positionName\n" +
+                "FROM user_detail\n" +
+                "WHERE meetingNumber='" + employeeNumbers + "'";
+//        List<UserDetailBO> list =
+//        String[] meetingNumbers = new String[]{meetingNumber};
+//        List<Organization> list = null;
+//        for (String s : meetingNumbers) {
+//            String sql = "SELECT id,meetingFormat,meetingArea,meetingTopic,content,host,organization\n" +
+//                    "FROM negotiatemeeting_organization\n" +
+//                    "WHERE meetingNumber='" + s + "'";
+//            String[] fileds = new String[]{"id", "meetingFormat", "meetingArea", "meetingTopic", "content", "host", "organization"};
+//            list = super.findBySql(sql, Organization.class, fileds);
+//        }
+//        if ((list != null) && (list.size() != 0)) {
+//            return list.get(0);
+//        }
+//        return null;
+        String[] fields = new String[]{"id", "sex", "realName", "departmentName", "positionName"};
+        return null;
+    }
+
+
 }

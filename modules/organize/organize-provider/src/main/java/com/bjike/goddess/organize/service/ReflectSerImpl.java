@@ -37,8 +37,10 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
 
     private ReflectBO transform(Reflect entity) throws SerException {
         ReflectBO bo = BeanTransform.copyProperties(entity, ReflectBO.class);
-        bo.setClassifyId(entity.getId());
-        bo.setClassifyName(entity.getClassify().getName());
+        bo.setClassifyId(entity.getClassify().getId());
+        if (null != entity.getClassify()) {
+            bo.setClassifyName(entity.getClassify().getName());
+        }
         return bo;
     }
 
@@ -96,6 +98,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         entity.setClassify(instructionClassifySer.findById(to.getClassifyId()));
         if (null == entity.getClassify())
             throw new SerException("选择分类不存在,无法保存");
+        entity.setDescription(to.getDescription());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transform(entity);

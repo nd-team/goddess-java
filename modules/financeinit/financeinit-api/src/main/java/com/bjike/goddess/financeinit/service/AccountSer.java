@@ -141,4 +141,28 @@ public interface AccountSer extends Ser<Account, AccountDTO> {
      * @throws SerException
      */
     String findByName(String name) throws SerException;
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * ljt
+     * 获取所有余额的总额
+     *
+     * @return
+     * @throws SerException
+     */
+    Double findTotalAmount() throws SerException;
+
+
+    /**
+     * zkq
+     * 通过用户名称(账户来源)获取一级二级三级科目
+     */
+    default List<String> findSubjects(String name) throws SerException {
+        return null;
+    }
 }

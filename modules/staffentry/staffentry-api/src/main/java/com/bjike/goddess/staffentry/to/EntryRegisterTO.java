@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import java.util.List;
 
@@ -128,7 +129,26 @@ public class EntryRegisterTO extends BaseTO {
      * 兴趣爱好
      */
     private String hobbies;
-
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 部门/项目组
+     */
+    private String department;
+    /**
+     * 职位 
+     */
+    private String position;
+    /**
+     * 入职日期 
+     */
+    private String inductionDate;
     /**
      * 家庭成员集合
      */
@@ -333,6 +353,47 @@ public class EntryRegisterTO extends BaseTO {
     public void setHobbies(String hobbies) {
         this.hobbies = hobbies;
     }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getInductionDate() {
+        return inductionDate;
+    }
+
+    public void setInductionDate(String inductionDate) {
+        this.inductionDate = inductionDate;
+    }
+
 
     public List<FamilyMemberTO> getFamilyMemberBOList() {
         return familyMemberBOList;

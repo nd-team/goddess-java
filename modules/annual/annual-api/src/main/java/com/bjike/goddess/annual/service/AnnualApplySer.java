@@ -5,6 +5,7 @@ import com.bjike.goddess.annual.dto.AnnualApplyDTO;
 import com.bjike.goddess.annual.entity.AnnualApply;
 import com.bjike.goddess.annual.to.AnnualApplyAuditTo;
 import com.bjike.goddess.annual.to.AnnualApplyTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +22,19 @@ import java.util.List;
  */
 public interface AnnualApplySer extends Ser<AnnualApply, AnnualApplyDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存年假申请实体数据
      *
@@ -108,4 +122,13 @@ public interface AnnualApplySer extends Ser<AnnualApply, AnnualApplyDTO> {
         return null;
     }
 
+    /**
+     * 获取申请开始时间
+     *
+     * @return
+     * @throws SerException
+     */
+    default String getStartTime() throws SerException {
+        return null;
+    }
 }

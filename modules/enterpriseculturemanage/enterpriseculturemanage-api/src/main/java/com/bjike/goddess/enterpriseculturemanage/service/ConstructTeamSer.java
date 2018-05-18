@@ -5,7 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.enterpriseculturemanage.bo.ConstructTeamBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.ConstructTeamDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.ConstructTeam;
+import com.bjike.goddess.enterpriseculturemanage.excel.SonPermissionObject;
 import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
+import com.bjike.goddess.user.entity.User;
 
 import java.util.List;
 
@@ -43,4 +46,28 @@ public interface ConstructTeamSer extends Ser<ConstructTeam, ConstructTeamDTO> {
      * @return 建设结果集
      */
     List<ConstructTeamBO> pageList(ConstructTeamDTO dto) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据工号来查询用户所有信息
+     * @param number
+     * @return
+     * @throws SerException
+     */
+    default List<User> findByJobNumber(String number) throws SerException{
+        return null;
+    }
 }

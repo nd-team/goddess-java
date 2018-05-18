@@ -16,29 +16,32 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--以下业配置为消费者(user-consumer)所依赖的需注入的,凡是消费者远程注入的业务接口,都必须在此配置声明
-	另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 	<!--发布接口,供其他模块调用-->
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.TaxVoucherAPI" ref="taxVoucherApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" ref="taxManagementApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI" ref="accountInfoManagementApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.InvoiceInfoAPI" ref="invoiceInfoApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.InvoiceReceiveAPI" ref="invoiceReceiveApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.OutputInvoiceAPI" ref="outputInvoiceApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.IncomeInvoiceAPI" ref="incomeInvoiceApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.LandTaxReportAPI" ref="landTaxReportApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.DiscountRecordAPI" ref="discountRecordApiImpl"/>
+	<dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionAPI"/>
+	<dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionOperateAPI"/>
+	<!--
+    以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+               否则不需要配置
+    -->
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
+	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI"/>
+	<dubbo:reference validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
+	<dubbo:reference validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI"/>
+	<dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI"/>
+	<dubbo:reference validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
+	<dubbo:reference validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+	<dubbo:reference validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI"/>
+	<dubbo:reference validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI"/>
+	<dubbo:reference validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI"/>
 
-
-	<dubbo:service interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" ref="taxManagementApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI" ref="accountInfoManagementApiImpl" />
-	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionAPI" />
-	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionOperateAPI" />
-
-	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
-        否则不需要配置-->
-
-	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
-	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
-	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
-	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
-	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
-	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
-	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-
-	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
-	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
-
-</beans>
+	</beans>

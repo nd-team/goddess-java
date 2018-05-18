@@ -1,8 +1,10 @@
 package com.bjike.goddess.business.entity;
 
+import com.bjike.goddess.business.enums.Status;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -21,7 +23,7 @@ public class BusinessRegister extends BaseEntity {
     /**
      * 注册公司名称
      */
-    @Column(name = "registerCompanyName", columnDefinition = "VARCHAR(255)   COMMENT '注册公司名称'")
+    @Column(name = "registerCompanyName", unique = true,columnDefinition = "VARCHAR(255)   COMMENT '注册公司名称'")
     private String registerCompanyName;
 
     /**
@@ -61,16 +63,11 @@ public class BusinessRegister extends BaseEntity {
     private String legalPerson;
 
     /**
-     * 股东
+     * 股东:股权比例
      */
-    @Column(name = "shareholders", columnDefinition = "VARCHAR(255)   COMMENT '股东'")
+    @Column(name = "shareholders", columnDefinition = "VARCHAR(255)   COMMENT '股东:股权比例'")
     private String shareholders;
 
-    /**
-     * 股权比例
-     */
-    @Column(name = "equityRatio", columnDefinition = "VARCHAR(255)   COMMENT '股权比例'")
-    private String equityRatio;
 
     /**
      * 地址
@@ -89,6 +86,66 @@ public class BusinessRegister extends BaseEntity {
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+
+    /**
+     * 成立日期
+     */
+    @Column(name = "setUpDate",  columnDefinition = "DATE   COMMENT '成立日期'")
+    private LocalDate setUpDate;
+
+    /**
+     * 许可经营范围
+     */
+    @Column(name = "permittedBusiness",  columnDefinition = "VARCHAR(255)   COMMENT '许可经营范围'")
+    private String permittedBusiness;
+
+    /**
+     * 状态
+     */
+    @Column(name = "status",  columnDefinition = "TINYINT(2)   COMMENT '状态'")
+    private Status status;
+
+    /**
+     * 核发日期
+     */
+    @Column(name = "issuingDate", columnDefinition = "VARCHAR(255)   COMMENT '核发日期'")
+    private LocalDate issuingDate;
+
+    /**
+     * 登记机关
+     */
+    @Column(name = "registrationAuthor", columnDefinition = "VARCHAR(255)   COMMENT '登记机关'")
+    private String registrationAuthor;
+
+    /**
+     * 组织结构成员名称
+     */
+    @Column(name = "organizationNemName", columnDefinition = "VARCHAR(255)   COMMENT '组织结构成员名称'")
+    private String organizationNemName;
+
+    /**
+     * 职务
+     */
+    @Column(name = "position", columnDefinition = "VARCHAR(255)   COMMENT '职务'")
+    private String position;
+
+    /**
+     * 职务产生方式
+     */
+    @Column(name = "positionWay", columnDefinition = "VARCHAR(255)   COMMENT '职务产生方式'")
+    private String positionWay;
+
+    /**
+     * 是否法定代表人
+     */
+    @Column(name = "representativeLegal", columnDefinition = "TINYINT(2)   COMMENT '是否法定代表人'")
+    private Boolean representativeLegal;
+
+    /**
+     * 网址
+     */
+    @Column(name = "url", columnDefinition = "VARCHAR(255)   COMMENT '网址'")
+    private String url;
 
 
     public String getRegisterCompanyName() {
@@ -155,14 +212,6 @@ public class BusinessRegister extends BaseEntity {
         this.shareholders = shareholders;
     }
 
-    public String getEquityRatio() {
-        return equityRatio;
-    }
-
-    public void setEquityRatio(String equityRatio) {
-        this.equityRatio = equityRatio;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -185,5 +234,85 @@ public class BusinessRegister extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public LocalDate getSetUpDate() {
+        return setUpDate;
+    }
+
+    public void setSetUpDate(LocalDate setUpDate) {
+        this.setUpDate = setUpDate;
+    }
+
+    public String getPermittedBusiness() {
+        return permittedBusiness;
+    }
+
+    public void setPermittedBusiness(String permittedBusiness) {
+        this.permittedBusiness = permittedBusiness;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDate getIssuingDate() {
+        return issuingDate;
+    }
+
+    public void setIssuingDate(LocalDate issuingDate) {
+        this.issuingDate = issuingDate;
+    }
+
+    public String getRegistrationAuthor() {
+        return registrationAuthor;
+    }
+
+    public void setRegistrationAuthor(String registrationAuthor) {
+        this.registrationAuthor = registrationAuthor;
+    }
+
+    public String getOrganizationNemName() {
+        return organizationNemName;
+    }
+
+    public void setOrganizationNemName(String organizationNemName) {
+        this.organizationNemName = organizationNemName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPositionWay() {
+        return positionWay;
+    }
+
+    public void setPositionWay(String positionWay) {
+        this.positionWay = positionWay;
+    }
+
+    public Boolean getRepresentativeLegal() {
+        return representativeLegal;
+    }
+
+    public void setRepresentativeLegal(Boolean representativeLegal) {
+        this.representativeLegal = representativeLegal;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

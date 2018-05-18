@@ -109,7 +109,7 @@ public class WaitPayAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export/{year}/{month}")
     public Result export(@PathVariable Integer year, @PathVariable Integer month, HttpServletResponse response) throws ActException {
         try {

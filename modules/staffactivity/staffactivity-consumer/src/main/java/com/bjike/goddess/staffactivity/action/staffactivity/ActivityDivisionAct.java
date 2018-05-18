@@ -9,9 +9,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityDivisionAPI;
+import com.bjike.goddess.staffactivity.api.ActivitySchemeAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityDivisionBO;
 import com.bjike.goddess.staffactivity.dto.ActivityDivisionDTO;
 import com.bjike.goddess.staffactivity.to.ActivityDivisionTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityDivisionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +38,31 @@ public class ActivityDivisionAct {
 
     @Autowired
     private ActivityDivisionAPI activityDivisionAPI;
+    @Autowired
+    private ActivitySchemeAPI activitySchemeAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = activityDivisionAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询活动分工
@@ -143,6 +170,37 @@ public class ActivityDivisionAct {
         try {
             activityDivisionAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有活动主题
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allTheme")
+    public Result allTheme() throws ActException {
+        try {
+            return ActResult.initialize(activitySchemeAPI.allTheme());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据活动主题获取活动方案id
+     *
+     * @param theme 活动主题
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findIdByTheme/{theme}")
+    public Result findIdByTheme(@PathVariable String theme) throws ActException {
+        try {
+            return ActResult.initialize(activitySchemeAPI.findIdByTheme(theme));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

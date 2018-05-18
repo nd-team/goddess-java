@@ -11,7 +11,7 @@ public class CollectBO extends BaseBO {
 
     public CollectBO(String date, String area, String department, Integer carNum, Double driverFee, Double oilRecharge, Double rent,
                      Double socialSecurity, Double staffWage, Double office, Double marketCost, Double tax, Double total,
-                     Integer staffNum, Double perCapitaWage, Double incomeAfterTax) {
+                     Integer staffNum, Double perCapitaWage, Double incomeAfterTax, Double balance) {
         this.date = date;
         this.area = area;
         this.department = department;
@@ -28,6 +28,7 @@ public class CollectBO extends BaseBO {
         this.staffNum = staffNum;
         this.perCapitaWage = perCapitaWage;
         this.incomeAfterTax = incomeAfterTax;
+        this.balance = balance;
     }
 
     /**
@@ -108,6 +109,18 @@ public class CollectBO extends BaseBO {
      * 税后余额收入
      */
     private Double incomeAfterTax;
+    /**
+     * 差额（税后余额收入-合计）
+     */
+    private Double balance;
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
 
     public String getDate() {
         return date;

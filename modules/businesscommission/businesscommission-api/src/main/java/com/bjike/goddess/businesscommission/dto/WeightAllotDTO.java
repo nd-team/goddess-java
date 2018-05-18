@@ -3,11 +3,11 @@ package com.bjike.goddess.businesscommission.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
- * 业务提成权重分配表数据传输对象
+ * 业务提成分配比例表数据传输对象
  *
  * @Author: [ zhuangkaiqin ]
  * @Date: [ 2017-06-29 04:34 ]
- * @Description: [ 业务提成权重分配表数据传输对象 ]
+ * @Description: [ 业务提成分配比例表数据传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -18,44 +18,44 @@ public class WeightAllotDTO extends BaseDTO {
     private String area;
 
     /**
-     * 项目名称
+     * 内部项目名称
      */
     private String projectName;
 
     /**
-     * 信息提供占比
+     * 信息提供人
      */
     private Double messageProportion;
 
     /**
-     * 业务揽接占比
+     * 介绍关系揽接
      */
     private Double businessProportion;
 
     /**
-     * 业务洽谈占比
+     * 出面接洽
      */
     private Double talkProportion;
 
     /**
-     * 维护占比
+     * 维护
      */
     private Double maintainProportion;
 
     /**
-     * 剩余占比
+     * 剩余分配比例
      */
     private Double surplusProportion;
 
-    /**
-     * 总比例
-     */
-    private Double totalProportion;
-
-    /**
-     * 备注
-     */
-    private String remark;
+//    /**
+//     * 总比例
+//     */
+//    private Double totalProportion;
+//
+//    /**
+//     * 备注
+//     */
+//    private String remark;
 
 
     public String getArea() {
@@ -112,21 +112,5 @@ public class WeightAllotDTO extends BaseDTO {
 
     public void setSurplusProportion(Double surplusProportion) {
         this.surplusProportion = surplusProportion;
-    }
-
-    public Double getTotalProportion() {
-        return totalProportion;
-    }
-
-    public void setTotalProportion(Double totalProportion) {
-        this.totalProportion = totalProportion;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 }

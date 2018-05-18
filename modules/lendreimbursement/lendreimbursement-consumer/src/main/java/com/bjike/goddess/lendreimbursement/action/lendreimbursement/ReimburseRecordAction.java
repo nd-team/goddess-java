@@ -8,21 +8,20 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.financeinit.bo.CategoryBO;
-import com.bjike.goddess.financeinit.dto.CategoryDTO;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
-import com.bjike.goddess.lendreimbursement.entity.ReimburseAuditLog;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.AccountVoucherTO;
+import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
-import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
+import com.bjike.goddess.lendreimbursement.vo.CollectReimerDataVO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseAuditLogVO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseRecordVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
@@ -60,7 +59,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @Autowired
     private ReimburseAuditLogAPI reimburseAuditLogAPI;
     @Autowired
-    private CategoryAPI categoryAPI;
+    private AccountanCourseAPI accountanCourseAPI;
     @Autowired
     private AccountAPI accountAPI;
     @Autowired
@@ -170,6 +169,23 @@ public class ReimburseRecordAction extends BaseFileAction {
     public Result count(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
         try {
             Long count = reimburseRecordAPI.countReimburseRecord(reimburseRecordDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 报销列表总条数(phone)
+     *
+     * @param reimburseRecordDTO 申请报销信息dto
+     * @des 获取所有申请报销信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/counts")
+    public Result counts(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
+        try {
+            Long count = reimburseRecordAPI.countReimburseRecords(reimburseRecordDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -332,7 +348,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     /**
      * 等待审核列表总条数
      *
-     * @param reimburseRecordDTO 申请报销信息dto
+     * @param reimburseRecordDTO 申请报销信息dtossssss
      * @des 获取所有等待审核报销信息总条数
      * @version v1
      */
@@ -395,7 +411,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/congelAuditRecord")
-    public Result congelAuditRecord(@Validated(ReimburseRecordTO.TestChargeCongel.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result congelAuditRecord(@Validated(ReimburseRecordTO.TestChargeCongel.class) ReimburseRecordTO reimburseRecordTO, BindingResult bindingResult) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.congelAuditRecord(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -452,7 +468,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/analisysRecord")
-    public Result analisysRecord(@Validated(ReimburseRecordTO.TestAnalysis.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result analisysRecord(@Validated(ReimburseRecordTO.TestAnalysis.class) ReimburseRecordTO reimburseRecordTO, BindingResult bindingResult) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.analisysRecord(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -516,7 +532,6 @@ public class ReimburseRecordAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
     /**
      * 帐务核对列表总条数
@@ -596,7 +611,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      *
      * @param reimburseRecordDTO 申请报销信息dto
      * @return class ReimburseRecordVO
-     * @des 获取所有等待付款信息
+     * @des 获取所有等待付款信息, 注意：必须规定的所有分析人员分析完且已经收到单据的
      * @version v1
      */
     @GetMapping("v1/listWaitPay")
@@ -720,7 +735,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @GetMapping("v1/exportHasPay")
     public Result exportHasPay(ReimburseRecordDTO reimburseRecordDTO, HttpServletResponse response) throws ActException {
         try {
-            String fileName = "等待付款.xlsx";
+            String fileName = "已付款记录.xlsx";
             super.writeOutFile(response, reimburseRecordAPI.exportAlPayExcel(reimburseRecordDTO), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
@@ -776,15 +791,15 @@ public class ReimburseRecordAction extends BaseFileAction {
      * 汇总报销人
      *
      * @param applyLendDTO 已付款记录信息applyLendDTO
-     * @return class CollectDataVO
+     * @return class CollectReimerDataVO
      * @des 汇总报销人
      * @version v1
      */
     @GetMapping("v1/collectReimer")
     public Result collectReimer(@Validated ReimburseRecordDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<CollectDataVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.collectLender(applyLendDTO), CollectDataVO.class, true);
+            List<CollectReimerDataVO> applyLendVOList = BeanTransform.copyProperties(
+                    reimburseRecordAPI.collectLender(applyLendDTO), CollectReimerDataVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -795,15 +810,15 @@ public class ReimburseRecordAction extends BaseFileAction {
      * 汇总地区
      *
      * @param applyLendDTO 已付款记录信息applyLendDTO
-     * @return class CollectDataVO
+     * @return class CollectReimerDataVO
      * @des 汇总地区
      * @version v1
      */
     @GetMapping("v1/collectArea")
     public Result collectArea(@Validated ReimburseRecordDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<CollectDataVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.collectArea(applyLendDTO), CollectDataVO.class, true);
+            List<CollectReimerDataVO> applyLendVOList = BeanTransform.copyProperties(
+                    reimburseRecordAPI.collectArea(applyLendDTO), CollectReimerDataVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -814,15 +829,15 @@ public class ReimburseRecordAction extends BaseFileAction {
      * 汇总一级科目
      *
      * @param applyLendDTO 已付款记录信息applyLendDTO
-     * @return class CollectDataVO
+     * @return class CollectReimerDataVO
      * @des 汇总一级科目
      * @version v1
      */
     @GetMapping("v1/collectProjectGroup")
     public Result collectProjectGroup(@Validated ReimburseRecordDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<CollectDataVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.collectFirstSubject(applyLendDTO), CollectDataVO.class, true);
+            List<CollectReimerDataVO> applyLendVOList = BeanTransform.copyProperties(
+                    reimburseRecordAPI.collectFirstSubject(applyLendDTO), CollectReimerDataVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -833,15 +848,15 @@ public class ReimburseRecordAction extends BaseFileAction {
      * 汇总项目名称
      *
      * @param applyLendDTO 已付款记录信息applyLendDTO
-     * @return class CollectDataVO
+     * @return class CollectReimerDataVO
      * @des 汇总项目名称
      * @version v1
      */
     @GetMapping("v1/collectProjectName")
     public Result collectProjectName(@Validated ReimburseRecordDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<CollectDataVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.collectProjectName(applyLendDTO), CollectDataVO.class, true);
+            List<CollectReimerDataVO> applyLendVOList = BeanTransform.copyProperties(
+                    reimburseRecordAPI.collectProjectName(applyLendDTO), CollectReimerDataVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -897,6 +912,22 @@ public class ReimburseRecordAction extends BaseFileAction {
     }
 
     /**
+     * 获取所有汇总报销人条件
+     *
+     * @des 获取所有报销人
+     * @version v1
+     */
+    @GetMapping("v1/listReimUser")
+    public Result listReimUser() throws ActException {
+        try {
+            List<String> userList = reimburseRecordAPI.listReimUser();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取所有报销人
      *
      * @des 获取所有报销人
@@ -913,61 +944,69 @@ public class ReimburseRecordAction extends BaseFileAction {
     }
 
     /**
+     * 获取所有一级科目和一级科目代码
+     *
+     * @des 获取所有一级科目和一级科目代码
+     * @version v1
+     */
+    @GetMapping("v1/list/firstSubject/code")
+    public Result listFirstSubjectAndCode() throws ActException {
+        try {
+            List<AccountAddDateBO> list = accountanCourseAPI.findFirstNameCode();
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有二级科目
+     *
+     * @des 根据一级科目的代码获取所有二级科目
+     * @version v1
+     */
+    @GetMapping("v1/listSecondSubject/{code}")
+    public Result listSecondByCode(@PathVariable String code) throws ActException {
+        try {
+            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName(code);
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取所有三级科目
      *
-     * @des 获取所有三级科目
+     * @des 根据二级科目的代码获取所有三级科目
      * @version v1
      */
-    @GetMapping("v1/listThirdSubject")
-    public Result listThirdSubject() throws ActException {
+    @GetMapping("v1/listThirdSubject/{code}")
+    public Result listThirdByCode(@PathVariable String code) throws ActException {
         try {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
-            return ActResult.initialize(categories);
+            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName(code);
+
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 获取所有说明
-     *
-     * @des 根据三级科目获取所有说明
-     * @version v1
-     */
-    @GetMapping("v1/listPlains")
-    public Result listPlain(ReimburseRecordTO reimburseRecordTO) throws ActException {
-        try {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())) {
-                throw new SerException("三级科目(thirdSubject)不能为空");
-            }
-            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
-            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
-            return ActResult.initialize(categories);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
-     * 获取所有一级二级科目
+     * 获取报销单号预计付款等待付款
      *
-     * @des 根据三级科目和说明获取所有一级和二级科目
+     * @des 获取报销单号预计付款等待付款
      * @version v1
      */
-    @GetMapping("v1/listFirstAndSecond")
-    public Result listFirstAndSecond(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    @LoginAuth
+    @GetMapping("v1/reimNumByPrepay")
+    public Result reimNumByPrepay() throws ActException {
         try {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())
-                    && StringUtils.isBlank(reimburseRecordTO.getPlainInfo())) {
-                throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
-            }
-            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
-            categoryDTO.setRemark(reimburseRecordTO.getPlainInfo());
-            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
-            return ActResult.initialize(categories);
+            List<String> list = reimburseRecordAPI.reimNumByPrepay();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -1072,6 +1111,22 @@ public class ReimburseRecordAction extends BaseFileAction {
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+    /**
+     * 报销数据分析图
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/analysisDiagram")
+    public Result analysisDiagram() throws ActException {
+        try {
+            OptionBO bo = reimburseRecordAPI.analysisDiagram();
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
 

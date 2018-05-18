@@ -6,6 +6,7 @@ import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.service.ManagementScoreSer;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
 
     @Autowired
     private ManagementScoreSer managementScoreSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return managementScoreSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return managementScoreSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询管理层评分
@@ -94,5 +105,10 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
     @Override
     public void update(ManagementScoreTO to) throws SerException {
         managementScoreSer.update(to);
+    }
+
+    @Override
+    public List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException {
+        return managementScoreSer.findByRegularId(regularizationId);
     }
 }

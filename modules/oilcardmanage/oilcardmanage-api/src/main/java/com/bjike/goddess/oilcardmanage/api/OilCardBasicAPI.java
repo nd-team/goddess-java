@@ -3,6 +3,9 @@ package com.bjike.goddess.oilcardmanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
+import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 
 import java.util.List;
@@ -18,6 +21,21 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardBasicAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增油卡基本信息
@@ -83,7 +101,7 @@ public interface OilCardBasicAPI {
      *
      * @param id id
      */
-    OilCardBasicBO findById(String id) throws SerException;
+    OilCardBasicBO find(String id) throws SerException;
 
     /**
      * 查询总记录数
@@ -92,4 +110,17 @@ public interface OilCardBasicAPI {
      * @return 总记录数
      */
     Long count(OilCardBasicDTO dto) throws SerException;
+
+    /**
+     * 保存油卡基本信息
+     */
+    void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException;
+
+    /**
+     * 查询未冻结的油卡
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findOilCard() throws SerException;
+
+
 }

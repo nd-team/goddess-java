@@ -8,9 +8,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.EmployeeSecureAPI;
+import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
+import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
+import com.bjike.goddess.secure.vo.AddEmployeeVO;
 import com.bjike.goddess.secure.vo.EmployeeSecureVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工社保基本信息
@@ -34,6 +40,29 @@ import java.util.List;
 public class EmployeeSecureAct {
     @Autowired
     private EmployeeSecureAPI employeeSecureAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = employeeSecureAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 查找
@@ -125,6 +154,39 @@ public class EmployeeSecureAct {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
 
+        }
+    }
+    /**
+     * 根据姓名获取社保基本信息
+     *
+     * @param to to
+     * @return class EmployeeSecureVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/byName")
+    public Result byName(@Validated(NameTO.TestName.class) NameTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<EmployeeSecureBO> bos = employeeSecureAPI.byName(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, EmployeeSecureVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            Set<String> set = employeeSecureAPI.allName();
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

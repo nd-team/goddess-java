@@ -7,8 +7,7 @@ import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.excel.SonPermissionObject;
 import com.bjike.goddess.managefee.service.OutFeeSer;
-import com.bjike.goddess.managefee.to.GuidePermissionTO;
-import com.bjike.goddess.managefee.to.OutFeeTO;
+import com.bjike.goddess.managefee.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,24 +68,45 @@ public class OutFeeApiImpl implements OutFeeAPI {
         outFeeSer.deleteOutFee(id);
     }
 
+
     @Override
-    public List<OutFeeBO> collectArea(OutFeeDTO outFeeDTO) throws SerException {
-        return outFeeSer.collectArea( outFeeDTO );
+    public List<OutFeeBO> collectArea(CollectAreaTO collectAreaTO) throws SerException {
+        return outFeeSer.collectArea( collectAreaTO );
     }
 
     @Override
-    public List<OutFeeBO> collectGroup(OutFeeDTO outFeeDTO) throws SerException {
-        return outFeeSer.collectGroup(outFeeDTO);
+    public List<OutFeeBO> collectGroup(CollectGroupTO collectGroupTO) throws SerException {
+        return outFeeSer.collectGroup( collectGroupTO );
     }
 
     @Override
-    public List<OutFeeBO> collectProject(OutFeeDTO outFeeDTO) throws SerException {
-        return outFeeSer.collectProject(outFeeDTO);
+    public List<OutFeeBO> collectProject(CollectProjectTO collectProjectTO) throws SerException {
+        return outFeeSer.collectProject( collectProjectTO );
     }
 
     @Override
-    public List<OutFeeBO> collectType(OutFeeDTO outFeeDTO) throws SerException {
-        return outFeeSer.collectType( outFeeDTO );
+    public List<OutFeeBO> collectType(CollectCategoryTO collectCategoryTO) throws SerException {
+        return outFeeSer.collectType( collectCategoryTO );
+    }
+
+    @Override
+    public List<OutFeeBO> collectAreaDetial(CollectAreaTO collectAreaTO) throws SerException {
+        return outFeeSer.collectAreaDetial( collectAreaTO );
+    }
+
+    @Override
+    public List<OutFeeBO> collectGroupDetail(CollectGroupTO collectGroupTO) throws SerException {
+        return outFeeSer.collectGroupDetail( collectGroupTO );
+    }
+
+    @Override
+    public List<OutFeeBO> collectProjectDetail(CollectProjectTO collectProjectTO) throws SerException {
+        return outFeeSer.collectProjectDetail( collectProjectTO );
+    }
+
+    @Override
+    public List<OutFeeBO> collectTypeDetail(CollectCategoryTO collectCategoryTO) throws SerException {
+        return outFeeSer.collectTypeDetail( collectCategoryTO );
     }
 
     @Override
@@ -108,4 +128,42 @@ public class OutFeeApiImpl implements OutFeeAPI {
     public List<String> projectList() throws SerException {
         return outFeeSer.projectList();
     }
+
+
+    @Override
+    public List<String> typeList() throws SerException {
+        return outFeeSer.typeList();
+    }
+
+    @Override
+    public byte[] areaExportReport(CollectAreaTO collectAreaTO) throws SerException {
+        return outFeeSer.areaExportReport( collectAreaTO );
+    }
+
+    @Override
+    public byte[] projectExportReport(CollectProjectTO collectProjectTO) throws SerException {
+        return outFeeSer.projectExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] groupExportReport(CollectGroupTO collectProjectTO) throws SerException {
+        return outFeeSer.groupExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] typeExportReport(CollectCategoryTO collectCategoryTO) throws SerException {
+        return outFeeSer.typeExportReport( collectCategoryTO );
+    }
+
+    @Override
+    public OutFeeBO importExcel(List<OutFeeTO> manageFeeTOS) throws SerException {
+        return outFeeSer.importExcel( manageFeeTOS );
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return outFeeSer.templateExport();
+    }
+
+
 }

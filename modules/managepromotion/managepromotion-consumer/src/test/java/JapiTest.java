@@ -9,13 +9,19 @@ import java.io.IOException;
 public class JapiTest {
 
     public static void main(String[] args) throws IOException {
-        JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
+//        JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
         JapiClient.setProjectJavaPath(
                 "modules/managepromotion/managepromotion-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/managepromotion/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/managepromotion/managepromotion-api",
+                "modules/user/user-api",
+                "modules/organize/organize-api",
+                "modules/archive/archive-api",
+                "modules/regularization/regularization-api",
+                "modules/contacts/contacts-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
@@ -24,7 +30,7 @@ public class JapiTest {
         JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
         japiClientStorage.setProject(project);
         japiClientStorage.autoSaveToDisk();
-        //JapiClient.delete(true);
+//        JapiClient.delete(true);
         new JapiClientTransfer().autoTransfer(japiClientStorage);
     }
 

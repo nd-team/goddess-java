@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.AwardDetailBO;
 import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.entity.AwardDetail;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.service.AwardDetailSer;
 import com.bjike.goddess.firmreward.to.AwardDetailTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,5 +96,15 @@ public class AwardDetailApiImpl implements AwardDetailAPI {
     @Override
     public void update(AwardDetailTO to) throws SerException {
         awardDetailSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return awardDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return awardDetailSer.guidePermission(guidePermissionTO);
     }
 }

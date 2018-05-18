@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--发布接口,供其他模块调用-->
+	<!--<dubbo:service interface="com.bjike.goddess.user.api.rbac.RoleAPI" ref="roleApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupAPI" ref="groupApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserDetailAPI" ref="userDetailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.DepartmentAPI" ref="departmentApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAPI" ref="userApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginAPI" ref="userLoginApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
+-->
+	<dubbo:service interface="com.bjike.goddess.royalty.api.IndexLibraryAPI" ref="indexLibraryApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.SystemBetAPI" ref="systemBetApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.SystemBetAAPI" ref="systemBetAApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.SystemBetBAPI" ref="systemBetBApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.SystemBetCAPI" ref="systemBetCApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.SystemBetDAPI" ref="systemBetDApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetAPI" ref="departmentBetApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetAAPI" ref="departmentBetAApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetBAPI" ref="departmentBetBApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetCAPI" ref="departmentBetCApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetDAPI" ref="departmentBetDApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetEAPI" ref="departmentBetEApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetAPI" ref="jobsBetApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetAAPI" ref="jobsBetAApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetBAPI" ref="jobsBetBApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetCAPI" ref="jobsBetCApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetDAPI" ref="jobsBetDApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetEAPI" ref="jobsBetEApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetFAPI" ref="jobsBetFApiImpl"/>
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionOperateAPI" />
+
+	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+        否则不需要配置-->
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="hierarchyApiImpl" interface="com.bjike.goddess.organize.api.HierarchyAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+
+</beans>

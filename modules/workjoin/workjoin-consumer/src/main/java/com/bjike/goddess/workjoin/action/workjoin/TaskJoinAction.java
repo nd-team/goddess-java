@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
+import com.bjike.goddess.organize.vo.PositionInstructionVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -17,6 +19,7 @@ import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDeleteFileTO;
@@ -50,6 +53,29 @@ public class TaskJoinAction extends BaseFileAction{
     @Autowired
     private FileAPI fileAPI;
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = taskJoinAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 任务交接列表总条数
      *
      * @param taskJoinDTO 任务交接dto
@@ -69,7 +95,7 @@ public class TaskJoinAction extends BaseFileAction{
     /**
      * 一个任务交接
      *
-     * @param id
+     * @param id 任务交接id
      * @return class TaskJoinVO
      * @des 获取一个任务交接
      * @version v1
@@ -247,6 +273,24 @@ public class TaskJoinAction extends BaseFileAction{
         return new ActResult("delFile success");
     }
 
+
+    /**
+     * 获取汇报对象
+     * @return class PositionInstructionVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/position")
+    public Result findPosition() throws ActException{
+        try {
+            List<PositionInstructionBO> boList = taskJoinAPI.findPosition();
+            List<PositionInstructionVO> voList = BeanTransform.copyProperties(boList,PositionInstructionVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

@@ -131,4 +131,14 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
      * @throws SerException
      */
     Long waitPayCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 通过id查找等待付款
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    WaitPayBO findWait(String id) throws SerException;
+
 }

@@ -117,5 +117,14 @@ public interface UserSetPermissionAPI {
         return null;
     }
 
+    /**
+     * 查询用户是否有操作所有模块设置的权限
+     *
+     * @throws SerException
+     */
+    default Boolean checkSetPermission22( ) throws SerException {
+        return null;
+    }
+
 
 }

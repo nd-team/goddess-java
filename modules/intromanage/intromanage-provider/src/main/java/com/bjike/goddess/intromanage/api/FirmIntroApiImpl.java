@@ -1,17 +1,22 @@
 package com.bjike.goddess.intromanage.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.intromanage.bo.BussinesBO;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.service.FirmIntroSer;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
+import com.bjike.goddess.intromanage.to.GuidePermissionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介业务接口实现
@@ -28,6 +33,16 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     @Autowired
     private FirmIntroSer firmIntroSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return firmIntroSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return firmIntroSer.guidePermission(guidePermissionTO);
+    }
+
     /**
      * 根据id查询公司简介
      *
@@ -37,8 +52,7 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
      */
     @Override
     public FirmIntroBO findById(String id) throws SerException {
-        FirmIntro model = firmIntroSer.findById(id);
-        return BeanTransform.copyProperties(model, FirmIntroBO.class);
+        return firmIntroSer.findByFirmId(id);
     }
 
     /**
@@ -49,6 +63,9 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
      */
     @Override
     public Long count(FirmIntroDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getFirmName())) {
+            dto.getConditions().add(Restrict.eq("firmName", dto.getFirmName()));
+        }
         return firmIntroSer.count(dto);
     }
 
@@ -107,5 +124,45 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     @Override
     public void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException {
         firmIntroSer.setFirmDisplayField(username, to);
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return firmIntroSer.findallMonUser();
+    }
+
+    @Override
+    public Set<String> firmNames() throws SerException {
+        return firmIntroSer.firmNames();
+    }
+
+    @Override
+    public Set<BussinesBO> moneyByName(String name) throws SerException {
+        return firmIntroSer.moneyByName(name);
+    }
+
+    @Override
+    public void congealFirmin(String id) throws SerException {
+        firmIntroSer.congealFirmin(id);
+    }
+
+    @Override
+    public void thawFirmin(String id) throws SerException {
+        firmIntroSer.thawFirmin(id);
+    }
+
+    @Override
+    public String getDate() throws SerException {
+        return firmIntroSer.getDate();
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return firmIntroSer.exportExcel();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return firmIntroSer.templateExport();
     }
 }

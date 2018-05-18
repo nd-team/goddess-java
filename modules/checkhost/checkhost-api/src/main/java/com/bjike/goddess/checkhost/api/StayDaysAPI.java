@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -19,11 +20,26 @@ import java.util.List;
  */
 public interface StayDaysAPI {
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 员工住宿天数汇总列表总条数
      */
     default Long countStayDays(StayDaysDTO stayDaysDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个员工住宿天数汇总
      *
@@ -32,6 +48,7 @@ public interface StayDaysAPI {
     default StayDaysBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取员工住宿天数汇总
      *
@@ -74,15 +91,16 @@ public interface StayDaysAPI {
     default void removeStayDays(String id) throws SerException {
 
     }
+
     /**
      * 审核
      *
-     * @param stayDaysTO 员工住宿天数汇总
+     * @param id  id
+     * @param dto dto
      * @return class StayDaysBO
      */
-    default StayDaysBO auditStayDays(StayDaysTO stayDaysTO) throws SerException {
-        return null;
-    }
+    StayDaysBO auditStayDays(String id, StayDaysDTO dto) throws SerException;
+
     /**
      * 汇总
      *

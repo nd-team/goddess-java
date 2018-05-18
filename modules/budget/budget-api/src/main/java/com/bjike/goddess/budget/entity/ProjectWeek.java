@@ -25,9 +25,9 @@ public class ProjectWeek extends BaseEntity {
     private String arrival;
 
     /**
-     * 项目
+     * 所属项目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
+    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属项目'")
     private String project;
 
     /**
@@ -57,7 +57,7 @@ public class ProjectWeek extends BaseEntity {
     /**
      * 实际完工量
      */
-    @Column(name = "actualWork", nullable = false, columnDefinition = "INT(11)   COMMENT '实际完工量'")
+    @Column(name = "actualWork", nullable = true, columnDefinition = "INT(11)   COMMENT '实际完工量'")
     private Integer actualWork;
 
 
@@ -76,8 +76,13 @@ public class ProjectWeek extends BaseEntity {
     /**
      * 计划收入
      */
-    @Column(name = "planIncome", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '计划收入'")
+    @Column(name = "planIncome", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '计划收入'")
     private Double planIncome;
+    /**
+     * 内部项目名称
+     */
+    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    private String projectName;
 
 
     public Integer getYear() {
@@ -158,5 +163,13 @@ public class ProjectWeek extends BaseEntity {
 
     public void setPlanIncome(Double planIncome) {
         this.planIncome = planIncome;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

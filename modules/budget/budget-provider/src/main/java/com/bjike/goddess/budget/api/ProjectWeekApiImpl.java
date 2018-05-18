@@ -1,7 +1,9 @@
 package com.bjike.goddess.budget.api;
 
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.service.ProjectWeekSer;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -57,6 +59,11 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     }
 
     @Override
+    public List<ProjectWeekListBO> listProject(ProjectWeekDTO dto) throws SerException {
+        return projectWeekSer.listProject(dto);
+    }
+
+    @Override
     public List<ProjectWeekCountBO> conditionsCount(ProjectWeekDTO dto1) throws SerException {
         return projectWeekSer.conditionsCount(dto1);
     }
@@ -72,6 +79,11 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     }
 
     @Override
+    public byte[] templateExport() throws SerException {
+        return projectWeekSer.templateExport();
+    }
+
+    @Override
     public Boolean sonPermission() throws SerException {
         return projectWeekSer.sonPermission();
     }
@@ -79,5 +91,20 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectWeekSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        return projectWeekSer.collect(dto);
+    }
+
+    @Override
+    public List<String> findArea() throws SerException {
+        return projectWeekSer.findAreas();
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        return projectWeekSer.figureShow();
     }
 }

@@ -2,7 +2,6 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
-import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -22,13 +21,13 @@ import java.util.Set;
 public interface BaseInfoManageAPI {
 
 
-
     /**
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -39,7 +38,6 @@ public interface BaseInfoManageAPI {
 
     /**
      * 基本信息列表总条数
-     *
      */
     default Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         return null;
@@ -47,64 +45,89 @@ public interface BaseInfoManageAPI {
 
     /**
      * 根据id获取基本信息列表
+     *
      * @return class BaseInfoManageBO
      */
-    default BaseInfoManageBO getOneById(String id) throws SerException {return null;}
+    default BaseInfoManageBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
      * 项目合同基本信息列表
+     *
      * @return class BaseInfoManageBO
      */
-    default List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param baseInfoManageTO 项目合同基本信息
-     * @return class BaseInfoManageBO
-     */
-    default BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException { return null;}
+    default List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param baseInfoManageTO 项目合同基本信息
      * @return class BaseInfoManageBO
      */
-    default BaseInfoManageBO editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException { return null;}
+    default BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param baseInfoManageTO 项目合同基本信息
+     * @return class BaseInfoManageBO
+     */
+    default BaseInfoManageBO editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除
+     *
      * @param id id
      */
-    default void deleteBaseInfoManage(String id ) throws SerException {return;};
+    default void deleteBaseInfoManage(String id) throws SerException {
+        return;
+    }
+
+
 
     /**
-     *  根据内部项目编号查找项目合同基本信息
+     * 根据内部项目编号查找项目合同基本信息
+     *
      * @param innerProjectNum 内部项目编号
      * @return class BaseInfoManageBO
      */
-    default BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException { return null;}
+    default BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
+        return null;
+    }
 
     /**
      * 搜索
+     *
      * @param baseInfoManageDTO 搜索
      * @return class BaseInfoManageBO
      */
-    default List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws  SerException {
+    default List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         return null;
     }
 
     /**
      * 获取甲方公司
+     *
      * @return class String
      */
-    default List<String> listFirstCompany( ) throws  SerException {
+    default List<String> listFirstCompany() throws SerException {
         return null;
     }
+
     /**
      * 获取内部项目编号
+     *
      * @return class String
      */
-    default List<String> getInnerNum( ) throws  SerException {
+    default List<String> getInnerNum() throws SerException {
         return null;
     }
 
@@ -116,6 +139,15 @@ public interface BaseInfoManageAPI {
      * @throws SerException
      */
     Set<String> allInnerProjects() throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有合同外部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> outerProjects() throws SerException;
 
     /**
      * 导出excel
@@ -142,4 +174,59 @@ public interface BaseInfoManageAPI {
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * 获取全部信息(不分页)
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<BaseInfoManageBO> getgetAll() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目数
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default Long getInterProject(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目名称
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称获取所部的地区
+     *
+     * @param projectNane
+     * @return
+     * @throws SerException
+     */
+    default List<String> getArea(String projectNane) throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 获取某内部项目名称的合同规模数量
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Double contractScale(String project) throws SerException;
 }

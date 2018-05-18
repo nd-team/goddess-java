@@ -6,6 +6,7 @@ import com.bjike.goddess.secure.bo.AttachedEndBO;
 import com.bjike.goddess.secure.dto.AttachedEndDTO;
 import com.bjike.goddess.secure.entity.AttachedEnd;
 import com.bjike.goddess.secure.to.AttachedEndTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AttachedEndSer extends Ser<AttachedEnd, AttachedEndDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -79,12 +89,12 @@ public interface AttachedEndSer extends Ser<AttachedEnd, AttachedEndDTO> {
      */
     void send() throws SerException;
 
-    /**
-     * 启动定时方法
-     *
-     * @throws SerException
-     */
-    void quartz() throws SerException;
+//    /**
+//     * 启动定时方法
+//     *
+//     * @throws SerException
+//     */
+//    void quartz() throws SerException;
 
     /**
      * 查找总记录数

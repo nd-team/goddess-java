@@ -1,10 +1,11 @@
 package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.FacilityBO;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.FacilityDTO;
 import com.bjike.goddess.projectroyalty.to.FacilityTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FacilityAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

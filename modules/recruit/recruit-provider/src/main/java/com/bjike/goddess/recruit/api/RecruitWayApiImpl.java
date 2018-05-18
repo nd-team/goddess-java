@@ -1,16 +1,20 @@
 package com.bjike.goddess.recruit.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
 import com.bjike.goddess.recruit.entity.RecruitWay;
 import com.bjike.goddess.recruit.service.RecruitWaySer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招聘渠道
@@ -48,6 +52,15 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
      */
     @Override
     public Long count(RecruitWayDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getRecruitSite())) {
+            dto.getConditions().add(Restrict.like("recruitSite", dto.getRecruitSite()));
+        }
+        if (StringUtils.isNotBlank(dto.getChannelContact())) {
+            dto.getConditions().add(Restrict.like("channelContact", dto.getChannelContact()));
+        }
+        if (null != dto.getStatus()) {
+            dto.getConditions().add(Restrict.like("status", dto.getStatus()));
+        }
         return recruitWaySer.count(dto);
     }
 
@@ -86,6 +99,16 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
         recruitWaySer.remove(id);
     }
 
+    @Override
+    public void thaw(String id) throws SerException {
+        recruitWaySer.thaw(id);
+    }
+
+    @Override
+    public void congeal(String id) throws SerException {
+        recruitWaySer.congeal(id);
+    }
+
     /**
      * 更新招聘渠道
      *
@@ -96,4 +119,21 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
     public void update(RecruitWayTO recruitWayTO) throws SerException {
         recruitWaySer.update(recruitWayTO);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitWaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitWaySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allRecruitName() throws SerException {
+        return recruitWaySer.allRecruitName();
+    }
+
+
 }

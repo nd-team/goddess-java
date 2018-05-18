@@ -36,6 +36,14 @@ public class FirstPhoneRecordTO extends BaseTO {
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String position;
+    /**
+     * 应聘地区
+     */
+    private String area;
+    /**
+     * 应聘部门/项目组
+     */
+    private String projectGroup;
 
     /**
      * 姓名
@@ -105,10 +113,16 @@ public class FirstPhoneRecordTO extends BaseTO {
      * 初试负责人
      */
     private String firstInterviewPrincipal;
+    /**
+     * 初试地点
+     */
+    private String firstPlace;
+
 
     /**
      * 是否初试
      */
+    @NotNull(message = "是否初试",groups = {ADD.class,EDIT.class})
     private Boolean whetherFirstInterview;
 
     /**
@@ -120,16 +134,77 @@ public class FirstPhoneRecordTO extends BaseTO {
      * 未应约初试原因
      */
     private String denyFirViewReason;
+    /**
+     * 是否需要复试
+     */
+    private Boolean retrial;
+    /**
+     * 复试时间
+     */
+    private String retrialTime;
+    /**
+     * 复试负责人
+     */
+    private String retrialOfficer;
 
     /**
      * 其他
      */
     private String other;
 
-    /**
-     * 附件地址
-     */
-    private String attachmentAddr;
+//    /**
+//     * 附件地址
+//     */
+//    private String attachmentAddr;
+
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getFirstPlace() {
+        return firstPlace;
+    }
+
+    public void setFirstPlace(String firstPlace) {
+        this.firstPlace = firstPlace;
+    }
+
+    public Boolean getRetrial() {
+        return retrial;
+    }
+
+    public void setRetrial(Boolean retrial) {
+        this.retrial = retrial;
+    }
+
+    public String getRetrialTime() {
+        return retrialTime;
+    }
+
+    public void setRetrialTime(String retrialTime) {
+        this.retrialTime = retrialTime;
+    }
+
+    public String getRetrialOfficer() {
+        return retrialOfficer;
+    }
+
+    public void setRetrialOfficer(String retrialOfficer) {
+        this.retrialOfficer = retrialOfficer;
+    }
 
     public String getDate() {
         return date;
@@ -291,11 +366,11 @@ public class FirstPhoneRecordTO extends BaseTO {
         this.other = other;
     }
 
-    public String getAttachmentAddr() {
-        return attachmentAddr;
-    }
-
-    public void setAttachmentAddr(String attachmentAddr) {
-        this.attachmentAddr = attachmentAddr;
-    }
+//    public String getAttachmentAddr() {
+//        return attachmentAddr;
+//    }
+//
+//    public void setAttachmentAddr(String attachmentAddr) {
+//        this.attachmentAddr = attachmentAddr;
+//    }
 }

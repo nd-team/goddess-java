@@ -1,7 +1,9 @@
 package com.bjike.goddess.attainment.api;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.service.SurveyQuestionnaireOptionSer;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,16 @@ public class SurveyQuestionnaireOptionApiImpl implements SurveyQuestionnaireOpti
     @Autowired
     private SurveyQuestionnaireOptionSer surveyQuestionnaireOptionSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return surveyQuestionnaireOptionSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return surveyQuestionnaireOptionSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public SurveyQuestionnaireOptionBO save(SurveyQuestionnaireOptionTO to) throws SerException {
         return surveyQuestionnaireOptionSer.save(to);
@@ -42,5 +54,10 @@ public class SurveyQuestionnaireOptionApiImpl implements SurveyQuestionnaireOpti
     @Override
     public List<SurveyQuestionnaireOptionBO> findByQuestion(String questionnaire_id) throws SerException {
         return surveyQuestionnaireOptionSer.findByQuestion(questionnaire_id);
+    }
+
+    @Override
+    public List<QuestionCheckBO> findQuesCheck() throws SerException {
+        return surveyQuestionnaireOptionSer.findQuesCheck();
     }
 }

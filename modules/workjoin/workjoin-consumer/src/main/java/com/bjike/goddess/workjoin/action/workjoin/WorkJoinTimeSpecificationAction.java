@@ -13,6 +13,7 @@ import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinTimeSpecificationBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.dto.WorkJoinTimeSpecificationDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTimeSpecificationTO;
 import com.bjike.goddess.workjoin.vo.WorkJoinTimeSpecificationVO;
@@ -40,6 +41,29 @@ public class WorkJoinTimeSpecificationAction {
     @Autowired
     private WorkJoinTimeSpecificationAPI workJoinTimeSpecificationAPI;
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = workJoinTimeSpecificationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 工作交接时间规范列表总条数
      *
      * @param workJoinTimeSpecificationDTO 工作交接时间规范dto
@@ -59,7 +83,7 @@ public class WorkJoinTimeSpecificationAction {
     /**
      * 一个工作交接时间规范
      *
-     * @param id
+     * @param id 工作交接时间id
      * @return class WorkJoinTimeSpecificationVO
      * @des 获取一个工作交接时间规范
      * @version v1

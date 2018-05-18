@@ -42,4 +42,9 @@ public class ModuleAssembleApiImpl implements ModuleAssembleAPI {
     public ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
         return moduleAssembleSer.modulesByName(name,checkType);
     }
+
+    @Override
+    public Boolean checkByName(String module ,String relation) throws SerException {
+        return moduleAssembleSer.checkByName(module,relation);
+    }
 }

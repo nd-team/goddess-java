@@ -3,6 +3,7 @@ package com.bjike.goddess.user.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.user.enums.UserType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 用户业务传送对象
@@ -14,14 +15,31 @@ import com.bjike.goddess.user.enums.UserType;
  * @Copy: [com.bjike]
  */
 public class UserTO extends BaseTO {
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
+
+    public interface UPDATEPWD{}
+
+    public interface UPDATEPHONE{}
+
+    public interface BECOMEENTERPRISE{}
+
     /**
      * 用户名
      */
+    @NotBlank(groups ={ UserTO.BECOMEENTERPRISE.class} , message = "用户名不能为空")
     private String username;
 
     /**
      * 登录手机(注册验证手机)
      */
+    @NotBlank(groups ={ UserTO.UPDATEPHONE.class} , message = "手机号不能为空")
     private String phone;
     /**
      * 登录邮箱
@@ -31,6 +49,7 @@ public class UserTO extends BaseTO {
     /**
      * 登陆密码
      */
+    @NotBlank(groups ={ UserTO.UPDATEPWD.class} , message = "密码不能为空")
     private String password;
     /**
      * 头像
@@ -43,6 +62,7 @@ public class UserTO extends BaseTO {
     /**
      * 员工编号
      */
+    @NotBlank(groups ={ UserTO.BECOMEENTERPRISE.class} , message = "员工编号不能为空")
     private String employeeNumber;
 
     /**
@@ -54,6 +74,11 @@ public class UserTO extends BaseTO {
      * 用户类型
      */
     private UserType userType;
+
+    /**
+     * 用户积分；String
+     */
+    private String integral;
 
     public String getUsername() {
         return username;

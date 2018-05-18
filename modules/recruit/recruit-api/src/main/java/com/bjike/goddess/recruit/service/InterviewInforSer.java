@@ -5,6 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
+import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 
 import java.util.List;
@@ -19,6 +22,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface InterviewInforSer extends Ser<InterviewInfor, InterviewInforDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询面试信息
@@ -55,12 +71,78 @@ public interface InterviewInforSer extends Ser<InterviewInfor, InterviewInforDTO
     void update(InterviewInforTO interviewInforTO) throws SerException;
 
     /**
-     * 总经办审核录取
+     * 初试面试意见
      *
-     * @param id 面试信息唯一标识
-     * @param whetherPassBoss 总经办审核是否录取
-     * @param bossAdvice 总经办审批意见
+     * @param to
      * @throws SerException
      */
-    void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException;
+    void firstIdea(IdeaTO to) throws SerException;
+
+    /**
+     * 复试面试意见
+     *
+     * @param to
+     * @throws SerException
+     */
+    void reexamineIdea(IdeaTO to) throws SerException;
+
+    /**
+     * 薪资面谈意见
+     *
+     * @param to
+     * @throws SerException
+     */
+    void wagesIdea(IdeaTO to) throws SerException;
+
+    /**
+     * 总经办审核录取
+     *
+     * @param to
+     * @throws SerException
+     */
+    void zjbAudit(IdeaTO to) throws SerException;
+
+    /**
+     * 入职信息获取
+     *
+     * @param to
+     * @throws SerException
+     */
+    void staffEntryInfo(IdeaTO to) throws SerException;
+
+
+    /**
+     * 查询所有面试信息
+     */
+    List<InterviewInforBO> findInterview() throws SerException;
+
+    /**
+     * 根据姓名获取通过面试的信息
+     */
+    InterviewInforBO findByName(String name) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param interviewInforTOS 面试信息
+     * @return class InterviewInforBO
+     */
+    default InterviewInforBO importExcel(List<InterviewInforTO> interviewInforTOS) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(InterviewInforDTO dto) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

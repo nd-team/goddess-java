@@ -3,6 +3,7 @@ package com.bjike.goddess.rentcar.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.rentcar.enums.AgreementStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,19 @@ public class DriverInfoTO extends BaseTO {
      */
     @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
+
+    /**
+     * 项目组/部门
+     */
+    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
+    private String department;
+
+
+    /**
+     * 租车单价
+     */
+    @NotNull(message = "租车单价不能为空",groups = {ADD.class, EDIT.class})
+    private Double rentCarUtilCost;
 
     /**
      * 结算方式
@@ -95,6 +109,12 @@ public class DriverInfoTO extends BaseTO {
      */
     @NotNull(message = "本车耗油不能为空",groups = {ADD.class, EDIT.class})
     private Double carFuel;
+
+    /**
+     * 是否确定签订租车协议
+     */
+    @NotNull(message = "是否确定签订租车协议不能为空",groups = {ADD.class, EDIT.class})
+    private Boolean enSureAgreement;
 
     /**
      * 是否签订租车协议
@@ -175,9 +195,20 @@ public class DriverInfoTO extends BaseTO {
     private String cardBank;
 
     /**
+     * 协议状态
+     */
+    @NotNull(message = "协议状态不能为空",groups = {ADD.class, EDIT.class})
+    private AgreementStatus agreementStatus;
+
+    /**
      * 是否解约
      */
     private Boolean breakAgreement;
+
+    /**
+     * 解除时间
+     */
+    private String liftTime;
 
     /**
      * 备注
@@ -406,5 +437,45 @@ public class DriverInfoTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Double getRentCarUtilCost() {
+        return rentCarUtilCost;
+    }
+
+    public void setRentCarUtilCost(Double rentCarUtilCost) {
+        this.rentCarUtilCost = rentCarUtilCost;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public AgreementStatus getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(AgreementStatus agreementStatus) {
+        this.agreementStatus = agreementStatus;
+    }
+
+    public String getLiftTime() {
+        return liftTime;
+    }
+
+    public void setLiftTime(String liftTime) {
+        this.liftTime = liftTime;
     }
 }

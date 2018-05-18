@@ -22,9 +22,16 @@ public class YearIndexSetBO extends BaseBO {
     private String indexName;
 
     /**
+     * 指标编号
+     */
+
+    private Integer indexNumber;
+
+
+    /**
      * 年份
      */
-    private String year;
+    private Integer year;
 
     /**
      * 指标类型
@@ -96,11 +103,11 @@ public class YearIndexSetBO extends BaseBO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -199,5 +206,13 @@ public class YearIndexSetBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
     }
 }

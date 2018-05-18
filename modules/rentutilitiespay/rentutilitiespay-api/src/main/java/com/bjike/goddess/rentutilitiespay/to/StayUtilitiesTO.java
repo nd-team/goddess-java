@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class StayUtilitiesTO extends BaseTO {
+    public interface financeAudit{}
+    public interface employeeVerify{}
 
     /**
      * 地区
@@ -34,8 +36,8 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
-    private String projectName;
+    @NotNull(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
+    private String[] projectName;
 
     /**
      * 住宿地址
@@ -58,11 +60,13 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 住宿开始时间
      */
+    @NotBlank(message = "住宿开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String stayStartTime;
 
     /**
      * 住宿结束时间
      */
+    @NotBlank(message = "住宿结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String stayEndTime;
 
     /**
@@ -70,6 +74,11 @@ public class StayUtilitiesTO extends BaseTO {
      */
     @NotNull(message = "住宿天数不能为空",groups = {ADD.class, EDIT.class})
     private Double stayDay;
+    /**
+     * 房租
+     */
+    @NotNull(message = "房租不能为空",groups = {ADD.class, EDIT.class})
+    private Double rent;
 
     /**
      * 房租公司缴纳
@@ -96,6 +105,12 @@ public class StayUtilitiesTO extends BaseTO {
     private Double waterCompanyPay;
 
     /**
+     * 水费员工预缴
+     */
+    @NotNull(message = "水费员工预缴不能为空",groups = {ADD.class,EDIT.class})
+    private Double waterStaffPrepay;
+
+    /**
      * 水费员工缴纳（(当月应缴水费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double waterStaffPay;
@@ -111,6 +126,12 @@ public class StayUtilitiesTO extends BaseTO {
      */
     @NotNull(message = "电费公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double energyCompanyPay;
+
+    /**
+     * 电费员工预缴
+     */
+    @NotNull(message = "电费员工预缴不能为空",groups = {ADD.class,EDIT.class})
+    private Double energyStaffPrepay;
 
     /**
      * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
@@ -130,6 +151,13 @@ public class StayUtilitiesTO extends BaseTO {
     private Double gasCompanyPay;
 
     /**
+     * 燃气费员工预缴
+     */
+    @NotNull(message = "燃气费员工预缴不能为空",groups = {ADD.class, EDIT.class})
+    private Double gasStaffPrepay;
+
+
+    /**
      * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double gasStaffPay;
@@ -142,6 +170,7 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 员工核实（确认/有误）
      */
+    @NotNull(message = "员工核实（确认/有误）不能为空",groups = {StayUtilitiesTO.employeeVerify.class})
     private StaffVerify staffVerify;
 
     /**
@@ -152,6 +181,7 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 扣款情况（运营商务部确认）
      */
+    @NotBlank(message = "扣款情况（运营商务部确认）不能为空",groups = {StayUtilitiesTO.financeAudit.class})
     private String deductionSituation;
 
     /**
@@ -176,11 +206,11 @@ public class StayUtilitiesTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 
@@ -198,6 +228,14 @@ public class StayUtilitiesTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getNum() {
@@ -358,5 +396,29 @@ public class StayUtilitiesTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
     }
 }

@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.FailPhoneReasonBO;
 import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
 import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未成功通话原因
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface FailPhoneReasonAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询未成功通话原因
@@ -68,4 +83,12 @@ public interface FailPhoneReasonAPI {
      * @throws SerException
      */
     void update(FailPhoneReasonTO failPhoneReasonTO) throws SerException;
+
+    /**
+     * 查找所有未成功通话原因
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allReason() throws SerException;
 }

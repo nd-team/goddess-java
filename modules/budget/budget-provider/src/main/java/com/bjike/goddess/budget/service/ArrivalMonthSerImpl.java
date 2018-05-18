@@ -1,8 +1,6 @@
 package com.bjike.goddess.budget.service;
 
-import com.bjike.goddess.budget.bo.ArrivalMonthBO;
-import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
-import com.bjike.goddess.budget.bo.ArrivalWeekBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.entity.ArrivalMonth;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
@@ -15,15 +13,18 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 地区收入月业务实现
@@ -165,6 +166,230 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     }
 
     @Override
+    public List<ArrivalMonthCountBO> collect(ArrivalMonthDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<ArrivalMonthCountBO> boList = new ArrayList<ArrivalMonthCountBO>();
+        Integer targetWorkSum = 0;
+        Integer actualWorkSum = 0;
+        Integer workDifferencesSum = 0;
+        Double targetIncomeSum = 0.00;
+        Double planIncomeSum = 0.00;
+        Double incomeDifferencesSum = 0.00;
+
+        ArrivalMonthDTO dto1 = new ArrivalMonthDTO();
+        if (null != dto.getArrivals()) {
+            for (String arrival : dto.getArrivals()) {
+                dto1 = new ArrivalMonthDTO();
+                dto1 = condition(dto);
+                dto1.getConditions().add(Restrict.eq("arrival", arrival));
+                dto1.getSorts().add("year=desc");
+                dto1.getSorts().add("month=asc");
+                List<ArrivalMonth> projectMonths = super.findByCis(dto1);
+                if (null != projectMonths && projectMonths.size() > 0) {
+                    List<String> arrivals = projectMonths.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+                    List<Integer> years = projectMonths.stream().map(ArrivalMonth::getYear).distinct().collect(Collectors.toList());
+                    List<Integer> months = projectMonths.stream().map(ArrivalMonth::getMonth).distinct().collect(Collectors.toList());
+//                    for (String area : arrivals) {
+                    for (Integer year : years) {
+//                        for (Integer month : months) {
+                        for (ArrivalMonth entity : projectMonths) {
+                            if (entity.getYear().equals(year)) {
+                                targetIncomeSum += entity.getTargetIncome();
+                                planIncomeSum += entity.getPlanIncome();
+                                double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += entity.getTargetWork();
+                                actualWorkSum += entity.getActualWork();
+                                int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
+                        }
+                        if (targetWorkSum != 0) {
+                            ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                            bo.setArrival(arrival);
+                            bo.setYear(year);
+//                                    bo.setProjectName(price);
+                            bo.setTargetWorkSum(targetWorkSum);
+                            bo.setActualWorkSum(actualWorkSum);
+                            bo.setWorkDifferencesSum(workDifferencesSum);
+                            bo.setTargetIncomeSum(targetIncomeSum);
+                            bo.setPlanIncomeSum(planIncomeSum);
+                            bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(bo);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;     //置为0
+                        }
+                    }
+                }
+
+            }
+        } else {
+            dto1 = new ArrivalMonthDTO();
+            dto1 = condition(dto);
+            dto1.getSorts().add("year=desc");
+            dto1.getSorts().add("month=asc");
+            List<ArrivalMonth> projectMonths = super.findByCis(dto1);
+            if (null != projectMonths && projectMonths.size() > 0) {
+                List<String> arrivals = projectMonths.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+                List<Integer> years = projectMonths.stream().map(ArrivalMonth::getYear).distinct().collect(Collectors.toList());
+                List<Integer> months = projectMonths.stream().map(ArrivalMonth::getMonth).distinct().collect(Collectors.toList());
+                for (String area : arrivals) {
+                    for (Integer year : years) {
+//                        for (Integer month : months) {
+                        for (ArrivalMonth entity : projectMonths) {
+                            if (entity.getArrival().equals(area) && entity.getYear().equals(year)) {
+                                targetIncomeSum += entity.getTargetIncome();
+                                planIncomeSum += entity.getPlanIncome();
+                                double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += entity.getTargetWork();
+                                actualWorkSum += entity.getActualWork();
+                                int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
+                        }
+                        if (targetWorkSum != 0) {
+                            ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                            bo.setArrival(area);
+                            bo.setYear(year);
+//                                    bo.setProjectName(price);
+                            bo.setTargetWorkSum(targetWorkSum);
+                            bo.setActualWorkSum(actualWorkSum);
+                            bo.setWorkDifferencesSum(workDifferencesSum);
+                            bo.setTargetIncomeSum(targetIncomeSum);
+                            bo.setPlanIncomeSum(planIncomeSum);
+                            bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(bo);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;     //置为0
+                        }
+                    }
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        List<ArrivalMonth> projectMonths = super.findAll();
+        List<ArrivalMonth> list = new ArrayList<>(0);
+        if (null != projectMonths && projectMonths.size() > 0) {
+            List<String> arrivals = projectMonths.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+            for (String arrival : arrivals) {
+                ArrivalMonth entity = findData(arrival);
+                if (null != entity) {
+                    list.add(entity);
+                }
+            }
+        }
+
+        String text_1 = "地区收入月";
+
+        return getOptionBO(text_1, list);
+    }
+
+    private OptionBO getOptionBO(String text_1, List<ArrivalMonth> list) throws SerException {
+        TitleBO title = new TitleBO();
+        title.setText(text_1);
+
+        TooltipBO tooltip = new TooltipBO();
+
+        List<String> nameList = new ArrayList<>(0);
+        nameList.add("目标任务量");
+        nameList.add("实际任务量");
+        nameList.add("目标收入");
+        nameList.add("实际收入");
+        String[] data1 = (String[]) nameList.toArray(new String[nameList.size()]);
+        LegendBO legend = new LegendBO();
+        legend.setData(data1);
+
+        List<String> names = list.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+        XAxisBO xAxis = new XAxisBO();
+        String[] data2 = (String[]) names.toArray(new String[names.size()]);
+        xAxis.setData(data2);
+
+        YAxisBO yAxis = new YAxisBO();
+
+        List<SeriesBO> seriesBOList = new ArrayList<>(0);
+
+        for (String name : nameList) {
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(name);
+            if ("目标任务量".equals(name) || "实际任务量".equals(name)) {
+                seriesBO.setType("bar");
+            } else {
+                seriesBO.setType("line");
+            }
+
+            List<Double> numbers = new ArrayList<>(0);
+            for (ArrivalMonth entity : list) {
+                for (String arrival : names) {
+                    if ("目标任务量".equals(name) && entity.getArrival().equals(arrival)) {
+                        Double value = 0d;
+                        Integer val = entity.getTargetWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.add(value);
+                    }
+                    if ("实际任务量".equals(name) && entity.getArrival().equals(arrival)) {
+                        Double value = 0d;
+                        Integer val = entity.getActualWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.add(value);
+                    }
+                    if ("目标收入".equals(name) && entity.getArrival().equals(arrival)) {
+                        Double value = 0d;
+                        value = entity.getTargetIncome();
+                        numbers.add(value);
+                    }
+                    if ("实际收入".equals(name) && entity.getArrival().equals(arrival)) {
+                        Double value = 0d;
+                        value = entity.getPlanIncome();
+                        numbers.add(value);
+                    }
+                }
+            }
+
+            Double[] data3 = numbers.toArray(new Double[numbers.size()]);
+            seriesBO.setData(data3);
+            seriesBOList.add(seriesBO);
+        }
+
+        SeriesBO[] seriesBOs = seriesBOList.toArray(new SeriesBO[seriesBOList.size()]);
+        OptionBO option = new OptionBO();
+        option.setLegend(legend);
+        option.setSeries(seriesBOs);
+        option.setTitle(title);
+        option.setTooltip(tooltip);
+        option.setxAxis(xAxis);
+        option.setyAxis(yAxis);
+        return option;
+    }
+
+    private ArrivalMonth findData(String arrival) throws SerException {
+        String[] files = new String[]{"targetWork", "actualWork", "targetIncome", "planIncome", "arrival"};
+        Integer year = LocalDate.now().getYear();
+        StringBuilder sql = new StringBuilder("select ifnull(sum(targetWork),0) as targetWork, ");
+        sql.append(" ifnull(sum(actualWork),0) as actualWork, ");
+        sql.append(" ifnull(sum(targetIncome),0) as targetIncome, ");
+        sql.append(" ifnull(sum(planIncome),0) as planIncome, arrival ");
+        sql.append(" from budget_projectmonth ");
+        sql.append(" where year = '" + year + "' ");
+        sql.append(" and arrival = '" + arrival + "' ");
+
+        List<ArrivalMonth> list = super.findBySql(sql.toString(), ArrivalMonth.class, files);
+        return list.get(0).getArrival() == null ? null : list.get(0);
+    }
+
+    @Override
     @Transactional(rollbackFor = {SerException.class})
     public ArrivalMonthBO save(ArrivalMonthTO to) throws SerException {
         checkAddIdentity();
@@ -198,8 +423,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         List<ArrivalMonthBO> boList = new ArrayList<ArrivalMonthBO>();
         for (ArrivalMonth a : list) {
             ArrivalMonthBO bo = BeanTransform.copyProperties(a, ArrivalMonthBO.class);
-            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
-            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            bo.setWorkDifferences(a.getTargetWork() - a.getActualWork());
+            bo.setIncomeDifferences(a.getTargetIncome() - a.getPlanIncome());
             boList.add(bo);
         }
         return boList;
@@ -209,8 +434,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     public ArrivalMonthBO findByID(String id) throws SerException {
         ArrivalMonth arrivalMonth = super.findById(id);
         ArrivalMonthBO bo = BeanTransform.copyProperties(arrivalMonth, ArrivalMonthBO.class);
-        bo.setWorkDifferences(arrivalMonth.getActualWork() - arrivalMonth.getTargetWork());
-        bo.setIncomeDifferences(arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome());
+        bo.setWorkDifferences(arrivalMonth.getTargetWork() - arrivalMonth.getActualWork());
+        bo.setIncomeDifferences(arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome());
         return bo;
     }
 
@@ -267,11 +492,11 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     if (arrivalMonth.getArrival().equals(arrival) && arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
-                        double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                        double incomeDifference = arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome();
                         incomeDifferencesSum += incomeDifference;
                         targetWorkSum += arrivalMonth.getTargetWork();
                         actualWorkSum += arrivalMonth.getActualWork();
-                        int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                        int workDifference = arrivalMonth.getTargetWork() - arrivalMonth.getActualWork();
                         workDifferencesSum += workDifference;
                     }
                 }
@@ -285,7 +510,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     bo.setTargetWorkSum(targetWorkSum);
                     bo.setActualWorkSum(actualWorkSum);
                     bo.setWorkDifferencesSum(workDifferencesSum);
-                    Double scale = planIncomeSum / targetIncomeSum;
+                    Double scale = Double.parseDouble(String.format("%.2f", planIncomeSum / targetIncomeSum));
                     bo.setScale(scale);
                     boList.add(bo);
                     targetIncomeSum = 0.00;
@@ -322,11 +547,11 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         if (arrivalMonth.getYear().equals(year)) {
                             targetIncomeSum += arrivalMonth.getTargetIncome();
                             planIncomeSum += arrivalMonth.getPlanIncome();
-                            double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                            double incomeDifference = arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome();
                             incomeDifferencesSum += incomeDifference;
                             targetWorkSum += arrivalMonth.getTargetWork();
                             actualWorkSum += arrivalMonth.getActualWork();
-                            int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                            int workDifference = arrivalMonth.getTargetWork() - arrivalMonth.getActualWork();
                             workDifferencesSum += workDifference;
                         }
                     }
@@ -340,7 +565,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         bo.setTargetWorkSum(targetWorkSum);
                         bo.setActualWorkSum(actualWorkSum);
                         bo.setWorkDifferencesSum(workDifferencesSum);
-                        Double scale = planIncomeSum / targetIncomeSum;
+                        Double scale = Double.parseDouble(String.format("%.2f", planIncomeSum / targetIncomeSum));
                         bo.setScale(scale);
                         boList.add(bo);
                         targetIncomeSum = 0.00;
@@ -377,8 +602,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
             bo.setArrival(arrivalMonth.getArrival());
             bo.setYear(arrivalMonth.getYear());
             bo.setMonth(arrivalMonth.getMonth());
-            bo.setIncomeDifferences(bo.getPlanIncome() - bo.getTargetIncome());
-            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
+            bo.setIncomeDifferences(bo.getTargetIncome() - bo.getPlanIncome());
+            bo.setWorkDifferences(arrivalMonth.getTargetWork() - arrivalMonth.getActualWork());
         }
         return list;
     }
@@ -386,5 +611,17 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     @Override
     public Long countNum(ArrivalMonthDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    private ArrivalMonthDTO condition(ArrivalMonthDTO dto) throws SerException {
+        ArrivalMonthDTO dto1 = new ArrivalMonthDTO();
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto1.getConditions().add(Restrict.eq("arrival", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getTime())) {
+            dto1.getConditions().add(Restrict.eq("year", dto.getTime()));
+//            dto1.getConditions().add(Restrict.eq("month", dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length())));
+        }
+        return dto1;
     }
 }

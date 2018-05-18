@@ -4,8 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -73,18 +76,18 @@ public interface BonusBudgetAPI {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
-    void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
+    void addRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException;
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
-    void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
+    void updateRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException;
 
     /**
      * 查看奖励项目比例
@@ -94,4 +97,18 @@ public interface BonusBudgetAPI {
      * @throws SerException
      */
     List<RewardProgramRatioBO> checkRewardProgramRatios(String id) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

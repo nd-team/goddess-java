@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -53,6 +54,30 @@ public class ForeignStaffingTO extends BaseTO {
      */
     @NotNull(message = "学历不能为空", groups = {ADD.class, EDIT.class})
     private String education;
+
+    /**
+     * 资质/认证证书
+     */
+    @NotBlank(message = "资质/认证证书不能为空", groups = {ADD.class, EDIT.class})
+    private String litterae;
+
+    /**
+     * 是否购买社保
+     */
+    @NotNull(message = "是否购买社保不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean buySecurity;
+
+    /**
+     * 社保购买类型
+     */
+    @NotBlank(message = "社保购买类型不能为空", groups = {ADD.class, EDIT.class})
+    private String securityType;
+
+    /**
+     * 购买社保所属公司
+     */
+    @NotBlank(message = "购买社保所属公司不能为空", groups = {ADD.class, EDIT.class})
+    private String company;
 
     /**
      * 专业
@@ -277,5 +302,37 @@ public class ForeignStaffingTO extends BaseTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getLitterae() {
+        return litterae;
+    }
+
+    public void setLitterae(String litterae) {
+        this.litterae = litterae;
+    }
+
+    public Boolean getBuySecurity() {
+        return buySecurity;
+    }
+
+    public void setBuySecurity(Boolean buySecurity) {
+        this.buySecurity = buySecurity;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 }

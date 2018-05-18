@@ -15,9 +15,9 @@ public class MoneyReadyCountVO {
      */
     private String groupTeam;
     /**
-     * 月份
+     * 时间
      */
-    private Integer month;
+    private String time;
     /**
      * 上月准备金
      */
@@ -34,6 +34,18 @@ public class MoneyReadyCountVO {
      * 增长率
      */
     private Double growth;
+    /**
+     * 地区
+     */
+    private String area;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getGroupTeam() {
         return groupTeam;
@@ -43,12 +55,12 @@ public class MoneyReadyCountVO {
         this.groupTeam = groupTeam;
     }
 
-    public Integer getMonth() {
-        return month;
+    public String getTime() {
+        return time;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public Double getLastMonthReserveSum() {

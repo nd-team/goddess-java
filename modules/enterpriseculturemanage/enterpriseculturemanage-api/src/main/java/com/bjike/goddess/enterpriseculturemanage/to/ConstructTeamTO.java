@@ -19,7 +19,7 @@ public class ConstructTeamTO extends BaseTO {
     /**
      * 员工Id
      */
-    @NotBlank(message = "员工Id不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "员工Id不能为空",groups = {EDIT.class})
     private String userId;
 
     /**

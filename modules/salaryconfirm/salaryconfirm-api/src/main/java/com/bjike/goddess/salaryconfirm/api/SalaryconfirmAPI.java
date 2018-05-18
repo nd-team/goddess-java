@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.salaryconfirm.bo.AnalyzeBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salaryconfirm.dto.SalaryconfirmDTO;
+import com.bjike.goddess.salaryconfirm.entity.Salaryconfirm;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
 import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
@@ -148,4 +149,25 @@ public interface SalaryconfirmAPI {
     void sendEmail() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 根据计薪周期和员工姓名来查询薪资确认情况
+     */
+    SalaryconfirmBO findSalary(String salaryStart,String salaryEnd,String name) throws SerException;
+
+    /**
+     * 导出－"已确认薪资"
+     *
+     * @return class
+     * @version v1
+     */
+    byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException;
+
+    /**
+     * 好的个人汇总
+     *
+     * @return
+     */
+//    List<SalaryconfirmBO> collectByGood(Integer year, Integer mouth, String name) throws SerException;
+
 }

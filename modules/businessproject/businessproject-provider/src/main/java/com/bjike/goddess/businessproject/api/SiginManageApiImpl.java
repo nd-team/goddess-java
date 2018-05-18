@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.api;
 
+import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
@@ -10,8 +12,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同签订与立项管理业务接口实现
@@ -36,7 +38,7 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return siginManageSer.guidePermission( guidePermissionTO );
+        return siginManageSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
-        return siginManageSer.auditSiginManage( siginManageTO);
+        return siginManageSer.auditSiginManage(siginManageTO);
     }
 
     @Override
@@ -86,20 +88,56 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
-        return siginManageSer.importExcel( siginManageTO );
+        return siginManageSer.importExcel(siginManageTO);
     }
 
     @Override
     public byte[] exportExcel(SiginManageDTO dto) throws SerException {
-        return siginManageSer.exportExcel( dto );
+        return siginManageSer.exportExcel(dto);
     }
+
     @Override
-    public byte[] templateExport( ) throws SerException {
-        return siginManageSer.templateExport(   );
+    public byte[] templateExport() throws SerException {
+        return siginManageSer.templateExport();
     }
 
     @Override
     public List<String> listInnerProject() throws SerException {
         return siginManageSer.listInnerProject();
+    }
+
+    @Override
+    public SiginManageBO findByProject(String name) throws SerException {
+        return siginManageSer.findByProject(name);
+    }
+
+    @Override
+    public Boolean findCompleteStatus(String projectName) throws SerException {
+        return siginManageSer.findCompleteStatus(projectName);
+    }
+
+    @Override
+    public Set<String> makeProjects() throws SerException {
+        return siginManageSer.makeProjects();
+    }
+
+    @Override
+    public OptionMakeBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+        return siginManageSer.weekCollectFigure(year, month, week);
+    }
+
+    @Override
+    public OptionMakeBO monthCollectFigure(Integer year, Integer month) throws SerException {
+        return siginManageSer.monthCollectFigure(year, month);
+    }
+
+    @Override
+    public OptionMakeBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+        return siginManageSer.quarterCollectFigure(year, quarter);
+    }
+
+    @Override
+    public OptionMakeBO yearCollectFigure(Integer year) throws SerException {
+        return siginManageSer.yearCollectFigure(year);
     }
 }

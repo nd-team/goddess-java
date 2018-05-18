@@ -58,11 +58,13 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 发送间隔
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
     private Double sendInterval;
 
     /**
      * 发送时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送时间格式不能为空")
     private CycleType cycle;
 
     /**

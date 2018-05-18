@@ -1,8 +1,6 @@
 package com.bjike.goddess.budget.service;
 
-import com.bjike.goddess.budget.bo.ProjectMonthBO;
-import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
-import com.bjike.goddess.budget.bo.ProjectWeekBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -73,6 +71,17 @@ public interface ProjectMonthSer extends Ser<ProjectMonth, ProjectMonthDTO> {
     }
 
     /**
+     * 项目收入周列表
+     *
+     * @param dto 项目收入周列表
+     * @return class ProjectWeekBO
+     * @throws SerException
+     */
+    default List<ProjectWeekListBO> listProjectMonth(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
      * 通过id查找
      *
      * @param id 项目收入月id
@@ -130,6 +139,27 @@ public interface ProjectMonthSer extends Ser<ProjectMonth, ProjectMonthDTO> {
      * @throws SerException
      */
     default List<String> findAllProjects() throws SerException {
+        return null;
+    }
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
         return null;
     }
 }

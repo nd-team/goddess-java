@@ -47,7 +47,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("otherexpenses")
+    @RequestMapping("otherexpenses")
 public class OtherExpensesAct extends BaseFileAction {
 
     @Autowired

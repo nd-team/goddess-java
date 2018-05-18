@@ -21,8 +21,13 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI" id="activityExecuteInfoApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.ActivitySchemeAPI" id="activitySchemeApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityStaffListAPI" id="activityStaffListApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference  validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 </beans>

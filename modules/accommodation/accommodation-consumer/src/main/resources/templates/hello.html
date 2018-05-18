@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vue 测试实例 </title>
+    <script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-html="message"></div>
+    <h1 v-if="ok">Hello!</h1>
+    <h1 v-show="ok">Hello!</h1>
+</div>
+<div id="myMessage">
+    <div v-html="hello" onclick="vm.test()"></div>
+</div>
+<!--<div id="app1">-->
+    <!--<p v-if="seen">现在你看到我了</p>-->
+    <!--<template v-if="ok">-->
+        <!--<h1>菜鸟教程</h1>-->
+        <!--<p>学的不仅是技术，更是梦想！</p>-->
+        <!--<p>哈哈哈，打字辛苦啊！！！</p>-->
+    <!--</template>-->
+<!--</div>-->
+
+
+<script>
+  var vm = new Vue({
+        el: '#app',
+        data: {
+            message: '<h1>菜鸟教程</h1>',
+            ok:false
+        },
+        methods:{
+            test : function () {
+                vm.ok = true;
+            }
+        }
+
+
+
+    })
+    new Vue({
+        el:"#myMessage",
+        data:{
+            hello:'<h1>hello,vue.js</h1>'
+        }
+    })
+</script>
+</body>
+</html>

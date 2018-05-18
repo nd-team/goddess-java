@@ -128,11 +128,11 @@ public interface BankRecordAPI {
     /**
      * 按月份查询所有银行余额
      *
-     * @param year  年份
-     * @param month 月份
+     * @param startTime  年份
+     * @param endTime 月份
      * @return 余额
      */
-    Double balanceByMonth(Integer year, Integer month) throws SerException;
+    Double balanceByMonth(String startTime,String endTime) throws SerException;
 
     /**
      * 汇总导出

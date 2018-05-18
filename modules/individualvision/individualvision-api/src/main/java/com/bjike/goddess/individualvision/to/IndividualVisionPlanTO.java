@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 个人愿景计划
  *
@@ -16,6 +18,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class IndividualVisionPlanTO extends BaseTO {
+    public interface TestAudit{}
 
     /**
      * 姓名
@@ -74,49 +77,59 @@ public class IndividualVisionPlanTO extends BaseTO {
     /**
      * 期望此能力的提升程度
      */
+    @NotBlank(message = "期望此能力的提升程度不能为空",groups = {ADD.class, EDIT.class})
     private String degreeAbilityAscend;
 
     /**
      * 期望学到的东西
      */
+    @NotBlank(message = "选择发展路径：不能为空",groups = {ADD.class, EDIT.class})
     private String expectLearnThings;
 
     /**
      * 预想的权利及义务
      */
+    @NotBlank(message = "预想的权利及义务不能为空",groups = {ADD.class, EDIT.class})
     private String rightsObligations;
 
     /**
      * 预计完成时间
      */
+    @NotBlank(message = "预计完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String expectedCompletionTime;
 
     /**
      * 期望此时的职位状态
      */
+    @NotBlank(message = "期望此时的职位状态不能为空",groups = {ADD.class, EDIT.class})
     private String positionsStatus;
 
     /**
      * 期望周收益（元）
      */
-    private String expectWeeksEarnings;
+    @NotNull(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    private String expectMonthsEarnings;
+    @NotNull(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    private String expectYearsEarnings;
+    @NotNull(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectYearsEarnings;
     /**
      * 审核人
      */
+    @NotBlank(message = "审核人不能为空",groups = {IndividualVisionPlanTO.TestAudit.class})
     private String audit;
     /**
      * 审核状态
      */
+    @NotBlank(message = "审核状态不能为空",groups = {IndividualVisionPlanTO.TestAudit.class})
     private String auditStatus;
 
     public String getAudit() {
@@ -248,27 +261,27 @@ public class IndividualVisionPlanTO extends BaseTO {
         this.positionsStatus = positionsStatus;
     }
 
-    public String getExpectWeeksEarnings() {
+    public Integer getExpectWeeksEarnings() {
         return expectWeeksEarnings;
     }
 
-    public void setExpectWeeksEarnings(String expectWeeksEarnings) {
+    public void setExpectWeeksEarnings(Integer expectWeeksEarnings) {
         this.expectWeeksEarnings = expectWeeksEarnings;
     }
 
-    public String getExpectMonthsEarnings() {
+    public Integer getExpectMonthsEarnings() {
         return expectMonthsEarnings;
     }
 
-    public void setExpectMonthsEarnings(String expectMonthsEarnings) {
+    public void setExpectMonthsEarnings(Integer expectMonthsEarnings) {
         this.expectMonthsEarnings = expectMonthsEarnings;
     }
 
-    public String getExpectYearsEarnings() {
+    public Integer getExpectYearsEarnings() {
         return expectYearsEarnings;
     }
 
-    public void setExpectYearsEarnings(String expectYearsEarnings) {
+    public void setExpectYearsEarnings(Integer expectYearsEarnings) {
         this.expectYearsEarnings = expectYearsEarnings;
     }
 }

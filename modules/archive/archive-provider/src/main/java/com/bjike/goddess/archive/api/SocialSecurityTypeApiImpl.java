@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.api;
 import com.bjike.goddess.archive.bo.SocialSecurityTypeBO;
 import com.bjike.goddess.archive.dto.SocialSecurityTypeDTO;
 import com.bjike.goddess.archive.service.SocialSecurityTypeSer;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.SocialSecurityTypeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -25,6 +26,16 @@ public class SocialSecurityTypeApiImpl implements SocialSecurityTypeAPI {
 
     @Autowired
     private SocialSecurityTypeSer socialSecurityTypeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return socialSecurityTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return socialSecurityTypeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public SocialSecurityTypeBO save(SocialSecurityTypeTO to) throws SerException {

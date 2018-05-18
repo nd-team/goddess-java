@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
 import com.bjike.goddess.balancecard.service.PositionIndexSetSer;
 import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,11 @@ public class PositionIndexSetApiImpl implements PositionIndexSetAPI {
     }
 
     @Override
+    public void leadExcel(List<PositionIndexSetTO> toList) throws SerException {
+        positionIndexSetSer.leadExcel(toList);
+    }
+
+    @Override
     public byte[] positionReport(ExportExcelPositTO to) throws SerException {
         return positionIndexSetSer.positionReport(to);
     }
@@ -100,5 +106,25 @@ public class PositionIndexSetApiImpl implements PositionIndexSetAPI {
     @Override
     public byte[] personReport(ExportExcelPositTO to) throws SerException {
         return positionIndexSetSer.personReport(to);
+    }
+
+    @Override
+    public List<PositionIndexSetBO> dendrogram(String id) throws SerException {
+        return positionIndexSetSer.dendrogram(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return positionIndexSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return positionIndexSetSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return positionIndexSetSer.templateExport();
     }
 }

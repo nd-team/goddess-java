@@ -1,6 +1,6 @@
 package com.bjike.goddess.materialbuy.vo;
 
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 物资购买表现层对象
@@ -152,6 +152,44 @@ public class MaterialBuyVO {
      */
     private String auditOpinion;
 
+    /**
+     * 是否到货
+     * */
+    private Boolean ifArrival;
+
+    /**
+     * 是否需要商务部审核
+     * */
+    private Boolean ifCommerceAudit;
+
+    /**
+     * 商务部审核通过数量
+     */
+    private Integer adoptQuantity;
+
+    public Boolean getIfArrival() {
+        return ifArrival;
+    }
+
+    public void setIfArrival(Boolean ifArrival) {
+        this.ifArrival = ifArrival;
+    }
+
+    public Boolean getIfCommerceAudit() {
+        return ifCommerceAudit;
+    }
+
+    public void setIfCommerceAudit(Boolean ifCommerceAudit) {
+        this.ifCommerceAudit = ifCommerceAudit;
+    }
+
+    public Integer getAdoptQuantity() {
+        return adoptQuantity;
+    }
+
+    public void setAdoptQuantity(Integer adoptQuantity) {
+        this.adoptQuantity = adoptQuantity;
+    }
 
     public String getId() {
         return id;

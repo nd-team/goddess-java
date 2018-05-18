@@ -5,6 +5,8 @@ import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
 import com.bjike.goddess.checkhost.entity.DormitoryInfo;
 import com.bjike.goddess.checkhost.service.DormitoryInfoSer;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
+import com.bjike.goddess.checkhost.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息管理业务接口实现
@@ -55,5 +58,23 @@ public class DormitoryInfoApiImpl implements DormitoryInfoAPI {
         dormitoryInfoSer.removeDormitoryInfo(id);
     }
 
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return dormitoryInfoSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dormitoryInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allAddress() throws SerException {
+        return dormitoryInfoSer.allAddress();
+    }
+
+    @Override
+    public String findContact(String address) throws SerException {
+        return dormitoryInfoSer.findContact(address);
+    }
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.qualifications.action.qualifications;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -111,7 +112,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findByFilter")
-    public Result findByFilter(QualificationsCollectFilterTO to, HttpServletRequest request) throws ActException {
+    public Result findByFilter(@Validated(QualificationsCollectFilterTO.Select.class) QualificationsCollectFilterTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.findByFilter(to), QualificationsCollectVO.class, request));
         } catch (SerException e) {
@@ -281,11 +282,10 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/sonPermission")
     public Result sonPermission() throws ActException {
         try {
-
+            String token = RpcContext.getContext().getAttachment("userToken");
             List<SonPermissionObject> hasPermissionList = qualificationsCollectAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 

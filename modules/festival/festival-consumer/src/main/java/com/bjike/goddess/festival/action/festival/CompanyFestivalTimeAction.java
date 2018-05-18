@@ -9,8 +9,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.CompanyFestivalTimeAPI;
 import com.bjike.goddess.festival.bo.CompanyFestivalTimeBO;
 import com.bjike.goddess.festival.dto.CompanyFestivalTimeDTO;
+import com.bjike.goddess.festival.excel.SonPermissionObject;
 import com.bjike.goddess.festival.to.CompanyFestivalTimeTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.vo.CompanyFestivalTimeVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +39,31 @@ public class CompanyFestivalTimeAction {
 
     @Autowired
     private CompanyFestivalTimeAPI companyFestivalTimeAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = companyFestivalTimeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      *  公司放假时间安排列表总条数

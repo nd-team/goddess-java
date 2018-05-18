@@ -3,8 +3,10 @@ package com.bjike.goddess.user.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @Service("userApiImpl")
-public class UserApiImpl implements UserAPI {
+public class UserApiImpl implements UserAPI{
     @Autowired
     private UserSer userSer;
 
@@ -60,6 +62,11 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
+    public List<String> currentSysNOs(Boolean bool) throws SerException {
+        return userSer.currentSysNOs(bool);
+    }
+
+    @Override
     public UserBO add(TransactionContext context,UserTO userTO) throws SerException {
         return userSer.add(context,userTO);
     }
@@ -67,6 +74,21 @@ public class UserApiImpl implements UserAPI {
     @Override
     public void update(UserTO userTO) throws SerException {
         userSer.update(userTO);
+    }
+
+    @Override
+    public void updatePassword(UserTO userTO) throws SerException {
+        userSer.updatePassword( userTO );
+    }
+
+    @Override
+    public void updatePasswords(UserTO userTO) throws SerException {
+        userSer.updatePassword ( userTO );
+    }
+
+    @Override
+    public void updatePhone(UserTO userTO) throws SerException {
+        userSer.updatePhone ( userTO );
     }
 
     @Override
@@ -128,4 +150,30 @@ public class UserApiImpl implements UserAPI {
     public String maxUserEmpNumber() throws SerException {
         return userSer.maxUserEmpNumber();
     }
+
+    @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+        return userSer.nextEmpNumber(empNum);
+    }
+
+    @Override
+    public String findNameById(String id) throws SerException {
+        return userSer.findNameById(id);
+    }
+
+    @Override
+    public List<UserBO> findByDept(String... department) throws SerException {
+        return userSer.findByDept(department);
+    }
+
+    @Override
+    public void becomeEnterprise(UserTO userTO) throws SerException {
+        userSer.becomeEnterprise ( userTO );
+    }
+
+    @Override
+    public List<UserDetailBO> myTeam() throws SerException {
+        return userSer.myTeam ();
+    }
+
 }

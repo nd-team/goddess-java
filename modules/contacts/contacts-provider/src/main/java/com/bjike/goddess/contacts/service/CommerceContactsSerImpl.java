@@ -5,17 +5,26 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
+import com.bjike.goddess.contacts.bo.MobileCommerceContactsBO;
 import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.CommerceContactsTemplateExport;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -25,15 +34,21 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 商务通讯录业务实现
@@ -72,10 +87,17 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     private MessageAPI messageAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceContactsBO save(CommerceContactsTO to) throws SerException {
+        if (!Validator.isEmail(to.getCusEmail())) {
+            throw new SerException("输入的邮箱格式不正确");
+        }
+
         CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class);
         CommerceContactsDTO dto = new CommerceContactsDTO();
         dto.getConditions().add(Restrict.eq("customerNum", to.getCustomerNum()));
@@ -122,7 +144,18 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
 
     @Override
     public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
-        return BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
+        search(dto);
+        List<CommerceContacts> list = super.findByPage(dto);
+        return BeanTransform.copyProperties(list, CommerceContactsBO.class);
+    }
+    private List<CommerceContactsBO> search(CommerceContactsDTO dto)throws SerException{
+        //客户姓名
+        if(StringUtils.isNotBlank(dto.getCustomerName())){
+            dto.getConditions().add(Restrict.like("customerName",dto.getCustomerName()));
+        }
+        List<CommerceContacts> commerceContacts = super.findByCis(dto);
+        List<CommerceContactsBO> commerceContactsBOS = BeanTransform.copyProperties(commerceContacts,CommerceContactsBO.class);
+        return commerceContactsBOS;
     }
 
     @Override
@@ -136,6 +169,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Override
     public Long getTotal() throws SerException {
         CommerceContactsDTO dto = new CommerceContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -291,6 +325,102 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         return flag;
     }
 
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<CommerceContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        CommerceContactsTemplateExport excel = new CommerceContactsTemplateExport();
+        excel.setCustomerNum("移动通信类");
+        excel.setCustomerName("test");
+        excel.setArea("dsa");
+        excel.setCustomerSex(CustomerSex.MAN);
+        excel.setCustomerType(CustomerType.COOPERATOR);
+        excel.setCustomerStatus(CustomerStatus.COMPLETEPROJECT);
+        excel.setRelation(1.2);
+        excel.setCustomerLevelName("dsa");
+        excel.setOrigin("ds");
+        excel.setIntroducer("dsa");
+        excel.setCusEmail("已dsa签订");
+        excel.setTel("框架d合同");
+        excel.setPhone("已立项");
+        excel.setWeChart("test");
+        excel.setQq("test");
+        excel.setWorkPosition("test");
+        excel.setWorkLevel("ds");
+        excel.setWorkRight("fgh");
+        commerceContactsExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
+    }
+
+    private static List<MobileCommerceContactsBO> sort(List<MobileCommerceContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileCommerceContactsBO> treeSet = new TreeSet<>(new Comparator<MobileCommerceContactsBO>() {
+            @Override
+            public int compare(MobileCommerceContactsBO o1, MobileCommerceContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getCustomerName()).compareTo(ChineseCharToEn.getFirstLetter(o2.getCustomerName()));
+            }
+        });
+        for (MobileCommerceContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
+
+    @Override
+    public List<MobileCommerceContactsBO> mobileList(CommerceContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        List<CommerceContactsBO> commerceContactsBOs = BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
+        if (!CollectionUtils.isEmpty(commerceContactsBOs)) {
+            List<MobileCommerceContactsBO> bos = BeanTransform.copyProperties(commerceContactsBOs, MobileCommerceContactsBO.class, "headSculpture");
+            for (MobileCommerceContactsBO bo : bos) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("username", bo.getCustomerName()));
+                UserBO userBO = userAPI.findOne(userDTO);
+                if (null != userBO) {
+                    bo.setHeadSculpture(userBO.getHeadSculpture());
+                }
+            }
+            return sort(bos);
+        }
+        return null;
+    }
+
+    @Override
+    public Long getMobileTotal(CommerceContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        return super.count(dto);
+    }
+
+    @Override
+    public MobileCommerceContactsBO findByMobileID(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        CommerceContactsDTO dto = new CommerceContactsDTO();
+        dto.getConditions().add(Restrict.eq("id", id));
+        CommerceContacts entity = super.findOne(dto);
+        CommerceContactsBO bo = BeanTransform.copyProperties(entity, CommerceContactsBO.class);
+        if (null != bo) {
+            MobileCommerceContactsBO mobileCommerceContactsBO = BeanTransform.copyProperties(bo, MobileCommerceContactsBO.class, "headSculpture");
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("username", mobileCommerceContactsBO.getCustomerName()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            if (null != userBO) {
+                mobileCommerceContactsBO.setHeadSculpture(userBO.getHeadSculpture());
+            }
+            return mobileCommerceContactsBO;
+        }
+        return null;
+    }
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -371,7 +501,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         String[] allEmails = null;
         //从公共邮箱中得到部门的邮箱
         CommonalityDTO commonalityDTO = new CommonalityDTO();
-        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(commonalityDTO);
+        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
         List<String> stringList = new ArrayList<>();
         for (CommonalityBO commonalityBO : commonalityBOList) {
             if (commonalityBO.getDepartmentId().equals(this.getDepartment("综合资源部"))) {
@@ -456,8 +586,20 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));
         List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
-        String departmentId = departmentDetailBOList.get(0).getId();
-        return departmentId;
+        if (null != departmentDetailBOList && departmentDetailBOList.size() > 0) {
+            String departmentId = departmentDetailBOList.get(0).getId();
+            return departmentId;
+        }
+        return null;
+    }
+
+    private void searchMobileCondition(CommerceContactsDTO dto) throws SerException {
+        /**
+         * 用户名
+         */
+        if (StringUtils.isNotBlank(dto.getCustomerName())) {
+            dto.getConditions().add(Restrict.like("customerName", dto.getCustomerName()));
+        }
     }
 
 }

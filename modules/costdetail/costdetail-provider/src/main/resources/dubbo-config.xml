@@ -23,6 +23,8 @@
 	<dubbo:service  ref="detailTypeApiImpl" interface="com.bjike.goddess.costdetail.api.DetailTypeAPI" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.costdetail.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.costdetail.api.CusPermissionOperateAPI" />
+	<dubbo:service  ref="costDetailApiImpl" interface="com.bjike.goddess.costdetail.api.CostDetailAPI" />
+	<dubbo:service  ref="collectApiImpl" interface="com.bjike.goddess.costdetail.api.CollectAPI" />
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 

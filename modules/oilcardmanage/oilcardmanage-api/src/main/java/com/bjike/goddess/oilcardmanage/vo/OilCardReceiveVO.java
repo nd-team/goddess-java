@@ -47,10 +47,6 @@ public class OilCardReceiveVO {
      */
     private String returnDate;
 
-    /**
-     * 地区
-     */
-    private String area;
 
     /**
      * 领卡人
@@ -81,6 +77,18 @@ public class OilCardReceiveVO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 油卡基本信息
+     *
+     */
+    private OilCardBasicVO oilCardBasicVO;
+
+    /**
+     * 油卡id
+     */
+
+    private String oilCardBasicId;
 
     public String getId() {
         return id;
@@ -138,14 +146,6 @@ public class OilCardReceiveVO {
         this.returnDate = returnDate;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getReceiveUser() {
         return receiveUser;
     }
@@ -194,4 +194,19 @@ public class OilCardReceiveVO {
         this.remark = remark;
     }
 
+    public OilCardBasicVO getOilCardBasicVO() {
+        return oilCardBasicVO;
+    }
+
+    public void setOilCardBasicVO(OilCardBasicVO oilCardBasicVO) {
+        this.oilCardBasicVO = oilCardBasicVO;
+    }
+
+    public String getOilCardBasicId() {
+        return oilCardBasicId;
+    }
+
+    public void setOilCardBasicId(String oilCardBasicId) {
+        this.oilCardBasicId = oilCardBasicId;
+    }
 }

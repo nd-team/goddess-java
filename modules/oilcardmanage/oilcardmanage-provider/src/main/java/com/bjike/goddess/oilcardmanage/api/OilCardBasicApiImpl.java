@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
+import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
 import com.bjike.goddess.oilcardmanage.service.OilCardBasicSer;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,7 +86,7 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
      */
     @Override
     public void deleteOilCardBasic(String id) throws SerException {
-        oilCardBasicSer.remove(id);
+        oilCardBasicSer.deleteOilCardBasic(id);
     }
 
     /**
@@ -104,8 +107,8 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
     }
 
     @Override
-    public OilCardBasicBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardBasicSer.findById(id), OilCardBasicBO.class);
+    public OilCardBasicBO find(String id) throws SerException {
+        return oilCardBasicSer.find(id);
     }
 
     @Override
@@ -113,5 +116,25 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
         return oilCardBasicSer.count(dto);
     }
 
+
+    @Override
+    public void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException {
+        oilCardBasicSer.updateOliCardBasic(basicBO);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return oilCardBasicSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return oilCardBasicSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<OilCardBasicBO> findOilCard() throws SerException {
+        return oilCardBasicSer.findOilCard();
+    }
 
 }

@@ -157,6 +157,19 @@ public class RecruitPro extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注' ")
     private String note;
+    /**
+     * 是否有资金准备
+     */
+    @Column(name = "is_moneyReady",  columnDefinition = "TINYINT(1)   COMMENT '是否有资金准备'")
+    private Boolean moneyReady;
+
+    public Boolean getMoneyReady() {
+        return moneyReady;
+    }
+
+    public void setMoneyReady(Boolean moneyReady) {
+        this.moneyReady = moneyReady;
+    }
 
     public Status getStatus() {
         return status;

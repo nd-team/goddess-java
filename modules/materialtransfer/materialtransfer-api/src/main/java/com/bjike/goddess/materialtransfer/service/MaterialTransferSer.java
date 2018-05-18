@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
 import com.bjike.goddess.materialtransfer.entity.MaterialTransfer;
+import com.bjike.goddess.materialtransfer.excel.SonPermissionObject;
+import com.bjike.goddess.materialtransfer.to.GuidePermissionTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 
@@ -21,6 +23,20 @@ import java.util.List;
  */
 public interface MaterialTransferSer extends Ser<MaterialTransfer, MaterialTransferDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询物资调动
      *
@@ -83,4 +99,43 @@ public interface MaterialTransferSer extends Ser<MaterialTransfer, MaterialTrans
      */
     void wealModConfirm(String id, String recipient, Boolean confirmDeploy, String finishDeployTime) throws SerException;
 
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取物资入库型号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findModel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取单位
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUnit() throws SerException {
+        return null;
+    }
 }

@@ -1,11 +1,13 @@
 package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.CollectionPeriodBO;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CollectionPeriodDTO;
+import com.bjike.goddess.projectroyalty.excel.SonPermissionObject;
 import com.bjike.goddess.projectroyalty.service.CollectionPeriodSer;
 import com.bjike.goddess.projectroyalty.to.CollectionPeriodTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,16 @@ public class CollectionPeriodApiImpl implements CollectionPeriodAPI {
 
     @Autowired
     private CollectionPeriodSer collectionPeriodSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return collectionPeriodSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return collectionPeriodSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public CollectionPeriodBO save(CollectionPeriodTO to) throws SerException {

@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.service.DepartmentDetailSer;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门详细业务实现
@@ -100,6 +102,21 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     }
 
     @Override
+    public List<String> findDepartByArea(String area) throws SerException {
+        return departmentDetailSer.findDepartByArea( area );
+    }
+
+    @Override
+    public List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
+        return departmentDetailSer.findPnameByAreaAndDepart( area ,depart);
+    }
+
+    @Override
+    public List<String> findAllProject() throws SerException {
+        return departmentDetailSer.findAllProject();
+    }
+
+    @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         return departmentDetailSer.findByIds(ids);
     }
@@ -112,5 +129,50 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     @Override
     public List<OpinionBO> findAllOpinion() throws SerException {
         return departmentDetailSer.findAllOpinion();
+    }
+
+    @Override
+    public String number(DepartmentDetailTO to) throws SerException {
+        return departmentDetailSer.number(to);
+    }
+
+    @Override
+    public Integer departmentTotalPeople(String department) throws SerException {
+        return departmentDetailSer.departmentTotalPeople(department);
+    }
+
+    @Override
+    public Integer getAreaNum(String startTime, String endTime) throws SerException {
+        return departmentDetailSer.getAreaNum(startTime, endTime);
+    }
+
+    @Override
+    public Set<String> departPersons(String departId) throws SerException {
+        return departmentDetailSer.departPersons(departId);
+    }
+
+    @Override
+    public List<DepartmentDetailBO> departByName(String[] departs) throws SerException {
+        return departmentDetailSer.departByName(departs);
+    }
+
+    @Override
+    public List<String> findAllDepartment() throws SerException {
+        return departmentDetailSer.findAllDepartment();
+    }
+
+    @Override
+    public List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
+        return departmentDetailSer.peopleByDepartment();
+    }
+
+    @Override
+    public List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
+        return departmentDetailSer.departmentByName(name);
+    }
+
+    @Override
+    public String findHierarchy(String department) throws SerException {
+        return departmentDetailSer.findHierarchy(department);
     }
 }

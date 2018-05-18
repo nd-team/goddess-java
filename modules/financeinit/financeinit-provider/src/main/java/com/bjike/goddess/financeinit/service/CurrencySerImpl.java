@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -22,11 +23,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 币别业务实现
+ * 设置币别业务实现
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别业务实现 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -56,6 +57,53 @@ public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implemen
         }
         RpcTransmit.transmitUserToken(userToken);
 
+    }
+
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+
+    /**
+     * 核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private void checkFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+            if (!flag) {
+                throw new SerException("您不是财务部门的主管，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+
+    /**
+     * 导航栏核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private Boolean guideFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     /**
@@ -117,7 +165,9 @@ public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implemen
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagFinanSup = guideFinanDepartSup();
+        if (flagSee || flagAdd || flagFinanSup) {
             return true;
         } else {
             return false;
@@ -135,12 +185,21 @@ public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implemen
                 flag = guideSeeIdentity();
                 break;
             case ADD:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case DELETE:
+                flag = guideFinanDepartSup();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
                 flag = guideAddIdentity();
                 break;
             default:
@@ -152,64 +211,115 @@ public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implemen
         return flag;
     }
 
-
     @Override
-    public Long countCurrency(CurrencyDTO currencyDTO) throws SerException {
-        Long count = super.count( currencyDTO );
+    public Long countCurren(CurrencyDTO currencyDTO) throws SerException {
+        currencyDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        Long count = super.count(currencyDTO);
         return count;
     }
 
     @Override
     public CurrencyBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
         Currency currency = super.findById(id);
-        return BeanTransform.copyProperties(currency, CurrencyBO.class );
+        return BeanTransform.copyProperties(currency, CurrencyBO.class);
     }
 
     @Override
-    public List<CurrencyBO> listCurrency(CurrencyDTO currencyDTO) throws SerException {
+    public List<CurrencyBO> listCurren(CurrencyDTO currencyDTO) throws SerException {
         checkSeeIdentity();
-
-        currencyDTO.getSorts().add("createTime=desc");
+        currencyDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<Currency> list = super.findByCis(currencyDTO, true);
-
-        return BeanTransform.copyProperties(list, CurrencyBO.class );
+        return BeanTransform.copyProperties(list, CurrencyBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
+    @Transactional(rollbackFor = {SerException.class})
     @Override
-    public CurrencyBO addCurrency(CurrencyTO currencyTO) throws SerException {
-        checkAddIdentity();
-
-        Currency currency = BeanTransform.copyProperties(currencyTO,Currency.class,true);
+    public CurrencyBO addCurren(CurrencyTO currencyTO) throws SerException {
+        checkFinanDepartSup();
+        String getSystemId = getSystemId();
+        if (currencyTO.getStandardMoney()) {
+            CurrencyDTO currencyDTO = new CurrencyDTO();
+            currencyDTO.getConditions().add(Restrict.eq("standardMoney", true));
+            currencyDTO.getConditions().add(Restrict.eq("systemId", getSystemId));
+            List<Currency> currency1 = super.findByCis(currencyDTO);
+            if (null != currency1 && currency1.size() > 0) {
+                throw new SerException("只能有一条是否为‘是’的本位币的数据");
+            }
+        }
+        Currency currency = BeanTransform.copyProperties(currencyTO, Currency.class, true);
         currency.setCreateTime(LocalDateTime.now());
-        super.save( currency );
+        currency.setCode(autoCode());
+        currency.setSystemId(getSystemId);
+        super.save(currency);
         return BeanTransform.copyProperties(currency, CurrencyBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
+    @Transactional(rollbackFor = {SerException.class})
     @Override
-    public CurrencyBO editCurrency(CurrencyTO currencyTO) throws SerException {
-        checkAddIdentity();
+    public CurrencyBO editCurren(CurrencyTO currencyTO) throws SerException {
+        checkFinanDepartSup();
+        Currency currency = super.findById(currencyTO.getId());
+        if (currency == null) {
+            throw new SerException("编辑实体不存在");
+        }
+        if (StringUtils.isNotBlank(currencyTO.getName())) {
+            currency.setName(currencyTO.getName());
+        }
+        if (null != currencyTO.getRate()) {
+            currency.setRate(currencyTO.getRate());
+        }
 
-        Currency currency = BeanTransform.copyProperties(currencyTO,Currency.class,true);
-        Currency dbCurrency = super.findById( currencyTO.getId() );
-
-        dbCurrency.setCode( currency.getCode() );
-        dbCurrency.setName( currency.getName() );
-        dbCurrency.setRate( currency.getRate() );
-        dbCurrency.setModifyTime(LocalDateTime.now());
-        super.update( dbCurrency );
+        super.update(currency);
         return BeanTransform.copyProperties(currency, CurrencyBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
+    @Transactional(rollbackFor = {SerException.class})
     @Override
-    public void deleteCurrency(String id) throws SerException {
-        checkAddIdentity();
-
-        super.remove( id );
+    public void deleteCurren(String id) throws SerException {
+        checkFinanDepartSup();
+        Currency currency = super.findById(id);
+        if (currency == null) {
+            throw new SerException("指定删除数据不存在");
+        }
+        if (currency.getStandardMoney()) {
+            throw new SerException("是本位币的数据不能被删除");
+        }
+        super.remove(id);
     }
+
+    /**
+     * 自动生成编码
+     *
+     * @throws SerException
+     */
+    public String autoCode() throws SerException {
+        String code = "01";
+        String sql = "SELECT max(code) AS code FROM financeinit_currency";
+        List<Currency> objectList = super.findBySql(sql, Currency.class, new String[] {"code"});
+        if (objectList != null && objectList.size() > 0) {
+            if (objectList.get(0).getCode() == null) {
+                return code;
+            }
+            Integer maxCode = Integer.parseInt(String.valueOf(objectList.get(0).getCode()));
+            code = (maxCode + 1) < 10 ? ("0" + (maxCode + 1)) : (maxCode + 1) + "";
+        }
+        return code;
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
+    }
+
 }

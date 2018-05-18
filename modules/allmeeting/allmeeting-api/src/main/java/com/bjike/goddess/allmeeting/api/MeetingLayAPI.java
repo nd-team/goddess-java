@@ -2,6 +2,7 @@ package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.MeetingLayDTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MeetingLayTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -19,6 +20,19 @@ import java.util.List;
 public interface MeetingLayAPI {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 新增会议层面
      *
      * @param to 会议层面
@@ -33,6 +47,13 @@ public interface MeetingLayAPI {
      * @return 会议层面
      */
     MeetingLayBO edit(MeetingLayTO to) throws SerException;
+
+
+    /**
+     * 获取计划参会岗位
+     * @return 计划参会岗位
+     */
+    String[] get() throws SerException;
 
     /**
      * 删除会议层面

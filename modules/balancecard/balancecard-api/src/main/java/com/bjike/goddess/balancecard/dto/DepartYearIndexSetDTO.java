@@ -30,6 +30,8 @@ public class DepartYearIndexSetDTO extends BaseDTO {
     private String department;
 
 
+
+
     public String getIndexName() {
         return indexName;
     }
@@ -53,4 +55,5 @@ public class DepartYearIndexSetDTO extends BaseDTO {
     public void setDepartment(String department) {
         this.department = department;
     }
+
 }

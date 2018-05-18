@@ -88,8 +88,19 @@ public class WaitPayBO extends BaseBO {
     /**
      * 是否付款
      */
-    private boolean isPay;
+    private Boolean isPay;
+    /**
+     * 删除时间
+     */
+    private String delTime;
 
+    public String getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(String delTime) {
+        this.delTime = delTime;
+    }
 
     public String getDriverName() {
         return driverName;
@@ -203,11 +214,11 @@ public class WaitPayBO extends BaseBO {
         this.single = single;
     }
 
-    public boolean getIsPay() {
+    public Boolean getIsPay() {
         return isPay;
     }
 
-    public void setIsPay(boolean isPay) {
-        this.isPay = isPay;
+    public void setIsPay(Boolean pay) {
+        isPay = pay;
     }
 }

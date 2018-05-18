@@ -25,6 +25,12 @@ public class DriverInfoTO extends BaseTO {
     private String area;
 
     /**
+     * 项目组
+     */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class,EDIT.class})
+    private String department;
+
+    /**
      * 结算方式
      */
     @NotBlank(message = "结算方式不能为空",groups = {ADD.class, EDIT.class})
@@ -280,21 +286,6 @@ public class DriverInfoTO extends BaseTO {
         this.carFuel = carFuel;
     }
 
-    public Boolean getAgreement() {
-        return agreement;
-    }
-
-    public void setAgreement(Boolean agreement) {
-        this.agreement = agreement;
-    }
-
-    public Boolean getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Boolean attachment) {
-        this.attachment = attachment;
-    }
 
     public String getBuyDate() {
         return buyDate;
@@ -328,28 +319,12 @@ public class DriverInfoTO extends BaseTO {
         this.endDate = endDate;
     }
 
-    public Boolean getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Boolean travel) {
-        this.travel = travel;
-    }
-
     public String getTravelName() {
         return travelName;
     }
 
     public void setTravelName(String travelName) {
         this.travelName = travelName;
-    }
-
-    public Boolean getDriverLicense() {
-        return driverLicense;
-    }
-
-    public void setDriverLicense(Boolean driverLicense) {
-        this.driverLicense = driverLicense;
     }
 
     public String getLicenseName() {
@@ -360,13 +335,6 @@ public class DriverInfoTO extends BaseTO {
         this.licenseName = licenseName;
     }
 
-    public Boolean getCarInsurance() {
-        return carInsurance;
-    }
-
-    public void setCarInsurance(Boolean carInsurance) {
-        this.carInsurance = carInsurance;
-    }
 
     public String getCardUser() {
         return cardUser;
@@ -406,5 +374,53 @@ public class DriverInfoTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Boolean getAgreement() {
+        return agreement;
+    }
+
+    public void setAgreement(Boolean agreement) {
+        this.agreement = agreement;
+    }
+
+    public Boolean getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Boolean attachment) {
+        this.attachment = attachment;
+    }
+
+    public Boolean getTravel() {
+        return travel;
+    }
+
+    public void setTravel(Boolean travel) {
+        this.travel = travel;
+    }
+
+    public Boolean getDriverLicense() {
+        return driverLicense;
+    }
+
+    public void setDriverLicense(Boolean driverLicense) {
+        this.driverLicense = driverLicense;
+    }
+
+    public Boolean getCarInsurance() {
+        return carInsurance;
+    }
+
+    public void setCarInsurance(Boolean carInsurance) {
+        this.carInsurance = carInsurance;
     }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.housepay.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by ike on 17-5-13.
@@ -11,9 +12,13 @@ public class AreaCollectBO extends BaseBO{
      */
     private String area;
     /**
-     * 时间
+     * 年份
      */
-    private String payTime;
+    private String year;
+    /**
+     * 月份
+     */
+    private String month;
     /**
      * 租金
      */
@@ -52,12 +57,20 @@ public class AreaCollectBO extends BaseBO{
         this.area = area;
     }
 
-    public String getPayTime() {
-        return payTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
     public Double getRent() {

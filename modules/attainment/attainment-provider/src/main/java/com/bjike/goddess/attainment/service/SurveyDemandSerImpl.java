@@ -1,22 +1,28 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.attainment.bo.SurveyDemandBO;
 import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.entity.SurveyDemand;
+import com.bjike.goddess.attainment.enums.GuideAddrStatus;
 import com.bjike.goddess.attainment.enums.ScopeType;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +48,13 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     @Autowired
     private UserAPI userAPI;
     @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
@@ -74,14 +86,25 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
             throw new SerException("调研类型不存在,无法保存");
         entity.setUsername(user.getUsername());
         entity.setLaunch(LocalDateTime.now());
-        String scope = "";
-        if (entity.getScope().equals(ScopeType.COMPANY))
-            scope = "公司";
-        else
-            for (String name : to.getScopeNames())
-                scope += name + ",";
-        entity.setScopeName(scope);
+        entity.setScope(to.getScope());
 
+//        String scope = "";
+//        if (entity.getScope().equals(ScopeType.COMPANY))
+//            scope = "公司";
+//        else
+        String scopeName = "";
+        for (String name : to.getScopeNames()) {
+            scopeName += name + ",";
+        }
+        scopeName = scopeName.substring(0, scopeName.length()-1);
+        entity.setScopeName(scopeName);
+
+        if (moduleAPI.isCheck("organize")) {
+            List<String> list = positionDetailUserAPI.getPosition(user.getUsername());
+            if (!CollectionUtils.isEmpty(list)) {
+                entity.setGradation(list.get(0));
+            }
+        }
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -108,6 +131,13 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
             for (String name : to.getScopeNames())
                 scope += name + ",";
         entity.setScopeName(scope);
+        if (moduleAPI.isCheck("organize")) {
+            List<String> list = positionDetailUserAPI.getPosition(entity.getUsername());
+            if (!CollectionUtils.isEmpty(list)) {
+                entity.setGradation(list.get(0));
+            }
+        }
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return this.transformBO(entity);
     }
@@ -163,5 +193,159 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     public Long getTotal() throws SerException {
         SurveyDemandDTO dto = new SurveyDemandDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getDemandId() throws SerException {
+        List<SurveyDemand> list = super.findAll();
+        List<String> stringList = new ArrayList<>();
+        if (null != list && list.size() > 0) {
+            for (SurveyDemand module : list) {
+                String str = module.getId();
+                stringList.add(str);
+            }
+        }
+        return stringList;
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 }

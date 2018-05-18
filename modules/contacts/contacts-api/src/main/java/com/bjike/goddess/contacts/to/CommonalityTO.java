@@ -3,7 +3,8 @@ package com.bjike.goddess.contacts.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.contacts.enums.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,17 +18,26 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class CommonalityTO extends BaseTO {
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
     /**
-     * 项目组/部门ID
+     * 地区
      */
-    @NotNull(message = "项目组/部门ID不能为空", groups = {ADD.class, EDIT.class})
+    private String area;
+
+    /**
+     * 项目组/部门
+     */
+    @NotBlank(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
     private String departmentId;
 
     /**
      * 邮箱地址
      */
-    @NotNull(message = "邮箱地址不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "邮箱地址不能为空", groups = {ADD.class, EDIT.class})
     private String email;
 
     /**
@@ -60,6 +70,22 @@ public class CommonalityTO extends BaseTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public Status getStatus() {

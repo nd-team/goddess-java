@@ -67,13 +67,14 @@ public final class AuthCodeSession {
     }
 
 
-    public static String get(String account) {
+    public static String get(String account){
         try {
             if (StringUtils.isNotBlank(account)) {
                 return AUTH_CODE_SESSION.get(account);
             }
         } catch (Exception e) {
             return null;
+//            e.printStackTrace();
         }
 
         throw ACCOUNT_NOT_NULL;

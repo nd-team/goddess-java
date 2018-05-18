@@ -1,5 +1,7 @@
 package com.bjike.goddess.qualifications.to;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.io.Serializable;
 
 /**
@@ -12,15 +14,18 @@ import java.io.Serializable;
  * @Copy: [com.bjike]
  */
 public class QualificationsCollectFilterTO implements Serializable {
+    public interface Select{}
 
     /**
      * 资质名称
      */
+    @NotBlank(message = "资质名称不能为空",groups = {QualificationsCollectFilterTO.Select.class})
     private String qualifications;
 
     /**
      * 公司名称
      */
+    @NotBlank(message = "公司名称不能为空",groups = {QualificationsCollectFilterTO.Select.class})
     private String company;
 
     public String getQualifications() {

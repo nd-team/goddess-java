@@ -1,22 +1,40 @@
 package com.bjike.goddess.businsurance.action.businsurance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businsurance.api.TowerInsureAPI;
 import com.bjike.goddess.businsurance.bo.TowerInsureBO;
 import com.bjike.goddess.businsurance.dto.TowerInsureDTO;
+import com.bjike.goddess.businsurance.excel.SonPermissionObject;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businsurance.to.TowerInsureTO;
 import com.bjike.goddess.businsurance.vo.TowerInsureVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,11 +48,92 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("towerinsure")
-public class TowerInsureAction {
+public class TowerInsureAction extends BaseFileAction {
 
 
     @Autowired
     private TowerInsureAPI towerInsureAPI;
+
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private FileAPI fileAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+//            if (moduleAPI.isCheck("organize")) {
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
+//            }
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = towerInsureAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = towerInsureAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 塔工意外险列表总条数
@@ -263,42 +362,111 @@ public class TowerInsureAction {
         }
     }
 
+
     /**
      * 上传附件
      *
-     * @param towerInsureDTO 塔工意外险基本信息数据towerInsureDTO
-     * @des 上传附件
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/uploadFile")
-    public Result uploadFile(TowerInsureDTO towerInsureDTO, BindingResult bindingResult) throws ActException {
-//        try {
-//            TowerInsureBO towerInsureBO1 = towerInsureAPI.uploadFile(towerInsureDTO);
-//            return ActResult.initialize(BeanTransform.copyProperties(towerInsureBO1, TowerInsureVO.class, true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return new ActResult(null);
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/businsurance/towerInsure/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/businsurance/towerInsure/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
     }
 
 
     /**
-     * 查看附件
+     * 获取所有用户
      *
-     * @param id 塔工意外险基本信息数据id
-     * @des 查看附件
+     * @return class UserVO
+     * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/getFile/{id}")
-    public Result getFile(@PathVariable String id , BindingResult bindingResult) throws ActException {
-//        try {
-//            TowerInsureBO towerInsureBO1 = towerInsureAPI.addTowerInsure(towerInsureTO);
-//            return ActResult.initialize(BeanTransform.copyProperties(towerInsureBO1, TowerInsureVO.class, true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return new ActResult(null);
-    }
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
 
+    }
 }

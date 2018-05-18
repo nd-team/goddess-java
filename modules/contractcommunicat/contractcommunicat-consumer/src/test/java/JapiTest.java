@@ -15,17 +15,22 @@ public class JapiTest {
 
     public static void main(String[] args) {
 //        JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/home/ike/CODE/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/contractcommunicat/contractcommunicat-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/contractcommunicat/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/contractcommunicat/contractcommunicat-api",
+                "modules/market/market-api",
+                "modules/businessproject/businessproject-api",
                 "modules/user/user-api",
                 "modules/organize/organize-api",
                 "modules/storage/storage-api",
-                "common/common-api"
+                "common/common-api",
+                "modules/contacts/contacts-api",
+                "modules/organize/organize-api",
+                "modules/message/message-api",
         });
 //        JapiClient.saveHistory(false);
         JapiClient.setFlushServer(true);

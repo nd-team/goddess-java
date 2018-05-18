@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffmeeting.bo.MeetingOrganizeBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
 import com.bjike.goddess.staffmeeting.entity.MeetingOrganize;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingOrganizeTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MeetingOrganizeSer extends Ser<MeetingOrganize, MeetingOrganizeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增组织内容
@@ -51,5 +65,14 @@ public interface MeetingOrganizeSer extends Ser<MeetingOrganize, MeetingOrganize
      */
     List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException;
 
+    /**
+     * 解冻组织内容
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
+    /**
+     * 查询所有人员
+     */
+    String[] findPlanUser() throws SerException;
 }

@@ -19,6 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "workjoin_joininfo")
 public class JoinInfo extends BaseEntity {
+    /**
+     * 工作交接编号
+     */
+    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'")
+    private String workJoinNum;
 
     /**
      * 制度文件夹编号
@@ -56,6 +61,13 @@ public class JoinInfo extends BaseEntity {
     @Column(name = "accountPath", columnDefinition = "VARCHAR(255)   COMMENT '账号，密码存储路径'")
     private String accountPath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getSystemFolderNum() {
         return systemFolderNum;

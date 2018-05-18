@@ -146,6 +146,11 @@ public class AddEmployee extends BaseEntity {
      */
     @Column(name = "businessAdvice", columnDefinition = "VARCHAR(255)   COMMENT '运营商务部意见'")
     private String businessAdvice;
+    /**
+     * 前参保公司
+     */
+    @Column(name = "beforeCompany", columnDefinition = "VARCHAR(255)   COMMENT '前参保公司'")
+    private String beforeCompany;
 
     /**
      * 增员月份
@@ -158,6 +163,14 @@ public class AddEmployee extends BaseEntity {
      */
     @Column(name = "year", nullable = false, columnDefinition = "INT(11)   COMMENT '增员年份'")
     private Integer year;
+
+    public String getBeforeCompany() {
+        return beforeCompany;
+    }
+
+    public void setBeforeCompany(String beforeCompany) {
+        this.beforeCompany = beforeCompany;
+    }
 
     public Integer getMonth() {
         return month;

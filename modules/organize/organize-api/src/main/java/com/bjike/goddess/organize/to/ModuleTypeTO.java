@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,10 +25,24 @@ public class ModuleTypeTO extends BaseTO {
     private String module;
 
     /**
-     * 描述
+     * 项目组/部门
      */
-    private String description;
+    @NotBlank(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
+    private String depart;
 
+    /**
+     * 是否为职能模块
+     */
+    @NotNull(message = "是否为职能模块不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean position;
+
+    public Boolean getPosition() {
+        return position;
+    }
+
+    public void setPosition(Boolean position) {
+        this.position = position;
+    }
 
     public String getModule() {
         return module;
@@ -37,12 +52,11 @@ public class ModuleTypeTO extends BaseTO {
         this.module = module;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDepart() {
+        return depart;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDepart(String depart) {
+        this.depart = depart;
     }
-
 }

@@ -35,7 +35,7 @@ public class SurveyPlanAudit extends BaseEntity {
     /**
      * 岗位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "position",columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String position;
 
     /**

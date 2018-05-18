@@ -4,6 +4,7 @@ import com.bjike.goddess.allmeeting.bo.ConciseSummaryBO;
 import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ConciseSummaryAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑简洁交流讨论
@@ -58,7 +72,19 @@ public interface ConciseSummaryAPI {
      */
     ConciseSummaryBO findById(String id) throws SerException;
 
+    /**
+     * 组织内容
+     * @param id
+     * @return
+     * @throws SerException
+     */
+
     OrganizeForSummaryBO organize(String id) throws SerException;
 
+    /**
+     * 解冻
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
 }

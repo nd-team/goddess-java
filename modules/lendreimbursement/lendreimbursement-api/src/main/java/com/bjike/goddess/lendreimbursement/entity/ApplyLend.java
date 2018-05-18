@@ -1,10 +1,15 @@
 package com.bjike.goddess.lendreimbursement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.lendreimbursement.enums.LendRetunStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -29,85 +34,85 @@ public class ApplyLend extends BaseEntity {
     /**
      * 借款人
      */
-    @Column(name = "lender",  columnDefinition = "VARCHAR(255)   COMMENT '借款人'")
+    @Column(name = "lender", columnDefinition = "VARCHAR(255)   COMMENT '借款人'")
     private String lender;
 
     /**
      * 负责人
      */
-    @Column(name = "charger",  columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
+    @Column(name = "charger", columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
     private String charger;
 
     /**
      * 地区
      */
-    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 项目名称
      */
-    @Column(name = "projectName",  columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
      * 参与人员
      */
-    @Column(name = "attender",  columnDefinition = "VARCHAR(255)   COMMENT '参与人员'")
+    @Column(name = "attender", columnDefinition = "VARCHAR(255)   COMMENT '参与人员'")
     private String attender;
 
     /**
      * 借款方式
      */
-    @Column(name = "lendWay",  columnDefinition = "VARCHAR(255)   COMMENT '借款方式'")
+    @Column(name = "lendWay", columnDefinition = "VARCHAR(255)   COMMENT '借款方式'")
     private String lendWay;
 
     /**
      * 一级科目
      */
-    @Column(name = "firstSubject",  columnDefinition = "VARCHAR(255)   COMMENT '一级科目'")
+    @Column(name = "firstSubject", columnDefinition = "VARCHAR(255)   COMMENT '一级科目'")
     private String firstSubject;
 
     /**
      * 二级科目
      */
-    @Column(name = "secondSubject",  columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
+    @Column(name = "secondSubject", columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
     private String secondSubject;
 
     /**
      * 三级科目
      */
-    @Column(name = "thirdSubject",  columnDefinition = "VARCHAR(255)   COMMENT '三级科目'")
+    @Column(name = "thirdSubject", columnDefinition = "VARCHAR(255)   COMMENT '三级科目'")
     private String thirdSubject;
 
     /**
      * 说明
      */
-    @Column(name = "explains",  columnDefinition = "VARCHAR(255)   COMMENT '说明'")
+    @Column(name = "explains", columnDefinition = "VARCHAR(255)   COMMENT '说明'")
     private String explains;
 
     /**
      * 是否补写(是/否)
      */
-    @Column(name = "writeUp",  columnDefinition = "VARCHAR(255)   COMMENT '是否补写（是/否）'")
+    @Column(name = "writeUp", columnDefinition = "VARCHAR(255)   COMMENT '是否补写（是/否）'")
     private String writeUp;
 
     /**
      * 补写情况
      */
-    @Column(name = "writeUpCondition",  columnDefinition = "VARCHAR(255)   COMMENT '补写情况'")
+    @Column(name = "writeUpCondition", columnDefinition = "VARCHAR(255)   COMMENT '补写情况'")
     private String writeUpCondition;
 
     /**
      * 借款事由
      */
-    @Column(name = "lendReson",  columnDefinition = "VARCHAR(255)   COMMENT '借款事由'")
+    @Column(name = "lendReson", columnDefinition = "VARCHAR(255)   COMMENT '借款事由'")
     private String lendReson;
 
     /**
@@ -119,37 +124,37 @@ public class ApplyLend extends BaseEntity {
     /**
      * 是否有发票（是/否）
      */
-    @Column(name = "invoice",  columnDefinition = "VARCHAR(255)   COMMENT '是否有发票（是/否）'")
+    @Column(name = "invoice", columnDefinition = "VARCHAR(255)   COMMENT '是否有发票（是/否）'")
     private String invoice;
 
     /**
      * 无发票备注
      */
-    @Column(name = "noInvoiceRemark",  columnDefinition = "VARCHAR(255)   COMMENT '无发票备注'")
+    @Column(name = "noInvoiceRemark", columnDefinition = "VARCHAR(255)   COMMENT '无发票备注'")
     private String noInvoiceRemark;
 
     /**
      * 商品链接
      */
-    @Column(name = "goodsLink",  columnDefinition = "VARCHAR(255)   COMMENT '商品链接'")
+    @Column(name = "goodsLink", columnDefinition = "VARCHAR(255)   COMMENT '商品链接'")
     private String goodsLink;
 
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
      * 填单人
      */
-    @Column(name = "fillSingler",  columnDefinition = "VARCHAR(255)   COMMENT '填单人'")
+    @Column(name = "fillSingler", columnDefinition = "VARCHAR(255)   COMMENT '填单人'")
     private String fillSingler;
 
     /**
-     * 借款日期
+     * 借款日期(付款后才有，相当于付款日期)
      */
-    @Column(name = "lendDate",  columnDefinition = "DATE   COMMENT '借款日期'")
+    @Column(name = "lendDate", columnDefinition = "DATE   COMMENT '借款日期(付款后才有，相当于付款日期)'")
     private LocalDate lendDate;
 
     /**
@@ -161,13 +166,19 @@ public class ApplyLend extends BaseEntity {
     /**
      * 负责人是否通过（是/否）
      */
-    @Column(name = "chargerPass",  columnDefinition = "VARCHAR(255)   COMMENT '负责人是否通过（是/否）'")
+    @Column(name = "chargerPass", columnDefinition = "VARCHAR(255)   COMMENT '负责人是否通过（是/否）'")
     private String chargerPass;
+
+    /**
+     * 负责人审核时间
+     */
+    @Column(name = "chargerPassTime", columnDefinition = "DATETIME   COMMENT '负责人审核时间'")
+    private LocalDateTime chargerPassTime;
 
     /**
      * 财务运营部
      */
-    @Column(name = "finacer",  columnDefinition = "VARCHAR(255)   COMMENT '财务运营部'")
+    @Column(name = "finacer", columnDefinition = "VARCHAR(255)   COMMENT '财务运营部'")
     private String finacer;
 
     /**
@@ -181,65 +192,76 @@ public class ApplyLend extends BaseEntity {
      */
     @Column(name = "fincerPass", columnDefinition = "VARCHAR(255)   COMMENT '财务运营部是否通过（是/否）'")
     private String fincerPass;
+    /**
+     * 财务运营部审核时间
+     */
+    @Column(name = "fincerPassTime", columnDefinition = "DATETIME  COMMENT '财务运营部审核时间'")
+    private LocalDateTime fincerPassTime;
 
     /**
      * 总经办
      */
-    @Column(name = "manager",  columnDefinition = "VARCHAR(255)   COMMENT '总经办'")
+    @Column(name = "manager", columnDefinition = "VARCHAR(255)   COMMENT '总经办'")
     private String manager;
 
     /**
      * 总经办审核意见
      */
-    @Column(name = "managerOpinion",  columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
+    @Column(name = "managerOpinion", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
     private String managerOpinion;
 
     /**
      * 总经办是否通过（是/否）
      */
-    @Column(name = "managerPass",  columnDefinition = "VARCHAR(255)   COMMENT '总经办是否通过（是/否）'")
+    @Column(name = "managerPass", columnDefinition = "VARCHAR(255)   COMMENT '总经办是否通过（是/否）'")
     private String managerPass;
+
+    /**
+     * 总经办审核时间
+     */
+    @Column(name = "managerPassTime", columnDefinition = "DATETIME   COMMENT '总经办审核时间'")
+    private LocalDateTime managerPassTime;
 
     /**
      * 代理审核备注
      */
-    @Column(name = "proxyAuditRemark",  columnDefinition = "VARCHAR(255)   COMMENT '代理审核备注'")
+    @Column(name = "proxyAuditRemark", columnDefinition = "VARCHAR(255)   COMMENT '代理审核备注'")
     private String proxyAuditRemark;
 
     /**
      * 是否付款（是/否）
      */
-    @Column(name = "payCondition",  columnDefinition = "VARCHAR(255)   COMMENT '是否付款（是/否）'")
+    @Column(name = "payCondition", columnDefinition = "VARCHAR(255)   COMMENT '是否付款（是/否）'")
     private String payCondition;
 
     /**
      * 付款人
      */
-    @Column(name = "payer",  columnDefinition = "VARCHAR(255)   COMMENT '付款人'")
+    @Column(name = "payer", columnDefinition = "VARCHAR(255)   COMMENT '付款人'")
     private String payer;
 
     /**
      * 付款日期
      */
-    @Column(name = "payDate",  columnDefinition = "DATE   COMMENT '付款日期'")
+    @Column(name = "payDate", columnDefinition = "DATE   COMMENT '付款日期'")
     private LocalDate payDate;
 
     /**
      * 支付来源
      */
-    @Column(name = "payOrigin",  columnDefinition = "VARCHAR(255)   COMMENT '支付来源'")
+    @Column(name = "payOrigin", columnDefinition = "VARCHAR(255)   COMMENT '支付来源'")
     private String payOrigin;
 
     /**
      * 单据数量
      */
-    @Column(name = "documentQuantity",  columnDefinition = "DECIMAL(10,2)   COMMENT '单据数量'")
+    @Column(name = "documentQuantity", columnDefinition = "DECIMAL(10,2)   COMMENT '单据数量'")
     private Double documentQuantity;
 
     /**
      * 是否收到单据（是/否）
      */
-    @Column(name = "documentCondition",  columnDefinition = "VARCHAR(255)   COMMENT '是否收到单据（是/否）'")
+    @Column(name = "documentCondition", columnDefinition = "VARCHAR(255)   COMMENT '是否收到单据（是/否）'")
     private String documentCondition;
 
     /**
@@ -249,21 +271,21 @@ public class ApplyLend extends BaseEntity {
     private Double reimMoney;
 
     /**
-     * 借款金额
+     * 借款金额(对应老系统的报销金额)
      */
-    @Column(name = "lendMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '借款金额'")
+    @Column(name = "lendMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '借款金额'")
     private Double lendMoney;
 
     /**
-     * 退回金额
+     * 退回金额(对应老系统的实际金额)
      */
-    @Column(name = "returnMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '退回金额'")
+    @Column(name = "returnMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '退回金额'")
     private Double returnMoney;
 
     /**
      * 退回日期
      */
-    @Column(name = "returnDate",  columnDefinition = "DATE   COMMENT '退回日期'")
+    @Column(name = "returnDate", columnDefinition = "DATE   COMMENT '退回日期'")
     private LocalDate returnDate;
 
     /**
@@ -275,8 +297,21 @@ public class ApplyLend extends BaseEntity {
     /**
      * 归还账户
      */
-    @Column(name = "returnAccount",  columnDefinition = "VARCHAR(255)   COMMENT '归还账户'")
+    @Column(name = "returnAccount", columnDefinition = "VARCHAR(255)   COMMENT '归还账户'")
     private String returnAccount;
+
+    /**
+     * 还款说明
+     */
+    @Column(name = "returnRemark", columnDefinition = "VARCHAR(255)   COMMENT '还款说明'")
+    private String returnRemark;
+
+
+    /**
+     * 寄件的收件人
+     */
+    @Column(name = "sendRecevier", columnDefinition = "VARCHAR(255)   COMMENT '寄件的收件人'")
+    private String sendRecevier;
 
     /**
      * 寄件人
@@ -287,81 +322,119 @@ public class ApplyLend extends BaseEntity {
     /**
      * 寄件日期
      */
-    @Column(name = "sendDate",  columnDefinition = "DATE   COMMENT '寄件日期'")
+    @Column(name = "sendDate", columnDefinition = "DATE   COMMENT '寄件日期'")
     private LocalDate sendDate;
 
     /**
      * 寄件情况
      */
-    @Column(name = "sendCondition",  columnDefinition = "VARCHAR(255)   COMMENT '寄件情况'")
+    @Column(name = "sendCondition", columnDefinition = "VARCHAR(255)   COMMENT '寄件情况'")
     private String sendCondition;
+
+
+    /**
+     * 收件地区(寄件的时候填的地区)
+     */
+    @Column(name = "receiveArea", columnDefinition = "VARCHAR(255)   COMMENT '收件地区(寄件的时候填的地区)'")
+    private String receiveArea;
 
     /**
      * 收件地址
      */
-    @Column(name = "receiveAddr",  columnDefinition = "VARCHAR(255)   COMMENT '收件地址'")
+    @Column(name = "receiveAddr", columnDefinition = "VARCHAR(255)   COMMENT '收件地址'")
     private String receiveAddr;
 
     /**
      * 收票人
      */
-    @Column(name = "ticketer",  columnDefinition = "VARCHAR(255)   COMMENT '收票人'")
+    @Column(name = "ticketer", columnDefinition = "VARCHAR(255)   COMMENT '收票人'")
     private String ticketer;
 
     /**
      * 收票日期
      */
-    @Column(name = "ticketDate",  columnDefinition = "DATE  COMMENT '收票日期'")
+    @Column(name = "ticketDate", columnDefinition = "DATE  COMMENT '收票日期'")
     private LocalDate ticketDate;
 
     /**
      * 收票情况
      */
-    @Column(name = "ticketCondition",  columnDefinition = "VARCHAR(255)   COMMENT '收票情况'")
+    @Column(name = "ticketCondition", columnDefinition = "VARCHAR(255)   COMMENT '收票情况'")
     private String ticketCondition;
 
     /**
      * 是否已收票（是/否）
      */
-    @Column(name = "receiveTicket",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收票（是/否）'")
+    @Column(name = "receiveTicket", columnDefinition = "VARCHAR(255)   COMMENT '是否已收票（是/否）'")
     private String receiveTicket;
 
 
     /**
      * 核对人
      */
-    @Column(name = "checker",  columnDefinition = "VARCHAR(255)   COMMENT '核对人'")
+    @Column(name = "checker", columnDefinition = "VARCHAR(255)   COMMENT '核对人'")
     private String checker;
 
     /**
      * 核对日期
      */
-    @Column(name = "checkDate",  columnDefinition = "DATE   COMMENT '核对日期'")
+    @Column(name = "checkDate", columnDefinition = "DATE   COMMENT '核对日期'")
     private LocalDate checkDate;
 
     /**
      * 核对内容
      */
-    @Column(name = "checkcontent",  columnDefinition = "VARCHAR(255)   COMMENT '核对内容'")
+    @Column(name = "checkcontent", columnDefinition = "VARCHAR(255)   COMMENT '核对内容'")
     private String checkcontent;
+
+    /**
+     * 还款核对状态
+     */
+    @Column(name = "lendRetunStatus", columnDefinition = "INT(2)   COMMENT '还款核对状态'")
+    private LendRetunStatus lendRetunStatus;
 
     /**
      * 状态
      */
-    @Column(name = "lendStatus",  columnDefinition = "INT(2)   COMMENT '状态'")
+    @Column(name = "lendStatus", columnDefinition = "INT(2)   COMMENT '状态'")
     private LendStatus lendStatus;
 
     /**
      * 申请单有误状态标识
      */
-    @Column(name = "lendError",  columnDefinition = "INT(2)   COMMENT '申请单有误状态标识'")
+    @Column(name = "lendError", columnDefinition = "INT(2)   COMMENT '申请单有误状态标识'")
     private Integer lendError;
 
     /**
      * 是否已收款（是/否）
      */
-    @Column(name = "receivePay",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收款（是/否）'")
+    @Column(name = "receivePay", columnDefinition = "VARCHAR(255)   COMMENT '是否已收款（是/否）'")
     private String receivePay;
+
+    /**
+     * 确认已收款时间
+     */
+    @Column(name = "receivePayTime", columnDefinition = "DATE   COMMENT '确认已收款时间'")
+    private LocalDate receivePayTime;
+
+    /**
+     * 提交时间(填单人的操作)
+     */
+    @Column(name = "commitTime", columnDefinition = " DATETIME  COMMENT '提交时间'")
+    private LocalDateTime commitTime;
+
+    /**
+     * 分析人
+     */
+    @Column(name = "analysiser", columnDefinition = " TEXT  COMMENT '分析人'")
+    private String analysiser;
+
+    /**
+     * 分析状态(通过/不通过)
+     */
+    @Column(name = "analyse", columnDefinition = " VARCHAR(255)  COMMENT '是否分析(是/否)'")
+    private String analyse;
+
 
     /**
      * 枚举辅助
@@ -369,6 +442,13 @@ public class ApplyLend extends BaseEntity {
     @Transient
     private Integer transientLendStatus;
 
+    public ApplyLend() {
+    }
+
+    public ApplyLend(String projectGroup, Double money) {
+        this.projectGroup = projectGroup;
+        this.money = money;
+    }
 
     public LocalDate getEstimateLendDate() {
         return estimateLendDate;
@@ -802,6 +882,14 @@ public class ApplyLend extends BaseEntity {
         this.checkcontent = checkcontent;
     }
 
+    public LendRetunStatus getLendRetunStatus() {
+        return lendRetunStatus;
+    }
+
+    public void setLendRetunStatus(LendRetunStatus lendRetunStatus) {
+        this.lendRetunStatus = lendRetunStatus;
+    }
+
     public LendStatus getLendStatus() {
         return lendStatus;
     }
@@ -826,11 +914,91 @@ public class ApplyLend extends BaseEntity {
         this.receivePay = receivePay;
     }
 
+    public LocalDate getReceivePayTime() {
+        return receivePayTime;
+    }
+
+    public void setReceivePayTime(LocalDate receivePayTime) {
+        this.receivePayTime = receivePayTime;
+    }
+
+    public LocalDateTime getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(LocalDateTime commitTime) {
+        this.commitTime = commitTime;
+    }
+
     public Integer getTransientLendStatus() {
         return transientLendStatus;
     }
 
     public void setTransientLendStatus(Integer transientLendStatus) {
         this.transientLendStatus = transientLendStatus;
+    }
+
+    public LocalDateTime getChargerPassTime() {
+        return chargerPassTime;
+    }
+
+    public void setChargerPassTime(LocalDateTime chargerPassTime) {
+        this.chargerPassTime = chargerPassTime;
+    }
+
+    public LocalDateTime getFincerPassTime() {
+        return fincerPassTime;
+    }
+
+    public void setFincerPassTime(LocalDateTime fincerPassTime) {
+        this.fincerPassTime = fincerPassTime;
+    }
+
+    public LocalDateTime getManagerPassTime() {
+        return managerPassTime;
+    }
+
+    public void setManagerPassTime(LocalDateTime managerPassTime) {
+        this.managerPassTime = managerPassTime;
+    }
+
+    public String getReturnRemark() {
+        return returnRemark;
+    }
+
+    public void setReturnRemark(String returnRemark) {
+        this.returnRemark = returnRemark;
+    }
+
+    public String getSendRecevier() {
+        return sendRecevier;
+    }
+
+    public void setSendRecevier(String sendRecevier) {
+        this.sendRecevier = sendRecevier;
+    }
+
+    public String getReceiveArea() {
+        return receiveArea;
+    }
+
+    public void setReceiveArea(String receiveArea) {
+        this.receiveArea = receiveArea;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

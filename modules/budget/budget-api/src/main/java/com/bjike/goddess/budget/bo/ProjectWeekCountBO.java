@@ -15,7 +15,7 @@ public class ProjectWeekCountBO extends BaseBO {
      */
     private String arrival;
     /**
-     * 项目
+     * 所属项目
      */
     private String project;
     /**
@@ -54,8 +54,11 @@ public class ProjectWeekCountBO extends BaseBO {
     /**
      * 收入差异总量
      */
-
     private Double incomeDifferencesSum;
+    /**
+     * 内部项目名称
+     */
+    private String projectName;
 
     public Double getPrice() {
         return price;
@@ -143,5 +146,13 @@ public class ProjectWeekCountBO extends BaseBO {
 
     public void setIncomeDifferencesSum(Double incomeDifferencesSum) {
         this.incomeDifferencesSum = incomeDifferencesSum;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

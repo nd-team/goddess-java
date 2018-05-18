@@ -1,6 +1,5 @@
 package com.bjike.goddess.fundcheck.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -18,8 +17,7 @@ import com.bjike.goddess.fundcheck.to.StockMoneyTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import net.sf.ehcache.util.SetAsList;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -27,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * 收到股东款业务实现
@@ -227,6 +222,7 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
     public StockMoneyBO edit(StockMoneyTO stockMoneyTO) throws SerException {
         checkAddIdentity();
         StockMoney stockMoney = super.findById(stockMoneyTO.getId());
+        BeanTransform.copyProperties(stockMoneyTO, stockMoney, true);
         stockMoney.setModifyTime(LocalDateTime.now());
         super.update(stockMoney);
         return BeanTransform.copyProperties(stockMoney, StockMoneyBO.class);
@@ -240,62 +236,48 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
     }
 
     @Override
-    public List<StockMoneyBO> collect(StockMoneyCollectTO to) throws SerException {
+    public LinkedHashMap<String, String> collect(StockMoneyCollectTO to) throws SerException {
 
-        List<StockMoneyBO> stockMoneyBOList = new ArrayList<>();
-        StockMoneyDTO dto = new StockMoneyDTO();
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            String[] condi = new String[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("date", condi));
-        }
-        //获取所有股东名
-        List<String> stockNameList = new ArrayList<>();
-        dto.getSorts().add("stockName=asc");
-        String sql = "select stockName from  fundcheck_stockmoney where date between '" + startTime + "' and '" + endTime + "' group by stockName";
-        List<Object> objects = super.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-//            String[] names = objects.toArray(new String[objects.size()]);
-//            for(String n:names){
-//                stockNameList.add(n);
-//            }
-            stockNameList.addAll((List) objects);
-        }
-        //获取股东名对应的金额
-        List<Double> stockNameMoney = new ArrayList<>();
-        sql = "select money from  fundcheck_stockmoney where date between '" + startTime + "' and '" + endTime + "' group by money ";
-        List<Object> object = super.findBySql(sql);
-        if (null != object && object.size() > 0) {
-            stockNameMoney.addAll((List) object);
-        }
-        //获取金额的合计
-        String[] fields = new String[]{"money"};
-        sql = "select sum(money) AS money from  fundcheck_stockmoney where date between '" + startTime + "' and '" + endTime + "' ";
-        List<StockMoneyBO> stockMoneyBOS = super.findBySql(sql, StockMoneyBO.class, fields);
-        Double money = stockMoneyBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(StockMoneyBO::getMoney).sum();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
-        StockMoneyBO stockMoneyBO = new StockMoneyBO();
-        stockMoneyBO.setDate( startTime+"-"+ endTime );
-        stockMoneyBO.setStockNameList(stockNameList);
-        stockMoneyBO.setStockNameMoney(stockNameMoney);
-        stockMoneyBO.setMoney(money);
-        stockMoneyBOList.add(stockMoneyBO);
-        return stockMoneyBOList;
-
-//        String sql = "SELECT stockName,sum(money) as moneys " +
-//                " from fundcheck_stockmoney where date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY  stockName " +
-//                " UNION ALL SELECT '合计' as stockName, sum(money) as moneys " +
-//                " from fundcheck_stockmoney where date BETWEEN '"+startTime+"' AND '"+endTime+"' ";
-//        String[] fields = new String[]{"stockName","money","stockNameMoney"};
-//        List<StockMoneyBO> stockMoneyBOS = super.findBySql(sql,StockMoneyBO.class,fields);
-//        for (StockMoneyBO stockMoneyBO : stockMoneyBOS){
-//            stockMoneyBO.setStockNameList();
-//        }
-//        return stockMoneyBOS;
+        String sql = "select stockName from fundcheck_stockmoney where " +
+                "date BETWEEN '" + startTime + "' and '" + endTime + "' GROUP BY stockName";
+        List<Object> titles = super.findBySql(sql);
+        for (Object o : titles) {
+            if (NumberUtils.isCreatable(String.valueOf(o))) {
+                throw new SerException("类型不能为数字");
+            }
+        }
+        String stockName = null;
+        if (null != titles && titles.size() > 0) {
+            StringBuilder sb = new StringBuilder("SELECT * from (SELECT");
+            for (Object o : titles) {
+                stockName = String.valueOf(o);
+                sb.append(" max(CASE WHEN stockName='" + stockName + "' THEN money  else NULL end )AS " + stockName + ",");
+            }
+            sb.append(" sum(money) as '合计' ");
+            sb.append(" FROM ");
+            sb.append(" (SELECT sum(money)as money,stockName  from fundcheck_stockmoney a  WHERE a.date BETWEEN ");
+            sb.append("  '" + startTime + "' AND '" + endTime + "' ");
+            sb.append("GROUP BY stockName) a)a where '" + stockName + "' IS NOT NULL");
+            sql = sb.toString();
+            titles.add("合计");
+            map.put("日期", startTime + "-" + endTime);
+            List<Object> values = super.findBySql(sql);
+            if (null != values && values.size() > 0) {
+                Object[] obj = (Object[]) values.get(0);
+                for (int i = 0; i < obj.length; i++) {
+                    map.put(String.valueOf(titles.get(i)), String.valueOf(obj[i]));
+                }
+            }
+        }
+        return map;
 
 
     }
+
     @Override
     public List<String> listFirstSubject() throws SerException {
         List<String> firstSubject = voucherGenerateAPI.listFirstSubject();
@@ -313,6 +295,7 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
         List<String> thirdSubject = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
         return thirdSubject;
     }
+
     @Override
     public StockMoneyBO importExcel(List<StockMoneyTO> stockMoneyTOS) throws SerException {
         List<StockMoney> stockMonies = BeanTransform.copyProperties(stockMoneyTOS, StockMoney.class, true);
@@ -321,6 +304,7 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
         StockMoneyBO bo = BeanTransform.copyProperties(new StockMoney(), StockMoneyBO.class);
         return bo;
     }
+
     @Override
     public byte[] templateExport() throws SerException {
         List<StockMoneyTemplateExcel> templateExcels = new ArrayList<>();
@@ -331,8 +315,8 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
         excel.setMoney(10.0d);
         templateExcels.add(excel);
 
-        Excel exce = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,exce);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels, exce);
         return bytes;
     }
 }

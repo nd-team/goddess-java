@@ -17,11 +17,37 @@ public class ProjectWeekDTO extends BaseDTO {
      */
     private String[] projects;
 
+    /**
+     * 时间(如2017-05)
+     */
+    private String time;
+
+    /**
+     * 地区
+     */
+    private String area;
+
     public String[] getProjects() {
         return projects;
     }
 
     public void setProjects(String[] projects) {
         this.projects = projects;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

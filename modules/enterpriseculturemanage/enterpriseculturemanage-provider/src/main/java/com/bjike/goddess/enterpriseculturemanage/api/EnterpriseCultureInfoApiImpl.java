@@ -9,6 +9,7 @@ import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,16 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
 
     @Autowired
     private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return enterpriseCultureInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return enterpriseCultureInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public EnterpriseCultureInfoBO addModel(EnterpriseCultureInfoTO to) throws SerException {
@@ -50,7 +61,7 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
     }
 
     @Override
-    public PublicizeProgramInfoBO findPublicize(String id) throws SerException {
+    public List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException {
         return enterpriseCultureInfoSer.findPublicize(id);
     }
 

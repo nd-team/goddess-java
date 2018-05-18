@@ -1,16 +1,20 @@
 package com.bjike.goddess.projectmeasure.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
+import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIBDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUIB;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
+import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUIBTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.type.GuideAddrStatus;
-import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 多项目单个界面业务实现
@@ -35,6 +42,8 @@ import java.util.List;
 @Service
 public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectSingleUI, MultipleProjectSingleUIDTO> implements MultipleProjectSingleUISer {
 
+    @Autowired
+    private MultipleProjectSingleUIBSer multipleProjectSingleUIBSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
@@ -86,15 +95,26 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     /**
      * 分页查询多项目单个界面
      *
-     * @return class MultipleProjectSingleUIBO
+     * @return class MultipleProjectSingleUIBBO
      * @throws SerException
      */
     @Override
-    public List<MultipleProjectSingleUIBO> list(MultipleProjectSingleUIDTO dto) throws SerException {
+    public List<MultipleProjectSingleUIBBO> list(MultipleProjectSingleUIBDTO dto) throws SerException {
         checkPermission();
-        List<MultipleProjectSingleUI> list = super.findByPage(dto);
-        List<MultipleProjectSingleUIBO> listBO = BeanTransform.copyProperties(list, MultipleProjectSingleUIBO.class);
-        return listBO;
+        List<MultipleProjectSingleUIB> listB = multipleProjectSingleUIBSer.findByPage(dto);
+        List<MultipleProjectSingleUIBBO> listBBO = BeanTransform.copyProperties(listB, MultipleProjectSingleUIBBO.class);
+        if (listBBO != null) {
+            for (MultipleProjectSingleUIBBO bbo : listBBO) {
+                MultipleProjectSingleUIDTO dtoA = new MultipleProjectSingleUIDTO();
+                dtoA.getConditions().add(Restrict.eq("multipleProjectSingleUIB.id", bbo.getId()));
+                List<MultipleProjectSingleUI> listA = super.findByCis(dtoA);
+                List<MultipleProjectSingleUIBO> listABO = BeanTransform.copyProperties(listA, MultipleProjectSingleUIBO.class);
+
+                bbo.setMultipleProjectSingleUIBOS(listABO);
+            }
+        }
+
+        return listBBO;
     }
 
     /**
@@ -106,13 +126,99 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public MultipleProjectSingleUIBO save(MultipleProjectSingleUITO to) throws SerException {
+    public void save(MultipleProjectSingleUIBTO to) throws SerException {
         checkPermission();
-        MultipleProjectSingleUI entity = BeanTransform.copyProperties(to, MultipleProjectSingleUI.class, true);
-        entity.setProjectCategory(ProjectCategory.MULTIPLE_SINGLE);
-        entity = super.save(entity);
-        MultipleProjectSingleUIBO bo = BeanTransform.copyProperties(entity, MultipleProjectSingleUIBO.class);
-        return bo;
+        MultipleProjectSingleUIB entityB = BeanTransform.copyProperties(to, MultipleProjectSingleUIB.class, true);
+        entityB.setCreateTime(LocalDateTime.now());
+        entityB.setModifyTime(LocalDateTime.now());
+        multipleProjectSingleUIBSer.save(entityB);
+        List<String> projectName = new ArrayList<>();
+        List<Double> profit = new ArrayList<>();
+
+        List<MultipleProjectSingleUITO> multipleProjectSingleUITOS = to.getMultipleProjectSingleUITOS();
+        Double sum = multipleProjectSingleUITOS.stream().filter(bto->null!=bto).distinct().mapToDouble(bto->bto.getWorkload()).sum();
+
+        for (MultipleProjectSingleUITO m : multipleProjectSingleUITOS) {
+            MultipleProjectSingleUI entityA = BeanTransform.copyProperties(m, MultipleProjectSingleUI.class, true);
+            entityA.setMultipleProjectSingleUIB(entityB);
+            entityA.setModifyTime(LocalDateTime.now());
+            entityA.setCreateTime(LocalDateTime.now());
+            projectName.add(m.getProjectName().toString());
+            profit.add(m.getProfit());
+            Double constant = m.getWorkload() / sum;
+            entityA.setProjectRatio((constant * 100)+"%");
+            List<Integer> numbers = new ArrayList<>();
+            if (profit != null && profit.size() > 0) {
+                for (Double number : profit) {
+                    numbers.add(Double.valueOf(number * 100).intValue());
+                }
+            }
+            Integer divisor = getMaxDivisor(numbers);
+
+            StringBuilder result = new StringBuilder();
+
+            for (Integer number : numbers) {
+                result.append(number / divisor).append(":");
+            }
+            result.setLength(result.length() - 1);
+
+            MultipleProjectSingleUIDTO dto = new MultipleProjectSingleUIDTO();
+            dto.getConditions().add(Restrict.eq("multipleProjectSingleUIB.id", entityB.getId()));
+            List<MultipleProjectSingleUI> multipleUIS = super.findByCis(dto);
+
+            for (MultipleProjectSingleUI multipleProjectSingleUI : multipleUIS) {
+
+                if (multipleProjectSingleUI.getProjectName().equals(m.getProjectName())) {
+                    throw new SerException("项目名称不能有两个一样的对应同个界面");
+                }
+            }
+            MultipleProjectSingleUIBDTO dtoB = new MultipleProjectSingleUIBDTO();
+            dtoB.getConditions().add(Restrict.eq("id", entityB.getId()));
+            List<MultipleProjectSingleUIB> multipleUIBS = multipleProjectSingleUIBSer.findByCis(dtoB);
+
+            for (MultipleProjectSingleUIB ui : multipleUIBS) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(projectName).append("=").
+                        append(result);
+                String contrast = sb.toString().replaceAll("\\[", "");
+                contrast = contrast.replaceAll("]", "");
+                contrast = contrast.replace(",", ":");
+
+                ui.setProjectProfitContrast(contrast);
+
+            }
+
+            super.save(entityA);
+        }
+    }
+
+    public static int getMaxDivisor(List<Integer> array) {
+        int minN = getMin(array);
+        for (int j = minN; j >= 2; j--) {
+            int count = 0;
+            for (int i = 0; i < array.size(); i++) {
+                if (array.get(i) % j == 0) {
+                    count++;
+                }
+            }
+            if (count == array.size()) {
+                return j;
+            }
+        }
+        return 1;// 无最大公约数
+    }
+
+    public static int getMin(List<Integer> a) {
+        if (a.size() < 1) {
+            return -1;
+        }
+        int min = a.get(0);
+        for (int i = 0; i < a.size(); i++) {
+            if (min > a.get(i)) {
+                min = a.get(i);
+            }
+        }
+        return min;
     }
 
     /**
@@ -123,32 +229,72 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void update(MultipleProjectSingleUITO to) throws SerException {
+    public void update(MultipleProjectSingleUIBTO to) throws SerException {
         checkPermission();
-        if (StringUtils.isNotEmpty(to.getId())) {
-            MultipleProjectSingleUI model = super.findById(to.getId());
-            if (model != null) {
-                updateMultipleProjectSingleUI(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
+        MultipleProjectSingleUIB entityB = multipleProjectSingleUIBSer.findById(to.getId());
+        BeanTransform.copyProperties(to, entityB, true);
+        multipleProjectSingleUIBSer.update(entityB);
+        //查询A表并删除
+        MultipleProjectSingleUIDTO dto = new MultipleProjectSingleUIDTO();
+        dto.getConditions().add(Restrict.eq("multipleProjectSingleUIB.id", entityB.getId()));
+        List<MultipleProjectSingleUI> aList = super.findByCis(dto);
+
+        if (aList != null && aList.size() > 0) {
+            super.remove(aList);
+        }
+        List<String> projectName = new ArrayList<>();
+        List<Double> profit = new ArrayList<>();
+        //修改A表
+        List<MultipleProjectSingleUITO> multipleProjectSingleUITOS = to.getMultipleProjectSingleUITOS();
+        Double sum = multipleProjectSingleUITOS.stream().filter(bto->null!=bto).distinct().mapToDouble(bto->bto.getWorkload()).sum();
+
+        if (multipleProjectSingleUITOS != null) {
+            for (MultipleProjectSingleUITO m : multipleProjectSingleUITOS) {
+                MultipleProjectSingleUI entityA = BeanTransform.copyProperties(m, MultipleProjectSingleUI.class, true);
+                entityA.setMultipleProjectSingleUIB(entityB);
+
+                projectName.add(m.getProjectName().toString());
+                profit.add(m.getProfit());
+                Double constant = m.getWorkload() / sum;
+                entityA.setProjectRatio((constant * 100)+"%");
+
+                List<Integer> numbers = new ArrayList<>();
+                if (profit != null && profit.size() > 0) {
+                    for (Double number : profit) {
+                        numbers.add(Double.valueOf(number * 100).intValue());
+                    }
+                }
+                Integer divisor = getMaxDivisor(numbers);
+
+                StringBuilder result = new StringBuilder();
+
+                for (Integer number : numbers) {
+                    result.append(number / divisor).append(":");
+                }
+                result.setLength(result.length() - 1);
+                for (MultipleProjectSingleUI multipleProjectSingleUI : aList) {
+                    if (multipleProjectSingleUI.getProjectName().equals(m.getProjectName())) {
+                        throw new SerException("项目名称不能有两个一样的对应同个界面");
+                    }
+                }
+                MultipleProjectSingleUIBDTO dtoB = new MultipleProjectSingleUIBDTO();
+                dtoB.getConditions().add(Restrict.eq("id", entityB.getId()));
+                List<MultipleProjectSingleUIB> multipleUIBS = multipleProjectSingleUIBSer.findByCis(dtoB);
+                for (MultipleProjectSingleUIB ui : multipleUIBS) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(projectName).append("=").
+                            append(result);
+                    String contrast = sb.toString().replaceAll("\\[", "");
+                    contrast = contrast.replaceAll("]", "");
+                    contrast = contrast.replace(",", ":");
+
+                    ui.setProjectProfitContrast(contrast);
+                }
+
+                super.update(entityA);
             }
-        } else {
-            throw new SerException("更新ID不能为空!");
         }
 
-    }
-
-    /**
-     * 更新多项目单个界面
-     *
-     * @param to
-     * @param model
-     * @throws SerException
-     */
-    private void updateMultipleProjectSingleUI(MultipleProjectSingleUITO to, MultipleProjectSingleUI model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
     }
 
     /**
@@ -162,6 +308,20 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     public void remove(String id) throws SerException {
         checkPermission();
         super.remove(id);
+        MultipleProjectSingleUIDTO dtoA = new MultipleProjectSingleUIDTO();
+        List<MultipleProjectSingleUI> entityAList = super.findByCis(dtoA);
+        List<MultipleProjectSingleUIB> entityBList = multipleProjectSingleUIBSer.findAll();
+
+
+        Set<String> aids = new HashSet<>();
+        for (MultipleProjectSingleUI a : entityAList) {
+            aids.add(a.getMultipleProjectSingleUIB().getId());
+        }
+        for (MultipleProjectSingleUIB b : entityBList) {
+            if (!aids.contains(b.getId())) {
+                multipleProjectSingleUIBSer.remove(b.getId());
+            }
+        }
     }
 
 
@@ -217,7 +377,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     }
 
     @Override
-    public MultipleProjectSingleUIBO getOne(String id) throws SerException{
+    public MultipleProjectSingleUIBO getOne(String id) throws SerException {
         checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");

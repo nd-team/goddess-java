@@ -3,7 +3,9 @@ package com.bjike.goddess.lendreimbursement.vo;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/** 汇总数据
+/**
+ * 汇总数据
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-04-10 11:57]
  * @Description: [汇总数据]
@@ -13,7 +15,7 @@ import java.time.LocalDate;
 public class CollectDataVO implements Serializable {
 
     /**
-     * 借款人
+     * 借款/报销人
      */
     private String lender;
 
@@ -22,6 +24,11 @@ public class CollectDataVO implements Serializable {
      */
     private LocalDate reimDate;
 
+
+    /**
+     * 报销日期汇总时间段
+     */
+    private String reimDatePeriod;
     /**
      * 地区
      */
@@ -140,5 +147,13 @@ public class CollectDataVO implements Serializable {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public String getReimDatePeriod() {
+        return reimDatePeriod;
+    }
+
+    public void setReimDatePeriod(String reimDatePeriod) {
+        this.reimDatePeriod = reimDatePeriod;
     }
 }

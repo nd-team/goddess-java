@@ -26,11 +26,6 @@ public class AccountVO {
     private String account;
 
     /**
-     * 类别
-     */
-    private CategoryVO categoryVO;
-
-    /**
      * 开户行地址
      */
     private String bankAddr;
@@ -65,7 +60,10 @@ public class AccountVO {
      * 三级类别名
      */
     private String thirdSubject;
-
+    /**
+     * 金额
+     */
+    private Double amount;
 
     public String getId() {
         return id;
@@ -89,14 +87,6 @@ public class AccountVO {
 
     public void setAccount(String account) {
         this.account = account;
-    }
-
-    public CategoryVO getCategoryVO() {
-        return categoryVO;
-    }
-
-    public void setCategoryVO(CategoryVO categoryVO) {
-        this.categoryVO = categoryVO;
     }
 
     public String getBankAddr() {
@@ -153,5 +143,13 @@ public class AccountVO {
 
     public void setThirdSubject(String thirdSubject) {
         this.thirdSubject = thirdSubject;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

@@ -39,9 +39,10 @@ dependencies {
 
     compile project(":modules:salaryconfirm:salaryconfirm-api")
     compile project(":modules:user:user-api")
+    compile("com.google.guava:guava:21.0")
     compile project(":modules:organize:organize-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
-
+    compile("org.springframework.boot:spring-boot-starter-undertow")
     compile("org.springframework.boot:spring-boot-starter-web")
 
 }

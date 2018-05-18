@@ -3,7 +3,6 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.AccountBO;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
-import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.service.AccountSer;
 import com.bjike.goddess.financeinit.to.AccountTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -93,5 +92,20 @@ public class AccountApiImpl implements AccountAPI {
     @Override
     public String findByName(String name) throws SerException {
         return accountSer.findByName(name);
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return accountSer.exportExcel();
+    }
+
+    @Override
+    public Double findTotalAmount( ) throws SerException {
+        return accountSer.findTotalAmount();
+    }
+
+    @Override
+    public List<String> findSubjects(String name) throws SerException {
+        return accountSer.findSubjects(name);
     }
 }

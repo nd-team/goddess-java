@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.bo.DemandTypeBO;
 import com.bjike.goddess.attainment.dto.DemandTypeDTO;
 import com.bjike.goddess.attainment.service.DemandTypeSer;
 import com.bjike.goddess.attainment.to.DemandTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,18 @@ import java.util.List;
 @Service("demandTypeApiImpl")
 public class DemandTypeApiImpl implements DemandTypeAPI {
 
+
     @Autowired
     private DemandTypeSer demandTypeSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return demandTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return demandTypeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DemandTypeBO save(DemandTypeTO to) throws SerException {
@@ -68,5 +79,10 @@ public class DemandTypeApiImpl implements DemandTypeAPI {
     @Override
     public Long getTotal() throws SerException {
         return demandTypeSer.getTotal();
+    }
+
+    @Override
+    public List<String> getObject() throws SerException {
+        return demandTypeSer.getObject();
     }
 }

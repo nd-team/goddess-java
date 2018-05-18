@@ -33,14 +33,14 @@ sourceSets {
     }
 }
 
-
 dependencies {
     compile(project(":common:common-consumer")){
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     compile project(":modules:market:market-api")
-    //compile project(":modules:customer:customer-api")
+//    compile project(":modules:customer:customer-api")
     compile project(":common:common-utils")
+//    compile project(":projectcalculation:projectcalculation-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }

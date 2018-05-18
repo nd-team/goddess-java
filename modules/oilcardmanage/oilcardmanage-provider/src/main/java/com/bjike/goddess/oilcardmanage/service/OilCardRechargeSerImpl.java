@@ -1,17 +1,39 @@
 package com.bjike.goddess.oilcardmanage.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
 import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
+import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
+import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
+import com.bjike.goddess.oilcardmanage.excel.OilCardRechargeSetExcel;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +43,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+//import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+//import com.bjike.goddess.dispatchcar.enums.FindType;
 
 /**
  * 油卡充值业务处理类
@@ -40,15 +67,179 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private MessageAPI messageAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 核对查看权限（层级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            case ANALYZE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardRechargeBO saveOilCardRecharge(OilCardRechargeTO to) throws SerException {
+        checkAddIdentity();
+        RpcTransmit.getUserToken();
+        UserBO user = userAPI.currentUser();
+        String userName = user.getUsername();
         OilCardBasic oilCardBasic = oilCardBasicSer.findById(to.getOilCardBasicId());
-
+        to.setRechargeUser(userName);
         if (oilCardBasic != null) {
             OilCardRecharge model = BeanTransform.copyProperties(to, OilCardRecharge.class, true);
 
-            to.setId(model.getId());
+//            to.setId(model.getId());
+
 
             //充值：修改油卡期初金额及余额
             oilCardBasic.setCycleEarlyMoney(oilCardBasic.getBalance() + to.getRechargeMoney()); //油卡期初金额 = 余额 + 充值金额
@@ -60,7 +251,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             model.setCycleEarlyMoney(oilCardBasic.getCycleEarlyMoney());
 
             super.save(model);
-            return BeanTransform.copyProperties(to, OilCardRechargeBO.class);
+            return BeanTransform.copyProperties(model, OilCardRechargeBO.class);
         } else {
             throw new SerException("非法oilCardBasicId,油卡信息对象不能为空!");
         }
@@ -69,6 +260,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardRechargeBO updateOilCardRecharge(OilCardRechargeTO to) throws SerException {
+        checkAddIdentity();
         // 记录修改前、后的数据Model
         OilCardRecharge model = super.findById(to.getId());
         Double currentRecharge = to.getRechargeMoney();//本次充值金额
@@ -87,7 +279,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             model.setCycleEarlyMoney(exCycleEarlyMoney - exRechargeMoney + currentRecharge);
             super.update(model);
             //修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-            updateAfterList(model.getCreateTime(), exRechargeMoney, currentRecharge);
+            updateAfterList(model.getCreateTime(),model.getOilCardBasic().getId(), exRechargeMoney, currentRecharge);
 
             return BeanTransform.copyProperties(to, OilCardRechargeBO.class);
         } else {
@@ -110,10 +302,11 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     }
 
     // 修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-    public void updateAfterList(LocalDateTime time, Double exRechargeMoney, Double currentRecharge) throws SerException {
+    public void updateAfterList(LocalDateTime createTime,String oilCardId, Double exRechargeMoney, Double currentRecharge) throws SerException {
 
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
-        dto.getConditions().add(Restrict.gt("createTime", time));
+        dto.getConditions().add(Restrict.eq("oilCardBasic.id", oilCardId));
+        dto.getConditions().add(Restrict.gt("createTime",createTime));
         List<OilCardRecharge> list = super.findByCis(dto);
         if (list != null && list.size() > 0) {
             for (OilCardRecharge model : list) {
@@ -124,6 +317,44 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             super.update(list);
         }
 
+    }
+
+    //删除了本次充值记录,在本次充值之后的数据的期初金额都要 - 删除前的充值金额
+
+    private void updateAfterList(LocalDateTime createTime,String oilCardId,Double exRecargeMoney) throws SerException{
+        OilCardRechargeDTO dto = new OilCardRechargeDTO();
+        dto.getConditions().add(Restrict.eq("oilCardBasic.id",oilCardId));
+        dto.getConditions().add(Restrict.gt("createTime",createTime));
+        List<OilCardRecharge> list = super.findByCis(dto);
+        if(list != null && list.size() >0 ){
+            for(OilCardRecharge model : list){
+                //期初金额 = 删除钱期初金额 - 删除掉的充值记录的充值金额
+                model.setCycleEarlyMoney(model.getCycleEarlyMoney() - exRecargeMoney);
+                model.setModifyTime(LocalDateTime.now());
+            }
+            super.update(list);
+        }
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        checkAddIdentity();
+        //删除修改要改变原先充值好的数据
+        if(null != id){
+            OilCardRecharge model = super.findById(id);
+            if(model != null){
+                //获取被充值的油卡id
+                String oilCardId = model.getOilCardBasic().getId();
+                Double exRecargeMoney = model.getRechargeMoney();
+                LocalDateTime createTime = model.getCreateTime();
+                updateAfterList(createTime,oilCardId,exRecargeMoney);
+            }else{
+                throw new SerException("不能传入非法id啊,亲爱的");
+            }
+            super.remove(id);
+        }else{
+            throw new SerException("id不能为空!");
+        }
     }
 
     @Override
@@ -161,24 +392,24 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     public AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException {
 
-        double addOilAmount = dispatchCarInfoAPI.findOilAmount(oilCardCode, year, month);
+//        double addOilAmount = dispatchCarInfoAPI.findOilAmount(oilCardCode, year, month);
         OilCardBasicBO oilCardBasic = oilCardBasicSer.findByCode(oilCardCode);
         if (oilCardBasic != null) {
             StringBuilder sql = new StringBuilder(" SELECT count(*) as count, sum(rechargeMoney) as rechargeMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
-            sql.append(" and oilCardBasic_id = '" + oilCardBasic + "'");
-            sql.append(" and year(rechargeDate) = " + year);
-            sql.append(" and month(rechargeDate) = " + month);
+            sql.append(" and oilCardBasic_id = '" + oilCardBasic.getId() + "'");
+            sql.append(" and year(rechargeDate) = '" + year);
+            sql.append("' and month(rechargeDate) = '" + month+"'");
             String[] fields = new String[]{"count", "rechargeMoney"};
             List<AnalyzeBO> boList = super.findBySql(sql.toString(), AnalyzeBO.class, fields);
             if (!CollectionUtils.isEmpty(boList)) {
                 AnalyzeBO bo = boList.get(0);
-                bo.setAddOilAmount(addOilAmount);
-                StringBuilder cycleEarlyMoneyStr = new StringBuilder(" SELECT cycleEarlyMoney, FROM oilcardmanage_recharge WHERE 0 = 0 ");
-                sql.append(" and oilCardBasic_id = '" + oilCardBasic + "'");
-                sql.append(" and year(rechargeDate) = " + year);
-                sql.append(" and month(rechargeDate) = " + month);
-                sql.append(" order by rechargeDate desc limit 1");
-                List<OilCardRecharge> list = super.findBySql(sql.toString(), OilCardRecharge.class, new String[]{"cycleEarlyMoney"});
+//                bo.setAddOilAmount(addOilAmount);
+                StringBuilder cycleEarlyMoneyStr = new StringBuilder(" SELECT cycleEarlyMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
+                cycleEarlyMoneyStr.append(" and oilCardBasic_id = '" + oilCardBasic.getId() + "'");
+                cycleEarlyMoneyStr.append(" and year(rechargeDate) = '" + year);
+                cycleEarlyMoneyStr.append("' and month(rechargeDate) = '" + month+"'");
+                cycleEarlyMoneyStr.append(" order by rechargeDate desc limit 1");
+                List<OilCardRecharge> list = super.findBySql(cycleEarlyMoneyStr.toString(), OilCardRecharge.class, new String[]{"cycleEarlyMoney"});
                 if (!CollectionUtils.isEmpty(list)) {
                     bo.setRechargeMoney(list.get(0).getCycleEarlyMoney());
                 }
@@ -199,11 +430,175 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
                 OilCardRechargeBO bo = BeanTransform.copyProperties(model, OilCardRechargeBO.class);
                 bo.setOilCardNumber(model.getOilCardBasic().getOilCardNumber());
                 bo.setOilCardCode(model.getOilCardBasic().getOilCardCode());
+                bo.setMainOrDeputy(model.getOilCardBasic().getMainOrDeputy());
                 boList.add(bo);
             }
             return boList;
         } else {
             return null;
         }
+    }
+
+    @Override
+    public OilCardRechargeBO findBy(String id) throws SerException {
+        OilCardRecharge oilCardRecharge = super.findById(id);
+        OilCardRechargeBO bo = BeanTransform.copyProperties(oilCardRecharge,OilCardRechargeBO.class);
+        bo.setOilCardBasicId(oilCardRecharge.getOilCardBasic().getId());
+        bo.setOilCardCode(oilCardRecharge.getOilCardBasic().getOilCardCode());
+        return bo;
+    }
+
+//    @Override
+//    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
+//        List<DispatchCarInfoBO> bos = new ArrayList<>(0);
+////        if(moduleAPI.isCheck("dispatchcarinfo")) {
+//            String userToken = RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+//            dto.getConditions().add(Restrict.ne("findType", FindType.WAITAUDIT));
+//            dto.getConditions().add(Restrict.gt("addOilTime", startTime));
+//            dto.getConditions().add(Restrict.lt("addOilTime", endTime));
+//            dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
+//            bos = dispatchCarInfoAPI.pageList(dto);
+////        }
+//        return bos;
+//    }
+
+    @Override
+    public void updateInformation(String id,Double balance,Double peetyCash) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        OilCardRecharge oilCardRecharge = new OilCardRecharge();
+        BeanTransform.copyProperties(model,oilCardRecharge,"ifUploadScreenshot","ifPrepaidNotification","ifUploadRecharge","afterRechargeTotalMoney","afterRechargeBalance");
+        oilCardRecharge.setRechargeBeforePettyCash(peetyCash);
+        oilCardRecharge.getOilCardBasic().setBalance(balance);
+        super.save(oilCardRecharge);
+    }
+
+    @Override
+    public void updateRecharge(String id, Boolean ifRecharge, Double pettyCash,Double rechargeMoney, String rechargeDate) throws SerException {
+        if (id != null) {
+            OilCardRecharge model = super.findById(id);
+            if (model != null) {
+                model.setIfRecharge(ifRecharge);
+                model.setPettyCash(pettyCash);
+                model.setRechargeDate(DateUtil.parseDateTime(rechargeDate));
+                Double afterRechargeBalance = rechargeMoney + model.getOilCardBasic().getBalance();
+                model.setAfterRechargeBalance(afterRechargeBalance);
+                super.update(model);
+            }else {
+                throw new SerException("数据库中没有该数据");
+            }
+        }else {
+            throw new SerException("id不能为空");
+        }
+
+    }
+
+    @Override
+    public void noticeRecharge(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        String oildardCode = model.getOilCardBasic().getOilCardCode();
+        List<String> receviers = new ArrayList<>();
+        if (moduleAPI.isCheck("organize")){
+            List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+            for (UserBO userBO : userBOS){
+                List<String> position = positionDetailUserAPI.getPosition(userBO.getUsername());
+                if (position != null && position.size() > 0){
+                    if (position.get(0).equals("福利模块负责人")){
+                        receviers.add(userBO.getEmail());
+                    }
+                }
+            }
+        }
+        MessageTO messageTO = new MessageTO();
+        String content = oildardCode+"油卡已经充值，请悉知！";
+        messageTO.setContent(content);
+        messageTO.setTitle("定时发送商务合同签订与立项汇总");
+        messageTO.setMsgType(MsgType.SYS);//根据自己业务写
+        messageTO.setSendType( SendType.EMAIL);//根据自己业务写
+        messageTO.setRangeType( RangeType.SPECIFIED);//根据自己业务写
+
+        messageTO.setReceivers((String[]) receviers.toArray(new String[receviers.size()]) );//根据自己业务写
+        messageAPI.send(messageTO);
+        model.setIfPrepaidNotification(true);
+        super.update(model);
+    }
+
+    @Override
+    public void updateScreen(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        model.setIfUploadScreenshot(true);
+        super.update(model);
+    }
+
+    @Override
+    public void updatePrepaid(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        model.setIfUploadRecharge(true);
+        super.update(model);
+    }
+
+    @Override
+    public void leadExcel(List<OilCardRechargeTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        List<OilCardRecharge> list = BeanTransform.copyProperties(toList, OilCardRecharge.class, true);
+        list.stream().forEach(str -> {
+            str.setModifyTime(LocalDateTime.now());
+            str.setCreateTime(LocalDateTime.now());
+        });
+        super.save(list);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportOilcardRechargeTO to) throws SerException {
+//        if (org.apache.commons.lang3.StringUtils.isNotBlank(to.getPayStartTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getPayEndTime())) {
+//            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStartTime()), DateUtil.parseDate(dto.getPayEndTime())};
+//            dto.getConditions().add(Restrict.between("payStartTime", localDates));
+//            dto.getConditions().add(Restrict.between("payEndTime", localDates));
+//        }
+        OilCardRechargeDTO dto = new OilCardRechargeDTO();
+
+        List<OilCardRecharge> list = super.findByCis(dto);
+        List<OilCardRechargeSetExcel> toList = new ArrayList<OilCardRechargeSetExcel>();
+        for (OilCardRecharge model : list) {
+            OilCardRechargeSetExcel excel = BeanTransform.copyProperties(model, OilCardRechargeSetExcel.class);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OilCardRechargeSetExcel> oilCardRechargeSetExcels = new ArrayList<>();
+
+        OilCardRechargeSetExcel excel = new OilCardRechargeSetExcel();
+
+        excel.setOilCardNumber("卡号");
+        excel.setMainOrDeputy("主卡/副卡");
+        excel.setBelongMainCard("所属主卡");
+        excel.setOilCardCode("油卡编号");
+        excel.setCardPassWord("密码");
+        excel.setArea("使用地区");
+        excel.setDepartment("部门/项目组");
+        excel.setCardStatus(OilCardStatus.FREEZE);
+        excel.setUpdateTime("更新时间");
+        excel.setBalance(200d);
+        excel.setRechargeBeforePettyCash(200d);
+        excel.setIfUploadScreenshot(false);
+        excel.setIfPrepaidNotification(false);
+        excel.setIfRecharge(true);
+        excel.setRechargeMoney(200d);
+        excel.setRechargeDate("2017-01-02 10:01:01");
+        excel.setIfUploadRecharge(false);
+        excel.setAfterRechargeTotalMoney(200d);
+        excel.setAfterRechargeBalance(300d);
+
+        oilCardRechargeSetExcels.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(oilCardRechargeSetExcels, exce);
+        return bytes;
     }
 }

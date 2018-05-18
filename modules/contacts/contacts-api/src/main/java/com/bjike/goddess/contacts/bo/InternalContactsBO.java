@@ -1,7 +1,8 @@
 package com.bjike.goddess.contacts.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.contacts.enums.ContactsStatus;
+import com.bjike.goddess.contacts.enums.Status;
 
 /**
  * 内部通讯录业务传输对象
@@ -14,10 +15,10 @@ import com.bjike.goddess.common.api.type.Status;
  */
 public class InternalContactsBO extends BaseBO {
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+//    /**
+//     * 用户ID
+//     */
+//    private String userId;
 
     /**
      * 用户名
@@ -25,14 +26,24 @@ public class InternalContactsBO extends BaseBO {
     private String username;
 
     /**
+     * 更新时间
+     */
+    private String updateTime;
+
+    /**
      * 地区
      */
     private String area;
 
     /**
+     * 姓名
+     */
+    private String name;
+
+    /**
      * 员工编号
      */
-    private String number;
+    private String employeeNum;
 
     /**
      * 部门/项目组
@@ -48,11 +59,26 @@ public class InternalContactsBO extends BaseBO {
      * 联系电话
      */
     private String phone;
-
     /**
-     * 邮箱
+     * 个人邮箱
      */
-    private String email;
+    private String personalEmail;
+    /**
+     * 工作邮箱
+     */
+    private String workEmail;
+    /**
+     * 原始密码
+     */
+    private String primalPassword;
+    /**
+     * 更改密码
+     */
+    private String updatePassword;
+    /**
+     * 工作邮箱检测是否通过
+     */
+    private Boolean workEmailPass;
 
     /**
      * 集团号
@@ -60,9 +86,24 @@ public class InternalContactsBO extends BaseBO {
     private String bloc;
 
     /**
+     * 联系电话1
+     */
+    private String phoneNumberA;
+    /**
      * 联系电话2
      */
-    private String phoneNumber;
+    private String phoneNumberB;
+
+    /**
+     * 联系电话3
+     */
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    private String phoneNumberD;
+
 
     /**
      * QQ号
@@ -92,15 +133,8 @@ public class InternalContactsBO extends BaseBO {
     /**
      * 状态
      */
-    private Status status;
+    private ContactsStatus status;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;
@@ -118,13 +152,6 @@ public class InternalContactsBO extends BaseBO {
         this.area = area;
     }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 
     public String getDepartment() {
         return department;
@@ -150,13 +177,6 @@ public class InternalContactsBO extends BaseBO {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getBloc() {
         return bloc;
@@ -166,13 +186,6 @@ public class InternalContactsBO extends BaseBO {
         this.bloc = bloc;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getQq() {
         return qq;
@@ -214,11 +227,107 @@ public class InternalContactsBO extends BaseBO {
         this.remark = remark;
     }
 
-    public Status getStatus() {
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
+    public String getPersonalEmail() {
+        return personalEmail;
+    }
+
+    public void setPersonalEmail(String personalEmail) {
+        this.personalEmail = personalEmail;
+    }
+
+    public String getWorkEmail() {
+        return workEmail;
+    }
+
+    public void setWorkEmail(String workEmail) {
+        this.workEmail = workEmail;
+    }
+
+    public String getPrimalPassword() {
+        return primalPassword;
+    }
+
+    public void setPrimalPassword(String primalPassword) {
+        this.primalPassword = primalPassword;
+    }
+
+    public String getUpdatePassword() {
+        return updatePassword;
+    }
+
+    public void setUpdatePassword(String updatePassword) {
+        this.updatePassword = updatePassword;
+    }
+
+    public Boolean getWorkEmailPass() {
+        return workEmailPass;
+    }
+
+    public void setWorkEmailPass(Boolean workEmailPass) {
+        this.workEmailPass = workEmailPass;
+    }
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
+
+    public ContactsStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ContactsStatus status) {
         this.status = status;
     }
 }

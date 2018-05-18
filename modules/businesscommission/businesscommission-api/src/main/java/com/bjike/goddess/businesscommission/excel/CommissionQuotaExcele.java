@@ -26,61 +26,61 @@ public class CommissionQuotaExcele extends BaseTO {
     /**
      * 实际业务提成总额
      */
-    @ExcelHeader(name = "实际业务提成总额", notNull = false)
+    @ExcelHeader(name = "实际业务提成总额", notNull = true)
     private Double actualAmount;
 
     /**
      * 信息提供人
      */
-    @ExcelHeader(name = "公司名称", notNull = false)
+    @ExcelHeader(name = "公司名称", notNull = true)
     private String informationProvide;
 
     /**
      * 信息提供占额
      */
-    @ExcelHeader(name = "信息提供占额", notNull = false)
+    @ExcelHeader(name = "信息提供占额", notNull = true)
     private Double provideAccount;
 
     /**
      * 业务揽接人
      */
-    @ExcelHeader(name = "业务揽接人", notNull = false)
+    @ExcelHeader(name = "业务揽接人", notNull = true)
     private String businessContracting;
 
     /**
      * 业务揽接占额
      */
-    @ExcelHeader(name = "业务揽接占额", notNull = false)
+    @ExcelHeader(name = "业务揽接占额", notNull = true)
     private Double contractAccount;
 
     /**
      * 业务洽谈人
      */
-    @ExcelHeader(name = "业务洽谈人", notNull = false)
+    @ExcelHeader(name = "业务洽谈人", notNull = true)
     private String businessNegotiation;
 
     /**
      * 业务洽谈占额
      */
-    @ExcelHeader(name = "业务洽谈占额", notNull = false)
+    @ExcelHeader(name = "业务洽谈占额", notNull = true)
     private Double negotiationAccount;
 
     /**
      * 维护人
      */
-    @ExcelHeader(name = "维护人", notNull = false)
+    @ExcelHeader(name = "维护人", notNull = true)
     private String maintenance;
 
     /**
      * 维护占额
      */
-    @ExcelHeader(name = "维护占额", notNull = false)
+    @ExcelHeader(name = "维护占额", notNull = true)
     private Double maintenanceAccount;
 
     /**
      * 剩余占额
      */
-    @ExcelHeader(name = "剩余占额", notNull = false)
+    @ExcelHeader(name = "剩余占额", notNull = true)
     private Double remainingAccount;
 
     /**

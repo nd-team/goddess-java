@@ -1,6 +1,6 @@
 package com.bjike.goddess.interiorrecommend.vo;
 
-import com.bjike.goddess.interiorrecommend.to.RecommendContentTO;
+import com.bjike.goddess.interiorrecommend.to.OldRecommendContentTO;
 
 import java.util.List;
 
@@ -19,6 +19,22 @@ public class RecommendInfoVO {
      * id
      */
     private String id;
+
+    /**
+     * 推荐时间
+     */
+    private String createTime;
+
+    /**
+     * 推荐目的
+     */
+    private String purpose;
+
+    /**
+     * 推荐类型
+     */
+    private String typeName;
+
     /**
      * 推荐要求设定id
      */
@@ -37,7 +53,7 @@ public class RecommendInfoVO {
     /**
      * 推荐内容
      */
-    private List<RecommendContentTO> contentList;
+    private List<OldRecommendContentTO> contentList;
 
 
     /**
@@ -65,12 +81,70 @@ public class RecommendInfoVO {
      */
     private String closeTime;
 
+    /**
+     * 奖励类型
+     */
+    private String awardType;
+
+    /**
+     * 奖励内容
+     */
+    private String awardContent;
+
+    /**
+     * 奖励数量
+     */
+    private Integer awardAmount;
+
+    /**
+     * 奖励发放方式
+     */
+    private String awardSendWay;
+
+    /**
+     * 奖励时间
+     */
+    private String awardTime;
+
+    /**
+     * 是否获得奖励
+     */
+    private Boolean getAward;
+
+    /**
+     * 奖励细信息id
+     */
+    private String awardInfoId;
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getRequireId() {
@@ -97,11 +171,11 @@ public class RecommendInfoVO {
         this.remark = remark;
     }
 
-    public List<RecommendContentTO> getContentList() {
+    public List<OldRecommendContentTO> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<RecommendContentTO> contentList) {
+    public void setContentList(List<OldRecommendContentTO> contentList) {
         this.contentList = contentList;
     }
 
@@ -143,5 +217,61 @@ public class RecommendInfoVO {
 
     public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
+    }
+
+    public String getAwardType() {
+        return awardType;
+    }
+
+    public void setAwardType(String awardType) {
+        this.awardType = awardType;
+    }
+
+    public String getAwardContent() {
+        return awardContent;
+    }
+
+    public void setAwardContent(String awardContent) {
+        this.awardContent = awardContent;
+    }
+
+    public Integer getAwardAmount() {
+        return awardAmount;
+    }
+
+    public void setAwardAmount(Integer awardAmount) {
+        this.awardAmount = awardAmount;
+    }
+
+    public String getAwardSendWay() {
+        return awardSendWay;
+    }
+
+    public void setAwardSendWay(String awardSendWay) {
+        this.awardSendWay = awardSendWay;
+    }
+
+    public String getAwardTime() {
+        return awardTime;
+    }
+
+    public void setAwardTime(String awardTime) {
+        this.awardTime = awardTime;
+    }
+
+    public Boolean getGetAward() {
+        return getAward;
+    }
+
+    public void setGetAward(Boolean getAward) {
+        this.getAward = getAward;
+    }
+
+    public String getAwardInfoId() {
+        return awardInfoId;
+    }
+
+    public void setAwardInfoId(String awardInfoId) {
+        this.awardInfoId = awardInfoId;
     }
 }

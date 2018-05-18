@@ -15,6 +15,7 @@ import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CollectionTotalVO;
 import com.bjike.goddess.competitormanage.vo.CompetitorCollectVO;
+import com.bjike.goddess.competitormanage.vo.CompetitorCollectsVO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.user.bo.UserBO;
@@ -193,13 +194,13 @@ public class CompetitorCollectAct {
      * 列表
      *
      * @param dto 分页条件
-     * @return class CompetitorCollectVO
+     * @return class CompetitorCollectsVO
      * @version v1
      */
     @GetMapping("v1/list")
     public Result pageList(CompetitorCollectDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<CompetitorCollectVO> voList = BeanTransform.copyProperties(competitorCollectAPI.pageList(dto), CompetitorCollectVO.class, request);
+            List<CompetitorCollectsVO> voList = BeanTransform.copyProperties(competitorCollectAPI.pageList(dto), CompetitorCollectsVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

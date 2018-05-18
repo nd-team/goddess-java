@@ -106,6 +106,11 @@ public class CommerceContactsBO extends BaseBO {
      */
     private String workRight;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
 
     public String getCustomerNum() {
         return customerNum;
@@ -249,5 +254,13 @@ public class CommerceContactsBO extends BaseBO {
 
     public void setWorkRight(String workRight) {
         this.workRight = workRight;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

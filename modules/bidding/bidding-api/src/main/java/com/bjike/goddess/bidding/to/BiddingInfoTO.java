@@ -8,6 +8,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 
 /**
  * 招标信息
@@ -23,7 +25,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 编号
      */
-    @NotBlank(message = "编号不能为空",groups = {ADD.class})
+    @NotBlank(message = "编号不能为空",groups = {EDIT.class})
     private String biddingNumber;
     /**
      * 网站名称
@@ -36,26 +38,44 @@ public class BiddingInfoTO extends BaseTO {
      */
     @NotBlank(message = "网址不能为空",groups = {ADD.class, EDIT.class})
     private String url;
-
+    /**
+     * 年份
+     */
+    @NotNull(message = "年份不能为空",groups = {ADD.class, EDIT.class})
+    private Integer year;
+    /**
+     * 月份
+     */
+    @NotNull(message = "月份不能为空",groups = {ADD.class, EDIT.class})
+    private Integer month;
     /**
      * 招投标类型
      */
-    private BiddingType biddingType;
+    @NotBlank(message = "招投标类型不能为空",groups = {ADD.class, EDIT.class})
+    private String biddingType;
 
     /**
      * 业务类型
      */
-    private BusinessType businessType;
+    @NotBlank(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
+    private String businessType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String businessDirectionSubject;
-
     /**
      * 标书模块
      */
+    @NotBlank(message = "标书模块不能为空",groups = {ADD.class, EDIT.class})
     private String tenderModule;
+
+    /**
+     * 标书类型
+     */
+    @NotNull(message = "标书类型不能为空",groups = {ADD.class, EDIT.class})
+    private String[] tenderType;
 
     /**
      * 项目名称
@@ -64,18 +84,25 @@ public class BiddingInfoTO extends BaseTO {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    private String registrationTime;
-
+    @NotBlank(message = "报名开始时间不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    @NotBlank(message = "报名结束时间不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationEndTime;
     /**
      * 投标时间
      */
+    @NotBlank(message = "投标时间不能为空",groups = {ADD.class, EDIT.class})
     private String biddingTime;
 
     /**
      * 投标资格要求
      */
+    @NotBlank(message = "投标资格要求不能为空",groups = {ADD.class, EDIT.class})
     private String biddingQualifications;
 
     /**
@@ -93,6 +120,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 账号
      */
+
     private String account;
 
     /**
@@ -113,43 +141,98 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 状态
      */
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
      */
+    @NotBlank(message = "购买标书时间不能为空",groups = {ADD.class, EDIT.class})
     private String buyTenderTime;
 
     /**
-     * 价格
+     * 标书价格
      */
+    @NotNull(message = "价格不能为空",groups = {ADD.class, EDIT.class})
     private Double price;
 
     /**
      * 购买标书要求
      */
+    @NotBlank(message = "购买标书要求不能为空",groups = {ADD.class, EDIT.class})
     private String buyTenderRequirements;
 
     /**
      * 交保证金时间
      */
+    @NotBlank(message = "交保证金时间不能为空",groups = {ADD.class, EDIT.class})
     private String marginTime;
+    /**
+     * 保证金金额
+     */
+    private Double marginPrice;
+    /**
+     * 退回保证金金额
+     */
+    private Double returnMarginPrice;
+
 
     /**
      * 交保证金方式
      */
+    @NotBlank(message = "交保证金方式不能为空",groups = {ADD.class, EDIT.class})
     private String marginMethod;
 
     /**
      * 保证金退回时间
      */
+    @NotBlank(message = "保证金退回时间不能为空",groups = {ADD.class, EDIT.class})
     private String backTimeDeposit;
+    /**
+     * 竞争对手数量
+     */
+    private Integer contendNum;
+    /**
+     * 是否进行项目测算
+     */
+    private Boolean projectEstimates;
+    /**
+     * 项目测算是否通过
+     */
+    @NotNull(message = "项目测算是否通过不能为空",groups = {ADD.class, EDIT.class})
+    private Boolean passProjectEstimates;
+    /**
+     * 规模数量
+     */
+    private Integer scale;
+    /**
+     * 是否转为商机
+     */
+    private Boolean opportunity;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
     /**
      * 备注
      */
     private String remark;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getWebName() {
         return webName;
@@ -167,19 +250,19 @@ public class BiddingInfoTO extends BaseTO {
         this.url = url;
     }
 
-    public BiddingType getBiddingType() {
+    public String getBiddingType() {
         return biddingType;
     }
 
-    public void setBiddingType(BiddingType biddingType) {
+    public void setBiddingType(String biddingType) {
         this.biddingType = biddingType;
     }
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(BusinessType businessType) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
 
@@ -199,6 +282,14 @@ public class BiddingInfoTO extends BaseTO {
         this.tenderModule = tenderModule;
     }
 
+    public String[] getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String[] tenderType) {
+        this.tenderType = tenderType;
+    }
+
     public String getBiddingNumber() {
         return biddingNumber;
     }
@@ -215,12 +306,20 @@ public class BiddingInfoTO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public String getRegistrationTime() {
-        return registrationTime;
+    public String getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(String registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
+    }
+
+    public String getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(String registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
     }
 
     public String getBiddingTime() {
@@ -287,11 +386,11 @@ public class BiddingInfoTO extends BaseTO {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -349,5 +448,69 @@ public class BiddingInfoTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Double getMarginPrice() {
+        return marginPrice;
+    }
+
+    public void setMarginPrice(Double marginPrice) {
+        this.marginPrice = marginPrice;
+    }
+
+    public Double getReturnMarginPrice() {
+        return returnMarginPrice;
+    }
+
+    public void setReturnMarginPrice(Double returnMarginPrice) {
+        this.returnMarginPrice = returnMarginPrice;
+    }
+
+    public Integer getContendNum() {
+        return contendNum;
+    }
+
+    public void setContendNum(Integer contendNum) {
+        this.contendNum = contendNum;
+    }
+
+    public Boolean getProjectEstimates() {
+        return projectEstimates;
+    }
+
+    public void setProjectEstimates(Boolean projectEstimates) {
+        this.projectEstimates = projectEstimates;
+    }
+
+    public Boolean getPassProjectEstimates() {
+        return passProjectEstimates;
+    }
+
+    public void setPassProjectEstimates(Boolean passProjectEstimates) {
+        this.passProjectEstimates = passProjectEstimates;
+    }
+
+    public Integer getScale() {
+        return scale;
+    }
+
+    public void setScale(Integer scale) {
+        this.scale = scale;
+    }
+
+    public Boolean getOpportunity() {
+        return opportunity;
+    }
+
+    public void setOpportunity(Boolean opportunity) {
+        this.opportunity = opportunity;
     }
 }

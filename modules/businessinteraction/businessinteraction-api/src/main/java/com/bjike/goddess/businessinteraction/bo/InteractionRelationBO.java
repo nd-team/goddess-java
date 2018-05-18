@@ -2,18 +2,21 @@ package com.bjike.goddess.businessinteraction.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
- * 商业能力互动联系业务传输对象
+ * 公司信息业务传输对象
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:06 ]
- * @Description: [ 商业能力互动联系业务传输对象 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 08:58 ]
+ * @Description: [ 公司信息业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class InteractionRelationBO extends BaseBO {
+
+    /**
+     * 互动信息更新时间
+     */
+    private String interactiveInfoDate;
 
     /**
      * 地区
@@ -41,9 +44,19 @@ public class InteractionRelationBO extends BaseBO {
     private String companyMajorPage;
 
     /**
+     * 公司业务方向
+     */
+    private String companyBussWay;
+
+    /**
      * 公司微信号
      */
     private String companyWebchat;
+
+    /**
+     * 公司公众号
+     */
+    private String companyPublic;
 
     /**
      * 公司QQ号
@@ -55,30 +68,14 @@ public class InteractionRelationBO extends BaseBO {
      */
     private String companyTalk;
 
-    /**
-     * 联系人
-     */
-    private String contact;
 
-    /**
-     * 联系电话
-     */
-    private String contactTel;
+    public String getInteractiveInfoDate() {
+        return interactiveInfoDate;
+    }
 
-    /**
-     * 移动电话
-     */
-    private String phone;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
+    public void setInteractiveInfoDate(String interactiveInfoDate) {
+        this.interactiveInfoDate = interactiveInfoDate;
+    }
 
     public String getArea() {
         return area;
@@ -120,12 +117,28 @@ public class InteractionRelationBO extends BaseBO {
         this.companyMajorPage = companyMajorPage;
     }
 
+    public String getCompanyBussWay() {
+        return companyBussWay;
+    }
+
+    public void setCompanyBussWay(String companyBussWay) {
+        this.companyBussWay = companyBussWay;
+    }
+
     public String getCompanyWebchat() {
         return companyWebchat;
     }
 
     public void setCompanyWebchat(String companyWebchat) {
         this.companyWebchat = companyWebchat;
+    }
+
+    public String getCompanyPublic() {
+        return companyPublic;
+    }
+
+    public void setCompanyPublic(String companyPublic) {
+        this.companyPublic = companyPublic;
     }
 
     public String getCompanyQQ() {
@@ -142,45 +155,5 @@ public class InteractionRelationBO extends BaseBO {
 
     public void setCompanyTalk(String companyTalk) {
         this.companyTalk = companyTalk;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContactTel() {
-        return contactTel;
-    }
-
-    public void setContactTel(String contactTel) {
-        this.contactTel = contactTel;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

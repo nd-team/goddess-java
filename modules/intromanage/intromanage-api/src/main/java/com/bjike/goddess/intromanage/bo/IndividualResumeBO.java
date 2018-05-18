@@ -1,6 +1,10 @@
 package com.bjike.goddess.intromanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.organize.enums.StaffStatus;
+
+import java.util.List;
 
 /**
  * 个人简介业务传输对象
@@ -27,6 +31,10 @@ public class IndividualResumeBO extends BaseBO {
      * 姓名
      */
     private String name;
+    /**
+     * 最新获取/更新时间
+     */
+    private String updateDate;
 
     /**
      * 员工编号
@@ -197,6 +205,46 @@ public class IndividualResumeBO extends BaseBO {
      * 工作年限
      */
     private String workExperience;
+    /**
+     * 员工状态
+     */
+    private String staffStatus;
+    /**
+     * 状态
+     */
+    private Status status;
+
+    /**
+     * 员工奖励
+     */
+    private List<StaffRewardBO> staffRewardBOS;
+
+
+    /**
+     *
+     * 员工荣誉
+     */
+    private List<StaffHonorBO> staffHonorBOS;
+
+
+    /**
+     *
+     * 教育经历
+     */
+    private List<EducateExperienceBO> educateExperienceBOS;
+
+
+    /**
+     *
+     * 工作经历
+     */
+    private List<WorkExperienceBO> workExperienceBOS;
+
+    /**
+     *
+     * 证书情况
+     */
+    private List<CredentialSituationBO> credentialSituationBOS;
 
 
     public String getArea() {
@@ -493,5 +541,77 @@ public class IndividualResumeBO extends BaseBO {
 
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
+    }
+
+    public String geteMsil() {
+        return eMsil;
+    }
+
+    public void seteMsil(String eMsil) {
+        this.eMsil = eMsil;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(String staffStatus) {
+        this.staffStatus = staffStatus;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<StaffRewardBO> getStaffRewardBOS() {
+        return staffRewardBOS;
+    }
+
+    public void setStaffRewardBOS(List<StaffRewardBO> staffRewardBOS) {
+        this.staffRewardBOS = staffRewardBOS;
+    }
+
+    public List<StaffHonorBO> getStaffHonorBOS() {
+        return staffHonorBOS;
+    }
+
+    public void setStaffHonorBOS(List<StaffHonorBO> staffHonorBOS) {
+        this.staffHonorBOS = staffHonorBOS;
+    }
+
+    public List<EducateExperienceBO> getEducateExperienceBOS() {
+        return educateExperienceBOS;
+    }
+
+    public void setEducateExperienceBOS(List<EducateExperienceBO> educateExperienceBOS) {
+        this.educateExperienceBOS = educateExperienceBOS;
+    }
+
+    public List<WorkExperienceBO> getWorkExperienceBOS() {
+        return workExperienceBOS;
+    }
+
+    public void setWorkExperienceBOS(List<WorkExperienceBO> workExperienceBOS) {
+        this.workExperienceBOS = workExperienceBOS;
+    }
+
+    public List<CredentialSituationBO> getCredentialSituationBOS() {
+        return credentialSituationBOS;
+    }
+
+    public void setCredentialSituationBOS(List<CredentialSituationBO> credentialSituationBOS) {
+        this.credentialSituationBOS = credentialSituationBOS;
     }
 }

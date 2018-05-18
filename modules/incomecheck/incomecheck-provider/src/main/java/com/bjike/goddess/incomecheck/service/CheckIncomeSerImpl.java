@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -238,14 +240,14 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         checkIncome.setActualIncome(checkIncomeTO.getActualIncome() == null ? 0d : checkIncomeTO.getActualIncome());
         if (checkIncome.getPlanIncome().doubleValue() != 0) {
             checkIncome.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
-        }else {
+        } else {
             throw new SerException("计划收入为0，不能计算");
         }
         checkIncome.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         checkIncome.setActualTask(checkIncomeTO.getActualTask() == null ? 0d : checkIncomeTO.getActualTask());
         if (checkIncome.getTargetTask().doubleValue() != 0) {
             checkIncome.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
-        }else {
+        } else {
             throw new SerException("目标任务量为0，不能计算");
         }
         checkIncome.setCreateTime(LocalDateTime.now());
@@ -268,14 +270,14 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         temp.setActualIncome(checkIncome.getActualIncome() == null ? 0d : checkIncome.getActualIncome());
         if (temp.getPlanIncome().doubleValue() != 0) {
             temp.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
-        }else {
+        } else {
             throw new SerException("计划收入为0，不能计算");
         }
         temp.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         temp.setActualTask(checkIncome.getActualTask() == null ? 0d : checkIncome.getActualTask());
         if (checkIncome.getTargetTask().doubleValue() != 0) {
             temp.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
-        }else {
+        } else {
             throw new SerException("目标任务量为0，不能计算");
         }
 
@@ -322,7 +324,11 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by area  order by area desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if (StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
+                    str.setTime(" -- ");
+                } else {
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
@@ -369,7 +375,11 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by projectGroup  order by projectGroup desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if (StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
+                    str.setTime(" -- ");
+                } else {
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
@@ -416,11 +426,15 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by projectName  order by projectName desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if (StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
+                    str.setTime(" -- ");
+                } else {
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"projectName", "time", "area", "projectName", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
+            field = new String[]{"projectName", "time", "area", "projectGroup", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
             sql = "select projectName , time , area ,projectGroup ,planIncome ,actualIncome ," +
                     "  (actualIncome/planIncome) as rate , (actualIncome-planIncome) as balance " +
                     " ,  targetTask , actualTask , (actualTask-targetTask) as completeRate from incomecheck_checkincome where 1=1 ";
@@ -462,9 +476,17 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
                 bo.setWarnRate("提醒");
             }
             if (checkIndex.getCompleteRate() < bo.getCompleteRate()) {
-                bo.setWarnRate("提醒");
+                bo.setWarnComRate("提醒");
             }
             collectList.add(bo);
+        }else{
+            CheckIncomeBO bo = new CheckIncomeBO();
+            bo.setArea( conditionValue);
+            bo.setProjectGroup( conditionValue);
+            bo.setProjectName( conditionValue);
+            bo.setTime(start.getYear() + "-" + start.getMonthValue());
+
+            collectList.add( bo );
         }
 
     }
@@ -492,11 +514,14 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         CheckIndex checkIndex = checkIndexSer.findOne(checkIndexDTO);
 
         //获取选取的时间段内所有的年月
+        if(start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()){
+            caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
+        }
         int flag = 0;
-        while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
+        while ( start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue() ) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("area", area, start, end, checkIndex, collectList);
+                caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -504,27 +529,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("area", area, start, end, checkIndex, collectList);
+                caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("area", area, start, end, checkIndex, collectList);
+                    caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("area", area, start, end, checkIndex, collectList);
+                    caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("area", area, start, end, checkIndex, collectList);
+                    caculateRate("area", area, start.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth()), start.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("area", area, start, end, checkIndex, collectList);
+                    caculateRate("area", area, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 }
             }
@@ -534,11 +559,12 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         return collectList;
     }
 
+
     @Override
     public List<CheckIncomeBO> groupDiff(CheckIncomeDTO checkIncomeDTO) throws SerException {
         checkSeeIdentity();
         List<CheckIncomeBO> collectList = new ArrayList<>();
-        if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
+        if (StringUtils.isBlank(checkIncomeDTO.getProjectGroup())) {
             throw new SerException("项目组不能为空");
         }
         if (StringUtils.isBlank(checkIncomeDTO.getStartTime()) && StringUtils.isBlank(checkIncomeDTO.getEndTime())) {
@@ -557,11 +583,14 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         CheckIndex checkIndex = checkIndexSer.findOne(checkIndexDTO);
 
         //获取选取的时间段内所有的年月
+        if(start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()){
+            caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
+        }
         int flag = 0;
         while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -569,27 +598,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                    caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                    caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                    caculateRate("projectGroup", group, start.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth()), start.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
+                    caculateRate("projectGroup", group, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 }
             }
@@ -603,7 +632,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     public List<CheckIncomeBO> projectDiff(CheckIncomeDTO checkIncomeDTO) throws SerException {
         checkSeeIdentity();
         List<CheckIncomeBO> collectList = new ArrayList<>();
-        if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
+        if (StringUtils.isBlank(checkIncomeDTO.getProjectName())) {
             throw new SerException("项目名称不能为空");
         }
         if (StringUtils.isBlank(checkIncomeDTO.getStartTime()) && StringUtils.isBlank(checkIncomeDTO.getEndTime())) {
@@ -622,11 +651,14 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         CheckIndex checkIndex = checkIndexSer.findOne(checkIndexDTO);
 
         //获取选取的时间段内所有的年月
+        if(start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()){
+            caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
+        }
         int flag = 0;
         while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -634,27 +666,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                    caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                    caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                    caculateRate("projectName", pName, start.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth()), start.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
+                    caculateRate("projectName", pName, start.with(TemporalAdjusters.firstDayOfMonth()), start.with(TemporalAdjusters.lastDayOfMonth()), checkIndex, collectList);
                     flag = 3;
                 }
             }

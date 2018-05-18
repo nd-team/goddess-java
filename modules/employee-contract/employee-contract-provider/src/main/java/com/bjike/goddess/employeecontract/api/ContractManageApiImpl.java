@@ -6,14 +6,16 @@ import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
 import com.bjike.goddess.employeecontract.bo.ContractManageBO;
 import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
+import com.bjike.goddess.employeecontract.excel.SonPermissionObject;
 import com.bjike.goddess.employeecontract.service.ContractManageSer;
-import com.bjike.goddess.employeecontract.to.ContractChangeTO;
-import com.bjike.goddess.employeecontract.to.ContractInfoTO;
-import com.bjike.goddess.employeecontract.to.ContractManageTO;
-import com.bjike.goddess.employeecontract.to.ContractPersonalTO;
+import com.bjike.goddess.employeecontract.to.*;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +32,18 @@ public class ContractManageApiImpl implements ContractManageAPI {
 
     @Autowired
     private ContractManageSer contractManageSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return contractManageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractManageSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ContractManageBO save(ContractManageTO to) throws SerException {
@@ -94,5 +108,17 @@ public class ContractManageApiImpl implements ContractManageAPI {
     @Override
     public ContractChangeBO saveChange(ContractChangeTO to) throws SerException {
         return contractManageSer.saveChange(to);
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(userBOList)) {
+            for (UserBO userBO : userBOList) {
+                list.add(userBO.getUsername());
+            }
+        }
+        return list;
     }
 }

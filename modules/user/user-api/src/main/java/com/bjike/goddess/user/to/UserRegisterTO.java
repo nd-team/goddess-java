@@ -28,6 +28,8 @@ public class UserRegisterTO extends BaseTO {
     @NotBlank(message = "重复密码不能为空")
     private String rePassword;
 
+    private String phone;
+
     /**
      * 验证码
      */
@@ -63,5 +65,13 @@ public class UserRegisterTO extends BaseTO {
 
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

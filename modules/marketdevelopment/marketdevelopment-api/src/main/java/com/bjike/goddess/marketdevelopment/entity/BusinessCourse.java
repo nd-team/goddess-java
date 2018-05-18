@@ -1,17 +1,19 @@
 package com.bjike.goddess.marketdevelopment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.marketdevelopment.enums.Status;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
- * 业务方向科目
+ * 业务方向
  *
- * @Author: [ dengjunren ]
+ * @Author: [ zhuangkaiqin ]
  * @Date: [ 2017-03-22 07:21 ]
- * @Description: [ 业务方向科目 ]
+ * @Description: [ 业务方向 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -20,11 +22,22 @@ import javax.persistence.*;
 public class BusinessCourse extends BaseEntity {
 
     /**
-     * 业务类型
+     * 业务方向编号
      */
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '业务类型'")
-    private BusinessType type;
+    @Column(name = "businessNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务方向编号'")
+    private String businessNum;
+
+    /**
+     * 业务方向分类
+     */
+    @Column(name = "businessType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务方向分类'")
+    private String businessType;
+
+    /**
+     * 科目编号
+     */
+    @Column(name = "subjectNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '科目编号'")
+    private String subjectNum;
 
     /**
      * 业务方向科目
@@ -33,24 +46,45 @@ public class BusinessCourse extends BaseEntity {
     private String course;
 
     /**
-     * 描述
+     * 所属类别
      */
-    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '描述'")
-    private String description;
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属类别'")
+    private String type;
+
+    /**
+     * 可以做的具体业务
+     */
+    @Column(name = "business", nullable = true, columnDefinition = "TEXT  COMMENT '可以做的具体业务'")
+    private String business;
 
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态' ", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态' ", nullable = false)
     private Status status;
 
-
-    public BusinessType getType() {
-        return type;
+    public String getBusinessNum() {
+        return businessNum;
     }
 
-    public void setType(BusinessType type) {
-        this.type = type;
+    public void setBusinessNum(String businessNum) {
+        this.businessNum = businessNum;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getSubjectNum() {
+        return subjectNum;
+    }
+
+    public void setSubjectNum(String subjectNum) {
+        this.subjectNum = subjectNum;
     }
 
     public String getCourse() {
@@ -61,12 +95,20 @@ public class BusinessCourse extends BaseEntity {
         this.course = course;
     }
 
-    public String getDescription() {
-        return description;
+    public String getType() {
+        return type;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public Status getStatus() {

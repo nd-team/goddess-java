@@ -16,6 +16,14 @@ public class ExternalContactsVO {
      */
     private String id;
     /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 录入人
+     */
+    private String input;
+    /**
      * 地区
      */
     private String area;
@@ -90,6 +98,21 @@ public class ExternalContactsVO {
      */
     private String remark;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
 
     public String getId() {
         return id;

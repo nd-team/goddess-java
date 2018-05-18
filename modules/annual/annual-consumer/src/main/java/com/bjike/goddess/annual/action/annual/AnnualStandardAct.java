@@ -2,28 +2,34 @@ package com.bjike.goddess.annual.action.annual;
 
 import com.bjike.goddess.annual.api.AnnualStandardAPI;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
+import com.bjike.goddess.annual.excel.SonPermissionObject;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.annual.vo.AnnualStandardVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 年假标准
+ * 年假标准管理
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-03-27 04:26 ]
- * @Description: [ 年假标准 ]
+ * @Description: [ 年假标准管理 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -34,8 +40,81 @@ public class AnnualStandardAct {
     @Autowired
     private AnnualStandardAPI annualStandardAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
     /**
-     * 保存年假标准实体数据
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = annualStandardAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = annualStandardAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 增加范围
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -51,7 +130,7 @@ public class AnnualStandardAct {
     }
 
     /**
-     * 修改年假标准实体数据
+     * 编辑范围
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -67,7 +146,7 @@ public class AnnualStandardAct {
     }
 
     /**
-     * 删除年假表尊实体数据
+     * 删除年假标准实体数据
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -147,7 +226,7 @@ public class AnnualStandardAct {
 
 
     /**
-     * 查询列表
+     * 年假标准列表
      *
      * @param dto 年假标准数据传输对象
      * @return class AnnualStandardVO

@@ -3,6 +3,7 @@ package com.bjike.goddess.competitormanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
+import com.bjike.goddess.competitormanage.bo.OrganizationBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.service.CompetitorSer;
@@ -101,4 +102,19 @@ public class CompetitorApiImpl implements CompetitorAPI {
     public List<CompetitorBO> areas() throws SerException {
         return competitorSer.areas();
     }
+
+    @Override
+    public OrganizationBO organizeList(String id) throws SerException {
+        return competitorSer.organizeList(id);
+    }
+
+    @Override
+    public List<String> findCompeName() throws SerException {
+        return competitorSer.findCompeName();
+    }
+
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        return competitorSer.findProject();
+//    }
 }

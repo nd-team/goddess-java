@@ -6,7 +6,9 @@ import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.RentPay;
+import com.bjike.goddess.rentutilitiespay.excel.SonPermissionObject;
 import com.bjike.goddess.rentutilitiespay.service.RentPaySer;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
 import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,15 @@ import java.util.List;
 public class RentPayApiImpl implements RentPayAPI {
     @Autowired
     private RentPaySer rentPaySer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return rentPaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rentPaySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countRentPay(RentPayDTO rentPayDTO) throws SerException {
         return rentPaySer.countRentPay(rentPayDTO);
@@ -59,16 +70,16 @@ public class RentPayApiImpl implements RentPayAPI {
         rentPaySer.removeRentPay(id);
     }
     @Override
-    public void uploadAttachments() throws SerException {
-        rentPaySer.uploadAttachments();
-    }
-    @Override
     public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
         return rentPaySer.collectArea(areas);
     }
     @Override
     public List<String> getArea() throws SerException {
         return  rentPaySer.getArea();
+    }
+    @Override
+    public RentPayBO financeAudit(RentPayTO rentPayTO) throws SerException {
+        return rentPaySer.financeAudit(rentPayTO);
     }
 
 }

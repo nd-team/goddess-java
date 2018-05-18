@@ -47,8 +47,10 @@ public class AccountInfoManagementAction extends BaseFileAction {
     private AccountInfoManagementAPI accountInfoManagementAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -58,11 +60,11 @@ public class AccountInfoManagementAction extends BaseFileAction {
         try {
 
             Boolean isHasPermission = accountInfoManagementAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -72,14 +74,14 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 外账资料管理列表总条数
      *
-     * @param accountInfoManagementDTO 外账资料管理dto
+     * @param dto 外账资料管理dto
      * @des 获取所有外账资料管理总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(AccountInfoManagementDTO accountInfoManagementDTO) throws ActException {
+    public Result count(AccountInfoManagementDTO dto) throws ActException {
         try {
-            Long count = accountInfoManagementAPI.countAccountInfoManagement(accountInfoManagementDTO);
+            Long count = accountInfoManagementAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -107,17 +109,16 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 外账资料管理列表
      *
-     * @param accountInfoManagementDTO 外账资料管理dto
+     * @param dto 外账资料管理dto
      * @return class AccountInfoManagementVO
      * @des 获取所有外账资料管理
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(AccountInfoManagementDTO accountInfoManagementDTO, HttpServletRequest request) throws ActException {
+    public Result list(AccountInfoManagementDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<AccountInfoManagementVO> accountInfoManagementVOS = BeanTransform.copyProperties
-                    (accountInfoManagementAPI.findListAccountInfoManagement(accountInfoManagementDTO), AccountInfoManagementVO.class, request);
-            return ActResult.initialize(accountInfoManagementVOS);
+            List<AccountInfoManagementBO> accountInfoManagementBOS =accountInfoManagementAPI.list(dto);
+            return ActResult.initialize( BeanTransform.copyProperties (accountInfoManagementBOS,AccountInfoManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -126,17 +127,17 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 添加外账资料管理
      *
-     * @param accountInfoManagementTO 外账资料管理数据to
+     * @param to 外账资料管理数据to
      * @return class AccountInfoManagementVO
      * @des 添加外账资料管理
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) AccountInfoManagementTO accountInfoManagementTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) AccountInfoManagementTO to, BindingResult bindingResult) throws ActException {
         try {
-            AccountInfoManagementBO accountInfoManagementBO = accountInfoManagementAPI.insertAccountInfoManagement(accountInfoManagementTO);
-            return ActResult.initialize(accountInfoManagementBO);
+            AccountInfoManagementBO bo = accountInfoManagementAPI.insert(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, AccountInfoManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -145,17 +146,17 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 编辑外账资料管理
      *
-     * @param accountInfoManagementTO 外账资料管理数据to
+     * @param to 外账资料管理数据to
      * @return class AccountInfoManagementVO
      * @des 编辑外账资料管理
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) AccountInfoManagementTO accountInfoManagementTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) AccountInfoManagementTO to, BindingResult bindingResult) throws ActException {
         try {
-            AccountInfoManagementBO accountInfoManagementBO = accountInfoManagementAPI.editAccountInfoManagement(accountInfoManagementTO);
-            return ActResult.initialize(accountInfoManagementBO);
+            AccountInfoManagementBO bo = accountInfoManagementAPI.edit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, AccountInfoManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -172,7 +173,7 @@ public class AccountInfoManagementAction extends BaseFileAction {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            accountInfoManagementAPI.removeAccountInfoManagement(id);
+            accountInfoManagementAPI.remove(id);
             return new ActResult("delete success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

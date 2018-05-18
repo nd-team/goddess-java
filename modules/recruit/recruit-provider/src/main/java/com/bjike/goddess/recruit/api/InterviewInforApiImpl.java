@@ -1,12 +1,16 @@
 package com.bjike.goddess.recruit.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.service.InterviewInforSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +28,8 @@ import java.util.List;
 @Service("interviewInforApiImpl")
 public class InterviewInforApiImpl implements InterviewInforAPI {
 
-     @Autowired
-     private InterviewInforSer interviewInforSer;
+    @Autowired
+    private InterviewInforSer interviewInforSer;
 
     /**
      * 根据id查询面试信息
@@ -48,6 +52,24 @@ public class InterviewInforApiImpl implements InterviewInforAPI {
      */
     @Override
     public Long count(InterviewInforDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getName())){
+            dto.getConditions().add(Restrict.like("name",dto.getName()));
+        }
+        if(StringUtils.isNotBlank(dto.getPosition())){
+            dto.getConditions().add(Restrict.like("position",dto.getPosition()));
+        }
+        if(StringUtils.isNotBlank(dto.getFirstTestPrincipal())){
+            dto.getConditions().add(Restrict.like("firstTestPrincipal",dto.getFirstTestPrincipal()));
+        }
+        if(StringUtils.isNotBlank(dto.getSecondTestPrincipal())){
+            dto.getConditions().add(Restrict.like("secondTestPrincipal",dto.getSecondTestPrincipal()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartDate()) && StringUtils.isNotBlank(dto.getEndDate())){
+            dto.getConditions().add(Restrict.between("date",new String[]{dto.getStartDate(),dto.getEndDate()}));
+        }
+        if(null != dto.getWhetherEntry()){
+            dto.getConditions().add(Restrict.eq("whetherEntry",dto.getWhetherEntry()));
+        }
         return interviewInforSer.count(dto);
     }
 
@@ -97,16 +119,64 @@ public class InterviewInforApiImpl implements InterviewInforAPI {
         interviewInforSer.update(interviewInforTO);
     }
 
-    /**
-     * 总经办审核是否录取
-     *
-     * @param id 面试信息唯一标识
-     * @param whetherPassBoss 总经办审核是否录取
-     * @param bossAdvice 总经办审批意见
-     * @throws SerException
-     */
     @Override
-    public void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException {
-        interviewInforSer.zjbAudit(id, whetherPassBoss, bossAdvice);
+    public void firstIdea(IdeaTO to) throws SerException {
+        interviewInforSer.firstIdea(to);
     }
+
+    @Override
+    public void reexamineIdea(IdeaTO to) throws SerException {
+        interviewInforSer.reexamineIdea(to);
+    }
+
+    @Override
+    public void wagesIdea(IdeaTO to) throws SerException {
+        interviewInforSer.wagesIdea(to);
+    }
+
+    @Override
+    public void zjbAudit(IdeaTO to) throws SerException {
+        interviewInforSer.zjbAudit(to);
+    }
+
+    @Override
+    public void staffEntryInfo(IdeaTO to) throws SerException {
+        interviewInforSer.staffEntryInfo(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return interviewInforSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return interviewInforSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<InterviewInforBO> findInterview() throws SerException {
+        return interviewInforSer.findInterview();
+    }
+
+    @Override
+    public InterviewInforBO findByName(String name) throws SerException {
+        return interviewInforSer.findByName(name);
+    }
+
+    @Override
+    public InterviewInforBO importExcel(List<InterviewInforTO> interviewInforTOS) throws SerException {
+        return interviewInforSer.importExcel(interviewInforTOS);
+    }
+
+    @Override
+    public byte[] exportExcel(InterviewInforDTO dto) throws SerException {
+        return interviewInforSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return interviewInforSer.templateExport();
+    }
+
 }

@@ -28,6 +28,6 @@ public class UserLoginLogApiImpl implements UserLoginLogAPI {
 
     @Override
     public List<UserLoginLogBO> findByUserId(String userId) throws SerException {
-        return null;
+        return loginLogSer.findByUserId(userId);
     }
 }

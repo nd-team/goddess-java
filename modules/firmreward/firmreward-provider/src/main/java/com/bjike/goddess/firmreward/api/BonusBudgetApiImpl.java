@@ -6,9 +6,12 @@ import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.service.BonusBudgetSer;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,23 +105,23 @@ public class BonusBudgetApiImpl implements BonusBudgetAPI {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
     @Override
-    public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
-        bonusBudgetSer.addRewardProgramRatios(to);
+    public void addRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException {
+        bonusBudgetSer.addRewardProgramRatios(rewardProgramTO);
     }
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
     @Override
-    public void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
-        bonusBudgetSer.updateRewardProgramRatios(to);
+    public void updateRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException {
+        bonusBudgetSer.updateRewardProgramRatios(rewardProgramTO);
     }
 
     /**
@@ -131,6 +134,16 @@ public class BonusBudgetApiImpl implements BonusBudgetAPI {
     @Override
     public List<RewardProgramRatioBO> checkRewardProgramRatios(String id) throws SerException {
         return bonusBudgetSer.checkRewardProgramRatios(id);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return bonusBudgetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return bonusBudgetSer.guidePermission( guidePermissionTO );
     }
 
 }

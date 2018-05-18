@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.regularization.type.SexType;
 
 /**
  * 员工转正业务传输对象
@@ -21,7 +22,7 @@ public class RegularizationBO extends BaseBO {
     /**
      * 性别
      */
-    private String gender;
+    private SexType gender;
 
     /**
      * 学历
@@ -57,7 +58,38 @@ public class RegularizationBO extends BaseBO {
      * 岗位
      */
     private String post;
-
+    /**
+     * 岗位层级
+     */
+    private String postHierarchy;
+    /**
+     * 转正申请日期
+     */
+    private String regularDate;
+    /**
+     * 工作年限
+     */
+    private Double workingYear;
+    /**
+     * 截止目前试用期时长
+     */
+    private Integer asProbationLength;
+    /**
+     * 确定事项是否确认
+     */
+    private Boolean confirmEvent;
+    /**
+     * 确认人
+     */
+    private String confirmPeople;
+    /**
+     * 转正是否通过
+     */
+    private Boolean isPassed;
+    /**
+     * 转正开始日期
+     */
+    private String positiveStartDate;
     /**
      * 试用期月份
      */
@@ -186,11 +218,11 @@ public class RegularizationBO extends BaseBO {
         this.name = name;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 
@@ -440,5 +472,69 @@ public class RegularizationBO extends BaseBO {
 
     public void setPosFacialInfor(String posFacialInfor) {
         this.posFacialInfor = posFacialInfor;
+    }
+
+    public String getPostHierarchy() {
+        return postHierarchy;
+    }
+
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public String getRegularDate() {
+        return regularDate;
+    }
+
+    public void setRegularDate(String regularDate) {
+        this.regularDate = regularDate;
+    }
+
+    public Double getWorkingYear() {
+        return workingYear;
+    }
+
+    public void setWorkingYear(Double workingYear) {
+        this.workingYear = workingYear;
+    }
+
+    public Integer getAsProbationLength() {
+        return asProbationLength;
+    }
+
+    public void setAsProbationLength(Integer asProbationLength) {
+        this.asProbationLength = asProbationLength;
+    }
+
+    public Boolean getConfirmEvent() {
+        return confirmEvent;
+    }
+
+    public void setConfirmEvent(Boolean confirmEvent) {
+        this.confirmEvent = confirmEvent;
+    }
+
+    public String getConfirmPeople() {
+        return confirmPeople;
+    }
+
+    public void setConfirmPeople(String confirmPeople) {
+        this.confirmPeople = confirmPeople;
+    }
+
+    public Boolean getPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(Boolean passed) {
+        isPassed = passed;
+    }
+
+    public String getPositiveStartDate() {
+        return positiveStartDate;
+    }
+
+    public void setPositiveStartDate(String positiveStartDate) {
+        this.positiveStartDate = positiveStartDate;
     }
 }

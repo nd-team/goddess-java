@@ -1,16 +1,21 @@
 package com.bjike.goddess.organize.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
+import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户职位业务接口实现
@@ -27,24 +32,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Autowired
     private PositionDetailUserSer positionDetailUserSer;
 
-    @Override
-    public PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
-        return positionDetailUserSer.save(to);
-    }
 
     @Override
-    public PositionDetailUserBO update(PositionDetailUserTO to) throws SerException {
-        return positionDetailUserSer.update(to);
-    }
-
-    @Override
-    public PositionDetailUserBO delete(String id) throws SerException {
-        return positionDetailUserSer.delete(id);
-    }
-
-    @Override
-    public List<PositionDetailBO> findPositionByUser(String user_id) throws SerException {
-        return positionDetailUserSer.findPositionByUser(user_id);
+    public List<PositionDetailBO> findPositionByUser(String name) throws SerException {
+        return positionDetailUserSer.findPositionByUser(name);
     }
 
     @Override
@@ -54,8 +45,18 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
 
     @Override
     public Boolean checkAsUserPosition(String user_id, String[] position_ids) throws SerException {
-        return positionDetailUserSer.checkAsUserPosition(user_id, position_ids);
+        return positionDetailUserSer.checkAsUserPosit2(user_id, position_ids);
     }
+
+    @Override
+    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+        return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
+    }
+
+//    @Override
+//    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+//        return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
+//    }
 
     @Override
     public Boolean checkAsUserArrangement(String user_id, String... arrangement_id) throws SerException {
@@ -78,8 +79,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+    public Long getTotal(PositionDetailUserDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getName())){
+            dto.getConditions().add(Restrict.eq("name",dto.getName()));
+        }
         return positionDetailUserSer.count(dto);
     }
 
@@ -96,5 +99,148 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public List<UserBO> findUserList() throws SerException {
         return positionDetailUserSer.findUserList();
+    }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        return positionDetailUserSer.findUserListInOrgan();
+    }
+
+    @Override
+    public List<PositionDetailUserBO> findUserListInOrgan1() throws SerException {
+        return positionDetailUserSer.findUserListInOrgan1();
+    }
+
+    @Override
+    public List<String> getPosition(String name) throws SerException {
+        return positionDetailUserSer.getPosition(name);
+    }
+
+    @Override
+    public List<String> getAllPositions() throws SerException {
+        return positionDetailUserSer.getAllPositions();
+    }
+
+    @Override
+    public List<String[]> getAllPosition() throws SerException {
+        return positionDetailUserSer.getAllPosition();
+    }
+
+    @Override
+    public List<String> getAllDepartment() throws SerException {
+        return positionDetailUserSer.getAllDepartment();
+    }
+
+    @Override
+    public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
+        return positionDetailUserSer.getPositionDetail(name);
+    }
+
+    @Override
+    public StaffStatus statusByName(String name) throws SerException {
+        return positionDetailUserSer.statusByName(name);
+    }
+
+    @Override
+    public void save(PositionDetailUserTO to) throws SerException {
+        positionDetailUserSer.save(to);
+    }
+
+    @Override
+    public void update(PositionDetailUserTO to) throws SerException {
+        positionDetailUserSer.update(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        positionDetailUserSer.delete(id);
+    }
+
+    @Override
+    public PositionDetailUserBO getById(String id) throws SerException {
+        return positionDetailUserSer.getById(id);
+    }
+
+    @Override
+    public List<DepartPositionBO> departPositions() throws SerException {
+        return positionDetailUserSer.departPositions();
+    }
+
+    @Override
+    public PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException {
+        return positionDetailUserSer.bo(entity,positions);
+    }
+
+    @Override
+    public DepartmentDetailBO areaAndDepart(String userId) throws SerException {
+        return positionDetailUserSer.areaAndDepart(userId);
+    }
+  @Override
+    public Boolean isMarker(String userId) throws SerException {
+        return positionDetailUserSer.isMarker(userId);
+    }
+
+    @Override
+    public PhoneLoginUserInfoBO userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO) throws SerException {
+        return positionDetailUserSer.userLoginInfoByUserName( phoneLoginUserInfoTO );
+    }
+
+    @Override
+    public List<String> names() throws SerException {
+        return positionDetailUserSer.names();
+    }
+
+    @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        return positionDetailUserSer.getByName(name);
+    }
+    @Override
+    public String customRepPerson() throws SerException {
+        return positionDetailUserSer.customRepPerson();
+    }
+    @Override
+    public String moneyModulePerson() throws SerException {
+        return positionDetailUserSer.moneyModulePerson();
+    }
+
+    @Override
+    public String findManageByDepart(String department) throws SerException {
+        return positionDetailUserSer.findManageByDepart(department);
+    }
+
+    @Override
+    public String[] budgetPerson() throws SerException {
+        return positionDetailUserSer.budgetPerson();
+    }
+
+    @Override
+    public String[] planPerson() throws SerException {
+        return positionDetailUserSer.planPerson();
+    }
+    @Override
+    public String[] managerPerson() throws SerException{
+        return positionDetailUserSer.managerPerson();
+    }
+    @Override
+    public String[] generPerson() throws SerException{
+        return positionDetailUserSer.generPerson();
+    }
+
+    @Override
+    public List<String> welfarePerson() throws SerException {
+        return positionDetailUserSer.welfarePerson();
+    }
+
+    @Override
+    public List<String> planningPerson() throws SerException {
+        return positionDetailUserSer.planningPerson();
+    }
+
+    /**
+     * wany
+     */
+    @Override
+    public List<PositionDetailUserBO> wanyfindAll() throws SerException {
+        return positionDetailUserSer.wanyfindAll();
     }
 }

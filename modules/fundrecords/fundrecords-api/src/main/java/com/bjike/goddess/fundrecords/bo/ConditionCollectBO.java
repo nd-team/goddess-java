@@ -29,6 +29,11 @@ public class ConditionCollectBO extends BaseBO {
     private Double expenditure;
 
     /**
+     * 本月发生额
+     */
+    private Double incurredAmount;
+
+    /**
      * 地区
      */
     private String area;
@@ -42,6 +47,32 @@ public class ConditionCollectBO extends BaseBO {
      * 项目组
      */
     private String projectGroup;
+
+    /**
+     * 开始时间
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public String getRecordDate() {
         return recordDate;
@@ -89,5 +120,13 @@ public class ConditionCollectBO extends BaseBO {
 
     public void setProjectGroup(String projectGroup) {
         this.projectGroup = projectGroup;
+    }
+
+    public Double getIncurredAmount() {
+        return incurredAmount;
+    }
+
+    public void setIncurredAmount(Double incurredAmount) {
+        this.incurredAmount = incurredAmount;
     }
 }

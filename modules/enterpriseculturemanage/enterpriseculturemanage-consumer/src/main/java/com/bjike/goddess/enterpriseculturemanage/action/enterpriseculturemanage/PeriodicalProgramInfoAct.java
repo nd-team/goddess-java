@@ -11,6 +11,7 @@ import com.bjike.goddess.enterpriseculturemanage.api.EnterpriseCultureInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.api.PeriodicalProgramInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.EnterpriseCultureInfoVO;
 import com.bjike.goddess.enterpriseculturemanage.vo.PeriodicalProgramInfoVO;
@@ -43,6 +44,29 @@ public class PeriodicalProgramInfoAct {
     private EnterpriseCultureInfoAPI enterpriseCultureInfoAPI;
     @Autowired
     private PositionDetailUserAPI detailUserAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = periodicalProgramInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -152,8 +176,8 @@ public class PeriodicalProgramInfoAct {
      * @param auditSuggestion 审核意见
      * @version v1
      */
-    @PutMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
+    @PutMapping("v1/audit")
+    public Result audit(@RequestParam String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
         try {
             periodicalProgramInfoAPI.audit(id, auditResult, auditSuggestion);
             return new ActResult();

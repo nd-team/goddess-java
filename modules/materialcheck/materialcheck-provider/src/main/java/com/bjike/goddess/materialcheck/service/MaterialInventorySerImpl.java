@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialcheck.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -19,6 +20,7 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -26,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资盘点业务实现
@@ -181,26 +181,28 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
             String userToken = RpcTransmit.getUserToken();
             Boolean flagInvenDai = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInvenMondDai = guideMondIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInvenPosinDai = guidePosinIdentity();
+            RpcTransmit.transmitUserToken(userToken);
 
             SonPermissionObject obj = new SonPermissionObject();
 
             obj = new SonPermissionObject();
             obj.setName("materialanalyzedaily");
             obj.setDescribesion("物质盘点日盘");
-            if (flagInvenDai) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
             }
             list.add(obj);
 
-            RpcTransmit.transmitUserToken(userToken);
-            Boolean flagInvenWeek = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
             obj = new SonPermissionObject();
             obj.setName("materialanalyzeweek");
             obj.setDescribesion("物质盘点周盘");
-            if (flagInvenWeek) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -208,12 +210,10 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
             list.add(obj);
 
             RpcTransmit.transmitUserToken(userToken);
-            Boolean flagInvenAnnu = guideIdentity();
-            RpcTransmit.transmitUserToken(userToken);
             obj = new SonPermissionObject();
             obj.setName("materialanalyzeannual");
             obj.setDescribesion("物质盘点年盘");
-            if (flagInvenAnnu) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -505,4 +505,15 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
         return inventoryBOList;
     }
 
+    @Override
+    public List<String> findArea(String[] intervalTime) throws SerException {
+        //TODO: 由于没有时间进行汇总所有没有实现
+       return null;
+    }
+
+    @Override
+    public List<MaterialInventoryBO> findByArea(String[] intervalTime, String area) throws SerException {
+        //TODO: 由于没有时间进行汇总所有没有实现
+        return null;
+    }
 }

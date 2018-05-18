@@ -6,15 +6,14 @@ import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.Regularization;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
 import com.bjike.goddess.regularization.service.RegularizationSer;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工转正业务接口实现
@@ -28,9 +27,20 @@ import java.util.List;
 @Service("regularizationApiImpl")
 public class RegularizationApiImpl implements RegularizationAPI {
 
+
     @Autowired
     private RegularizationSer regularizationSer;
 
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return regularizationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return regularizationSer.guidePermission(guidePermissionTO);
+    }
     /**
      * 根据id查询员工转正
      *
@@ -170,5 +180,40 @@ public class RegularizationApiImpl implements RegularizationAPI {
     @Override
     public void zjbApproval(ZjbApprovalTO to) throws SerException {
         regularizationSer.zjbApproval(to);
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return regularizationSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return regularizationSer.findallMonUser();
+    }
+
+    @Override
+    public RegularizationBO findAddRusult(String empNumer) throws SerException {
+        return regularizationSer.findAddRusult(empNumer);
+    }
+
+    @Override
+    public String time(String empNo) throws SerException {
+        return regularizationSer.time(empNo);
+    }
+
+    @Override
+    public Set<String> allNum() throws SerException {
+        return regularizationSer.allNum();
+    }
+
+    @Override
+    public String getTime(String userName) throws SerException {
+        return regularizationSer.getTime(userName);
+    }
+
+    @Override
+    public Boolean checkTran(String userName) throws SerException {
+        return regularizationSer.checkTran(userName);
     }
 }

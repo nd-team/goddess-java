@@ -3,6 +3,7 @@ package com.bjike.goddess.firmreward.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.AwardDetailBO;
 import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
@@ -10,7 +11,13 @@ import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
 import com.bjike.goddess.firmreward.entity.AwardDetail;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
+import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
+import com.bjike.goddess.firmreward.to.PeopleNoStatTO;
+import com.bjike.goddess.firmreward.to.PeopleTO;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,6 +43,133 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
 
     @Autowired
     private AwardDetailSer awardDetailSer;
+
+    @Autowired
+    private UserAPI userAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     /**
      * 分页查询奖励人数统计
@@ -116,7 +250,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
     /**
      * 更新奖励人数统计
      *
-     * @param to 奖励人数统计to
+     * @param to    奖励人数统计to
      * @param model 奖励人数统计
      */
     private void updateRewardPeopleNoStat(RewardPeopleNoStatTO to, RewardPeopleNoStat model) throws SerException {
@@ -133,32 +267,27 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void addAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void addAwardDetails(PeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();//奖励人数统计id
-        String[] awardRankings = to.getAwardRankings();//获奖名次
-        String[] prizewinners = to.getPrizewinners();//获奖人姓名
-        Double[] bonusLimits = to.getBonusLimits();  //奖金额度
-        Double[] empiricalValueLimits = to.getEmpiricalValueLimits();//经验值额度
-        Double[] honorAwardLimits = to.getHonorAwardLimits(); //荣誉衍生奖品额度
-
-        boolean awardRankingNotEmpty = (awardRankings != null) && (awardRankings.length > 0);
-        if (StringUtils.isNotBlank(rewardPeopleNoStatId) && awardRankingNotEmpty) {
+        List<PeopleTO> peopleTOS = to.getPeopleTOS();
+        if (peopleTOS != null && peopleTOS.size() > 0) {
             List<AwardDetail> list = new ArrayList<>(0);
-            for (int i = 0; i < awardRankings.length; i ++) {
-                AwardDetail model = new AwardDetail();
-                model.setAwardRanking(awardRankings[i]);
-                model.setPrizewinner(prizewinners[i]);
-                model.setBonusLimit(bonusLimits[i]);
-                model.setEmpiricalValueLimit(empiricalValueLimits[i]);
-                model.setHonorAwardLimit(honorAwardLimits[i]);
-                model.setAwardPersonNoStatId(rewardPeopleNoStatId);
-                list.add(model);
+            if (StringUtils.isNotBlank(rewardPeopleNoStatId)) {
+                for (PeopleTO peopleTO : peopleTOS) {
+                    AwardDetail model = new AwardDetail();
+                    model.setAwardRanking(peopleTO.getAwardRankings());//获奖名次
+                    model.setPrizewinner(peopleTO.getPrizewinners());//获奖人姓名
+                    model.setBonusLimit(peopleTO.getBonusLimits());  //奖金额度
+                    model.setEmpiricalValueLimit(peopleTO.getEmpiricalValueLimits());//经验值额度
+                    model.setHonorAwardLimit(peopleTO.getHonorAwardLimits()); //荣誉衍生奖品额度
+                    model.setAwardPersonNoStatId(rewardPeopleNoStatId);
+                    list.add(model);
+                }
+                awardDetailSer.save(list);
+            } else {
+                throw new SerException("奖励人数统计id为空,无法进行");
             }
-            awardDetailSer.save(list);
-        } else {
-          throw new SerException("奖励人数统计id为空,无法进行");
         }
-
     }
 
     /**
@@ -169,7 +298,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void updateAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void updateAwardDetails(PeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();
         List<AwardDetail> list = getAwardDetailsByStatId(rewardPeopleNoStatId);
         awardDetailSer.remove(list);//执行删除操作

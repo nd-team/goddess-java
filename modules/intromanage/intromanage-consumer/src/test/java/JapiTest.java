@@ -17,12 +17,16 @@ public class JapiTest {
 	public static void main(String[] args) throws IOException {
 //		JapiClient.delete(true);
 		JapiClient.setClassLoader(JapiTest.class);
-		JapiClient.setPrefixPath("/home/ike/pro/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/intromanage/intromanage-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/intromanage/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/intromanage/intromanage-api",
+				"modules/assemble/assemble-api",
+				"modules/staffentry/staffentry-api",
+				"modules/organize/organize-api",
+				"modules/storage/storage-api",
 				"common/common-api",
 				"user/user-api"
 		});

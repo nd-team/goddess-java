@@ -29,13 +29,13 @@ public class ArchiveGather extends BaseEntity {
     /**
      * 自愿放弃购买社保协议书
      */
-    @Column(name = "is_abandon", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '自愿放弃购买社保协议书'", insertable = false)
+    @Column(name = "is_abandon", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '自愿放弃购买社保协议书'")
     private Boolean abandon;
 
     /**
      * 转正定级档案收集
      */
-    @Column(name = "is_become", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '转正定级档案收集'", insertable = false)
+    @Column(name = "is_become", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '转正定级档案收集'")
     private Boolean become;
 
     /**

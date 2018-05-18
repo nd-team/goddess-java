@@ -3,7 +3,9 @@ package com.bjike.goddess.staffmeeting.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffmeeting.bo.FeedbackComplainBO;
 import com.bjike.goddess.staffmeeting.dto.FeedbackComplainDTO;
+import com.bjike.goddess.staffmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.staffmeeting.to.FeedbackComplainTO;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FeedbackComplainAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增通告反馈投诉

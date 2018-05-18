@@ -4,19 +4,24 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.ConstructTeam;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PublicizeProgramInfo;
+import com.bjike.goddess.enterpriseculturemanage.enums.GuideAddrStatus;
 import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
+import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -52,9 +57,153 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     @Autowired
     private UserAPI userAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EnterpriseCultureInfoBO insertModel(EnterpriseCultureInfoTO to) throws SerException {
+        checkAddIdentity();
 
         onOfTeam();
         //需要检查theme是否与解冻状态记录存在相同
@@ -94,6 +243,7 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoEditTO to) throws SerException {
+        checkAddIdentity();
         onOfTeam();
         EnterpriseCultureInfo newmodel = super.findById(to.getId());
         if (newmodel != null) {
@@ -117,28 +267,35 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<EnterpriseCultureInfoBO> pageList(EnterpriseCultureInfoDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<EnterpriseCultureInfo> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, EnterpriseCultureInfoBO.class);
     }
 
     @Override
-    public PublicizeProgramInfoBO findPublicize(String id) throws SerException {
+    public List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException {
+        checkSeeIdentity();
         EnterpriseCultureInfo model = super.findById(id);
         if (model != null) {
-            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
-            if (publicizeProgramInfo != null) {
-                return BeanTransform.copyProperties(publicizeProgramInfo, PublicizeProgramInfoBO.class);
+            PublicizeProgramInfoDTO dto = new PublicizeProgramInfoDTO();
+            dto.getConditions().add(Restrict.eq("infoId",model.getId()));
+//            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
+            List<PublicizeProgramInfo> info = publicizeProgramInfoSer.findByCis(dto);
+            if (info.size() > 0 && info != null) {
+                 List<PublicizeProgramInfoBO> boList = BeanTransform.copyProperties(info,PublicizeProgramInfoBO.class);
+                 return boList;
             }
         } else {
             throw new SerException("非法Id,企业文化对象不存在!");
         }
-        return new PublicizeProgramInfoBO();
+        return null;
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PeriodicalProgramInfoBO findPeriodical(String id) throws SerException {
+        checkSeeIdentity();
         EnterpriseCultureInfo model = super.findById(id);
         if (model != null) {
             PeriodicalProgramInfoDTO programInfoDTO = new PeriodicalProgramInfoDTO();
@@ -155,6 +312,7 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
 
     @Override
     public List<EnterpriseCultureInfoBO> findThawAll() throws SerException {
+        checkSeeIdentity();
         EnterpriseCultureInfoDTO dto = new EnterpriseCultureInfoDTO();
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         List<EnterpriseCultureInfo> list = super.findByCis(dto);

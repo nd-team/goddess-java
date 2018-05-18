@@ -66,7 +66,20 @@ public enum GuideAddrStatus {
     /**
      * 查看附件
      */
-    SEEFILE(13);
+    SEEFILE(13),
+    /**
+     * 项目经理
+     */
+    MANAGER(14),
+    /**
+     * 规划负责人
+     */
+    PLAN(15),
+    /**
+     * 预算负责人
+     */
+    BUDGET(16),
+    ;
 
     private int code;
 

@@ -62,6 +62,11 @@ public class CommonalityApiImpl implements CommonalityAPI {
     }
 
     @Override
+    public List<CommonalityBO> findAll() throws SerException {
+        return commonalitySer.findAlls();
+    }
+
+    @Override
     public CommonalityBO findByDepartment(String department) throws SerException {
         return commonalitySer.findByDepartment(department);
     }
@@ -89,5 +94,20 @@ public class CommonalityApiImpl implements CommonalityAPI {
     @Override
     public void importExcel(List<CommonalityTO> tocs) throws SerException {
         commonalitySer.importExcel(tocs);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return commonalitySer.templateExport();
+    }
+
+    @Override
+    public List<String> getEmails() throws SerException {
+        return commonalitySer.getEmails();
+    }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        return commonalitySer.findDepartment();
     }
 }

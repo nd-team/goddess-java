@@ -5,8 +5,6 @@ import com.bjike.goddess.voucher.enums.AuditStatus;
 import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
 
-import javax.persistence.Column;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -56,6 +54,16 @@ public class VoucherGenerateBO extends BaseBO {
     private Double borrowMoney;
 
     /**
+     * 借方金额合计
+     */
+    private Double borrowMoneyTotal;
+
+    /**
+     * 贷方金额合计
+     */
+    private Double loanMoneyTotal;
+
+    /**
      * 贷方金额
      */
     private Double loanMoney;
@@ -64,6 +72,11 @@ public class VoucherGenerateBO extends BaseBO {
      * 摘要
      */
     private String sumary;
+
+    /**
+     * 来源
+     */
+    private String source;
 
     /**
      * 地区
@@ -160,6 +173,41 @@ public class VoucherGenerateBO extends BaseBO {
      */
     private List<Double> loanMoneys;
 
+    /**
+     *　凭证标志
+     */
+    private String uId;
+
+    /**
+     * 子凭证
+     */
+    private List<VoucherGenerateChildBO> details;
+
+    /*
+     * 凭证字号”和“凭证字”合并成“凭证字号”字段
+     */
+    private String newVoucherNum;
+
+    /**
+     * 类别
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNewVoucherNum() {
+        return newVoucherNum;
+    }
+
+    public void setNewVoucherNum(String newVoucherNum) {
+        this.newVoucherNum = newVoucherNum;
+    }
 
     public String getVoucherWord() {
         return voucherWord;
@@ -383,5 +431,45 @@ public class VoucherGenerateBO extends BaseBO {
 
     public void setLoanMoneys(List<Double> loanMoneys) {
         this.loanMoneys = loanMoneys;
+    }
+
+    public Double getBorrowMoneyTotal() {
+        return borrowMoneyTotal;
+    }
+
+    public void setBorrowMoneyTotal(Double borrowMoneyTotal) {
+        this.borrowMoneyTotal = borrowMoneyTotal;
+    }
+
+    public Double getLoanMoneyTotal() {
+        return loanMoneyTotal;
+    }
+
+    public void setLoanMoneyTotal(Double loanMoneyTotal) {
+        this.loanMoneyTotal = loanMoneyTotal;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public List<VoucherGenerateChildBO> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<VoucherGenerateChildBO> details) {
+        this.details = details;
     }
 }

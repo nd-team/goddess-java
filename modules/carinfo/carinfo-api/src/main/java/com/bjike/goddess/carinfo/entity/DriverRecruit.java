@@ -21,18 +21,18 @@ import java.time.LocalDate;
 @Table(name = "carinfo_driverrecruit")
 public class DriverRecruit extends BaseEntity {
 
-    /**
-     * 账务模块审核意见
-     */
-    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
-    private String suggest;
-
-
-    /**
-     * 审核结果
-     */
-    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
-    private Boolean audit;
+//    /**
+//     * 账务模块审核意见
+//     */
+//    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
+//    private String suggest;
+//
+//
+//    /**
+//     * 审核结果
+//     */
+//    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
+//    private Boolean audit;
 
 
     /**
@@ -40,6 +40,18 @@ public class DriverRecruit extends BaseEntity {
      */
     @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
+
+    /**
+     * 项目组
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    private String department;
+
+    /**
+     * 信息收集时间
+     */
+    @Column(name = "informationCollecttionTime", nullable = false, columnDefinition = "DATE   COMMENT '信息收集时间'")
+    private LocalDate informationCollecttionTime;
 
     /**
      * 司机名称
@@ -65,6 +77,18 @@ public class DriverRecruit extends BaseEntity {
     @Column(name = "is_backup", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否可备用'")
     private Boolean backup;
 
+
+    /**
+     * 是否确定签订协议
+     */
+    @Column(name = "enSureAgreement", columnDefinition = "TINYINT(1)  COMMENT '是否确定签订协议'")
+    private Boolean enSureAgreement;
+
+    /**
+     * 结算方式
+     */
+    @Column(name = "meansOfPayments", columnDefinition = "VARCHAR(255) COMMENT '结算方式'")
+    private String meansOfPayments;
     /**
      * 身份证号
      */
@@ -155,14 +179,6 @@ public class DriverRecruit extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
-
-    public String getSuggest() {
-        return suggest;
-    }
-
-    public void setSuggest(String suggest) {
-        this.suggest = suggest;
-    }
 
     public String getArea() {
         return area;
@@ -324,11 +340,36 @@ public class DriverRecruit extends BaseEntity {
         this.remark = remark;
     }
 
-    public Boolean getAudit() {
-        return audit;
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
     }
 
-    public void setAudit(Boolean audit) {
-        this.audit = audit;
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public LocalDate getInformationCollecttionTime() {
+        return informationCollecttionTime;
+    }
+
+    public void setInformationCollecttionTime(LocalDate informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
+    }
+
+    public String getMeansOfPayments() {
+        return meansOfPayments;
+    }
+
+    public void setMeansOfPayments(String meansOfPayments) {
+        this.meansOfPayments = meansOfPayments;
     }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.service;
 
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
@@ -112,6 +113,12 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
     default List<String> findAllArrivals() throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
     /**
      * 下拉导航权限
@@ -122,4 +129,33 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 删除全部地区收入周的数据
+     * zhuangkaiqin
+     */
+    default void deleteAll() throws SerException{
+        return;
+    }
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ArrivalWeekCountBO> collect(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
+        return null;
+    }
 }

@@ -4,11 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.*;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 
 /**
@@ -17,6 +15,7 @@ import java.io.IOException;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.festival.action", "com.bjike.goddess.festival.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 

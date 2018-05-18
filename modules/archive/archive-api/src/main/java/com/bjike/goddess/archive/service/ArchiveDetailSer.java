@@ -1,10 +1,10 @@
 package com.bjike.goddess.archive.service;
 
-import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.bo.ArchiveDetailBO;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.entity.ArchiveDetail;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ArchiveDetailSer extends Ser<ArchiveDetail, ArchiveDetailDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -94,6 +109,27 @@ public interface ArchiveDetailSer extends Ser<ArchiveDetail, ArchiveDetailDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取管理等级
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findManage(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取处罚和奖励
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String[] findPushAndReward(String name) throws SerException {
         return null;
     }
 }

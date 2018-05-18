@@ -2,11 +2,12 @@ package com.bjike.goddess.projectroyalty.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.CompletionTimeBO;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CompletionTimeDTO;
 import com.bjike.goddess.projectroyalty.entity.CompletionTime;
 import com.bjike.goddess.projectroyalty.to.CompletionTimeTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CompletionTimeSer extends Ser<CompletionTime, CompletionTimeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -97,4 +112,13 @@ public interface CompletionTimeSer extends Ser<CompletionTime, CompletionTimeDTO
     }
 
 
+    /**
+     * 根据完工时间获取重要性
+     *
+     * @return
+     * @throws SerException
+     */
+    default Double findImportain(Integer month) throws SerException {
+        return null;
+    }
 }

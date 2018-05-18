@@ -43,6 +43,11 @@ public class ReimburseAnalisisor extends BaseEntity {
     private String department;
 
 
+    /**
+     * 备注
+     */
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    private String remark;
 
 
     public String getUserName() {
@@ -77,5 +82,11 @@ public class ReimburseAnalisisor extends BaseEntity {
         this.department = department;
     }
 
+    public String getRemark() {
+        return remark;
+    }
 
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

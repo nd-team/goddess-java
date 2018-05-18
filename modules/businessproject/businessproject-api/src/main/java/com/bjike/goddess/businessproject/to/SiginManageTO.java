@@ -1,8 +1,6 @@
 package com.bjike.goddess.businessproject.to;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -96,8 +94,8 @@ public class SiginManageTO extends BaseTO {
     /**
      * 立项情况 xx
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
-    private String makeProject;
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -116,6 +114,31 @@ public class SiginManageTO extends BaseTO {
      */
     @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目负责人不能为空")
     private String projectCharge;
+    /**
+     * 派工单号
+     */
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "项目状态不能为空")
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同规模数量不能为空")
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "规模数量不能为空")
+    private Double scale;
+    /**
+     * 专业
+     */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "专业不能为空")
+    private String major;
+
 
     /**
      * 备注
@@ -142,6 +165,45 @@ public class SiginManageTO extends BaseTO {
      */
     private String modifyTime;
 
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public BusinessType getBusinessType() {
         return businessType;
@@ -239,11 +301,11 @@ public class SiginManageTO extends BaseTO {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

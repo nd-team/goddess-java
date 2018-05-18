@@ -65,4 +65,18 @@ public class PositionInstructionApiImpl implements PositionInstructionAPI {
     public PositionInstructionBO findById(String id) throws SerException {
         return positionInstructionSer.getById(id);
     }
+    @Override
+    public List<String> getOutCome() throws SerException {
+        return positionInstructionSer.getOutCome();
+    }
+
+    @Override
+    public List<String> findOutcome() throws SerException {
+        return positionInstructionSer.findOutcome();
+    }
+
+    @Override
+    public List<String> findWorkPermission() throws SerException {
+        return positionInstructionSer.findWorkPermission();
+    }
 }

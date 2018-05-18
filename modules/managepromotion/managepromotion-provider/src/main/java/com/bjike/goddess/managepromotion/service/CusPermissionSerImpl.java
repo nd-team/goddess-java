@@ -1,5 +1,6 @@
 package com.bjike.goddess.managepromotion.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -29,11 +30,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 技能晋升权限配置业务实现
+ * 权限配置业务实现
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-05-12 05:43 ]
- * @Description: [ 技能晋升权限配置业务实现 ]
+ * @Description: [ 权限配置业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -55,6 +56,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -96,9 +99,11 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 }
 
             }
+            String userToken = RpcTransmit.getUserToken();
             CusPermissionType type = str.getType();
             List<OpinionBO> opinionBOS = new ArrayList<>();
             List<CusOperateBO> coboList = null;
+            RpcTransmit.transmitUserToken(userToken);
             if (null != ids && ids.length != 0) {
 
                 if (CusPermissionType.LEVEL.equals(type)) {
@@ -153,9 +158,11 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             }
 
         }
+        String userToken = RpcTransmit.getUserToken();
         CusPermissionType type = cusPermission.getType();
         List<OpinionBO> opinionBOS = new ArrayList<>();
         List<CusOperateBO> coboList = new ArrayList<>();
+        RpcTransmit.transmitUserToken(userToken);
         if (null != ids && ids.length != 0) {
 
             if (CusPermissionType.LEVEL.equals(type)) {
@@ -190,6 +197,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
         if (CusPermissionType.LEVEL.equals(type)) {
@@ -201,6 +210,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         } else if (CusPermissionType.DEPART.equals(type)) {
             //TODO 部门查询
             list = departmentDetailAPI.findThawOpinion();
+            RpcTransmit.transmitUserToken(userToken);
         }
 
         return list;
@@ -283,14 +293,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        List<CusPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            List<CusPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                CusPermissionOperate cpo = new CusPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
@@ -299,6 +311,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     public Boolean getCusPermission(String idFlag) throws SerException {
         Boolean flag = false;
         //但前用户
+        String usertoken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
@@ -332,19 +345,19 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+//        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+        RpcTransmit.transmitUserToken(usertoken);
         Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
         //TODO 部门
-        if (positionFlag || arrangementFlag || moduleFlag || depart) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;
         }
-
 
         return flag;
     }
@@ -385,6 +398,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门id 商务部
+        RpcTransmit.transmitUserToken(userToken);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
         Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 

@@ -28,6 +28,15 @@ public class ReceivableSubsidiaryBO extends BaseBO {
      * 派工单编号
      */
     private String taskNum;
+    /**
+     * 派工合同号
+     */
+    private String contractNum;
+    /**
+     * 外包合同号
+     */
+    private String outsourcingNum;
+
 
     /**
      * 派工单价
@@ -290,6 +299,22 @@ public class ReceivableSubsidiaryBO extends BaseBO {
 
     public void setFinishNum(Double finishNum) {
         this.finishNum = finishNum;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getOutsourcingNum() {
+        return outsourcingNum;
+    }
+
+    public void setOutsourcingNum(String outsourcingNum) {
+        this.outsourcingNum = outsourcingNum;
     }
 
     public Double getFinishMoney() {

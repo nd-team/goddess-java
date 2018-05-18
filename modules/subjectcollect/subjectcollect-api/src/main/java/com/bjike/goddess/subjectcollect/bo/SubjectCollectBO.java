@@ -3,172 +3,130 @@ package com.bjike.goddess.subjectcollect.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
-import java.util.List;
-import java.util.Map;
-
 /**
- * 科目汇总表业务传输对象
- *
- * @Author: [ xiazhili ]
- * @Date: [ 2017-04-07 04:02 ]
- * @Description: [ 科目汇总表业务传输对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
- */
+* 科目汇总业务传输对象
+* @Author:			[ jiangzaixuan ]
+* @Date:			[  2017-10-26 02:42 ]
+* @Description:	[ 科目汇总业务传输对象 ]
+* @Version:		[ v1.0.0 ]
+* @Copy:   		[ com.bjike ]
+*/
 public class SubjectCollectBO extends BaseBO {
 
     /**
-     * 代码
+     * 项目
      */
-    private String code;
-    /**
-     * 月份
-     */
-    private Integer  months;
-    /**
-     * 一级科目
-     */
-    private String firstSubject;
+    private String project;
 
     /**
-     * 地区
+     * 起初借方余额
      */
-    private String area;
+    private Double beginBorrowMoney;
 
     /**
-     * 项目名称
+     * 起初贷方余额
      */
-    private String projectName;
+    private Double beginLoanMoney;
 
     /**
-     * 项目组/部门
+     * 本期借方余额
      */
-    private String projectGroup;
+    private Double  currentBorrowMoney;
 
     /**
-     * 期初借方余额
+     * 本期贷方余额
      */
-    private Double beginningDebitAmount;
+    private Double  currentLoanMoney;
 
     /**
-     * 期初贷方余额
+     * 期末借方发生额
      */
-    private Double beginningCreditAmount;
+    private Double  endBorrowMoney;
 
     /**
-     * 本期借方发生额
+     * 期末贷方发生额
      */
-    private Double issueDebitAmount;
+    private Double  endLoanMoney;
 
     /**
-     * 本期贷方发生额
+     * 本年借方统计
      */
-    private Double issueCreditAmount;
+    private Double  currentYearBorrowMoney;
 
     /**
-     * 期末借方余额
+     * 本年贷方统计
      */
-    private Double endDebitAmount;
+    private Double  currentYearLoanMoney;
 
-    /**
-     * 期末贷方余额
-     */
-    private Double endCreditAmount;
-
-
-    public String getCode() {
-        return code;
+    public String getProject() {
+        return project;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setProject(String project) {
+        this.project = project;
     }
 
-    public Integer getMonths() {
-        return months;
+    public Double getCurrentBorrowMoney() {
+        return currentBorrowMoney;
     }
 
-    public void setMonths(Integer months) {
-        this.months = months;
+    public void setCurrentBorrowMoney(Double currentBorrowMoney) {
+        this.currentBorrowMoney = currentBorrowMoney;
     }
 
-    public String getFirstSubject() {
-        return firstSubject;
+    public Double getCurrentLoanMoney() {
+        return currentLoanMoney;
     }
 
-    public void setFirstSubject(String firstSubject) {
-        this.firstSubject = firstSubject;
+    public void setCurrentLoanMoney(Double currentLoanMoney) {
+        this.currentLoanMoney = currentLoanMoney;
     }
 
-    public String getArea() {
-        return area;
+    public Double getEndBorrowMoney() {
+        return endBorrowMoney;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setEndBorrowMoney(Double endBorrowMoney) {
+        this.endBorrowMoney = endBorrowMoney;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public Double getEndLoanMoney() {
+        return endLoanMoney;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setEndLoanMoney(Double endLoanMoney) {
+        this.endLoanMoney = endLoanMoney;
     }
 
-    public String getProjectGroup() {
-        return projectGroup;
+    public Double getCurrentYearBorrowMoney() {
+        return currentYearBorrowMoney;
     }
 
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
+    public void setCurrentYearBorrowMoney(Double currentYearBorrowMoney) {
+        this.currentYearBorrowMoney = currentYearBorrowMoney;
     }
 
-    public Double getBeginningDebitAmount() {
-        return beginningDebitAmount;
+    public Double getCurrentYearLoanMoney() {
+        return currentYearLoanMoney;
     }
 
-    public void setBeginningDebitAmount(Double beginningDebitAmount) {
-        this.beginningDebitAmount = beginningDebitAmount;
+    public void setCurrentYearLoanMoney(Double currentYearLoanMoney) {
+        this.currentYearLoanMoney = currentYearLoanMoney;
     }
 
-    public Double getBeginningCreditAmount() {
-        return beginningCreditAmount;
+    public Double getBeginBorrowMoney() {
+        return beginBorrowMoney;
     }
 
-    public void setBeginningCreditAmount(Double beginningCreditAmount) {
-        this.beginningCreditAmount = beginningCreditAmount;
+    public void setBeginBorrowMoney(Double beginBorrowMoney) {
+        this.beginBorrowMoney = beginBorrowMoney;
     }
 
-    public Double getIssueDebitAmount() {
-        return issueDebitAmount;
+    public Double getBeginLoanMoney() {
+        return beginLoanMoney;
     }
 
-    public void setIssueDebitAmount(Double issueDebitAmount) {
-        this.issueDebitAmount = issueDebitAmount;
-    }
-
-    public Double getIssueCreditAmount() {
-        return issueCreditAmount;
-    }
-
-    public void setIssueCreditAmount(Double issueCreditAmount) {
-        this.issueCreditAmount = issueCreditAmount;
-    }
-
-    public Double getEndDebitAmount() {
-        return endDebitAmount;
-    }
-
-    public void setEndDebitAmount(Double endDebitAmount) {
-        this.endDebitAmount = endDebitAmount;
-    }
-
-    public Double getEndCreditAmount() {
-        return endCreditAmount;
-    }
-
-    public void setEndCreditAmount(Double endCreditAmount) {
-        this.endCreditAmount = endCreditAmount;
+    public void setBeginLoanMoney(Double beginLoanMoney) {
+        this.beginLoanMoney = beginLoanMoney;
     }
 }

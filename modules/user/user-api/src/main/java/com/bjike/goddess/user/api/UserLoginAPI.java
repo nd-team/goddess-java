@@ -25,6 +25,15 @@ public interface UserLoginAPI {
     String login(UserLoginTO loginTO) throws SerException;
 
     /**
+     * 移动端登录
+     *
+     * @param loginTO 用户登陆数据传输对象
+     * @return token 登录用户唯一令牌
+     * @throws SerException
+     */
+    String logins(UserLoginTO loginTO) throws SerException;
+
+    /**
      * 注销登陆
      *
      * @param token 登录用户唯一令牌

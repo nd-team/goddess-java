@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessCourse;
-import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
+import com.bjike.goddess.marketdevelopment.excel.BusinessCourseImportExcel;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
@@ -21,6 +21,8 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessCourseSer extends Ser<BusinessCourse, BusinessCourseDTO> {
+
+
 
     /**
      * 保存业务方向科目数据
@@ -131,6 +133,75 @@ public interface BusinessCourseSer extends Ser<BusinessCourse, BusinessCourseDTO
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询正常数据的业务方向科目
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<BusinessCourseImportExcel> tos) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的业务方向名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findBusinessType() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务方向分类查询业务方向科目
+     *
+     * @param businessType
+     * @return
+     * @throws SerException
+     */
+    default List<String> findSubject(String businessType) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的业务方向科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllSubject() throws SerException {
         return null;
     }
 }

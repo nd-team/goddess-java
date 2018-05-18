@@ -3,6 +3,7 @@ package com.bjike.goddess.moneyside.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.FundEntryWrongRecordBO;
 import com.bjike.goddess.moneyside.dto.FundEntryWrongRecordDTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -16,6 +17,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FundEntryWrongRecordAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资金进入申请有误记录列表总条数
      */

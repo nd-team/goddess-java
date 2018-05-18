@@ -51,7 +51,7 @@ public class Account extends BaseEntity {
     /**
      * 二级科目
      */
-    @Column(name = "secondSubject",  columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
+    @Column(name = "secondSubject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
     private String secondSubject;
 
     /**
@@ -60,7 +60,25 @@ public class Account extends BaseEntity {
     @Column(name = "thirdSubject",  columnDefinition = "VARCHAR(255)   COMMENT '三级科目'")
     private String thirdSubject;
 
+    /**
+     * 金额
+     */
+    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
+    private Double amount;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
 
     public String getName() {
@@ -120,5 +138,11 @@ public class Account extends BaseEntity {
         this.firstSubject = firstSubject;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
 
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 }

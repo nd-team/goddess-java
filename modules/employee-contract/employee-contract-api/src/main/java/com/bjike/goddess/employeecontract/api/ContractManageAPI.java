@@ -6,10 +6,8 @@ import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
 import com.bjike.goddess.employeecontract.bo.ContractManageBO;
 import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
-import com.bjike.goddess.employeecontract.to.ContractChangeTO;
-import com.bjike.goddess.employeecontract.to.ContractInfoTO;
-import com.bjike.goddess.employeecontract.to.ContractManageTO;
-import com.bjike.goddess.employeecontract.to.ContractPersonalTO;
+import com.bjike.goddess.employeecontract.excel.SonPermissionObject;
+import com.bjike.goddess.employeecontract.to.*;
 
 import java.util.List;
 
@@ -23,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ContractManageAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 数据录入
@@ -164,4 +177,13 @@ public interface ContractManageAPI {
         return null;
     }
 
+    /**
+     * 获取姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 }

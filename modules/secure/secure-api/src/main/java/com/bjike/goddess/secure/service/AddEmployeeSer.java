@@ -6,8 +6,12 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
+import com.bjike.goddess.secure.vo.SonPermissionObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保增员信息名单业务接口
@@ -19,6 +23,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 查找
      *
@@ -84,7 +98,7 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
      * @param id
      * @throws SerException
      */
-    void managerConfirmAdd(String id) throws SerException;
+    void managerConfirmAdd(AddEmployeeDTO dto, String id) throws SerException;
 
     /**
      * 社保管理负责人确认增员
@@ -111,4 +125,18 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
      * @throws SerException
      */
     AddEmployeeBO save(AddEmployeeTO to) throws SerException;
+    /**
+     * 根据姓名查找
+     *
+     * @param to to
+     * @return AddEmployeeBO
+     * @throws SerException
+     */
+    List<AddEmployeeBO> byName(NameTO to) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 }

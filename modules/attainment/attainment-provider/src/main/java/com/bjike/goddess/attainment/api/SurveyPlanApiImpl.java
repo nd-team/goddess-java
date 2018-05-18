@@ -1,9 +1,9 @@
 package com.bjike.goddess.attainment.api;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.service.SurveyPlanSer;
-import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,15 @@ public class SurveyPlanApiImpl implements SurveyPlanAPI {
 
     @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return surveyPlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return surveyPlanSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public SurveyPlanBO save(SurveyPlanTO to) throws SerException {
@@ -58,5 +67,35 @@ public class SurveyPlanApiImpl implements SurveyPlanAPI {
     @Override
     public Long getTotal() throws SerException {
         return surveyPlanSer.getTotal();
+    }
+
+    @Override
+    public List<SurPlanBO> getSurveyPlan() throws SerException {
+        return surveyPlanSer.getSurveyPlan();
+    }
+
+    @Override
+    public List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        return surveyPlanSer.questionnaire(to);
+    }
+
+    @Override
+    public List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        return surveyPlanSer.getQuestionnaire(id);
+    }
+
+    @Override
+    public List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
+        return surveyPlanSer.editQuestionnaire(to);
+    }
+
+    @Override
+    public List<SurveyActualizesBO> edit(SurveyActualizesTO to) throws SerException {
+        return surveyPlanSer.edit(to);
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        return surveyPlanSer.getName();
     }
 }

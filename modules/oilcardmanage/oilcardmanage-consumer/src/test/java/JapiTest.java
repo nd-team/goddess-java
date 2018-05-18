@@ -16,13 +16,17 @@ import java.io.IOException;
 public class JapiTest {
 
     public static void main(String[] args) throws IOException {
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+//        JapiClient.delete(true);
+        JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/oilcardmanage/oilcardmanage-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/oilcardmanage/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/oilcardmanage/oilcardmanage-api",
+                "modules/dispatchcar/dispatchcar-api",
+                "modules/storage/storage-api",
+                "modules/organize/organize-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

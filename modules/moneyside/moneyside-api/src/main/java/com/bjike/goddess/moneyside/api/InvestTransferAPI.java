@@ -3,7 +3,9 @@ package com.bjike.goddess.moneyside.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.InvestTransferBO;
 import com.bjike.goddess.moneyside.dto.InvestTransferDTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestTransferTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface InvestTransferAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 投资转让列表总条数
      */
@@ -75,4 +90,9 @@ public interface InvestTransferAPI {
     default void removeInvestTransfer(String id) throws SerException {
 
     }
+
+    /**
+     * 获取所有投资转让人
+     */
+    List<UserBO> findUserListInOrgan() throws SerException;
 }

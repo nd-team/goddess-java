@@ -37,6 +37,14 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     private String taskNum;
 
     /**
+     * 派工合同号
+     */
+    private String contractNum;
+    /**
+     * 外包合同号
+     */
+    private String outsourcingNum;
+    /**
      * 派工单价
      */
     @NotNull(message = "派工单价不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
@@ -233,12 +241,23 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     @NotNull(message = "是否已走结算流程不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Boolean flow;
 
-    /*//开始时间
-    private String startTime;
-    //结束时间
-    private String endTime;*/
     private String contractorName;
 
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getOutsourcingNum() {
+        return outsourcingNum;
+    }
+
+    public void setOutsourcingNum(String outsourcingNum) {
+        this.outsourcingNum = outsourcingNum;
+    }
 
     public String getArea() {
         return area;

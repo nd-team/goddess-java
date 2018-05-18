@@ -16,16 +16,15 @@ import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
 import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 费用效益分析业务实现
@@ -592,5 +591,21 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
         CostAnalysisBO bo = new CostAnalysisBO();
         bo.setNum(super.count(dto));
         return bo;
+    }
+
+    @Override
+    public List<Double> allExMarketCost() throws SerException {
+        List<CostAnalysis> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<Double> set = new HashSet<>();
+        for (CostAnalysis model : list) {
+            Double expectedMarketCost = model.getExpectedMarketCost();
+            if (model.getExpectedMarketCost()!=null) {
+                set.add(expectedMarketCost);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

@@ -24,5 +24,18 @@
 	<dubbo:reference  validation="true" id="holidayWorkPlanApiImpl" interface="com.bjike.goddess.festival.api.HolidayWorkPlanAPI" />
 	<dubbo:reference  validation="true" id="noticeThingApiImpl" interface="com.bjike.goddess.festival.api.NoticeThingAPI" />
 	<dubbo:reference  validation="true" id="welfareApiImpl" interface="com.bjike.goddess.festival.api.WelfareAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionOperateAPI" />
+
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 </beans>

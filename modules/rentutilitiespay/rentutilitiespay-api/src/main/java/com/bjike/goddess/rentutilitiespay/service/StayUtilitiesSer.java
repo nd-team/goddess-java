@@ -8,6 +8,8 @@ import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
+import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
 
 import java.util.List;
@@ -22,6 +24,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayUtilitiesSer extends Ser<StayUtilities, StayUtilitiesDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 员工住宿水电费列表总条数
      */
@@ -98,5 +112,32 @@ public interface StayUtilitiesSer extends Ser<StayUtilities, StayUtilitiesDTO> {
     default List<String> getName() throws SerException {
         return null;
     }
+    /**
+     * 员工核实
+     *
+     * @param to to
+     * @return class StayUtilitiesBO
+     * @throws SerException
+     */
+    default StayUtilitiesBO employeeVerify(StayUtilitiesTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 运营财务部
+     *
+     * @param to to
+     * @return class StayUtilitiesBO
+     * @throws SerException
+     */
+    default StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据员工姓名,缴费日期获取缴费情况    --jiangzaixuan 2017-08-18 20:33
+     * todo 这个可能有点问题，要跟志丽沟通下
+     */
+    StayUtilitiesBO findStay(String time,String name) throws SerException;
+
 
 }

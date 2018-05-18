@@ -2,13 +2,15 @@ package com.bjike.goddess.carinfo.api;
 
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
+import com.bjike.goddess.carinfo.excel.SonPermissionObject;
 import com.bjike.goddess.carinfo.to.DriverInfoTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
 
 /**
- * 车辆信息管理业务接口
+ * 司机信息管理业务接口
  *
  * @Author: [ jason ]
  * @Date: [ 2017-07-13 07:46 ]
@@ -17,6 +19,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DriverInfoAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -62,9 +79,26 @@ public interface DriverInfoAPI {
 
     /**
      * 审核
-     * @param id id
+     *
+     * @param id      id
      * @param suggest 意见
-     * @param audit 结果
+     * @param audit   结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+    /**
+     * 根据名称查询
+     * @param driver 司机
+     */
+    DriverInfoBO findByDriver(String driver) throws SerException;
+
+    /**
+     * 根据司机姓名获取是否提供行驶证照片-是否提供驾驶证照片-是否提供车辆保险－是否提供协议附件－是否签订租车协议的信息
+     */
+     DriverInfoBO findByName(String name) throws SerException;
+
+    /**
+     * 拷贝旧服务器上的数据到本地
+     */
+    void copyDriver() throws SerException;
 }

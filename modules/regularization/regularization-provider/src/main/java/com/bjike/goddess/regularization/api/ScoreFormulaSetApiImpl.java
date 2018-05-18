@@ -6,6 +6,7 @@ import com.bjike.goddess.regularization.bo.ScoreFormulaSetBO;
 import com.bjike.goddess.regularization.dto.ScoreFormulaSetDTO;
 import com.bjike.goddess.regularization.entity.ScoreFormulaSet;
 import com.bjike.goddess.regularization.service.ScoreFormulaSetSer;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.ScoreFormulaSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class ScoreFormulaSetApiImpl implements ScoreFormulaSetAPI {
 
     @Autowired
     private ScoreFormulaSetSer scoreFormulaSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return scoreFormulaSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return scoreFormulaSetSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询工作表现计分方式设置

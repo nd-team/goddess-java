@@ -12,4 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class ReportAddressInforDTO extends BaseDTO {
+
+    @Override
+    public String toString() {
+        return "ReportAddressInforDTO{" +
+                "limit=" + limit +
+                ", page=" + page +
+                ", sorts=" + sorts +
+                ", conditions=" + conditions +
+                ", conditionsJson='" + conditionsJson + '\'' +
+                '}';
+    }
+
 }

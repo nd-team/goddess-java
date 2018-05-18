@@ -3,6 +3,7 @@ package com.bjike.goddess.rentutilitiespay.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.rentutilitiespay.enums.PayParty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class RentPayTO extends BaseTO {
+    public interface financeAudit{}
 
     /**
      * 缴费日期
@@ -39,8 +41,8 @@ public class RentPayTO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
-    private String projectName;
+    @NotNull(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
+    private String[] projectName;
 
     /**
      * 租房地址
@@ -51,77 +53,92 @@ public class RentPayTO extends BaseTO {
     /**
      * 房东姓名
      */
+    @NotBlank(message = "房东姓名不能为空",groups = {ADD.class, EDIT.class})
     private String landlord;
 
     /**
      * 联系方式
      */
+    @NotBlank(message = "联系方式不能为空",groups = {ADD.class, EDIT.class})
     private String contact;
 
     /**
      * 账户名称
      */
+    @NotBlank(message = "账户名称不能为空",groups = {ADD.class, EDIT.class})
     private String accountTitle;
 
     /**
      * 银行卡号
      */
+    @NotBlank(message = "银行卡号不能为空",groups = {ADD.class, EDIT.class})
     private String bankNumber;
 
     /**
      * 银行开户行（详细到支行）
      */
+    @NotBlank(message = "银行开户行（详细到支行）不能为空",groups = {ADD.class, EDIT.class})
     private String bankAccount;
 
     /**
      * 房屋交租方式
      */
+    @NotBlank(message = "房屋交租方式不能为空",groups = {ADD.class, EDIT.class})
     private String taxesWay;
 
     /**
      * 房屋交租频率
      */
+    @NotBlank(message = "房屋交租频率不能为空",groups = {ADD.class, EDIT.class})
     private String taxesFequency;
 
     /**
      * 房租缴费日期
      */
+    @NotBlank(message = "房租缴费日期不能为空",groups = {ADD.class, EDIT.class})
     private String rentDate;
 
     /**
      * 水电费缴费频率
      */
+    @NotBlank(message = "水电费缴费频率不能为空",groups = {ADD.class, EDIT.class})
     private String paymentFrequency;
 
     /**
      * 水电费缴费日期
      */
+    @NotBlank(message = "水电费缴费日期不能为空",groups = {ADD.class, EDIT.class})
     private String paymentDate;
 
     /**
      * 房租（元/月）
      */
+    @NotNull(message = "房租（元/月）不能为空",groups = {ADD.class, EDIT.class})
     private Double rent;
 
     /**
      * 管理费，卫生费
      */
+    @NotNull(message = "管理费，卫生费不能为空",groups = {ADD.class, EDIT.class})
     private Double fee;
 
     /**
      * 房租缴纳开始时间
      */
+    @NotBlank(message = "房租缴纳开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String rentStartTime;
 
     /**
      * 房租缴纳结束时间
      */
+    @NotBlank(message = "房租缴纳结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String rentEndTime;
 
     /**
      * 房租缴费方
      */
-    private String rentPay;
+    @NotNull(message = "房租缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private PayParty rentPay;
 
     /**
      * 水费初期数目
@@ -166,8 +183,8 @@ public class RentPayTO extends BaseTO {
     /**
      * 水费缴费方
      */
-    @NotBlank(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String waterPay;
+    @NotNull(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private PayParty waterPay;
 
     /**
      * 电费初期数目
@@ -212,8 +229,8 @@ public class RentPayTO extends BaseTO {
     /**
      * 电费缴费方
      */
-    @NotBlank(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String energyPay;
+    @NotNull(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private PayParty energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -236,8 +253,8 @@ public class RentPayTO extends BaseTO {
     /**
      * 燃气费缴费方
      */
-    @NotBlank(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String gasPay;
+    @NotNull(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private PayParty gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -247,19 +264,15 @@ public class RentPayTO extends BaseTO {
     /**
      * 运营财务部确认是否缴费
      */
-    @NotNull(message = "运营财务部确认是否缴费不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "运营财务部确认是否缴费不能为空",groups = {RentPayTO.financeAudit.class})
     private Boolean operatingPay;
 
     /**
      * 房租收费是否已邮寄到广州
      */
-    @NotNull(message = "房租收费是否已邮寄到广州不能为空")
+    @NotNull(message = "房租收费是否已邮寄到广州不能为空",groups = {ADD.class,EDIT.class})
     private Boolean rentMoneyMail;
 
-    /**
-     * 房租收据附件
-     */
-    private String rentReceiptAccessory;
 
     /**
      * 备注
@@ -291,11 +304,11 @@ public class RentPayTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 
@@ -419,13 +432,6 @@ public class RentPayTO extends BaseTO {
         this.rentEndTime = rentEndTime;
     }
 
-    public String getRentPay() {
-        return rentPay;
-    }
-
-    public void setRentPay(String rentPay) {
-        this.rentPay = rentPay;
-    }
 
     public Double getWaterBeginNum() {
         return waterBeginNum;
@@ -483,13 +489,6 @@ public class RentPayTO extends BaseTO {
         this.waterEndTime = waterEndTime;
     }
 
-    public String getWaterPay() {
-        return waterPay;
-    }
-
-    public void setWaterPay(String waterPay) {
-        this.waterPay = waterPay;
-    }
 
     public Double getEnergyBeginNum() {
         return energyBeginNum;
@@ -547,13 +546,6 @@ public class RentPayTO extends BaseTO {
         this.energyEndTime = energyEndTime;
     }
 
-    public String getEnergyPay() {
-        return energyPay;
-    }
-
-    public void setEnergyPay(String energyPay) {
-        this.energyPay = energyPay;
-    }
 
     public Double getGasRechargeLines() {
         return gasRechargeLines;
@@ -579,13 +571,6 @@ public class RentPayTO extends BaseTO {
         this.gasEndTime = gasEndTime;
     }
 
-    public String getGasPay() {
-        return gasPay;
-    }
-
-    public void setGasPay(String gasPay) {
-        this.gasPay = gasPay;
-    }
 
     public Double getPayMoneyCollect() {
         return payMoneyCollect;
@@ -611,13 +596,6 @@ public class RentPayTO extends BaseTO {
         this.rentMoneyMail = rentMoneyMail;
     }
 
-    public String getRentReceiptAccessory() {
-        return rentReceiptAccessory;
-    }
-
-    public void setRentReceiptAccessory(String rentReceiptAccessory) {
-        this.rentReceiptAccessory = rentReceiptAccessory;
-    }
 
     public String getRemark() {
         return remark;
@@ -625,5 +603,37 @@ public class RentPayTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public PayParty getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(PayParty rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public PayParty getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(PayParty waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public PayParty getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(PayParty energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public PayParty getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(PayParty gasPay) {
+        this.gasPay = gasPay;
     }
 }

@@ -172,18 +172,36 @@ public class MoneyReadyAction {
             throw new ActException(e.getMessage());
         }
     }
+//    /**
+//     * 对比汇总
+//     *
+//     * @param month 月份
+//     * @return class CollectCompareVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/collect")
+//    public Result collect(@RequestParam Integer month) throws ActException {
+//        try {
+//            List<CollectCompareBO> collectCompareBOS = moneyReadyAPI.collectCompare(month);
+//            return ActResult.initialize(BeanTransform.copyProperties(collectCompareBOS, CollectCompareVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
-     * 对比汇总
+     * 汇总
      *
-     * @param month 月份
+     * @param date yyyy-MM-dd
      * @return class CollectCompareVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(@RequestParam Integer month) throws ActException {
+    public Result readyCollect(@RequestParam String date) throws ActException {
         try {
-            List<CollectCompareBO> collectCompareBOS = moneyReadyAPI.collectCompare(month);
+            List<CollectCompareBO> collectCompareBOS = moneyReadyAPI.readyCollect(date);
             return ActResult.initialize(BeanTransform.copyProperties(collectCompareBOS, CollectCompareVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

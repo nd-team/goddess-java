@@ -1,10 +1,14 @@
 package com.bjike.goddess.accommodation.api;
 
 import com.bjike.goddess.accommodation.bo.RentalApplyBO;
+import com.bjike.goddess.accommodation.bo.RentalBO;
+import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
 import com.bjike.goddess.accommodation.entity.RentalApply;
 import com.bjike.goddess.accommodation.service.RentalApplySer;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalApplyTO;
+import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,15 @@ import java.util.List;
 public class RentalApplyApiImpl implements RentalApplyAPI{
     @Autowired
     private RentalApplySer rentalApplySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rentalApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rentalApplySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long count(RentalApplyDTO rentalApplyDTO) throws SerException {
         return rentalApplySer.count(rentalApplyDTO);
@@ -49,15 +62,26 @@ public class RentalApplyApiImpl implements RentalApplyAPI{
     public void removeApply(String id) throws SerException {
         rentalApplySer.removeApply(id);
     }
-
+    @Override
+    public RentalApplyBO businessAudit(RentalApplyTO applyTO) throws SerException {
+        return rentalApplySer.businessAudit(applyTO);
+    }
+    @Override
+    public RentalApplyBO financeAudit(RentalApplyTO applyTO) throws SerException {
+        return rentalApplySer.financeAudit(applyTO);
+    }
+    @Override
+    public RentalApplyBO resourceAudit(RentalApplyTO applyTO) throws SerException {
+        return rentalApplySer.resourceAudit(applyTO);
+    }
     @Override
     public RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         return rentalApplySer.manageAudit(applyTO);
     }
-    @Override
-    public void summary() throws SerException {
-        rentalApplySer.summary();
-    }
+//    @Override
+//    public RentalBO rentInfo(RentalApplyTO to) throws SerException {
+//        return rentalApplySer.rentInfo(to);
+//    }
 
     @Override
     public byte[] exportExcel(RentalApplyDTO dto) throws SerException{

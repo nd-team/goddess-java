@@ -9,6 +9,7 @@ import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.dto.MeetingDiscussionDTO;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
 import com.bjike.goddess.allmeeting.to.DiscussionVoteTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MeetingDiscussionTO;
 import com.bjike.goddess.allmeeting.vo.*;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -49,6 +50,29 @@ public class ConciseSummaryAct {
     private MeetingDiscussionAPI meetingDiscussionAPI;
     @Autowired
     private ConcisePermissionAPI concisePermissionAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = conciseSummaryAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 组织内容

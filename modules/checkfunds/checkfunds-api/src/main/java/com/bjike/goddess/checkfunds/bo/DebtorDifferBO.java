@@ -35,6 +35,11 @@ public class DebtorDifferBO extends BaseBO {
      */
     List<Detail> detailList;
 
+    /**
+     * 银行流水借方
+     */
+    private Double bankIncome;
+
     public String getRecordDate() {
         return recordDate;
     }
@@ -49,6 +54,14 @@ public class DebtorDifferBO extends BaseBO {
 
     public void setIncome(Double income) {
         this.income = income;
+    }
+
+    public Double getBankIncome() {
+        return bankIncome;
+    }
+
+    public void setBankIncome(Double bankIncome) {
+        this.bankIncome = bankIncome;
     }
 
     @Override

@@ -313,7 +313,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
             }
         }
         for (ProjectMarketFee p : super.findAll()) {
-            VoucherGenerateBO v = voucherGenerateAPI.getById(p.getSaleId());
+            VoucherGenerateBO v = voucherGenerateAPI.getByIdCJh(p.getSaleId());
             if ((v == null) || (!("销售费用".equals(v.getFirstSubject())))) {
                 super.remove(p.getId());
             }

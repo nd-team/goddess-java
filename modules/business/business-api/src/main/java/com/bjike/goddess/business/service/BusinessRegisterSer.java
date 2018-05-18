@@ -1,7 +1,11 @@
 package com.bjike.goddess.business.service;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.BusinessRegisterListBO;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
+import com.bjike.goddess.business.enums.ChangeDataName;
 import com.bjike.goddess.business.excel.SonPermissionObject;
+import com.bjike.goddess.business.to.BusinessRegisterExcelTO;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
 import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -53,10 +57,10 @@ public interface BusinessRegisterSer extends Ser<BusinessRegister, BusinessRegis
      * 工商注册
      *
      * @param businessRegisterDTO 工商注册dto
-     * @return class BusinessRegisterBO
+     * @return class BusinessRegisterListBO
      * @throws SerException
      */
-    default List<BusinessRegisterBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
+    default List<BusinessRegisterListBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         return null;
     }
 
@@ -92,4 +96,51 @@ public interface BusinessRegisterSer extends Ser<BusinessRegister, BusinessRegis
 
     }
 
+    /**
+     * 工商注册的注册公司的名称,注册类型,注册资本
+     * lijuntao
+     * @return class RegisterNaTypeCaBO
+     * @throws SerException
+     */
+    default List<RegisterNaTypeCaBO> findRegiNaTyCa() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工商注册的地址
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findAddress() throws SerException {
+        return null;
+    }
+    /**
+     * 导出excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+
+    /**
+     *  导入
+     * @param businessRegisterExcelTOS 工商注册to
+     */
+    void importExcel(List<BusinessRegisterExcelTO> businessRegisterExcelTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 获取变更前内容
+     *
+     * @return class BusinessRegisterListBO
+     */
+    default BusinessRegisterListBO findOneById(String id) throws SerException {
+        return null;
+    }
 }

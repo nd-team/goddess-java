@@ -73,10 +73,61 @@ public class CompetitorTO extends BaseTO {
     @NotBlank(message = "级别定义方式不能为空", groups = {ADD.class, EDIT.class})
     private String leveldefinition;
 
+
     /**
      * 其他备注
      */
     private String remark;
+
+    /**
+     * 主管部门
+     */
+    private String directDepartment;
+
+    /**
+     * 主管名称
+     */
+    private String director;
+
+    /**
+     * 主管职权
+     */
+    private String directAuthority;
+
+    /**
+     * 负责事项
+     */
+    private String chargeItems;
+
+    /**
+     * 客户信息表序号
+     */
+    private String customerInfoCode;
+
+    /**
+     * 分管部门
+     */
+    private String branchedDepartment;
+
+    /**
+     * 负责人名称
+     */
+    private String chargeMan;
+
+    /**
+     * 负责人职权
+     */
+    private String chargeManAuthority;
+
+    /**
+     * 接口人
+     */
+    private String interfaceMan;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
 
     public String getProject() {
@@ -159,4 +210,83 @@ public class CompetitorTO extends BaseTO {
         this.remark = remark;
     }
 
+    public String getDirectDepartment() {
+        return directDepartment;
+    }
+
+    public void setDirectDepartment(String directDepartment) {
+        this.directDepartment = directDepartment;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getDirectAuthority() {
+        return directAuthority;
+    }
+
+    public void setDirectAuthority(String directAuthority) {
+        this.directAuthority = directAuthority;
+    }
+
+    public String getChargeItems() {
+        return chargeItems;
+    }
+
+    public void setChargeItems(String chargeItems) {
+        this.chargeItems = chargeItems;
+    }
+
+    public String getCustomerInfoCode() {
+        return customerInfoCode;
+    }
+
+    public void setCustomerInfoCode(String customerInfoCode) {
+        this.customerInfoCode = customerInfoCode;
+    }
+
+    public String getBranchedDepartment() {
+        return branchedDepartment;
+    }
+
+    public void setBranchedDepartment(String branchedDepartment) {
+        this.branchedDepartment = branchedDepartment;
+    }
+
+    public String getChargeMan() {
+        return chargeMan;
+    }
+
+    public void setChargeMan(String chargeMan) {
+        this.chargeMan = chargeMan;
+    }
+
+    public String getChargeManAuthority() {
+        return chargeManAuthority;
+    }
+
+    public void setChargeManAuthority(String chargeManAuthority) {
+        this.chargeManAuthority = chargeManAuthority;
+    }
+
+    public String getInterfaceMan() {
+        return interfaceMan;
+    }
+
+    public void setInterfaceMan(String interfaceMan) {
+        this.interfaceMan = interfaceMan;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 }

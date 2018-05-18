@@ -1,6 +1,6 @@
 package com.bjike.goddess.materialbuy.vo;
 
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 临时物资需求表现层对象
@@ -87,6 +87,23 @@ public class TempMatterDemandVO {
      */
     private String auditOpinion;
 
+    /**
+     * 库存是否满足
+     */
+    private Boolean ifStockSatisfy;
+
+    /**
+     * 财务部审核通过数量
+     */
+    private Integer adoptNum;
+
+    public void setIfStockSatisfy(Boolean ifStockSatisfy) {
+        this.ifStockSatisfy = ifStockSatisfy;
+    }
+
+    public void setAdoptNum(Integer adoptNum) {
+        this.adoptNum = adoptNum;
+    }
 
     public String getId() {
         return id;

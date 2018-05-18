@@ -57,21 +57,21 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private CusPermissionOperateSer cusPermissionOperateSer;
 
     @Override
-    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public Long busCountPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
-
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag", new String[]{"1", "2", "3", "4", "5"}));
         Long count = super.count(cusPermissionDTO);
         return count;
     }
 
     @Override
-    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public List<CusPermissionBO> busList(CusPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
-
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag", new String[]{"1", "2", "3", "4", "5"}));
         List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
         List<CusPermissionBO> bo = new ArrayList<>();
         for (CusPermission str : list) {
@@ -100,7 +100,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             List<OpinionBO> opinionBOS = new ArrayList<>();
             List<CusOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
-
                 if (CusPermissionType.LEVEL.equals(type)) {
                     opinionBOS = arrangementAPI.findByIds(ids);
                 } else if (CusPermissionType.MODULE.equals(type)) {
@@ -110,7 +109,74 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 } else if (CusPermissionType.DEPART.equals(type)) {
                     opinionBOS = departmentDetailAPI.findByIds(ids);
                 }
+                coboList = new ArrayList<>();
+                for (OpinionBO op : opinionBOS) {
+                    CusOperateBO cobo = new CusOperateBO();
+                    cobo.setId(op.getId());
+                    cobo.setOperator(op.getValue());
+                    coboList.add(cobo);
+                }
+            }
+            temp.setCusOperateBO(coboList);
 
+            bo.add(temp);
+        }
+        return bo;
+    }
+
+    @Override
+    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
+            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
+        }
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag", new String[]{"1", "2"}));
+        Long count = super.count(cusPermissionDTO);
+        return count;
+    }
+
+    @Override
+    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
+            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
+        }
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag", new String[]{"1", "2"}));
+        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
+        List<CusPermissionBO> bo = new ArrayList<>();
+        for (CusPermission str : list) {
+            CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);
+
+            //先查询操作对象
+            List<String> idList = new ArrayList<>();
+            CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
+            List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+            if (operateList != null && operateList.size() > 0) {
+                operateList.stream().forEach(op -> {
+                    idList.add(op.getOperator());
+                });
+            }
+            //操作对象list转String[]
+            String[] ids = null;
+            if (null != idList && idList.size() > 0) {
+                ids = new String[idList.size()];
+                for (int i = 0; i < idList.size(); i++) {
+                    ids[i] = idList.get(i);
+                }
+
+            }
+            CusPermissionType type = str.getType();
+            List<OpinionBO> opinionBOS = new ArrayList<>();
+            List<CusOperateBO> coboList = null;
+            if (null != ids && ids.length != 0) {
+                if (CusPermissionType.LEVEL.equals(type)) {
+                    opinionBOS = arrangementAPI.findByIds(ids);
+                } else if (CusPermissionType.MODULE.equals(type)) {
+                    opinionBOS = moduleTypeAPI.findByIds(ids);
+                } else if (CusPermissionType.POSITION.equals(type)) {
+                    opinionBOS = positionDetailAPI.findByIds(ids);
+                } else if (CusPermissionType.DEPART.equals(type)) {
+                    opinionBOS = departmentDetailAPI.findByIds(ids);
+                }
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
                     CusOperateBO cobo = new CusOperateBO();
@@ -157,7 +223,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<OpinionBO> opinionBOS = new ArrayList<>();
         List<CusOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
-
             if (CusPermissionType.LEVEL.equals(type)) {
                 //根据id数组查询名字和id
                 opinionBOS = arrangementAPI.findByIds(ids);
@@ -168,7 +233,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             } else if (CusPermissionType.DEPART.equals(type)) {
                 opinionBOS = departmentDetailAPI.findByIds(ids);
             }
-
 
             for (OpinionBO op : opinionBOS) {
                 CusOperateBO cobo = new CusOperateBO();
@@ -202,7 +266,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             //TODO 部门查询
             list = departmentDetailAPI.findThawOpinion();
         }
-
         return list;
     }
 
@@ -285,7 +348,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        if( operators != null && operators.length>0 ){
+        if (operators != null && operators.length > 0) {
             List<CusPermissionOperate> list = new ArrayList<>();
             for (String operateId : operators) {
                 CusPermissionOperate cpo = new CusPermissionOperate();
@@ -300,11 +363,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         String ss = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -344,22 +412,26 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门
-        if (  depart) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;
         }
 
-
         return flag;
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag) throws SerException {
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -391,7 +463,62 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+
+        if (positionFlag) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        String aa = RpcTransmit.getUserToken();
+        return flag;
+    }
+
+    @Override
+    public Boolean modCusPermission(String idFlag, UserBO user) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+        //但前用户
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
+        String userId = userBO.getId();
+        if (StringUtils.isBlank(idFlag)) {
+            throw new SerException("idFlag不能为空");
+        }
+        CusPermissionDTO dto = new CusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag", idFlag));
+        CusPermission cusPermission = super.findOne(dto);
+
+
+        //先查询操作对象
+        List<String> idList = new ArrayList<>();
+        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        if (operateList != null && operateList.size() > 0) {
+            operateList.stream().forEach(op -> {
+                idList.add(op.getOperator());
+            });
+        }
+        String[] operateIds = null;
+        if (null != idList && idList.size() > 0) {
+            operateIds = new String[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                operateIds[i] = idList.get(i);
+            }
+
+        }
+
+
+        //TODO 部门id 商务部
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
         if (moduleFlag) {

@@ -1,44 +1,27 @@
 package com.bjike.goddess.analysis.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by ike on 17-7-6.
  */
 public class CollectTO extends BaseTO{
-    /**
-     * 开始时间
-     */
-    private String startTime;
-
-    /**
-     * 结束时间
-     */
-    private String endTime;
+    public interface TestDepartment{}
+    public interface TestArea{}
     /**
      * 地区
      */
+    @NotNull(message = "地区不能为空",groups = CollectTO.TestArea.class)
     private String[] area;
     /**
      * 项目组
      */
+    @NotNull(message = "项目组不能为空",groups = CollectTO.TestDepartment.class)
     private String[] department;
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 
     public String[] getArea() {
         return area;

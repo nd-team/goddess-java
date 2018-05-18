@@ -2,10 +2,9 @@ package com.bjike.goddess.balancecard.api;
 
 import com.bjike.goddess.balancecard.bo.YearIndexSetBO;
 import com.bjike.goddess.balancecard.dto.YearIndexSetDTO;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
 import com.bjike.goddess.balancecard.service.YearIndexSetSer;
-import com.bjike.goddess.balancecard.to.DepartSerperateTO;
-import com.bjike.goddess.balancecard.to.ExportExcelYearTO;
-import com.bjike.goddess.balancecard.to.YearIndexSetTO;
+import com.bjike.goddess.balancecard.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,5 +85,25 @@ public class YearIndexSetApiImpl implements YearIndexSetAPI {
     @Override
     public byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException {
         return yearIndexSetSer.exportYearDeExcel(to);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return yearIndexSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return yearIndexSetSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<YearIndexSetBO> dendrogram(YearIndexSetDTO yearIndexSetDTO) throws SerException {
+        return yearIndexSetSer.dendrogram(yearIndexSetDTO);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return yearIndexSetSer.templateExport();
     }
 }

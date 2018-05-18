@@ -9,10 +9,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityEvaluateAPI;
+import com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateBO;
+import com.bjike.goddess.staffactivity.bo.EvaluateScoreSummaryBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityEvaluateVO;
+import com.bjike.goddess.staffactivity.vo.EvaluateScoreSummaryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +40,31 @@ public class ActivityEvaluateAct {
 
     @Autowired
     private ActivityEvaluateAPI activityEvaluateAPI;
+    @Autowired
+    private ActivityExecuteInfoAPI activityExecuteInfoAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = activityEvaluateAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询活动评价
@@ -143,6 +172,39 @@ public class ActivityEvaluateAct {
         try {
             activityEvaluateAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有活动方案
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allActivityScheme")
+    public Result allActivityScheme() throws ActException {
+        try {
+            return ActResult.initialize(activityEvaluateAPI.allActivityScheme());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 活动评价得分汇总
+     *
+     * @param dto dto
+     * @return class EvaluateScoreSummaryVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/evaluateScoreSummary")
+    public Result evaluateScoreSummary(@Validated({ActivityEvaluateDTO.COUNT.class}) ActivityEvaluateDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<EvaluateScoreSummaryBO> list = activityEvaluateAPI.evaluateScoreSummary(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, EvaluateScoreSummaryVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

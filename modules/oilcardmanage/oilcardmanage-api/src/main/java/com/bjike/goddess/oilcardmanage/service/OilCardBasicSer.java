@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 
 import java.util.List;
@@ -20,6 +22,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增油卡基本信息
@@ -65,4 +80,27 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
     List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException;
 
     OilCardBasicBO findByCode(String oilCardCode) throws SerException;
+
+
+    OilCardBasicBO find(String id) throws SerException;
+
+    /**
+     * 查询未冻结的油卡
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findOilCard() throws SerException;
+
+    /**
+     * 删除油卡基本信息
+     *
+     * @param id 删除信息记录Id
+     * @throws SerException 删除油卡记录业务异常
+     */
+    void deleteOilCardBasic(String id) throws SerException;
+
+
+    /**
+     * 保存油卡基本信息
+     */
+    void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException;
 }

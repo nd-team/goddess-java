@@ -6,6 +6,29 @@ import com.dounine.japi.core.impl.ProjectImpl;
 
 import java.io.IOException;
 
+//public class JapiTest {
+//
+//    public static void main(String[] args) throws IOException {
+//        JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
+//        JapiClient.setpostfixPath("/src/main/java");
+//        JapiClient.setProjectJavaPath("modules/archive/archive-consumer");//主项目位置
+//        JapiClient.setActionReletivePath("com/bjike/goddess/archive/action");//主项目action位置
+//        JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
+//                "modules/archive/archive-api",
+//                "modules/annual/annual-api",
+//                "modules/storage/storage-api",
+//                "common/common-api"
+//        });
+//        JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
+//        IProject project = ProjectImpl.init();
+//        JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
+//        japiClientStorage.setProject(project);
+//        japiClientStorage.autoSaveToDisk();
+//        new JapiClientTransfer().autoTransfer(japiClientStorage);
+//    }
+//
+//}
+
 public class JapiTest {
 
     public static void main(String[] args) throws IOException {
@@ -15,7 +38,10 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/archive/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/archive/archive-api",
+                "modules/storage/storage-api",
                 "modules/annual/annual-api",
+                "modules/staffentry/staffentry-api",
+                "modules/secure/secure-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

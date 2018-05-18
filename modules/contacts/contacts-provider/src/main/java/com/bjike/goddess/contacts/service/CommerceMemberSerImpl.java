@@ -195,6 +195,11 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
         return flag;
     }
 
+    @Override
+    public byte[] templateExport() throws SerException {
+        return null;
+    }
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -274,7 +279,7 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
         String[] allEmails = null;
         //从公共邮箱中得到部门的邮箱
         CommonalityDTO commonalityDTO = new CommonalityDTO();
-        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(commonalityDTO);
+        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
         List<String> stringList = new ArrayList<>();
         for (CommonalityBO commonalityBO : commonalityBOList) {
             if (commonalityBO.getDepartmentId().equals(this.getDepartment("综合资源部"))) {
@@ -335,8 +340,11 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));
         List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
-        String departmentId = departmentDetailBOList.get(0).getId();
-        return departmentId;
+        if (null != departmentDetailBOList && departmentDetailBOList.size() > 0) {
+            String departmentId = departmentDetailBOList.get(0).getId();
+            return departmentId;
+        }
+        return null;
     }
 
 

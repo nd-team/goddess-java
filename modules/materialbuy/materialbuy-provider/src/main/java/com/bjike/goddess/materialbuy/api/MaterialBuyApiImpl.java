@@ -4,13 +4,18 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
+import com.bjike.goddess.materialbuy.bo.OptionBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.service.MaterialBuySer;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
+import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +33,16 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
 
     @Autowired
     private MaterialBuySer materialBuySer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return materialBuySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialBuySer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资购买
@@ -144,4 +159,94 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
         return materialBuySer.areaBuyStatusDaySum();
     }
 
+    @Override
+    public Long count(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.count(dto);
+    }
+
+    @Override
+    public List<String> findDevType(String[] intervalTime) throws SerException {
+        return materialBuySer.findDevType(intervalTime);
+    }
+
+    @Override
+    public List<String> findAreaByType(String devType,String[] intervalTime) throws SerException {
+        return materialBuySer.findAreaByType(devType,intervalTime);
+    }
+
+    @Override
+    public List<String> findArea(String[] intervalTime) throws SerException {
+        return materialBuySer.findArea(intervalTime);
+    }
+
+    @Override
+    public List<String> findDepByArea(String area, String[] intervalTime) throws SerException {
+        return materialBuySer.findDepByArea(area,intervalTime);
+    }
+
+
+    @Override
+    public List<String> findRequis(String[] intervalTime) throws SerException {
+        return materialBuySer.findRequis(intervalTime);
+    }
+
+    @Override
+    public List<String> findDeparByTyAre(String devType, String area, String[] intervalTime) throws SerException {
+        return materialBuySer.findDeparByTyAre(devType,area,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTyAndAr(String devType, String area, String department, String[] intervalTime) throws SerException {
+        return materialBuySer.findByTyAndAr(devType,area,department,intervalTime);
+    }
+
+    @Override
+    public List<String> findDevByAreaDev(String area, String projectTeam, String[] intervalTime) throws SerException {
+        return materialBuySer.findDevByAreaDev(area,projectTeam,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String devType, String[] intervalTime) throws SerException {
+        return materialBuySer.findByTeamAnArea(area,projectTeam,devType,intervalTime);
+    }
+
+    @Override
+    public List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
+        return materialBuySer.findByRequis(requisitioner,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByRequisType(String requisitioner, String devType, String[] intervalTime) throws SerException {
+        return materialBuySer.findByRequisType(requisitioner,devType,intervalTime);
+    }
+
+    @Override
+    public List<String> findSubscribeDate() throws SerException {
+        return materialBuySer.findSubscribeDate();
+    }
+
+    @Override
+    public List<String> findRequisitioner() throws SerException {
+        return materialBuySer.findRequisitioner();
+    }
+
+    @Override
+    public byte[] exportExcel(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.exportExcel(dto);
+    }
+
+    @Override
+    public List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.materialBuySum(dto);
+    }
+
+    @Override
+    public OptionBO GUI(String year, String month) throws SerException {
+        return materialBuySer.GUI( year,  month);
+    }
+
+    @Override
+    public OptionBO GuiByWeek(String year, String month, String week) throws SerException {
+        return materialBuySer.GuiByWeek(year,month,week);
+    }
 }

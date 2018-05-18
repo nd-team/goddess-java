@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.action.archive;
 import com.bjike.goddess.archive.api.ArchiveDetailAPI;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.vo.ArchiveDetailVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -44,6 +45,29 @@ public class ArchiveDetailAct extends BaseFileAction {
     private ArchiveDetailAPI archiveDetailAPI;
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = archiveDetailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存
@@ -233,6 +257,38 @@ public class ArchiveDetailAct extends BaseFileAction {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(archiveDetailAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取管理等级
+     *
+     * @param name 姓名
+     * @version v1
+     */
+    @GetMapping("v1/findManage")
+    public Result findManage(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(archiveDetailAPI.findManage(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取处罚和奖励
+     *
+     * @description 数组第一个为处罚第二个为奖励
+     * @param name 姓名
+     * @version v1
+     */
+    @GetMapping("v1/findPushAndReward")
+    public Result findPushAndReward(@RequestParam String name) throws ActException {
+        try {
+            String[] strings = archiveDetailAPI.findPushAndReward(name);
+            return ActResult.initialize(strings);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MarPermissionBO;
 import com.bjike.goddess.marketdevelopment.dto.MarPermissionDTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 
@@ -18,6 +19,12 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarPermissionAPI {
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**

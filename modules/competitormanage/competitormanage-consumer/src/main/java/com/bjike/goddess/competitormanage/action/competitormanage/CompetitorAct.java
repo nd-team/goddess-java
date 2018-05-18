@@ -20,6 +20,7 @@ import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CompetitorVO;
+import com.bjike.goddess.competitormanage.vo.OrganizationVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
@@ -318,11 +319,11 @@ public class CompetitorAct extends BaseFileAction {
      * @param endDate   结束时间
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportExcel(String startDate, String endDate, HttpServletResponse response) throws ActException {
         try {
-            String fileName = "竞争对手管理.xlsx";
+            String fileName = "竞争对手信息.xlsx";
             super.writeOutFile(response, competitorAPI.exportExcel(startDate, endDate), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
@@ -340,7 +341,7 @@ public class CompetitorAct extends BaseFileAction {
     @GetMapping("v1/module")
     public Result exportModule(HttpServletResponse response) throws ActException {
         try {
-            String fileName = "竞争对手管理模板.xlsx";
+            String fileName = "竞争对手信息模板.xlsx";
             super.writeOutFile(response, competitorAPI.exportExcelModule(), fileName);
             return new ActResult(0, "导出成功");
         } catch (SerException e) {
@@ -416,4 +417,39 @@ public class CompetitorAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查看组织结构
+     *
+     * @param id 竞争对手信息id
+     * @return class OrganizationVO
+     * @version v1
+     */
+    @GetMapping("v1/organize/{id}")
+    public Result organizeList(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(competitorAPI.organizeList(id), OrganizationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+//    /**
+//     * 查询所有项目名称竞争对手名称
+//     * @return class MarketInfoVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/project")
+//    public Result findProject() throws ActException{
+//        try {
+//            List<MarketInfoBO> boList = competitorAPI.findProject();
+//            List<MarketInfoVO> voList = BeanTransform.copyProperties(boList,MarketInfoVO.class);
+//            return ActResult.initialize(voList);
+//        }catch (SerException e){
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
 }

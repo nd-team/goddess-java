@@ -102,6 +102,7 @@ public interface QQGroupAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -116,6 +117,10 @@ public interface QQGroupAPI {
      * @return class QQGroupBO
      */
     default QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException {
+        return null;
+    }
+
+    default byte[] templateExport() throws SerException {
         return null;
     }
 }

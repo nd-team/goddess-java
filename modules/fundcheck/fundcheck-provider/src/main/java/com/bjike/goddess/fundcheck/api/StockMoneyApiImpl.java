@@ -10,7 +10,9 @@ import com.bjike.goddess.fundcheck.to.StockMoneyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 收到股东款业务接口实现
@@ -65,7 +67,7 @@ public class StockMoneyApiImpl implements StockMoneyAPI {
 
     }
     @Override
-    public List<StockMoneyBO> collect(StockMoneyCollectTO to) throws SerException {
+    public LinkedHashMap<String,String> collect(StockMoneyCollectTO to) throws SerException {
         return stockMoneySer.collect(to);
     }
     @Override

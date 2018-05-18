@@ -1,6 +1,8 @@
 package com.bjike.goddess.attainment.api;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -16,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SurveyQuestionnaireOptionAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加
@@ -61,4 +77,13 @@ public interface SurveyQuestionnaireOptionAPI {
         return null;
     }
 
+    /**
+     * 查询所有的选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<QuestionCheckBO> findQuesCheck() throws SerException {
+        return null;
+    }
 }

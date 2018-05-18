@@ -7,10 +7,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.projectroyalty.api.RatioAPI;
 import com.bjike.goddess.projectroyalty.dto.RatioDTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.RatioTO;
-import com.bjike.goddess.projectroyalty.vo.OpinionVO;
 import com.bjike.goddess.projectroyalty.vo.RatioVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -34,6 +35,31 @@ public class RatioAction {
 
     @Autowired
     private RatioAPI ratioAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = ratioAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 
     /**
@@ -76,7 +102,7 @@ public class RatioAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@Validated String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(ratioAPI.delete(id), RatioVO.class));
         } catch (SerException e) {
@@ -92,7 +118,7 @@ public class RatioAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@Validated String id) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(ratioAPI.getById(id), RatioVO.class));
         } catch (SerException e) {

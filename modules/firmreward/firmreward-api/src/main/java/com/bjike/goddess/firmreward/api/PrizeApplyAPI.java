@@ -2,8 +2,12 @@ package com.bjike.goddess.firmreward.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.firmreward.bo.*;
+import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
+import com.bjike.goddess.firmreward.to.ApplyDetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -74,7 +78,7 @@ public interface PrizeApplyAPI {
      * @param to 奖品申请to
      * @throws SerException
      */
-    void addPrizeDetails(PrizeApplyTO to) throws SerException;
+    void addPrizeDetails(ApplyDetailTO to) throws SerException;
 
     /**
      * 更新奖品明细
@@ -82,7 +86,7 @@ public interface PrizeApplyAPI {
      * @param to 奖品申请to
      * @throws SerException
      */
-    void updatePrizeDetails(PrizeApplyTO to) throws SerException;
+    void updatePrizeDetails(ApplyDetailTO to) throws SerException;
 
     /**
      * 查看奖品明细
@@ -95,7 +99,6 @@ public interface PrizeApplyAPI {
 
     /**
      * 员工奖励汇总
-     *
      * @return class StaffRewardCollectBO
      * @throws SerException
      */
@@ -116,5 +119,18 @@ public interface PrizeApplyAPI {
      * @throws SerException
      */
     List<AreaRewardCollectBO> areaRewardCollect() throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

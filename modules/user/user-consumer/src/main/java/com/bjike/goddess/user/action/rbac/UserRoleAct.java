@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @LoginAuth
 @DefaultProperties
 @RestController
-@RequestMapping("user-role")
+@RequestMapping("user/role")
 public class UserRoleAct {
 
     @Autowired
     private UserRoleAPI userRoleAPI;
 
     /**
-     * 添加用户角色
+     * 添加
      *
      * @param userRoleTO 用户角色信息
      * @return class UserRoleVO

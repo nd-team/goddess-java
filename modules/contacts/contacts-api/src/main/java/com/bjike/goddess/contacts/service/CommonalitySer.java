@@ -97,6 +97,10 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
         return null;
     }
 
+    default List<CommonalityBO> findAlls() throws SerException {
+        return null;
+    }
+
     /**
      * 根据部门ID查询公共邮箱
      *
@@ -148,5 +152,29 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
      * 导入
      */
     default void importExcel(List<CommonalityTO> tocs) throws SerException {
+    }
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取未冻结的公邮邮件List<String>
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getEmails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取部门项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartment() throws SerException {
+        return null;
     }
 }

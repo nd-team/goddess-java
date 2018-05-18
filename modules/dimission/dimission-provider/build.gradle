@@ -29,8 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:dimission:dimission-api")
-    compile project(":modules:user:user-api")
-    compile project(":modules:organize:organize-api")
+    compile project(":modules:staffentry:staffentry-api")
     compile project(":common:common-utils")
 }
 

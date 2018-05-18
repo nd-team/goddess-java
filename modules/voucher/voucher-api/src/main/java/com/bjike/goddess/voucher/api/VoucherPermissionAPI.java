@@ -26,6 +26,49 @@ public interface VoucherPermissionAPI {
     default Long countPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
         return null;
     }
+    /**
+     * 明细账权限总条数
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default Long countAccountPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 明细账权限列表
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherPermissionBO> listAccount(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总权限总条数
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default Long countSubjectPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总权限列表
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherPermissionBO> listSubject(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 客户权限列表
@@ -98,6 +141,15 @@ public interface VoucherPermissionAPI {
      * @throws SerException
      */
     default Boolean busCusPermission(String idFlag) throws SerException {
+        return null;
+    }
+    /**
+     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
+     *
+     * @param idFlag 客户权限idFlag
+     * @throws SerException
+     */
+    default Boolean accCusPermission(String idFlag) throws SerException {
         return null;
     }
 }

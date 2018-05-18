@@ -2,90 +2,89 @@ package com.bjike.goddess.supplier.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
- * 联系情况
+ * 联络情况
  *
- * @Author: [ dengjunren ]
- * @Date: [ 2017-03-20T11:03:21.694 ]
- * @Description: [ 联系情况 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-12-15 04:03 ]
+ * @Description: [ 联络情况 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "supplier_contact_situation")
+@Table(name = "supplier_contactsituation")
 public class ContactSituation extends BaseEntity {
 
     /**
-     * 供应商基本信息
+     * 供应商信息登记id
      */
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "information_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '供应商基本信息'")
-    private SupplierInformation information;
-
+    @Column(name = "supplierInfoRegiId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '供应商信息登记id'")
+    private String supplierInfoRegiId;
     /**
-     * 业务联系人
+     * 业务联络人
      */
-    @Column(name = "contacts", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '业务联系人'")
-    private String contacts;
+    @Column(name = "bussLiaison", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务联络人'")
+    private String bussLiaison;
 
     /**
      * 职务
      */
-    @Column(name = "duties", columnDefinition = "VARCHAR(50)   COMMENT '职务'")
-    private String duties;
+    @Column(name = "duty", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职务'")
+    private String duty;
 
     /**
      * 联系电话
      */
-    @Column(name = "telephone", nullable = false, columnDefinition = "VARCHAR(20)   COMMENT '联系电话'")
-    private String telephone;
+    @Column(name = "contactNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    private String contactNum;
 
     /**
      * 邮箱
      */
-    @Column(name = "email", columnDefinition = "VARCHAR(100)   COMMENT '邮箱'")
+    @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
     private String email;
 
     /**
      * 传真
      */
-    @Column(name = "fax", columnDefinition = "VARCHAR(100)   COMMENT '传真'")
-    private String fax;
+    @Column(name = "facsimile", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '传真'")
+    private String facsimile;
 
-
-    public SupplierInformation getInformation() {
-        return information;
+    public String getSupplierInfoRegiId() {
+        return supplierInfoRegiId;
     }
 
-    public void setInformation(SupplierInformation information) {
-        this.information = information;
+    public void setSupplierInfoRegiId(String supplierInfoRegiId) {
+        this.supplierInfoRegiId = supplierInfoRegiId;
     }
 
-    public String getContacts() {
-        return contacts;
+    public String getBussLiaison() {
+        return bussLiaison;
     }
 
-    public void setContacts(String contacts) {
-        this.contacts = contacts;
+    public void setBussLiaison(String bussLiaison) {
+        this.bussLiaison = bussLiaison;
     }
 
-    public String getDuties() {
-        return duties;
+    public String getDuty() {
+        return duty;
     }
 
-    public void setDuties(String duties) {
-        this.duties = duties;
+    public void setDuty(String duty) {
+        this.duty = duty;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getContactNum() {
+        return contactNum;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setContactNum(String contactNum) {
+        this.contactNum = contactNum;
     }
 
     public String getEmail() {
@@ -96,11 +95,11 @@ public class ContactSituation extends BaseEntity {
         this.email = email;
     }
 
-    public String getFax() {
-        return fax;
+    public String getFacsimile() {
+        return facsimile;
     }
 
-    public void setFax(String fax) {
-        this.fax = fax;
+    public void setFacsimile(String facsimile) {
+        this.facsimile = facsimile;
     }
 }

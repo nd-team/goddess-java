@@ -5,10 +5,10 @@ import com.bjike.goddess.supplier.dto.ContactSituationDTO;
 import com.bjike.goddess.supplier.entity.ContactSituation;
 
 /**
-* 联系情况持久化接口, 继承基类可使用ｊｐａ命名查询
-* @Author:			[ dengjunren ]
-* @Date:			[  2017-03-20T11:03:21.709 ]
-* @Description:	[ 联系情况持久化接口, 继承基类可使用ｊｐａ命名查询 ]
+* 联络情况持久化接口, 继承基类可使用ｊｐａ命名查询
+* @Author:			[ lijuntao ]
+* @Date:			[  2017-12-15 04:03 ]
+* @Description:	[ 联络情况持久化接口, 继承基类可使用ｊｐａ命名查询 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */

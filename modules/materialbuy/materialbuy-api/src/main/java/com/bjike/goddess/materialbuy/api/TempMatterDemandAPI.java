@@ -3,6 +3,7 @@ package com.bjike.goddess.materialbuy.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialbuy.bo.TempMatterDemandBO;
 import com.bjike.goddess.materialbuy.dto.TempMatterDemandDTO;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.TempMatterDemandTO;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TempMatterDemandAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询临时物资需求
@@ -77,4 +91,12 @@ public interface TempMatterDemandAPI {
      */
     TempMatterDemandBO checkDetail(String id) throws SerException;
 
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(TempMatterDemandDTO dto) throws SerException;
 }

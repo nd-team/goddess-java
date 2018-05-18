@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.ReHierarchyBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.service.PositionDetailSer;
@@ -113,5 +114,35 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     @Override
     public List<OpinionBO> findAllOpinion() throws SerException {
         return positionDetailSer.findAllOpinion();
+    }
+
+    @Override
+    public List<String> getPositions(String id) throws SerException {
+        return positionDetailSer.getPositions(id);
+    }
+
+    @Override
+    public List<ReHierarchyBO> list() throws SerException {
+        return positionDetailSer.list();
+    }
+
+    @Override
+    public PositionDetailBO findByNumber(String serialNumber) throws SerException {
+        return positionDetailSer.findByNumber(serialNumber);
+    }
+
+    @Override
+    public PositionDetailBO findByPosition(String position) throws SerException {
+        return positionDetailSer.findByPosition(position);
+    }
+
+    @Override
+    public String number(PositionDetailTO to) throws SerException {
+        return positionDetailSer.number(to);
+    }
+
+    @Override
+    public List<String> positionNames() throws SerException {
+        return positionDetailSer.positionNames();
     }
 }

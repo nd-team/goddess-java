@@ -3,7 +3,10 @@ package com.bjike.goddess.buyticket.service;
 import com.bjike.goddess.buyticket.bo.BuyTicketApplyBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketApplyDTO;
 import com.bjike.goddess.buyticket.entity.BuyTicketApply;
+import com.bjike.goddess.buyticket.enums.AuditType;
+import com.bjike.goddess.buyticket.excel.SonPermissionObject;
 import com.bjike.goddess.buyticket.to.BuyTicketApplyTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,16 +24,34 @@ import java.util.List;
 public interface BuyTicketApplySer extends Ser<BuyTicketApply, BuyTicketApplyDTO> {
 
     /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+    /**
      * 车票购买申请列表总条数
      */
     default Long countBuyTicketApply(BuyTicketApplyDTO buyTicketApplyDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个车票购买申请
+     *
      * @return class BuyTicketApplyBO
      */
-    default BuyTicketApplyBO getOne(String id) throws SerException {return null;}
+    default BuyTicketApplyBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 基本信息设置
@@ -76,20 +97,41 @@ public interface BuyTicketApplySer extends Ser<BuyTicketApply, BuyTicketApplyDTO
     }
 
     /**
-     * 审核
+     * 规划模块审核
      *
      * @return class BuyTicketApplyBO
      */
-    default BuyTicketApplyBO auditBuyTicketApply(BuyTicketApplyTO buyTicketApplyTO) throws SerException {
+    default void planAuditBuyTicketApply(String id,AuditType planAuditOpinion) throws SerException {
+        return;
+    }
+
+    /**
+     * 福利模块审核
+     *
+     * @return class BuyTicketApplyBO
+     */
+    default void welfAuditBuyTicketApply(String id,AuditType welfAuditOpinion) throws SerException {
+        return;
+    }
+
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
         return null;
     }
 
     /**
-     * 发送邮件
+     * 获取所有用户
      *
-     * @return class BuyTicketApplyBO
+     * @return
+     * @throws SerException
      */
-    default BuyTicketApplyBO sendBuyTicketApply(BuyTicketApplyTO buyTicketApplyTO) throws SerException {
+    default List<String> findallMonUser() throws SerException {
         return null;
     }
 }

@@ -1,9 +1,7 @@
 package com.bjike.goddess.materialbuy.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.materialbuy.type.AuditState;
-
-import javax.persistence.Column;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 临时物资需求业务传输对象
@@ -16,6 +14,7 @@ import javax.persistence.Column;
  */
 public class TempMatterDemandBO extends BaseBO {
 
+    private String createTime;
     /**
      * 地区
      */
@@ -86,6 +85,32 @@ public class TempMatterDemandBO extends BaseBO {
      */
     private String auditOpinion;
 
+    /**
+     * 库存是否满足
+     */
+    private Boolean ifStockSatisfy;
+
+    /**
+     * 财务部审核通过数量
+     */
+    private Integer adoptNum;
+
+
+    public Boolean getIfStockSatisfy() {
+        return ifStockSatisfy;
+    }
+
+    public void setIfStockSatisfy(Boolean ifStockSatisfy) {
+        this.ifStockSatisfy = ifStockSatisfy;
+    }
+
+    public Integer getAdoptNum() {
+        return adoptNum;
+    }
+
+    public void setAdoptNum(Integer adoptNum) {
+        this.adoptNum = adoptNum;
+    }
 
     public String getArea() {
         return area;
@@ -197,5 +222,13 @@ public class TempMatterDemandBO extends BaseBO {
 
     public void setAuditOpinion(String auditOpinion) {
         this.auditOpinion = auditOpinion;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

@@ -43,6 +43,50 @@ public class MonthCollectBO extends BaseBO {
      */
     private Double expenditure;
 
+    /**
+     * 本月发生额
+     */
+    private Double incurredAmount;
+
+    /**
+     * 开始时间
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
+
+    /**
+     * 流水日期
+     */
+    private String recordDate;
+
+    public String getRecordDate() {
+        return recordDate;
+    }
+
+    public void setRecordDate(String recordDate) {
+        this.recordDate = recordDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public Integer getYear() {
         return year;
     }
@@ -89,5 +133,13 @@ public class MonthCollectBO extends BaseBO {
 
     public void setExpenditure(Double expenditure) {
         this.expenditure = expenditure;
+    }
+
+    public Double getIncurredAmount() {
+        return incurredAmount;
+    }
+
+    public void setIncurredAmount(Double incurredAmount) {
+        this.incurredAmount = incurredAmount;
     }
 }

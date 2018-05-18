@@ -1,9 +1,9 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.entity.SurveyPlan;
-import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -19,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加
@@ -93,6 +107,48 @@ public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研计划
+     */
+    default List<SurPlanBO> getSurveyPlan() throws SerException {
+        return null;
+    }
+
+    /**
+     * 建立问卷
+     */
+    default List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查看问卷
+     */
+    default List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 问卷调研
+     */
+    default List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改问卷
+     */
+    default List<SurveyActualizesBO> edit(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研表名称
+     */
+    default List<String> getName() throws SerException {
         return null;
     }
 }

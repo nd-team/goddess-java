@@ -1,12 +1,14 @@
 package com.bjike.goddess.customer.action.customer;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.api.CustomerLevelAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
@@ -45,6 +47,8 @@ public class CustomerLevelAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
     /**
@@ -55,7 +59,7 @@ public class CustomerLevelAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider filter="userFilter" timeout="${dubbo.provider.timeout}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.ArrestPointAPI" ref="arrestPointApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.PunchAPI" ref="punchApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.PunchGrandSonAPI" ref="punchGrandSonApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.PunchSonAPI" ref="punchSonApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.DayReportAPI" ref="dayReportApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAPI" ref="vacateApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.OverWorkAPI" ref="overWorkApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.ExtralOverWorkAPI" ref="extralOverWorkApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.FinanceAttendanceAPI" ref="financeAttendanceApiImpl" timeout="1200000"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAuditAPI" ref="vacateAuditApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateSetAPI" ref="vacateSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.HolidaySetAPI" ref="holidaySetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.CaseCountSetAPI" ref="caseCountSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.AuditTimeSetAPI" ref="auditTimeSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.DayCountSetAPI" ref="dayCountSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.FinanceSetAPI" ref="financeSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.OverWorkCountSetAPI" ref="overWorkCountSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.PhoneRemindAPI" ref="phoneRemindApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateCountSetAPI" ref="vacateCountSetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.AutoPunchAPI" ref="autoPunchApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+	<dubbo:reference  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" id="dimissionInfoApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" id="taskNodeApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.push.api.PushUserInfoAPI" id="pushUserInfoApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+
+</beans>

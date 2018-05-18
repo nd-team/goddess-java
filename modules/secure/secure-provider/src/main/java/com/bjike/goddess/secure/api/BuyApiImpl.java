@@ -5,6 +5,7 @@ import com.bjike.goddess.secure.bo.BuyBO;
 import com.bjike.goddess.secure.dto.BuyDTO;
 import com.bjike.goddess.secure.service.BuySer;
 import com.bjike.goddess.secure.to.BuyTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,15 @@ public class BuyApiImpl implements BuyAPI {
     @Override
     public Long count(BuyDTO dto) throws SerException {
         return buySer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return buySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return buySer.guidePermission(guidePermissionTO);
     }
 }

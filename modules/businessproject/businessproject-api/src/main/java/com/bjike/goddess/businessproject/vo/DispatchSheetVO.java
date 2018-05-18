@@ -1,5 +1,8 @@
 package com.bjike.goddess.businessproject.vo;
 
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.ProjectStatus;
+
 /**
  * 商务项目派工单信息管理表现层对象
  *
@@ -144,6 +147,30 @@ public class DispatchSheetVO {
      * 临时合同编号
      */
     private String tempContractNum;
+    /**
+     * 立项情况
+     */
+    private MakeContract makeContract;
+    /**
+     * 派工单号
+     */
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    private Double scale;
+    /**
+     * 专业
+     */
+    private String major;
 
     /**
      * 创建时间
@@ -155,6 +182,53 @@ public class DispatchSheetVO {
      */
     private String modifyTime;
 
+    public MakeContract getMakeContract() {
+        return makeContract;
+    }
+
+    public void setMakeContract(MakeContract makeContract) {
+        this.makeContract = makeContract;
+    }
+
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public String getId() {
         return id;

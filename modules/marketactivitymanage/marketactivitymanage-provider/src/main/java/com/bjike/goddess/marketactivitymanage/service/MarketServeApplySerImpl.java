@@ -1,6 +1,5 @@
 package com.bjike.goddess.marketactivitymanage.service;
 
-import com.alibaba.dubbo.common.json.Yylex;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,7 +8,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.marketactivitymanage.api.MarketServeRecordAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyDetailBO;
@@ -38,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 市场招待申请业务实现
@@ -82,31 +81,31 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是本部门人员,没有该操作权限");
+            throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
     }
 
     /**
-     * 核对审核权限(模块)
+     * 核对审核权限(运营商务部)
      *
      * @throws SerException
      */
-    private void checkAuditMPermission() throws SerException {
+    private void checkBusinPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是运营商务部人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -123,7 +122,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.arrCusPermission("3");
         } else {
@@ -154,16 +153,16 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 核对审核权限（模块级别）
+     * 核对查看权限（部门级别）
      */
-    private Boolean guideAuditMIdentity() throws SerException {
+    private Boolean guideBusinIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
@@ -192,9 +191,11 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditM = guideAuditMIdentity();
         Boolean flagAuditA = guideAuditAIdentity();
-        if (flagSee || flagAuditM || flagAuditA) {
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditB = guideBusinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAuditA || flagAuditB) {
             return true;
         } else {
             return false;
@@ -247,7 +248,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideBusinIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -271,7 +272,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     public List<MarketServeApplyBO> list(MarketServeApplyDTO dto) throws SerException {
         checkPermission();
-        dto.getConditions().add(Restrict.ne("executiveAuditOpinion",1));
         List<MarketServeApply> list = super.findByPage(dto);
         List<MarketServeApplyBO> listBO = BeanTransform.copyProperties(list, MarketServeApplyBO.class);
         return listBO;
@@ -369,8 +369,11 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
-        checkAuditMPermission();
+        checkBusinPermission();
         MarketServeApply model = super.findById(id);
+        if (model.getFundModuleOpinion() != null) {
+            throw new SerException("您已审核了,就不能再审核了");
+        }
         model.setModifyTime(LocalDateTime.now());
         model.setFundModuleOpinion(fundModuleOpinion);
         super.update(model);
@@ -389,24 +392,28 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         checkAuditAPermission();
 
         MarketServeApply model = super.findById(id);
-        model.setModifyTime(LocalDateTime.now());
-        model.setExecutiveAuditOpinion(executiveAuditOpinion);
-        super.update(model);
-        if(model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)){
-            MarketServeRecord marketServeRecord = new MarketServeRecord();
-            BeanUtils.copyProperties(model,marketServeRecord);
-            marketServeRecord = marketServeRecordSer.save(marketServeRecord);
-            List<CustomerInfoBO> list = customerInfoSer.findByMarketServeId(model.getId());
-            if(null != list && list.size()!=0){
-                for (CustomerInfoBO customerInfoBO : list){
-                    CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO,CustomerInfo.class,true,"marketServeId","id");
-                    customerInfo.setCreateTime(LocalDateTime.now());
-                    customerInfo.setModifyTime(LocalDateTime.now());
-                    customerInfo.setMarketServeId(marketServeRecord.getId());
-                    customerInfoSer.save(customerInfo);
+        if (model.getExecutiveAuditOpinion() != null) {
+            throw new SerException("您已审核了,就不能再审核了");
+        } else {
+            model.setModifyTime(LocalDateTime.now());
+            model.setExecutiveAuditOpinion(executiveAuditOpinion);
+            super.update(model);
+            if (model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)) {
+                MarketServeRecord marketServeRecord = new MarketServeRecord();
+                BeanUtils.copyProperties(model, marketServeRecord);
+                marketServeRecord = marketServeRecordSer.save(marketServeRecord);
+                List<CustomerInfoBO> list = customerInfoSer.findByMarketServeId(model.getId());
+                if (null != list && list.size() != 0) {
+                    for (CustomerInfoBO customerInfoBO : list) {
+                        CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO, CustomerInfo.class, true, "marketServeId", "id");
+                        customerInfo.setCreateTime(LocalDateTime.now());
+                        customerInfo.setModifyTime(LocalDateTime.now());
+                        customerInfo.setMarketServeId(marketServeRecord.getId());
+                        customerInfoSer.save(customerInfo);
+                    }
                 }
+                //TODO : lijuntao插数据到借款记录表未明白
             }
-            //TODO : lijuntao插数据到借款记录表未明白
         }
     }
 
@@ -491,7 +498,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 查看所有的项目名
+     * 查看所有本表的项目名
      *
      * @return list
      * @throws SerException
@@ -513,7 +520,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 查看所有的地区
+     * 查看所有本表的地区
      *
      * @return list
      * @throws SerException
@@ -529,6 +536,22 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             String area = model.getArea();
             if (StringUtils.isNotBlank(model.getArea())) {
                 set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findProjectCode() throws SerException {
+        List<MarketServeApply> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MarketServeApply model : list) {
+            String projectCode = model.getProjectCode();
+            if (StringUtils.isNotBlank(model.getProjectCode())) {
+                set.add(projectCode);
             }
         }
         return new ArrayList<>(set);
@@ -634,7 +657,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
 
     @Override
     public byte[] templateExport() throws SerException {
-        // checkPermission();
         List<MarketServeApplyTemplateExprot> marketServeApplyTemplateExprots = new ArrayList<>();
 
         MarketServeApplyTemplateExprot excel = new MarketServeApplyTemplateExprot();
@@ -661,5 +683,15 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(marketServeApplyTemplateExprots, exce);
         return bytes;
+    }
+
+    @Override
+    public List<String> getServePrincipal() throws SerException {
+        List<MarketServeApply> marketServeApplies = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(marketServeApplies)) {
+            list = marketServeApplies.stream().map(MarketServeApply::getServePrincipal).distinct().collect(Collectors.toList());
+        }
+        return list;
     }
 }

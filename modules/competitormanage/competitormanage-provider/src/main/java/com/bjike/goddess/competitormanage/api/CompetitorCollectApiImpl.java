@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
+import com.bjike.goddess.competitormanage.bo.CompetitorCollectsBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.service.CompetitorCollectSer;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
@@ -59,7 +60,7 @@ public class CompetitorCollectApiImpl implements CompetitorCollectAPI {
     }
 
     @Override
-    public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
+    public List<CompetitorCollectsBO> pageList(CompetitorCollectDTO dto) throws SerException {
         return competitorCollectSer.pageList(dto);
     }
 

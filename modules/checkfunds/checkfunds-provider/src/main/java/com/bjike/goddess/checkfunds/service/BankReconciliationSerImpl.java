@@ -19,12 +19,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.fundrecords.to.CollectTO;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -35,6 +38,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +76,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -304,6 +312,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         if (account == null) {
             throw new SerException("没有该用户名对应的账号");
         }
+        List<BankRecordCollectBO> boList = bankRecordAPI.collectByCondition(entity.getYear(), entity.getMonth(), account);   //用于判断银行流水是否存在这账号
         super.save(entity);
         return BeanTransform.copyProperties(entity, BankReconciliationBO.class);
     }
@@ -358,11 +367,21 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         notPassAuditTO.setAuditStatus("审批不通过");
         notPassAuditTO.setBankReconciliationId(id);
         notPassAuditSer.save(notPassAuditTO);
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle("审批不通过");
+        messageTO.setContent("审\n" +
+                "批不通过,请重新\n" +
+                "经办");
+        String handler = super.findById(id).getHandler();
+        String email = internalContactsAPI.getEmail(handler);
+        if (null != email) {
+            messageTO.setReceivers(new String[]{email});
+            messageAPI.send(messageTO);
+        }
     }
 
-    @Transactional(rollbackFor = SerException.class)
     private void aduit(String id) throws SerException {
-        checkAuditIdentity();
+        checkAddIdentity();
         String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = super.findById(id);
@@ -429,10 +448,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         RemainAdjustBO firstBO = list.get(0);
         Double bankBalance = firstBO.getBankWaterSum();
         Double fundBalance = firstBO.getMoneyWaterSum();
-        Double addBank = 0.00;
-        Double addFund = 0.00;
-        Double removeBank = 0.00;
-        Double removeFund = 0.00;
+        double addBank = 0;
+        double addFund = 0;
+        double removeBank = 0;
+        double removeFund = 0;
         boolean b1 = true;
         boolean b2 = true;
         boolean b3 = true;
@@ -496,10 +515,12 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         RemainAdjustBO lastBO = new RemainAdjustBO();
         lastBO.setMoneyWaterProject("余额");
         Double fundSum = fundBalance + addFund - removeFund;
-        lastBO.setMoneyWaterSum(fundSum);
+        double a = new BigDecimal(fundSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        lastBO.setMoneyWaterSum(a);
         lastBO.setBankWaterProject("余额");
         Double bankSum = bankBalance + addBank - removeBank;
-        lastBO.setBankWaterSum(bankSum);
+        double b = new BigDecimal(bankSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        lastBO.setBankWaterSum(b);
         boList.add(lastBO);
         return boList;
     }
@@ -507,7 +528,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Override
     public List<BankReconciliationBO> list(BankReconciliationDTO dto) throws SerException {
         checkSeeIdentity();
-        List<BankReconciliation> list = super.findByCis(dto);
+        List<BankReconciliation> list = super.findByCis(dto, true);
         List<BankReconciliationBO> boList = new ArrayList<BankReconciliationBO>();
         for (BankReconciliation b : list) {
             BankReconciliationBO bo = BeanTransform.copyProperties(b, BankReconciliationBO.class);
@@ -529,9 +550,9 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     private BankReconciliationBO showBO(BankReconciliationBO bo) throws SerException {
         String account = findAccountByName(bo.getName());
         List<BankRecordCollectBO> boList = bankRecordAPI.collectByCondition(bo.getYear(), bo.getMonth(), account);
-        Double bankDebtor = 0.00;
-        Double bankCreditor = 0.00;
-        Double bankBalance = 0.00;
+        double bankDebtor = 0;
+        double bankCreditor = 0;
+        double bankBalance = 0;
         if ((boList != null) && (!boList.isEmpty())) {
             BankRecordCollectBO bankRecordCollectBO = boList.get(boList.size() - 1);
             bankDebtor = bankRecordCollectBO.getDebtorCost();
@@ -637,7 +658,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
             }
         }
         if ((debtorDifferBOs != null) && (!debtorDifferBOs.isEmpty())) {
-            for (int i = 0; i < debtorDifferBOs.size(); i++) {
+            for (int i = 0; i < debtorDifferBOs.size() && i < bankRecordPageListBOs.size(); i++) {
                 BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
                 String bankRecorId = bankRecordPageListBO.getId();
                 List<Detail> detailList = bankRecordPageListBO.getDetailList();
@@ -645,6 +666,11 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 debtorDifferBO.setId(bankRecorId);
                 List<com.bjike.goddess.checkfunds.beanlist.Detail> details = debtorDifferBO.getDetailList();
                 details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                for (com.bjike.goddess.checkfunds.beanlist.Detail detail : details) {
+                    if (detail.getTitle().contains("借方")) {
+                        debtorDifferBO.setBankIncome(Double.parseDouble(detail.getVal()));
+                    }
+                }
                 debtorDifferBO.setDetailList(details);
             }
         }
@@ -672,7 +698,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
             }
         }
         if ((creditorDifferBOs != null) && (!creditorDifferBOs.isEmpty())) {
-            for (int i = 0; i < creditorDifferBOs.size(); i++) {
+            for (int i = 0; i < creditorDifferBOs.size() && i < bankRecordPageListBOs.size(); i++) {
                 BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
                 String bankRecorId = bankRecordPageListBO.getId();
                 List<Detail> detailList = bankRecordPageListBO.getDetailList();
@@ -680,6 +706,11 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 creditorDifferBO.setId(bankRecorId);
                 List<com.bjike.goddess.checkfunds.beanlist.Detail> details = creditorDifferBO.getDetailList();
                 details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                for (com.bjike.goddess.checkfunds.beanlist.Detail detail : details) {
+                    if (detail.getTitle().contains("贷方")) {
+                        creditorDifferBO.setBankExpend(Double.parseDouble(detail.getVal()));
+                    }
+                }
                 creditorDifferBO.setDetailList(details);
             }
         }

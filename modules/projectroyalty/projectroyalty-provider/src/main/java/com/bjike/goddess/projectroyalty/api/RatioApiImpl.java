@@ -1,10 +1,11 @@
 package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.RatioBO;
 import com.bjike.goddess.projectroyalty.dto.RatioDTO;
 import com.bjike.goddess.projectroyalty.service.RatioSer;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.RatioTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,18 @@ public class RatioApiImpl implements RatioAPI {
 
     @Autowired
     private RatioSer ratioSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return ratioSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return ratioSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public RatioBO save(RatioTO to) throws SerException {

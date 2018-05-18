@@ -2,14 +2,18 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDatasBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
-import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
+import com.bjike.goddess.lendreimbursement.to.*;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -362,6 +366,25 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
         return null;
     }
 
+    /**
+     * 手机版还款
+     *
+     * @param phoneLendReturnSendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机版寄件
+     *
+     * @param phoneLendSendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editPhoneSend(PhoneLendSendTO phoneLendSendTO) throws SerException {
+        return null;
+    }
 
     /**
      * 借款记录生成记账凭证
@@ -412,6 +435,26 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
         return null;
     }
 
+    /**
+     * 手机版还款记录还款核对
+     *
+     * @param phoneLendReturnCheckTO applyLendTO
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 网页版还款记录不通过编辑
+     * 当不通过才去编辑，否则不可以编辑
+     *
+     * @param applyLendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editErrorReturn(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
 
     /**
      * 帐务核对总条数
@@ -500,6 +543,15 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
 
 
     /**
+     * 获取所有用户
+     *
+     * @return
+     */
+    default List<String> getAllUser() throws SerException {
+        return null;
+    }
+
+    /**
      * 获取所有借款人
      *
      * @return
@@ -518,11 +570,29 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     }
 
     /**
+     * 手机端获取所有地区
+     *
+     * @return
+     */
+    default List<String> listPhoneArea() throws SerException {
+        return null;
+    }
+
+    /**
      * 获取所有项目组
      *
      * @return
      */
     default List<String> listProjectGroup() throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机端获取所有项目组
+     *
+     * @return
+     */
+    default List<String> listPhoneProjectGroup(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
         return null;
     }
 
@@ -535,14 +605,16 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
         return null;
     }
 
+
     /**
-     * 获取所有账户来源
+     * 手机端获取所有项目名
      *
      * @return
      */
-    default List<String> listAccountCom() throws SerException {
+    default List<String> listPhoneProjectName(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
         return null;
     }
+
 
     /**
      * 申请记录导出excel
@@ -581,6 +653,17 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     byte[] returnExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
     /**
+     * 账户核对导出
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    default byte[] businessCheckOut(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 已收票导出excel
      *
      * @param applyLendDTO
@@ -588,6 +671,16 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @throws SerException
      */
     byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException;
+
+    /**
+     * 获取所有账户来源
+     * chenjunhao
+     *
+     * @return
+     */
+    default List<String> listAccountCom() throws SerException {
+        return null;
+    }
 
     /**
      * chenjunhao
@@ -618,4 +711,265 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @throws SerException
      */
     ApplyLendBO editPayMoneyCJH(ApplyLendTO applyLendTO) throws SerException;
+
+    /**
+     * chenjunhao
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException;
+
+
+    /**
+     * 判断手机端页面某些地方显示问题的权限
+     *
+     * @param lendPhoneShowStatus
+     * @return
+     * @throws SerException
+     */
+    Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus, String lendId) throws SerException;
+
+
+    /**
+     * 手机版所有列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
+        return null;
+    }
+
+    ;
+
+
+    /**
+     * 汇总个人周月年借款数据图
+     *
+     * @param reimburseShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 汇总任意两月的借款变化趋势图
+     *
+     * @param reimburseTrendShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 汇总公司项目组时间段内的借款特定指标统计图
+     *
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 汇总公司项目时间段内的借款特定指标统计图
+     *
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 汇总公司地区时间段内的借款特定指标统计图
+     *
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 汇总公司地区时间段内的借款详情特定指标统计图
+     *
+     * @param reimburseShapeDetailDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectAreaDetailBar(LendShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总个人年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
+     * @param lendMixReimShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
+     * @param lendMixCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总详细公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
+     * @param lendMixCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 报销根据报销人跟二级科目获取一级科目和三级科目
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default SubjectDataBO findSubjects(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 借款根据报销人跟二级科目获取一级科目和三级科目
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default SubjectDatasBO findSubjects1(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目代码获取二级科目
+     *
+     * @param firstSubjectCode
+     * @return
+     * @throws SerException
+     */
+    default List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+        return null;
+    }
+
+    /**
+     * 借款数据分析图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO analysisDiagram() throws SerException {
+        return null;
+    }
+
+    /**
+     * 分析
+     *
+     * @param applyLendTO
+     * @return
+     * @throws SerException
+     */
+    default ApplyLendBO analyse(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取所有人名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartment() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 提醒功能
+     *
+     * @throws SerException
+     */
+    default void sendEmailTiming() throws SerException {
+        return;
+    }
+
+    /**
+     * 部门提醒功能
+     *
+     * @throws SerException
+     */
+    default void departmentEmail() throws SerException {
+        return;
+    }
+
+    /**
+     * 财务部提醒功能
+     *
+     * @throws SerException
+     */
+    default void finanEmail() throws SerException {
+        return;
+    }
 }

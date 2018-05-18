@@ -6,8 +6,8 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
-apply plugin: 'org.springframework.boot'
 
+apply plugin: 'org.springframework.boot'
 jar {
     String buildDir = project.buildDir
     manifest {
@@ -22,7 +22,7 @@ task copyJars(type: Copy) {
     from configurations.runtime
     into new File('build/libs/lib') // 目标位置
 }
-build.dependsOn copyJars
+compileJava.dependsOn copyJars
 
 def env = hasProperty("pro") ? "pro" : (hasProperty("dev") ? "dev" : null)
 sourceSets {
@@ -32,15 +32,14 @@ sourceSets {
         }
     }
 }
-
-
 dependencies {
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
+
     compile project(":modules:bidding:bidding-api")
-    compile project(":common:common-utils")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

@@ -1,8 +1,9 @@
 package com.bjike.goddess.budget.service;
 
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
-import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -74,6 +75,17 @@ public interface ProjectWeekSer extends Ser<ProjectWeek, ProjectWeekDTO> {
     }
 
     /**
+     * 项目收入周列表
+     *
+     * @param dto 项目收入周列表
+     * @return class ProjectWeekBO
+     * @throws SerException
+     */
+    default List<ProjectWeekListBO> listProject(ProjectWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
      * 通过id查找
      *
      * @param id 项目收入周id
@@ -120,6 +132,44 @@ public interface ProjectWeekSer extends Ser<ProjectWeek, ProjectWeekDTO> {
      * @throws SerException
      */
     default List<String> findAllProjects() throws SerException {
+        return null;
+    }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     * zhuangkaiqin
+     */
+    default List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总时获取地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreas() throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
         return null;
     }
 }

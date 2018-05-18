@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.receivable.bo.*;
+import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
@@ -17,6 +18,7 @@ import com.bjike.goddess.receivable.enums.AuditStatus;
 import com.bjike.goddess.receivable.enums.CompareStatus;
 import com.bjike.goddess.receivable.enums.GuideAddrStatus;
 import com.bjike.goddess.receivable.enums.TimeStatus;
+import com.bjike.goddess.receivable.excel.BackExcel;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExport;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryTemplateExport;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
@@ -26,7 +28,6 @@ import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -36,10 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -206,6 +204,15 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public Long countReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
+        if (StringUtils.isNotBlank(receivableSubsidiaryDTO.getTaskNum())) {
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("taskNum", receivableSubsidiaryDTO.getTaskNum()));
+        }
+        if (StringUtils.isNotBlank(receivableSubsidiaryDTO.getContractNum())) {
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("contractNum", receivableSubsidiaryDTO.getContractNum()));
+        }
+        if (StringUtils.isNotBlank(receivableSubsidiaryDTO.getOutsourcingNum())) {
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("outsourcingNum", receivableSubsidiaryDTO.getOutsourcingNum()));
+        }
         Long count = super.count(receivableSubsidiaryDTO);
         return count;
     }
@@ -213,12 +220,18 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public ReceivableSubsidiaryBO getOne(String id) throws SerException {
         ReceivableSubsidiary receivableSubsidiary = super.findById(id);
-        return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        Contractor contractor = receivableSubsidiary.getContractor();
+        receivableSubsidiary.setContractor(contractor);
+        ContractorBO contractorBO = BeanTransform.copyProperties(contractor, ContractorBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        bo.setContractorBO(contractorBO);
+        return bo;
     }
 
     @Override
     public List<ReceivableSubsidiaryBO> findListReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
         checkSeeIdentity();
+        search(receivableSubsidiaryDTO);
         receivableSubsidiaryDTO.getSorts().add("createTime=desc");
         List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(receivableSubsidiaryDTO, true);
         List<ReceivableSubsidiaryBO> bo = BeanTransform.copyProperties(receivableSubsidiaries, ReceivableSubsidiaryBO.class);
@@ -228,6 +241,18 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             bo.get(i).setContractorBO(cbo);
         }
         return bo;
+    }
+
+    private void search(ReceivableSubsidiaryDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getTaskNum())) {
+            dto.getConditions().add(Restrict.like("taskNum", dto.getTaskNum()));
+        }
+        if (StringUtils.isNotBlank(dto.getContractNum())) {
+            dto.getConditions().add(Restrict.like("contractNum", dto.getContractNum()));
+        }
+        if (StringUtils.isNotBlank(dto.getOutsourcingNum())) {
+            dto.getConditions().add(Restrict.like("outsourcingNum", dto.getOutsourcingNum()));
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -251,7 +276,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         Double unfinishMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getUnfinishNum();
         receivableSubsidiary.setUnfinishMoney(unfinishMoney);
         //管理费(实际数量金额*承包商比例)
-        Double managementFee = contractor.getPercent() * receivableSubsidiary.getRealCountMoney();
+        Double managementFee = (contractor.getPercent() / 100) * receivableSubsidiary.getRealCountMoney();
         receivableSubsidiary.setManagementFee(managementFee);
         //到帐金额(实际数量金额-管理费)
         Double accountMoney = receivableSubsidiary.getRealCountMoney() - managementFee;
@@ -279,7 +304,9 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         checkAddIdentity();
         Contractor contractor = contractorSer.findById(receivableSubsidiaryTO.getContractorId());
         ReceivableSubsidiary receivableSubsidiary = super.findById(receivableSubsidiaryTO.getId());
-        BeanUtils.copyProperties(receivableSubsidiaryTO, receivableSubsidiary);
+        LocalDateTime localDateTime = receivableSubsidiary.getCreateTime();
+        receivableSubsidiary = BeanTransform.copyProperties(receivableSubsidiaryTO, ReceivableSubsidiary.class, true);
+        receivableSubsidiary.setCreateTime(localDateTime);
         receivableSubsidiary.setContractor(contractor);
         receivableSubsidiary.setModifyTime(LocalDateTime.now());
 
@@ -296,7 +323,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         Double unfinishMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getUnfinishNum();
         receivableSubsidiary.setUnfinishMoney(unfinishMoney);
         //管理费(实际数量金额*承包商比例)
-        Double managementFee = contractor.getPercent() * receivableSubsidiary.getRealCountMoney();
+        Double managementFee = (contractor.getPercent() / 100) * receivableSubsidiary.getRealCountMoney();
         receivableSubsidiary.setManagementFee(managementFee);
         //到帐金额(实际数量金额-管理费)
         Double accountMoney = receivableSubsidiary.getRealCountMoney() - managementFee;
@@ -313,7 +340,10 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
         //receivableSubsidiary = count(receivableSubsidiary);
         super.update(receivableSubsidiary);
-        return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        ContractorBO contractorBO = BeanTransform.copyProperties(contractor, ContractorBO.class);
+        bo.setContractorBO(contractorBO);
+        return bo;
     }
 
 
@@ -321,17 +351,20 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public void removeReceivableSubsidiary(String id) throws SerException {
         checkAddIdentity();
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        ReceivableSubsidiary entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
         }
+        if (entity.getContractor() == null) {
+            throw new SerException("承包商为空时不能删除，需编辑后就可删除");
+        }
+        super.remove(id);
 
     }
 
     @Override
-    public List<String> auditTime(String auditTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> auditTime(String auditTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(auditTime);
@@ -339,31 +372,31 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String countTime = sdf.format(cal.getTime());//ERP结算审批时间
-            list.add(countTime);
+            map.put("countTime", countTime);
 
             cal.setTime(date);
             cal.add(Calendar.DATE, 20);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            list.add(billTime);
+            map.put("billTime", billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime", planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public List<String> countTime(String countTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> countTime(String countTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(countTime);
@@ -372,26 +405,26 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            list.add(billTime);
+            map.put("billTime", billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime", planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public List<String> billTime(String billTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> billTime(String billTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(billTime);
@@ -400,21 +433,23 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime", planTime);
+
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public String planTime(String planTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> planTime(String planTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String accountTime = null;
         try {
@@ -424,11 +459,11 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return accountTime;
+        return map;
     }
 
     @Override
@@ -481,13 +516,11 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 //
 //        messageAPI.send(to);
         //todo 编辑时间时发送邮件
-        subsidiary.setFinishTime(LocalDate.parse(receivableSubsidiaryTO.getFinishTime()));
-        subsidiary.setCheckTime(LocalDate.parse(receivableSubsidiaryTO.getCheckTime()));
-        subsidiary.setAuditTime(LocalDate.parse(receivableSubsidiaryTO.getAuditTime()));
-        subsidiary.setCountTime(LocalDate.parse(receivableSubsidiaryTO.getCountTime()));
-        subsidiary.setBillTime(LocalDate.parse(receivableSubsidiaryTO.getBillTime()));
-        subsidiary.setPlanTime(LocalDate.parse(receivableSubsidiaryTO.getPlanTime()));
-        subsidiary.setAccountTime(LocalDate.parse(receivableSubsidiaryTO.getAccountTime()));
+        subsidiary.setAuditTime(DateUtil.parseDate(receivableSubsidiaryTO.getAuditTime()));
+        subsidiary.setCountTime(DateUtil.parseDate(receivableSubsidiaryTO.getCountTime()));
+        subsidiary.setBillTime(DateUtil.parseDate(receivableSubsidiaryTO.getBillTime()));
+        subsidiary.setPlanTime(DateUtil.parseDate(receivableSubsidiaryTO.getPlanTime()));
+        subsidiary.setAccountTime(DateUtil.parseDate(receivableSubsidiaryTO.getAccountTime()));
         super.update(subsidiary);
         ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(subsidiary, ReceivableSubsidiaryBO.class);
         return bo;
@@ -757,14 +790,18 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public ReceivableSubsidiaryBO collectId(String id) throws SerException {
-        ReceivableSubsidiary receivableSubsidiary = super.findById(id);
-        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
-        ContractorBO cbo = new ContractorBO();
-        if (null != receivableSubsidiary.getContractor()) {
-            cbo = BeanTransform.copyProperties(receivableSubsidiary.getContractor(), ContractorBO.class);
+        if (StringUtils.isNotBlank(id)) {
+            ReceivableSubsidiary receivableSubsidiary = super.findById(id);
+            ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+            ContractorBO cbo = new ContractorBO();
+            if (null != receivableSubsidiary.getContractor()) {
+                cbo = BeanTransform.copyProperties(receivableSubsidiary.getContractor(), ContractorBO.class);
+            }
+            bo.setContractorBO(cbo);
+            return bo;
+        } else {
+            throw new SerException("id不能为空");
         }
-        bo.setContractorBO(cbo);
-        return bo;
 
     }
 
@@ -778,7 +815,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         //处理月份,季度,年份
         if (TimeStatus.MONTH.equals(to.getTimeStatus())) {
             int year = LocalDate.now().getYear();
-            int month = LocalDate.now().getMonthValue();
+            int month = to.getMonth();
             int prev_year = year;
             int prev_month = month - 1;
             if (to.getMonth() == 1) {
@@ -824,7 +861,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         }
 
         StringBuilder sb = new StringBuilder();
-        if(groupField.equals("contractor_id")){
+        if (groupField.equals("contractor_id")) {
             sb.append("select c.name,b.taskPrice,b.pactSize" +
                     ",b.accountMoney,b.managementFee,b.taxes,b.afterTax" +
                     ",b.phaseAccount,b.phaseFee,b.phaseTaxes,b.phaseAfterTax," +
@@ -844,7 +881,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes,sum(afterTax)as afterTax ");
         sb.append(" FROM receivable_receivablesubsidiary");
         sb.append(" where accountTime BETWEEN '" + prev_startTime + "' AND '" + prev_endTime + "' GROUP BY " + groupField + " ORDER BY " + groupField + ")b");
-        if(groupField.equals("contractor_id")){
+        if (groupField.equals("contractor_id")) {
             sb.append(")b where b.groupField=c.id");
         }
         String sql = sb.toString();
@@ -946,6 +983,76 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
 
     @Override
+    public ReceivableSubsidiaryBO importExcelBack(String id, List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>(receivableSubsidiaryTOS.size());
+        for (ReceivableSubsidiaryTO to : receivableSubsidiaryTOS) {
+            ReceivableSubsidiary receivableSubsidiary = BeanTransform.copyProperties(to, ReceivableSubsidiary.class, true);
+            ContractorDTO dto = new ContractorDTO();
+            dto.getConditions().add(Restrict.eq("id", id));
+            Contractor contractor = contractorSer.findById(id);
+            receivableSubsidiary.setContractor(contractor);
+            receivableSubsidiary.setManagementFee(receivableSubsidiary.getRealCountMoney() * (contractor.getPercent() / 100));
+            receivableSubsidiary.setAccountMoney(receivableSubsidiary.getRealCountMoney()-receivableSubsidiary.getManagementFee());
+            receivableSubsidiaries.add(receivableSubsidiary);
+        }
+        super.save(receivableSubsidiaries);
+
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(new ReceivableSubsidiary(), ReceivableSubsidiaryBO.class);
+        return bo;
+    }
+
+    @Override
+    public byte[] templateExportBack() throws SerException {
+        List<BackExcel> backExcels = new ArrayList<>();
+        BackExcel backExcel = new BackExcel();
+        backExcel.setArea("test");
+        backExcel.setInnerName("test");
+        backExcel.setTaskNum("test");
+        backExcel.setContractNum("test");
+        backExcel.setOutsourcingNum("test");
+        backExcel.setTaskPrice(0d);
+        backExcel.setPactNum(0d);
+        backExcel.setPactMoney(0d);
+        backExcel.setPactSize(0d);
+        backExcel.setTaskMoney(0d);
+        backExcel.setFinishNum(0d);
+        backExcel.setFinishMoney(0d);
+        backExcel.setUnfinishNum(0d);
+        backExcel.setUnfinishMoney(0d);
+        backExcel.setPayTax(0d);
+        backExcel.setUndeal(0d);
+        backExcel.setPenalty(0d);
+        backExcel.setRealCountNum(0d);
+        backExcel.setRealCountMoney(0d);
+        backExcel.setFinishTime(LocalDate.now());
+        backExcel.setCheckTime(LocalDate.now());
+        backExcel.setAuditTime(LocalDate.now());
+        backExcel.setCountTime(LocalDate.now());
+        backExcel.setBillTime(LocalDate.now());
+        backExcel.setPlanTime(LocalDate.now());
+//        backExcel.setManagementFee();
+        backExcel.setAccountTime(LocalDate.now());
+        backExcel.setProgressA("test");
+        backExcel.setProgressB("test");
+        backExcel.setProgressC("test");
+        backExcel.setProgressD("test");
+//        backExcel.setAccountMoney();
+        backExcel.setTaxes(0d);
+        backExcel.setAfterTax(0d);
+        backExcel.setMoreNum(0d);
+        backExcel.setMoreMoney(0d);
+        backExcel.setPay("是");
+        backExcel.setFrame("是");
+        backExcel.setPact("是");
+        backExcel.setFlow("是");
+
+        backExcels.add(backExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(backExcels, excel);
+        return bytes;
+    }
+
+    @Override
     public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
 
         List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>(receivableSubsidiaryTOS.size());
@@ -1028,6 +1135,13 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         export.setFrame("test");
         export.setPact("test");
         export.setFlow("test");
+        export.setFinishTime(LocalDate.now());
+        export.setCheckTime(LocalDate.now());
+        export.setAuditTime(LocalDate.now());
+        export.setCountTime(LocalDate.now());
+        export.setBillTime(LocalDate.now());
+        export.setPlanTime(LocalDate.now());
+        export.setAccountTime(LocalDate.now());
         templateExports.add(export);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(templateExports, exce);

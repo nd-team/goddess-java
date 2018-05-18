@@ -1,13 +1,12 @@
 package com.bjike.goddess.contractcommunicat.service;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
@@ -76,9 +75,23 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
 
     List<ProjectOutsourcingBO> prjects() throws SerException;
 
-    List<SonPermissionObject> sonPermission() throws SerException;
+    Boolean sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 
     byte[] exportExcelModule() throws SerException;
+
+    /**
+     * 获取所有合同外部项目名称和合同项目外部编号
+     * @throws SerException
+     */
+    List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
+
+
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
+
 }

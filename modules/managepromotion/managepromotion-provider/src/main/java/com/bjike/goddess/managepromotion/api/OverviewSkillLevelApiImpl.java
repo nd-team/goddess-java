@@ -6,6 +6,7 @@ import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.dto.OverviewSkillLevelDTO;
 import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.service.OverviewSkillLevelSer;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.OverviewSkillLevelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,15 @@ public class OverviewSkillLevelApiImpl implements OverviewSkillLevelAPI {
     @Autowired
     private OverviewSkillLevelSer overviewSkillLevelSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return overviewSkillLevelSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return overviewSkillLevelSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countOverviewSkillLevel(OverviewSkillLevelDTO overviewSkillLevelDTO) throws SerException {
         return overviewSkillLevelSer.countOverviewSkillLevel(overviewSkillLevelDTO);
@@ -56,5 +66,10 @@ public class OverviewSkillLevelApiImpl implements OverviewSkillLevelAPI {
     @Override
     public void removeOverviewSkillLevel(String id) throws SerException {
         overviewSkillLevelSer.removeOverviewSkillLevel(id);
+    }
+
+    @Override
+    public OverviewSkillLevelBO findByName(String employeeName) throws SerException {
+        return overviewSkillLevelSer.findByName(employeeName);
     }
 }

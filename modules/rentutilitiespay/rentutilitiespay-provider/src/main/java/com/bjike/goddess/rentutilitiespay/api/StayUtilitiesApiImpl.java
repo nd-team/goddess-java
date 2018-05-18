@@ -7,6 +7,7 @@ import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
 import com.bjike.goddess.rentutilitiespay.service.StayUtilitiesSer;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,6 +30,14 @@ import java.util.List;
 public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
     @Autowired
     private StayUtilitiesSer stayUtilitiesSer;
+    @Override
+    public  Boolean sonPermission() throws SerException {
+        return stayUtilitiesSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return stayUtilitiesSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
         return stayUtilitiesSer.countStayUtilities(stayUtilitiesDTO);
@@ -66,6 +75,18 @@ public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
     public List<String> getName() throws SerException {
         return stayUtilitiesSer.getName();
     }
+    @Override
+    public StayUtilitiesBO employeeVerify(StayUtilitiesTO to) throws SerException {
+        return stayUtilitiesSer.employeeVerify(to);
+    }
 
+    @Override
+    public StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
+        return stayUtilitiesSer.financeAudit(to);
+    }
 
+    @Override
+    public StayUtilitiesBO findStay(String time, String name) throws SerException {
+        return stayUtilitiesSer.findStay(time,name);
+    }
 }

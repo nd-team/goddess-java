@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.ForeignStaffingSetBO;
 import com.bjike.goddess.archive.dto.ForeignStaffingSetDTO;
 import com.bjike.goddess.archive.service.ForeignStaffingSetSer;
 import com.bjike.goddess.archive.to.ForeignStaffingSetTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class ForeignStaffingSetApiImpl implements ForeignStaffingSetAPI {
     @Autowired
     private ForeignStaffingSetSer foreignStaffingSetSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return foreignStaffingSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return foreignStaffingSetSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public ForeignStaffingSetBO save(ForeignStaffingSetTO to) throws SerException {
         return foreignStaffingSetSer.save(to);

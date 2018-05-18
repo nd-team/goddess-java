@@ -14,29 +14,93 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class PartBO extends BaseBO {
 
     /**
-     * 名称
+     * 油卡充值
      */
-    private String name;
+    private Double oilRecharge;
 
     /**
-     * 金额
+     * 房租
      */
-    private Double money;
+    private Double rent;
 
+    /**
+     * 社保
+     */
+    private Double socialSecurity;
 
-    public String getName() {
-        return name;
+    /**
+     * 员工工资
+     */
+    private Double staffWage;
+
+    /**
+     * 办公费
+     */
+    private Double office;
+
+    /**
+     * 市场费
+     */
+    private Double marketCost;
+
+    /**
+     * 税金
+     */
+    private Double tax;
+
+    public Double getOilRecharge() {
+        return oilRecharge;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOilRecharge(Double oilRecharge) {
+        this.oilRecharge = oilRecharge;
     }
 
-    public Double getMoney() {
-        return money;
+    public Double getRent() {
+        return rent;
     }
 
-    public void setMoney(Double money) {
-        this.money = money;
+    public void setRent(Double rent) {
+        this.rent = rent;
+    }
+
+    public Double getSocialSecurity() {
+        return socialSecurity;
+    }
+
+    public void setSocialSecurity(Double socialSecurity) {
+        this.socialSecurity = socialSecurity;
+    }
+
+    public Double getStaffWage() {
+        return staffWage;
+    }
+
+    public void setStaffWage(Double staffWage) {
+        this.staffWage = staffWage;
+    }
+
+    public Double getOffice() {
+        return office;
+    }
+
+    public void setOffice(Double office) {
+        this.office = office;
+    }
+
+    public Double getMarketCost() {
+        return marketCost;
+    }
+
+    public void setMarketCost(Double marketCost) {
+        this.marketCost = marketCost;
+    }
+
+    public Double getTax() {
+        return tax;
+    }
+
+    public void setTax(Double tax) {
+        this.tax = tax;
     }
 }

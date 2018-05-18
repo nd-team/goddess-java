@@ -2,13 +2,13 @@ package com.bjike.goddess.voucher.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
+import com.bjike.goddess.voucher.to.AnalysisTO;
+import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
@@ -30,6 +30,13 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * 下拉导航权限
      */
     default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermissionAccount() throws SerException {
         return null;
     }
 
@@ -104,6 +111,15 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return;
     }
 
+    /**
+     * 删除
+     *
+     * @param uIds uIds
+     */
+    default void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        return;
+    }
+
     ;
 
     /**
@@ -136,11 +152,11 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 审核
      *
-     * @param id 记账凭证信息id
+     * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO audit(String id) throws SerException {
-        return null;
+    default void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
     }
 
 
@@ -167,18 +183,17 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @param voucherGenerateTO 记账凭证信息voucherGenerateTO
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    default Long posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return null;
     }
 
     /**
      * 反审核
      *
-     * @param id 记账凭证信息id
-     * @return class VoucherGenerateBO
+     * @param voucherGenerateTO 记账凭证信息
      */
-    default VoucherGenerateBO antiAudit(String id) throws SerException {
-        return null;
+    default void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
     }
 
     /**
@@ -237,10 +252,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 反过账
      *
-     * @param id 记账凭证信息id
+     * @param to 只需要传ids数组即可
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO antiPosting(String id) throws SerException {
+    default VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
         return null;
     }
 
@@ -406,7 +421,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
-     * 根据一级科目查询二级科目
+     * 根据一级科目代码查询二级科目
      *
      * @param firstSub 一级科目
      * @return
@@ -417,10 +432,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
-     * 根据一级二级查询三级科目
+     * 根据一级科目代码查询三级科目(参数二级科目传过后台不作任何处理)
      *
      * @param firstSub  一级科目
-     * @param secondSub 二级科目
+     * @param secondSub 二级科目()
      * @return
      * @throws SerException
      */
@@ -458,6 +473,78 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+    /**
+     * 根据日期地区项目组项目名称科目汇总明细帐
+     *
+     * @param dto
+     * @return class AccountInfoBO
+     * @throws SerException
+     */
+    default List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 明细账导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException;
+
+    /**
+     * 从已过账那里获取所有地区
+     *
+     * @throws SerException
+     */
+    default List<String> accountArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 从已过账那里获取所有项目名称
+     *
+     * @throws SerException
+     */
+    default List<String> accountProjectName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 从已过账那里获取所有项目组部门
+     *
+     * @throws SerException
+     */
+    default List<String> accountProjectGroup() throws SerException {
+        return null;
+    }
+
+    /**
+     * 从已过账那里获取所有科目
+     *
+     * @throws SerException
+     */
+    default List<String> accountSubject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 从已过账那里根据一级获取所有二级
+     *
+     * @throws SerException
+     */
+    default List<String> subSubject(String firstSubject) throws SerException {
+        return null;
+    }
+
+    /**
+     * 从已过账那里根据一级,二级获取所有三级
+     *
+     * @throws SerException
+     */
+    default List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
+        return null;
+    }
 
     /**
      * 根据日期、项目组、地区、项目统计记账凭证
@@ -478,48 +565,52 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * chenjunhao
      * 查询所有一级科目为销售费用的记录
+     *
      * @return class VoucherGenerateBO
      * @throws SerException
      */
-    default List<VoucherGenerateBO> allSales() throws SerException{
+    default List<VoucherGenerateBO> allSales() throws SerException {
         return null;
     }
 
     /**
      * xiazhili
      * 在已过账记录里面根据二级或三级统计金额
+     *
      * @return class PartBO
      * @throws SerException
      */
-    default List<PartBO> findByCondition(String[] conditions ) throws SerException{
+    default List<PartBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return null;
     }
-
 
 
     /**
      * xiazhili
      * 在资金和对里面根据一级和二级和三级统计借方金额和贷方金额
+     *
      * @return class PartOptionBO
      * @throws SerException
      */
-    default PartOptionBO findMoneyByCondition(String first, String second, String third ) throws SerException{
+    default PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
         return null;
     }
 
 
     /**
      * 地区分析
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 分页结果集
      */
     List<VoucherGenerateBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组分析
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
      * @param group 地区
      * @return 分页结果集
@@ -528,8 +619,9 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 项目分析
-     * @param year 年份
-     * @param month 月份
+     *
+     * @param year    年份
+     * @param month   月份
      * @param project 地区
      * @return 分页结果集
      */
@@ -537,16 +629,18 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(VoucherGenerateExportDTO dto ) throws SerException;
+    byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
     /**
@@ -560,6 +654,220 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
 
+    /**
+     * chenjunhao
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    VoucherGenerateBO getByIdCJh(String id) throws SerException;
 
+    /**
+     * 反结账
+     *
+     * @param voucherGenerateTO
+     * @return
+     * @throws SerException
+     */
+    default void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
+    }
+
+    /**
+     * 查看月度,季度,年度的结账记录
+     *
+     * @param month
+     * @param quart
+     * @param year
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherGenerateBO> findCkRecordByTime(String month, Integer quart, String year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录分析
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    default List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据月份查询借方金额和贷方金额
+     */
+    default OptionBO ctReSubHistogram(VoucherChartDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有一级科目为现金或者银行存款的数据
+     */
+    default List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return null;
+    }
+//    /**
+//     * 获取所有一级科目为现金或者银行存款的数据
+//     */
+//    default List<VoucherGenerateBO> findByCourseName() throws SerException {
+//        return null;
+//    }
+
+    /**
+     * 根据时间查询对应的解放和贷方金额
+     * zhuangkaiqin
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String starTime, String time, Boolean tar) throws SerException {
+        return null;
+    }
+
+    default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取所有的项目名称
+     */
+    default List<String> findProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的地区名称名称
+     */
+    default List<String> findAllArea()throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime, String token) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目,时间获取本期
+     *
+     * @param i            区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar          true:借方,false:贷方
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO getCurrent(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据一级科目,时间获取本期或本年
+     *
+     * @param i            区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    default Double findCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取年初未分配利润科目(1月)的数据
+     *
+     * @param i            区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+    Double getCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException;
+
+    /**
+     * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+     *
+     * @param i
+     * @param sumary
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     */
+    List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
+
+    /**
+     * 导出
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSubjectCollectTO to) throws SerException;
+
+    /**
+     * 获取所有会计科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findFirstSubject() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有项目组/部门
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllGroup()throws SerException {
+        return null;
+    }
 
 }

@@ -1,10 +1,16 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.entity.CusPermissionOperate;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.organize.bo.AreaBO;
 
 import java.util.List;
 
@@ -19,6 +25,21 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardReceiveAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增领用油卡信息
@@ -41,7 +62,7 @@ public interface OilCardReceiveAPI {
     /**
      * 审核领用油卡信息
      */
-    void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException;
+    void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException;
 
     /**
      * 删除领用油卡信息
@@ -72,7 +93,7 @@ public interface OilCardReceiveAPI {
      *
      * @param id id
      */
-    OilCardReceiveBO findById(String id) throws SerException;
+    OilCardReceiveBO findOne(String id) throws SerException;
 
     /**
      * 查询总记录数
@@ -81,6 +102,27 @@ public interface OilCardReceiveAPI {
      * @return 总记录数
      */
     Long count(OilCardReceiveDTO dto) throws SerException;
+
+    /**
+     * 查询所有未冻结的油卡
+     * @throws SerException
+     */
+    List<String> findOilCard() throws SerException;
+
+    /**
+     * 查询所有地区
+     * @throws SerException
+     */
+    List<AreaBO> findArea() throws SerException;
+
+
+    /**
+     * 查询所有审核人
+     * @throws SerException
+     */
+    List<String> findOperate() throws SerException;
+
+
 
 
 }

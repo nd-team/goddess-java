@@ -2,6 +2,7 @@ package com.bjike.goddess.enterpriseculturemanage.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,8 +44,8 @@ public class PeriodicalProgramInfo extends BaseEntity {
     /**
      * 发刊形式
      */
-    @Column(name = "way", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发刊形式'")
-    private String way;
+    @Column(name = "way", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '发刊形式'")
+    private PublicizeWay way;
 
     /**
      * 发刊规格
@@ -125,11 +126,11 @@ public class PeriodicalProgramInfo extends BaseEntity {
         this.ida = ida;
     }
 
-    public String getWay() {
+    public PublicizeWay getWay() {
         return way;
     }
 
-    public void setWay(String way) {
+    public void setWay(PublicizeWay way) {
         this.way = way;
     }
 

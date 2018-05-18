@@ -1,6 +1,8 @@
 package com.bjike.goddess.interiorrecommend.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.interiorrecommend.enums.RecommendType;
+import com.bjike.goddess.interiorrecommend.enums.SolutionStatus;
 
 /**
  * 推荐方案业务传输对象
@@ -19,80 +21,86 @@ public class RecommendSchemeBO extends BaseBO {
     private String makeTime;
 
     /**
-     * 方案类型
+     * 方案名称
      */
     private String type;
 
     /**
-     * 推荐目的
+     * 目的
      */
     private String purpose;
 
     /**
-     * 推荐开通时间
+     * 推荐奖开通时间
      */
     private String openTime;
 
     /**
-     * 推荐关闭时间
+     * 推荐奖关闭时间
      */
     private String closeTime;
 
     /**
-     * 适用对象
+     * 适用范围
      */
     private String suitableObj;
 
     /**
-     * 推荐要求明细
+     * 推荐条件
      */
     private String requireDetail;
 
     /**
-     * 推荐采纳指标
+     * 招聘负责人职责
      */
-    private String acceptTarget;
+    private String hiringDuties;
 
     /**
-     * 奖励标准明细
+     * 推荐人职责
      */
-    private String awardDetail;
+    private String recommenderDuty;
 
     /**
-     * 综合资源部意见
+     * 推荐类型
      */
-    private String resourcesSuggest;
+    private RecommendType recommendType;
 
     /**
-     * 综合资源部审核
+     * 推荐岗位
      */
-    private Boolean resourcesAudit;
+    private String recommendPosition;
+
 
     /**
-     * 运营商务部意见
+     * 推荐时长
      */
-    private String operateSuggest;
+    private Integer recommendTime;
+
 
     /**
-     * 运营商务部审核
+     * 推荐考核内容
      */
-    private Boolean operateAudit;
+    private String checkContent;
 
     /**
-     * 总经办意见
+     * 内容要求
      */
-    private String generalSuggest;
+    private String contentRequire;
 
     /**
-     * 总经办审核
+     * 方案状态
      */
-    private Boolean generalAudit;
+    private SolutionStatus status;
 
     /**
-     * 备注
+     * 预计推荐奖金额
      */
-    private String remark;
+    private Integer predictMoney;
 
+    /**
+     * 推荐奖金额
+     */
+    private Integer awardMoney;
 
     public String getMakeTime() {
         return makeTime;
@@ -150,75 +158,83 @@ public class RecommendSchemeBO extends BaseBO {
         this.requireDetail = requireDetail;
     }
 
-    public String getAcceptTarget() {
-        return acceptTarget;
+    public String getHiringDuties() {
+        return hiringDuties;
     }
 
-    public void setAcceptTarget(String acceptTarget) {
-        this.acceptTarget = acceptTarget;
+    public void setHiringDuties(String hiringDuties) {
+        this.hiringDuties = hiringDuties;
     }
 
-    public String getAwardDetail() {
-        return awardDetail;
+    public String getRecommenderDuty() {
+        return recommenderDuty;
     }
 
-    public void setAwardDetail(String awardDetail) {
-        this.awardDetail = awardDetail;
+    public void setRecommenderDuty(String recommenderDuty) {
+        this.recommenderDuty = recommenderDuty;
     }
 
-    public String getResourcesSuggest() {
-        return resourcesSuggest;
+    public RecommendType getRecommendType() {
+        return recommendType;
     }
 
-    public void setResourcesSuggest(String resourcesSuggest) {
-        this.resourcesSuggest = resourcesSuggest;
+    public void setRecommendType(RecommendType recommendType) {
+        this.recommendType = recommendType;
     }
 
-    public Boolean getResourcesAudit() {
-        return resourcesAudit;
+    public String getRecommendPosition() {
+        return recommendPosition;
     }
 
-    public void setResourcesAudit(Boolean resourcesAudit) {
-        this.resourcesAudit = resourcesAudit;
+    public void setRecommendPosition(String recommendPosition) {
+        this.recommendPosition = recommendPosition;
     }
 
-    public String getOperateSuggest() {
-        return operateSuggest;
+    public Integer getRecommendTime() {
+        return recommendTime;
     }
 
-    public void setOperateSuggest(String operateSuggest) {
-        this.operateSuggest = operateSuggest;
+    public void setRecommendTime(Integer recommendTime) {
+        this.recommendTime = recommendTime;
     }
 
-    public Boolean getOperateAudit() {
-        return operateAudit;
+    public String getCheckContent() {
+        return checkContent;
     }
 
-    public void setOperateAudit(Boolean operateAudit) {
-        this.operateAudit = operateAudit;
+    public void setCheckContent(String checkContent) {
+        this.checkContent = checkContent;
     }
 
-    public String getGeneralSuggest() {
-        return generalSuggest;
+    public String getContentRequire() {
+        return contentRequire;
     }
 
-    public void setGeneralSuggest(String generalSuggest) {
-        this.generalSuggest = generalSuggest;
+    public void setContentRequire(String contentRequire) {
+        this.contentRequire = contentRequire;
     }
 
-    public Boolean getGeneralAudit() {
-        return generalAudit;
+    public SolutionStatus getStatus() {
+        return status;
     }
 
-    public void setGeneralAudit(Boolean generalAudit) {
-        this.generalAudit = generalAudit;
+    public void setStatus(SolutionStatus status) {
+        this.status = status;
     }
 
-    public String getRemark() {
-        return remark;
+    public Integer getPredictMoney() {
+        return predictMoney;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setPredictMoney(Integer predictMoney) {
+        this.predictMoney = predictMoney;
+    }
+
+    public Integer getAwardMoney() {
+        return awardMoney;
+    }
+
+    public void setAwardMoney(Integer awardMoney) {
+        this.awardMoney = awardMoney;
     }
 }

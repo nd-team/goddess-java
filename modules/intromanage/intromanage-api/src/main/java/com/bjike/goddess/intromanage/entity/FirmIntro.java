@@ -1,10 +1,12 @@
 package com.bjike.goddess.intromanage.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.intromanage.type.DemandType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -121,6 +123,24 @@ public class FirmIntro extends BaseEntity {
      */
     @Column(name = "demandType", nullable = false, columnDefinition = "TINYINT(2) COMMENT '需求类型'")
     private DemandType demandType;
+
+    /**
+     * 更新（制作）时间
+     */
+    @Column(name = "updateDate", nullable = false, columnDefinition = "DATE COMMENT '更新（制作）时间'")
+    private LocalDate updateDate;
+
+    /**
+     * 战略定位
+     */
+    @Column(name = "positioning", nullable = false, columnDefinition = "TEXT COMMENT '战略定位'")
+    private String positioning;
+
+    /**
+     * 状态
+     */
+    @Column(name = "status", nullable = false, columnDefinition = "INT(2) COMMENT '状态'")
+    private Status status;
 
     public String getFirmName() {
         return firmName;
@@ -256,5 +276,29 @@ public class FirmIntro extends BaseEntity {
 
     public void setDemandType(DemandType demandType) {
         this.demandType = demandType;
+    }
+
+    public LocalDate getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getPositioning() {
+        return positioning;
+    }
+
+    public void setPositioning(String positioning) {
+        this.positioning = positioning;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

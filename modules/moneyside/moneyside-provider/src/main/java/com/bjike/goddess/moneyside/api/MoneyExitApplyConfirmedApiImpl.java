@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.MoneyExitApplyConfirmedBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyConfirmedDTO;
 import com.bjike.goddess.moneyside.service.MoneyExitApplyConfirmedSer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,15 @@ import java.util.List;
 public class MoneyExitApplyConfirmedApiImpl implements MoneyExitApplyConfirmedAPI {
     @Autowired
     private MoneyExitApplyConfirmedSer moneyExitApplyConfirmedSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyExitApplyConfirmedSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyExitApplyConfirmedSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countMoneyExitApplyConfirmed(MoneyExitApplyConfirmedDTO moneyExitApplyConfirmedDTO) throws SerException {

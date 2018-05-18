@@ -186,7 +186,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
 
     @Override
     public byte[] export(String startTime, String endTime) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         LocalDate s = null;
         LocalDate e = null;
         try {
@@ -199,9 +199,9 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
         InventoryRecordDTO dto = new InventoryRecordDTO();
         dto.getConditions().add(Restrict.between("inventoryTime", time));
         List<InventoryRecord> list = super.findByCis(dto);
-        if (list==null||list.isEmpty()){
-            throw new SerException("该时间段没有数据");
-        }
+//        if (list==null||list.isEmpty()){
+//            throw new SerException("该时间段没有数据");
+//        }
         List<InventoryRecordExcel> toList=BeanTransform.copyProperties(list,InventoryRecordExcel.class,true);
         Excel excel=new Excel(0,2);
         byte[] bytes= ExcelUtil.clazzToExcel(toList,excel);
@@ -230,10 +230,11 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
-                bo.setQuantitySum(quantitySum);
-                bo.setInventoryNumSum(inventoryNumSum);
-                bo.setProfitLossSum(profitLossSum);
-                bo.setProfitLossCountSum(profitLossCountSum);
+                bo.setInventoryTime("合计");
+                bo.setQuantity(quantitySum);
+                bo.setInventoryNum(inventoryNumSum);
+                bo.setProfitLoss(profitLossSum);
+                bo.setProfitLossCount(profitLossCountSum);
                 boList.add(bo);
                 quantitySum = 0;
                 inventoryNumSum = 0;
@@ -266,10 +267,11 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
-                bo.setQuantitySum(quantitySum);
-                bo.setInventoryNumSum(inventoryNumSum);
-                bo.setProfitLossSum(profitLossSum);
-                bo.setProfitLossCountSum(profitLossCountSum);
+                bo.setInventoryTime("合计");
+                bo.setQuantity(quantitySum);
+                bo.setInventoryNum(inventoryNumSum);
+                bo.setProfitLoss(profitLossSum);
+                bo.setProfitLossCount(profitLossCountSum);
                 boList.add(bo);
                 quantitySum = 0;
                 inventoryNumSum = 0;
@@ -302,10 +304,11 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
-                bo.setQuantitySum(quantitySum);
-                bo.setInventoryNumSum(inventoryNumSum);
-                bo.setProfitLossSum(profitLossSum);
-                bo.setProfitLossCountSum(profitLossCountSum);
+                bo.setInventoryTime("合计");
+                bo.setQuantity(quantitySum);
+                bo.setInventoryNum(inventoryNumSum);
+                bo.setProfitLoss(profitLossSum);
+                bo.setProfitLossCount(profitLossCountSum);
                 boList.add(bo);
                 quantitySum = 0;
                 inventoryNumSum = 0;
@@ -338,10 +341,11 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
-                bo.setQuantitySum(quantitySum);
-                bo.setInventoryNumSum(inventoryNumSum);
-                bo.setProfitLossSum(profitLossSum);
-                bo.setProfitLossCountSum(profitLossCountSum);
+                bo.setInventoryTime("合计");
+                bo.setQuantity(quantitySum);
+                bo.setInventoryNum(inventoryNumSum);
+                bo.setProfitLoss(profitLossSum);
+                bo.setProfitLossCount(profitLossCountSum);
                 boList.add(bo);
                 quantitySum = 0;
                 inventoryNumSum = 0;

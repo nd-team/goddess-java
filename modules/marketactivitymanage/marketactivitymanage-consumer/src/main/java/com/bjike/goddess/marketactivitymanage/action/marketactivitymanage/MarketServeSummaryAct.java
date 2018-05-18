@@ -1,5 +1,8 @@
 package com.bjike.goddess.marketactivitymanage.action.marketactivitymanage;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +20,7 @@ import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
 import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeSummaryVO;
 import com.bjike.goddess.marketactivitymanage.vo.ServeSummaryVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
@@ -53,6 +57,8 @@ public class MarketServeSummaryAct {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -62,12 +68,14 @@ public class MarketServeSummaryAct {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
                 //int code, String msg
@@ -123,6 +131,7 @@ public class MarketServeSummaryAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询市场招待汇总邮件发送
      *
@@ -269,18 +278,15 @@ public class MarketServeSummaryAct {
     /**
      * 市场招待汇总
      *
-     * @param type            汇总类型true:按照计划汇总,false:按照实际汇总
-     * @param projectGroups   部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString   结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize")
-    public Result summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString, HttpServletRequest request) throws ActException {
+    public Result summarize(SummaryTO summaryTO, HttpServletRequest request) throws ActException {
         try {
-            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(type, projectGroups, startTimeString, endTimeString);
+            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(summaryTO);
             List<ServeSummaryVO> voList = BeanTransform.copyProperties(boList, ServeSummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
@@ -296,11 +302,11 @@ public class MarketServeSummaryAct {
      * @version v1
      */
     @GetMapping("v1/findProjectName")
-    public Result findApplyProjectName(Boolean type) throws ActException {
+    public Result findApplyProjectName(@RequestParam Boolean type) throws ActException {
         try {
-            if(type==null){
-                throw new SerException("类型不能为空");
-            }
+//            if(type==null){
+//                throw new SerException("类型不能为空");
+//            }
             List<String> projectNames = new ArrayList<>();
             if (type) {
                 projectNames = marketServeApplyAPI.findAllProjectName();

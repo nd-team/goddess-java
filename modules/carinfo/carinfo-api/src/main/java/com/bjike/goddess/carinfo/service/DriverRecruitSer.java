@@ -4,6 +4,7 @@ import com.bjike.goddess.carinfo.bo.DriverRecruitBO;
 import com.bjike.goddess.carinfo.dto.DriverRecruitDTO;
 import com.bjike.goddess.carinfo.entity.DriverRecruit;
 import com.bjike.goddess.carinfo.to.DriverRecruitTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,13 +21,25 @@ import java.util.List;
  */
 public interface DriverRecruitSer extends Ser<DriverRecruit, DriverRecruitDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
      *
      * @param to 司机招聘信息
      */
-    DriverRecruitBO insertModel(DriverRecruitTO to) throws SerException;
+    void insertModel(DriverRecruitTO to) throws SerException;
 
     /**
      * 更新
@@ -50,4 +63,11 @@ public interface DriverRecruitSer extends Ser<DriverRecruit, DriverRecruitDTO> {
      * @param audit   结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+
+    /**
+     * 根据Id查询
+     * @param id id
+     */
+    DriverRecruitBO findOne(String id) throws SerException;
 }

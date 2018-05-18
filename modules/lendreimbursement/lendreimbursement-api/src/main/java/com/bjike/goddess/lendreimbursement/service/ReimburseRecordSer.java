@@ -2,14 +2,21 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.lendreimbursement.bo.*;
+import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDetailDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
+import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -52,6 +59,13 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * 申请报销列表总条数
      */
     default Long countReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 报销列表总条数
+     */
+    default Long countReimburseRecords(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -147,6 +161,15 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return class ReimburseRecordBO
      */
     default ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
+    /**
+     * 等待审核寄件
+     *
+     * @param reimburseRecordTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO sendRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
 
@@ -265,12 +288,33 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     }
 
     /**
+     * 手机版等待付款预计付款
+     *
+     * @param reimburseRecordTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO phonePrePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 等待付款的付款
      *
      * @param reimburseRecordTO 申请报销信息
      * @return class ReimburseRecordBO
      */
     default ReimburseRecordBO waitPay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 手机版的等待付款的付款
+     *
+     * @param phoneReimbursePayTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO phoneWaitPay(PhoneReimbursePayTO phoneReimbursePayTO) throws SerException {
         return null;
     }
 
@@ -307,7 +351,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @param reimburseRecordDTO reimburseRecordDTO
      * @return class CollectDataBO
      */
-    default List<CollectDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -315,9 +359,9 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * 汇总地区
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -325,9 +369,9 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * 汇总一级科目
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -335,9 +379,9 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * 汇总项目名称
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -348,6 +392,13 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     default List<String> listAllUser() throws SerException {
         return null;
     }
+
+    /**
+     * 预计付款的报销单号
+     */
+    default List<String> reimNumByPrepay( ) throws SerException {return null;}
+
+
 
     /**
      * 所有一级科目
@@ -369,6 +420,12 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     default List<String> listProject() throws SerException {
         return null;
     }
+    /**
+     * 报销人汇总的报销人条件
+     */
+    default List<String> listReimUser() throws SerException {
+        return null;
+    }
 
     /**
      * 等待付款导出excel
@@ -377,7 +434,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return
      * @throws SerException
      */
-    byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
+    default byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException{return null;};
 
     /**
      * 已付款记录导出excel
@@ -386,7 +443,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return
      * @throws SerException
      */
-    byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
+    default byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException{return null;};
 
 
     /**
@@ -397,7 +454,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return
      * @throws SerException
      */
-    List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException ;
+    default List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException{return null;} ;
 
     /**
      * chenjunhao
@@ -407,7 +464,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return
      * @throws SerException
      */
-    List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
+    default List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException{return null;};
 
     /**
      * chenjunhao
@@ -417,5 +474,95 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @return
      * @throws SerException
      */
-    ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException;
+    default ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException{return null;};
+
+    /**
+     * chenjunhao
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    default Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException{return null;};
+
+    /**
+     * 手机端的列表
+     *
+     * @return classs phoneReimburseDTO
+     */
+    default List<ReimburseRecordBO> listAll(PhoneReimburseDTO phoneReimburseDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机端的详情按钮控件状态
+     *
+     * @return class ReimPhoneShowStatus
+     */
+    default ReimPhoneShowStatus phoneShowRight(ReimPhoneSelectStatus reimPhoneSelectStatus, String reimId ) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总个人周月年数据
+     * @param reimburseShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总任意两月的变化趋势图
+     * @param reimburseTrendShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司项目组时间段内的特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司项目时间段内的特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的特定指标统计图
+     * @param reimburseShapeDetailDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
+
+
+    /**
+     * 报销数据分析图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO analysisDiagram() throws SerException {
+        return null;
+    }
 }

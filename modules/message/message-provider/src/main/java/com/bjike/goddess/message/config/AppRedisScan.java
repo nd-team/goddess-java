@@ -1,6 +1,7 @@
 package com.bjike.goddess.message.config;
 
 import com.bjike.goddess.redis.client.RedisClientImpl;
+import com.bjike.goddess.redis.client.RedisScan;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +14,6 @@ import org.springframework.stereotype.Component;
  * @Copy: [com.bjike]
  */
 @Component
-public class AppRedisScan extends RedisClientImpl {
+public class AppRedisScan extends RedisScan {
 
 }

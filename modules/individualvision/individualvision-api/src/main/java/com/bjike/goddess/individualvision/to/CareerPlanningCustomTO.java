@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 职业规划定制
  *
@@ -72,62 +74,69 @@ public class CareerPlanningCustomTO extends BaseTO {
     /**
      * 此路径能力提升程度的选择
      */
+    @NotBlank(message = "此路径能力提升程度的选择不能为空",groups = {ADD.class, EDIT.class})
     private String degreeAbilityAscend;
 
     /**
      * 此时的权利及义务
      */
+    @NotBlank(message = "此时的权利及义务不能为空",groups = {ADD.class, EDIT.class})
     private String rightsObligations;
 
     /**
      * 预计完成时间
      */
+    @NotBlank(message = "预计完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String expectedCompletionTime;
 
     /**
      * 实际完成时间
      */
+    @NotBlank(message = "实际完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String actualCompletionTime;
 
     /**
      * 是否按时完成
      */
+    @NotNull(message = "是否按时完成不能为空",groups = {ADD.class, EDIT.class})
     private Boolean finish;
 
     /**
      * 期望周收益（元）
      */
-    private String expectWeeksEarnings;
+    @NotNull(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    private String expectMonthsEarnings;
+    @NotNull(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    private String expectYearsEarnings;
+    @NotNull(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectYearsEarnings;
 
     /**
      * 实际周收益（元）
      */
-    private String actualWeeksEarnings;
+    @NotNull(message = "实际周收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualWeeksEarnings;
 
     /**
      * 实际月收益（元）
      */
-    private String actualMonthsEarnings;
+    @NotNull(message = "实际月收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualMonthsEarnings;
 
     /**
      * 实际年收益（元）
      */
-    private String actualYearsEarnings;
+    @NotNull(message = "实际年收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualYearsEarnings;
 
-    private String notUpStandard; //未达标项内容
-    private String completeDegree;//此定制项完成程度
-    private String standard;//此定制项标准
-    private String surplusTime;//剩余时间
 
     public String getAvailableBenefitPackage() {
         return availableBenefitPackage;
@@ -242,83 +251,51 @@ public class CareerPlanningCustomTO extends BaseTO {
         this.finish = finish;
     }
 
-    public String getExpectWeeksEarnings() {
+    public Integer getExpectWeeksEarnings() {
         return expectWeeksEarnings;
     }
 
-    public void setExpectWeeksEarnings(String expectWeeksEarnings) {
+    public void setExpectWeeksEarnings(Integer expectWeeksEarnings) {
         this.expectWeeksEarnings = expectWeeksEarnings;
     }
 
-    public String getExpectMonthsEarnings() {
+    public Integer getExpectMonthsEarnings() {
         return expectMonthsEarnings;
     }
 
-    public void setExpectMonthsEarnings(String expectMonthsEarnings) {
+    public void setExpectMonthsEarnings(Integer expectMonthsEarnings) {
         this.expectMonthsEarnings = expectMonthsEarnings;
     }
 
-    public String getExpectYearsEarnings() {
+    public Integer getExpectYearsEarnings() {
         return expectYearsEarnings;
     }
 
-    public void setExpectYearsEarnings(String expectYearsEarnings) {
+    public void setExpectYearsEarnings(Integer expectYearsEarnings) {
         this.expectYearsEarnings = expectYearsEarnings;
     }
 
-    public String getActualWeeksEarnings() {
+    public Integer getActualWeeksEarnings() {
         return actualWeeksEarnings;
     }
 
-    public void setActualWeeksEarnings(String actualWeeksEarnings) {
+    public void setActualWeeksEarnings(Integer actualWeeksEarnings) {
         this.actualWeeksEarnings = actualWeeksEarnings;
     }
 
-    public String getActualMonthsEarnings() {
+    public Integer getActualMonthsEarnings() {
         return actualMonthsEarnings;
     }
 
-    public void setActualMonthsEarnings(String actualMonthsEarnings) {
+    public void setActualMonthsEarnings(Integer actualMonthsEarnings) {
         this.actualMonthsEarnings = actualMonthsEarnings;
     }
 
-    public String getActualYearsEarnings() {
+    public Integer getActualYearsEarnings() {
         return actualYearsEarnings;
     }
 
-    public void setActualYearsEarnings(String actualYearsEarnings) {
+    public void setActualYearsEarnings(Integer actualYearsEarnings) {
         this.actualYearsEarnings = actualYearsEarnings;
-    }
-
-    public String getNotUpStandard() {
-        return notUpStandard;
-    }
-
-    public void setNotUpStandard(String notUpStandard) {
-        this.notUpStandard = notUpStandard;
-    }
-
-    public String getCompleteDegree() {
-        return completeDegree;
-    }
-
-    public void setCompleteDegree(String completeDegree) {
-        this.completeDegree = completeDegree;
-    }
-
-    public String getStandard() {
-        return standard;
-    }
-
-    public void setStandard(String standard) {
-        this.standard = standard;
-    }
-
-    public String getSurplusTime() {
-        return surplusTime;
-    }
-
-    public void setSurplusTime(String surplusTime) {
-        this.surplusTime = surplusTime;
     }
 }

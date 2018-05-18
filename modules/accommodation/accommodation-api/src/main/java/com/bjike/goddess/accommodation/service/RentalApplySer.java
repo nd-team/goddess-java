@@ -1,9 +1,14 @@
 package com.bjike.goddess.accommodation.service;
 
 import com.bjike.goddess.accommodation.bo.RentalApplyBO;
+import com.bjike.goddess.accommodation.bo.RentalBO;
+import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
+import com.bjike.goddess.accommodation.entity.Rental;
 import com.bjike.goddess.accommodation.entity.RentalApply;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalApplyTO;
+import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -17,6 +22,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RentalApplySer extends Ser<RentalApply, RentalApplyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租房方案列表总条数
      */
@@ -76,6 +94,36 @@ public interface RentalApplySer extends Ser<RentalApply, RentalApplyDTO> {
     default void removeApply(String id) throws SerException {
         return;
     }
+    /**
+     * 商务发展部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO businessAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
+    /**
+     * 运营财务部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO financeAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
+    /**
+     * 综合资源部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO resourceAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
 
     /**
      * 项目经理审核
@@ -87,11 +135,16 @@ public interface RentalApplySer extends Ser<RentalApply, RentalApplyDTO> {
     default RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         return null;
     }
-    /**
-     * 租房申请汇总到租房信息中
-     */
-    default void summary() throws SerException {
-    }
+//    /**
+//     * 租房信息
+//     *
+//     * @param to
+//     * @return class RentalBO
+//     * @throws SerException
+//     */
+//    default RentalBO rentInfo(RentalApplyTO to) throws SerException {
+//        return null;
+//    }
 
     /**
      * 导出Excel

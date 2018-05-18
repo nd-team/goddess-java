@@ -1,18 +1,27 @@
 package com.bjike.goddess.regularization.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,4 +112,11 @@ public class ManagementScoreSerImpl extends ServiceImpl<ManagementScore, Managem
         super.remove(id);
     }
 
+    @Override
+    public List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException {
+        ManagementScoreDTO managementScoreDTO = new ManagementScoreDTO();
+        managementScoreDTO.getConditions().add(Restrict.eq("regularizationId",regularizationId));
+        List<ManagementScore> managementScores = super.findByCis(managementScoreDTO);
+        return BeanTransform.copyProperties(managementScores,ManagementScoreBO.class);
+    }
 }

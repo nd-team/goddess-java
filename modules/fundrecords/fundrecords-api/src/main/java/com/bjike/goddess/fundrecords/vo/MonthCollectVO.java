@@ -37,6 +37,23 @@ public class MonthCollectVO extends BaseBO {
      * 支出
      */
     private Double expenditure;
+    /**
+     * 本月发生额
+     */
+    private Double incurredAmount;
+
+    /**
+     * 记录时间
+     */
+    private String recordDate;
+
+    public String getRecordDate() {
+        return recordDate;
+    }
+
+    public void setRecordDate(String recordDate) {
+        this.recordDate = recordDate;
+    }
 
     public Integer getMonth() {
         return month;
@@ -76,5 +93,13 @@ public class MonthCollectVO extends BaseBO {
 
     public void setExpenditure(Double expenditure) {
         this.expenditure = expenditure;
+    }
+
+    public Double getIncurredAmount() {
+        return incurredAmount;
+    }
+
+    public void setIncurredAmount(Double incurredAmount) {
+        this.incurredAmount = incurredAmount;
     }
 }

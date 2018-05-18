@@ -93,7 +93,6 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
         return;
     }
 
-    ;
 
     /**
      * 根据内部项目编号查找项目合同基本信息
@@ -143,6 +142,15 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
     Set<String> allInnerProjects() throws SerException;
 
     /**
+     * chenjunhao
+     * 获取所有合同外部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> outerProjects() throws SerException;
+
+    /**
      * 导出excel
      * chenjunhao
      *
@@ -167,4 +175,58 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * 获取全部信息(不分页)
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<BaseInfoManageBO> getgetAll() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目数
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default Long getInterProject(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目名称
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称获取所部的地区
+     *
+     * @param projectNane
+     * @return
+     * @throws SerException
+     */
+    default List<String> getArea(String projectNane) throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 获取某内部项目名称的合同规模数量
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Double contractScale(String project) throws SerException;
 }

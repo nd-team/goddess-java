@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
 import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -20,6 +21,20 @@ import java.util.List;
 public interface PositionIndexSetAPI {
 
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 岗位指标列表总条数
@@ -145,6 +160,12 @@ public interface PositionIndexSetAPI {
     ;
 
     /**
+     * 岗位报告导入 Excel
+     */
+
+    void leadExcel(List<PositionIndexSetTO> toList) throws SerException;
+
+    /**
      * 岗位报告导出Excel
      *
      * @param to
@@ -153,6 +174,7 @@ public interface PositionIndexSetAPI {
     default byte[] positionReport(ExportExcelPositTO to) throws SerException{
         return null;
     };
+
 
     /**
      * 个人报告导出Excel
@@ -164,4 +186,18 @@ public interface PositionIndexSetAPI {
         return null;
     };
 
+    /**
+     * 根据部门月度传来的id来查询它所分解的岗位指标
+     * @param id
+     * @throws SerException
+     */
+    default List<PositionIndexSetBO> dendrogram(String id ) throws SerException{
+        return null;
+    }
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }

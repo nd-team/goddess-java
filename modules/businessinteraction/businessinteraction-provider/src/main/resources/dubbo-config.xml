@@ -20,9 +20,7 @@
 	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 	<dubbo:service  ref="demandApiImpl" interface="com.bjike.goddess.businessinteraction.api.DemandAPI" />
 	<dubbo:service  ref="interactionRelationApiImpl" interface="com.bjike.goddess.businessinteraction.api.InteractionRelationAPI" />
-	<dubbo:service  ref="leavingMessageApiImpl" interface="com.bjike.goddess.businessinteraction.api.LeavingMessageAPI" />
 	<dubbo:service  ref="talkDetailApiImpl" interface="com.bjike.goddess.businessinteraction.api.TalkDetailAPI" />
-	<dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI" />
 
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
@@ -39,10 +37,6 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
-	<dubbo:reference  validation="true" id="competitorApiImpl" interface="com.bjike.goddess.competitormanage.api.CompetitorAPI" />
-	<dubbo:reference  validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
-	<dubbo:reference  validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
-	<dubbo:reference  validation="true" id="supplierInformationApiImpl" interface="com.bjike.goddess.supplier.api.SupplierInformationAPI" />
 
 
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionAPI" />

@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 /**
  * @Author: [xiazhili]
@@ -16,8 +15,25 @@ import java.time.LocalDate;
  * @Copy: [com.bjike]
  */
 public class RentalPreceptTO extends BaseTO {
-    public interface TestManager{}
-    public interface TestGeneral{}
+    public interface TestBusiness {
+    }
+
+    public interface TestFinance {
+    }
+
+    public interface TestResource {
+    }
+
+    public interface TestManager {
+    }
+
+    public interface TestGeneral {
+    }
+
+    /**
+     * 租房编号
+     */
+    private String rentNum;
     /**
      * 姓名（用户名称）
      */
@@ -56,7 +72,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 住宿人数
      */
-    @NotBlank(message = "住宿人数不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "住宿人数不能为空", groups = {ADD.class, EDIT.class})
     private Integer accommodationPeople;
     /**
      * 租房规格
@@ -66,38 +82,48 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 租房要求
      */
+    @NotBlank(message = "租房要求不能为空", groups = {ADD.class, EDIT.class})
     private String requirements;
     /**
      * 租房期限
      */
+    @NotBlank(message = "租房期限不能为空", groups = {ADD.class, EDIT.class})
     private String deadline;
     /**
      * 完成租房开始时间
      */
+    @NotBlank(message = "完成租房开始时间不能为空", groups = {ADD.class, EDIT.class})
     private String completeStartTime;
     /**
      * 完成租房结束时间
      */
+    @NotBlank(message = "完成租房结束时间不能为空", groups = {ADD.class, EDIT.class})
     private String completeEndTime;
-    /**
-     * 资金意见
-     */
-    private String moneyOn;
     /**
      * 注意事项
      */
+    @NotBlank(message = "注意事项不能为空", groups = {ADD.class, EDIT.class})
     private String attention;
+    /**
+     * 资金意见
+     */
+    @NotBlank(message = "资金意见不能为空", groups = {RentalPreceptTO.TestFinance.class})
+    private String moneyOn;
+
     /**
      * 商务发展部意见
      */
+    @NotBlank(message = "商务发展部意见不能为空", groups = {RentalPreceptTO.TestBusiness.class})
     private String commerceRemark;
     /**
      * 运营财务部意见
      */
+    @NotBlank(message = "运营财务部意见不能为空", groups = {RentalPreceptTO.TestFinance.class})
     private String operatingRemark;
     /**
      * 综合资源部意见
      */
+    @NotBlank(message = "综合资源部意见不能为空", groups = {RentalPreceptTO.TestResource.class})
     private String comprehensiveRemark;
     /**
      * 项目经理
@@ -110,7 +136,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 项目经理是否通过(是/否)
      */
-    @NotBlank(message = "项目经理是否通过不能为空",groups = {RentalPreceptTO.TestManager.class})
+    @NotBlank(message = "项目经理是否通过不能为空", groups = {RentalPreceptTO.TestManager.class})
     private String managePass;
 
     /**
@@ -124,12 +150,20 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 总经办是否通过(是/否)
      */
-    @NotBlank(message = "总经办是否通过不能为空",groups = {RentalPreceptTO.TestGeneral.class})
+    @NotBlank(message = "总经办是否通过不能为空", groups = {RentalPreceptTO.TestGeneral.class})
     private String generalPass;
     /**
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;

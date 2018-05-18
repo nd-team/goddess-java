@@ -18,6 +18,11 @@ import java.time.LocalDate;
 @Table(name = "accommodation_rental")
 public class Rental extends BaseEntity {
     /**
+     * 租房编号
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'")
+    private String rentNum;
+    /**
      * 地区
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '地区'")
@@ -108,46 +113,109 @@ public class Rental extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '水电费缴费频率'")
     private String paymentFrequency;
     /**
+     * 水电费缴费日期
+     */
+    @Column(columnDefinition = "DATE COMMENT '水电费缴费日期'")
+    private LocalDate paymentTime;
+    /**
      * 中介费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '中介费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '中介费'")
     private Double agency;
     /**
      * 押金
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '押金'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '押金'")
     private Double deposit;
     /**
      * 房租
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '房租'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '房租'")
     private Double rent;
     /**
-     * 水费计价
+     * 管理费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '水费计价'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '管理费'")
+    private Double managementFee;
+    /**
+     * 卫生费
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '卫生费'")
+    private Double healthFee;
+    /**
+     * 房租缴费方
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '房租缴费方'")
+    private String rentPay;
+    /**
+     * 水费期初数目
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '水费期初数目'")
     private Double water;
     /**
-     * 电费计价
+     * 水费计价金额(元/吨)
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '电费计价'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '水费计价金额(元/吨)'")
+    private Double waterMoney;
+
+    /**
+     * 水费缴费方
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '水费缴费方'")
+    private String waterPay;
+    /**
+     * 电费期初数目
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '电费期初数目'")
     private Double energy;
     /**
-     * 网络套餐费用
+     * 电费计价金额(元/吨)
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '网络套餐费用'")
-    private Double network;
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '电费计价金额(元/吨)'")
+    private Double energyMoney;
     /**
-     * 燃气费
+     * 电费缴费方
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '燃气费'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '电费缴费方'")
+    private String energyPay;
+    /**
+     * 网络套餐费用使用期限
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '网络套餐费用使用期限'")
+    private String network;
+    /**
+     * 网络套餐费用缴纳金额
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '网络套餐费用缴纳金额'")
+    private Double networkMoney;
+    /**
+     * 网络套餐费用缴费方
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '网络套餐费用缴费方'")
+    private String networkPay;
+    /**
+     * 管道燃气费充值额度
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '管道燃气费充值额度'")
     private Double gas;
+    /**
+     * 燃气费缴费方
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '燃气费缴费方'")
+    private String gasPay;
     /**
      * 备注
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
 
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getArea() {
         return area;
@@ -293,6 +361,14 @@ public class Rental extends BaseEntity {
         this.paymentFrequency = paymentFrequency;
     }
 
+    public LocalDate getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(LocalDate paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
     public Double getAgency() {
         return agency;
     }
@@ -317,12 +393,52 @@ public class Rental extends BaseEntity {
         this.rent = rent;
     }
 
+    public Double getManagementFee() {
+        return managementFee;
+    }
+
+    public void setManagementFee(Double managementFee) {
+        this.managementFee = managementFee;
+    }
+
+    public Double getHealthFee() {
+        return healthFee;
+    }
+
+    public void setHealthFee(Double healthFee) {
+        this.healthFee = healthFee;
+    }
+
+    public String getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(String rentPay) {
+        this.rentPay = rentPay;
+    }
+
     public Double getWater() {
         return water;
     }
 
     public void setWater(Double water) {
         this.water = water;
+    }
+
+    public Double getWaterMoney() {
+        return waterMoney;
+    }
+
+    public void setWaterMoney(Double waterMoney) {
+        this.waterMoney = waterMoney;
+    }
+
+    public String getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(String waterPay) {
+        this.waterPay = waterPay;
     }
 
     public Double getEnergy() {
@@ -333,12 +449,44 @@ public class Rental extends BaseEntity {
         this.energy = energy;
     }
 
-    public Double getNetwork() {
+    public Double getEnergyMoney() {
+        return energyMoney;
+    }
+
+    public void setEnergyMoney(Double energyMoney) {
+        this.energyMoney = energyMoney;
+    }
+
+    public String getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(String energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public String getNetwork() {
         return network;
     }
 
-    public void setNetwork(Double network) {
+    public void setNetwork(String network) {
         this.network = network;
+    }
+
+    public Double getNetworkMoney() {
+        return networkMoney;
+    }
+
+    public void setNetworkMoney(Double networkMoney) {
+        this.networkMoney = networkMoney;
+    }
+
+    public String getNetworkPay() {
+        return networkPay;
+    }
+
+    public void setNetworkPay(String networkPay) {
+        this.networkPay = networkPay;
     }
 
     public Double getGas() {
@@ -349,6 +497,14 @@ public class Rental extends BaseEntity {
         this.gas = gas;
     }
 
+    public String getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(String gasPay) {
+        this.gasPay = gasPay;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -356,6 +512,4 @@ public class Rental extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-
 }

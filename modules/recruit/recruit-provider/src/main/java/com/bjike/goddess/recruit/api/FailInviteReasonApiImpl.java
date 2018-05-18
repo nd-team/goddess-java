@@ -7,11 +7,13 @@ import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
 import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.service.FailInviteReasonSer;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未邀约成功原因
@@ -99,5 +101,20 @@ public class FailInviteReasonApiImpl implements FailInviteReasonAPI {
     @Override
     public void update(FailInviteReasonTO failInviteReasonTO) throws SerException {
         failInviteReasonSer.update(failInviteReasonTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return failInviteReasonSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return failInviteReasonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        return failInviteReasonSer.allReason();
     }
 }

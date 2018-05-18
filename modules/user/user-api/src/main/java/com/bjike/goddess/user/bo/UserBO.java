@@ -43,6 +43,11 @@ public class UserBO extends BaseBO {
      * 昵称
      */
     private String nickname;
+
+    /**
+     * 企业/团体名称
+     */
+    private String enterpriseName;
     /**
      * 员工编号
      */
@@ -53,7 +58,25 @@ public class UserBO extends BaseBO {
      */
     private Status status;
 
+    /**
+     * 用户积分
+     */
+    private String integral;
+
     private String createTime;
+
+    /**
+     * 父级ID
+     */
+    private String fatherId;
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
 
     public String getSystemNO() {
         return systemNO;
@@ -119,6 +142,14 @@ public class UserBO extends BaseBO {
         this.employeeNumber = employeeNumber;
     }
 
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -133,5 +164,13 @@ public class UserBO extends BaseBO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
     }
 }

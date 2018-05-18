@@ -24,9 +24,9 @@ public enum GuideAddrStatus {
      */
     EDIT(2),
     /**
-     * 组织结构
+     * 审核
      */
-    ORGANIZE(3),
+    AUDIT(3),
     /**
      * 删除
      */

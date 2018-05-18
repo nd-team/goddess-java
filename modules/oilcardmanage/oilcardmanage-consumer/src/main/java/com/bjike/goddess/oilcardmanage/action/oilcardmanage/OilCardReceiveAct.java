@@ -11,14 +11,21 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardReceiveAPI;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardReceiveVO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.vo.AreaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * 油卡领用
@@ -35,6 +42,29 @@ public class OilCardReceiveAct {
 
     @Autowired
     private OilCardReceiveAPI oilCardReceiveAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = oilCardReceiveAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 新增
@@ -75,16 +105,16 @@ public class OilCardReceiveAct {
     /**
      * 审核
      *
-     * @param id                   id
-     * @param auditSuggestion      审核意见
-     * @param OilCardReceiveResult 审核结果
+     * @param id              id
+     * @param auditSuggestion 审核意见
+     * @param auditResult     审核结果
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id, @RequestParam String auditSuggestion, @RequestParam OilCardReceiveResult OilCardReceiveResult) throws ActException {
+    @GetMapping("v1/audit")
+    public Result audit(@RequestParam String id, @RequestParam String auditSuggestion, @RequestParam OilCardReceiveResult auditResult) throws ActException {
         try {
-            oilCardReceiveAPI.auditOilCardReceive(id, auditSuggestion, OilCardReceiveResult);
+            oilCardReceiveAPI.auditOilCardReceive(id, auditSuggestion, auditResult);
             return ActResult.initialize("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -120,7 +150,7 @@ public class OilCardReceiveAct {
 
         try {
             oilCardReceiveAPI.returnOilCardReceive(id);
-            return new ActResult("领用成功");
+            return new ActResult("归还成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -139,6 +169,11 @@ public class OilCardReceiveAct {
 
         try {
             List<OilCardReceiveVO> vo = BeanTransform.copyProperties(oilCardReceiveAPI.pageList(dto), OilCardReceiveVO.class);
+            if (vo != null && vo.size() > 0) {
+                vo.stream().forEach(str -> {
+                    str.setOilCardBasicVO(BeanTransform.copyProperties(str.getOilCardBasicVO(), OilCardBasicVO.class));
+                });
+            }
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -146,16 +181,16 @@ public class OilCardReceiveAct {
     }
 
     /**
-     * 根据Id查询油卡基础信息
+     * 根据Id查询油卡领用信息
      *
      * @param id id
      * @return class OilCardReceiveVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable String id) throws ActException {
         try {
-            OilCardReceiveVO vo = BeanTransform.copyProperties(oilCardReceiveAPI.findById(id), OilCardReceiveVO.class);
+            OilCardReceiveVO vo = BeanTransform.copyProperties(oilCardReceiveAPI.findOne(id), OilCardReceiveVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -177,4 +212,56 @@ public class OilCardReceiveAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询所有未冻结且闲置的油卡的油卡编号
+     *
+     * @return class OilCardBasicVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/oilcard")
+    public Result findOilcard() throws ActException {
+        try {
+            List<String> boList = oilCardReceiveAPI.findOilCard();
+            return ActResult.initialize(boList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/area")
+    public Result findArea() throws ActException {
+        try {
+            List<AreaBO> areaBOS = oilCardReceiveAPI.findArea();
+            List<AreaVO> voList = BeanTransform.copyProperties(areaBOS, AreaVO.class);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有审核人
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/operate")
+    public Result findOperate() throws ActException {
+        try {
+            List<String> list = oilCardReceiveAPI.findOperate();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -1,40 +1,59 @@
 package com.bjike.goddess.bidding.vo;
 
-import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ike on 17-5-5.
  */
-public class BiddingInfoCollectVO implements Serializable{
+public class BiddingInfoCollectVO {
 
     /**
-     * 地市
+     * 招投标类型汇总集合
+     */
+    private List<Map<String,String>> biddingMap;
+    /**
+     * 业务类型汇总集合
+     */
+    private List<Map<String,String>> businessMap;
+    /**
+     * 个数
+     */
+    private Integer counts;
+
+    /**
+     * 地区
      */
     private String cities;
+
     /**
-     * 邀请招标
+     * remark
      */
-    private Object invite;
-    /**
-     * 公开招标
-     */
-    private Object openly;
-    /**
-     * 移动通信
-     */
-    private Object mobile;
-    /**
-     * 软件开发
-     */
-    private Object soft;
-    /**
-     * 智能系统集成
-     */
-    private Object system;
-    /**
-     * 策划与营销方案
-     */
-    private Object plan;
+    private String remark;
+
+    public List<Map<String, String>> getBiddingMap() {
+        return biddingMap;
+    }
+
+    public void setBiddingMap(List<Map<String, String>> biddingMap) {
+        this.biddingMap = biddingMap;
+    }
+
+    public List<Map<String, String>> getBusinessMap() {
+        return businessMap;
+    }
+
+    public void setBusinessMap(List<Map<String, String>> businessMap) {
+        this.businessMap = businessMap;
+    }
+
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
+    }
 
     public String getCities() {
         return cities;
@@ -44,51 +63,11 @@ public class BiddingInfoCollectVO implements Serializable{
         this.cities = cities;
     }
 
-    public Object getInvite() {
-        return invite;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setInvite(Object invite) {
-        this.invite = invite;
-    }
-
-    public Object getOpenly() {
-        return openly;
-    }
-
-    public void setOpenly(Object openly) {
-        this.openly = openly;
-    }
-
-    public Object getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(Object mobile) {
-        this.mobile = mobile;
-    }
-
-    public Object getSoft() {
-        return soft;
-    }
-
-    public void setSoft(Object soft) {
-        this.soft = soft;
-    }
-
-    public Object getSystem() {
-        return system;
-    }
-
-    public void setSystem(Object system) {
-        this.system = system;
-    }
-
-    public Object getPlan() {
-        return plan;
-    }
-
-    public void setPlan(Object plan) {
-        this.plan = plan;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

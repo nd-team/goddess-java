@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.WorkCollectPrepareBO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.WorkCollectPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -18,6 +19,18 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface WorkCollectPrepareSer extends Ser<WorkCollectPrepare, WorkCollectPrepareDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     List<WorkCollectPrepareBO> pageList(WorkCollectPrepareDTO dto) throws SerException;
 

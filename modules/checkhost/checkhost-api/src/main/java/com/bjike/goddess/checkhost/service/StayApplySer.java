@@ -1,13 +1,12 @@
 package com.bjike.goddess.checkhost.service;
 
-import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
-import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.dto.StayApplyDTO;
+import com.bjike.goddess.checkhost.entity.StayApply;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.checkhost.entity.StayApply;
-import com.bjike.goddess.checkhost.dto.StayApplyDTO;
 
 import java.util.List;
 
@@ -22,11 +21,26 @@ import java.util.List;
  */
 public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 住宿申请列表总条数
      */
     default Long countStayApply(StayApplyDTO stayApplyDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个住宿申请
      *
@@ -35,6 +49,7 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     default StayApplyBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取住宿申请
      *
@@ -81,13 +96,27 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     /**
      * 福利模块负责人审核
      *
-     * @param applyTO
      * @return class StayApplyBO
      * @throws SerException
      */
-    default StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
-        return null;
-    }
+    StayApplyBO manageAudit(StayApplyTO to) throws SerException;
 
+    /**
+     * 离宿申请
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO applyHost(StayApplyTO to) throws SerException;
+
+    /**
+     * 离宿申请审核
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO hostAudit(StayApplyTO to) throws SerException;
 
 }

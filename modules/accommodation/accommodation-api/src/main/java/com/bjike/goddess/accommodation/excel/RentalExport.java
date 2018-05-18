@@ -127,10 +127,10 @@ public class RentalExport {
     @ExcelHeader(name = "电费计价", notNull = true)
     private Double energy;
     /**
-     * 网络套餐费用
+     * 网络套餐费用缴纳金额
      */
-    @ExcelHeader(name = "网络套餐费用", notNull = true)
-    private Double network;
+    @ExcelHeader(name = "网络套餐费用缴纳金额", notNull = true)
+    private Double networkMoney;
     /**
      * 燃气费
      */
@@ -326,12 +326,12 @@ public class RentalExport {
         this.energy = energy;
     }
 
-    public Double getNetwork() {
-        return network;
+    public Double getNetworkMoney() {
+        return networkMoney;
     }
 
-    public void setNetwork(Double network) {
-        this.network = network;
+    public void setNetworkMoney(Double networkMoney) {
+        this.networkMoney = networkMoney;
     }
 
     public Double getGas() {

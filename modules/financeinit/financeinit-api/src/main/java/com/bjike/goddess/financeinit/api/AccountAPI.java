@@ -27,6 +27,7 @@ public interface AccountAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -140,4 +141,27 @@ public interface AccountAPI {
      */
     String findByName(String name) throws SerException;
 
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * ljt
+     * 查询总余额
+     *
+     * @return
+     * @throws SerException
+     */
+    Double findTotalAmount() throws SerException;
+
+    /**
+     * zkq
+     * 通过用户名称(账户来源)获取一级二级三级科目
+     */
+    default List<String> findSubjects(String name) throws SerException {
+        return null;
+    }
 }

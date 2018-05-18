@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.action.attainment;
 import com.bjike.goddess.attainment.api.DemandTypeAPI;
 import com.bjike.goddess.attainment.dto.DemandTypeDTO;
 import com.bjike.goddess.attainment.to.DemandTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.vo.DemandTypeVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -11,6 +12,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +36,29 @@ public class DemandTypeAct {
 
     @Autowired
     private DemandTypeAPI demandTypeAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = demandTypeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存
@@ -121,9 +147,9 @@ public class DemandTypeAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw( HttpServletRequest request) throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class,request));
+            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -174,4 +200,19 @@ public class DemandTypeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 调研对象
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getObject")
+    public Result getObject() throws ActException {
+        try {
+            return ActResult.initialize(demandTypeAPI.getObject());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

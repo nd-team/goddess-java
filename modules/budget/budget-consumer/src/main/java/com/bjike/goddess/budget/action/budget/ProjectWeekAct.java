@@ -1,18 +1,24 @@
 package com.bjike.goddess.budget.action.budget;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.budget.vo.ProjectWeekCountVO;
+import com.bjike.goddess.budget.vo.ProjectWeekListVO;
 import com.bjike.goddess.budget.vo.ProjectWeekVO;
+import com.bjike.goddess.businessproject.api.DispatchSheetAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -22,6 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,9 +44,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("projectweek")
-public class ProjectWeekAct {
+public class ProjectWeekAct extends BaseFileAction{
     @Autowired
     private ProjectWeekAPI projectWeekAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DispatchSheetAPI dispatchSheetAPI;
 
     /**
      * 功能导航权限
@@ -72,7 +85,7 @@ public class ProjectWeekAct {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/save")
+        @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) ProjectWeekTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ProjectWeekBO bo = projectWeekAPI.save(to);
@@ -132,6 +145,24 @@ public class ProjectWeekAct {
         try {
             List<ProjectWeekBO> list = projectWeekAPI.list(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目收入周分页列表
+     *
+     * @param dto     项目收入周分页信息
+     * @param request 请求对象
+     * @return class ProjectWeekVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/listProjectWeek")
+    public Result listProjectWeek(ProjectWeekDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectWeekListBO> list = projectWeekAPI.listProject(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekListVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -220,6 +251,128 @@ public class ProjectWeekAct {
         try {
             List<String> list = projectWeekAPI.findAllProjects();
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板项目收入周
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目收入周模板.xlsx";
+            super.writeOutFile(response, projectWeekAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 所有地区下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea() throws ActException {
+        try {
+            List<String> areas = new ArrayList<>();
+            if(moduleAPI.isCheck("businessproject")){
+
+                areas = dispatchSheetAPI.areas();
+            }
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据地区获取所属项目下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findProject/area")
+    public Result findProjectByArea(@RequestParam String area) throws ActException {
+        try {
+            List<String> project = new ArrayList<>(0);
+            if(moduleAPI.isCheck("businessproject")){
+                project = dispatchSheetAPI.getProjectGroup(area);
+            }
+            return ActResult.initialize(project);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据地区和所属项目获取内部项目名称下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findProject/area/project")
+    public Result findNameByAreaProject(@RequestParam String area,@RequestParam String project) throws ActException {
+        try {
+            List<String> projectName = new ArrayList<>(0);
+            if(moduleAPI.isCheck("businessproject")){
+                projectName = dispatchSheetAPI.getInnerName(area,project);
+            }
+            return ActResult.initialize(project);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 按条件汇总
+     *
+     * @return class ProjectWeekCountVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(ProjectWeekDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectWeekCountBO> list = projectWeekAPI.collect(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 汇总时获取地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAreas")
+    public Result findAreas() throws ActException {
+        try {
+            List<String> list = projectWeekAPI.findArea();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionBO bo = projectWeekAPI.figureShow();
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionVO.class));
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

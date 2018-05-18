@@ -3,7 +3,7 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.CurrencyBO;
 import com.bjike.goddess.financeinit.dto.CurrencyDTO;
-import com.bjike.goddess.financeinit.excel.SonPermissionObject;
+import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.service.CurrencySer;
 import com.bjike.goddess.financeinit.to.CurrencyTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -13,17 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 币别业务接口实现
+ * 设置币别业务接口实现
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别业务接口实现 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别业务接口实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @Service("currencyApiImpl")
 public class CurrencyApiImpl implements CurrencyAPI {
-
     @Autowired
     private CurrencySer currencySer;
 
@@ -38,8 +37,8 @@ public class CurrencyApiImpl implements CurrencyAPI {
     }
 
     @Override
-    public Long countCurrency(CurrencyDTO currencyDTO) throws SerException {
-        return currencySer.countCurrency( currencyDTO );
+    public Long countCurren(CurrencyDTO currencyDTO) throws SerException {
+        return currencySer.countCurren(currencyDTO);
     }
 
     @Override
@@ -48,22 +47,22 @@ public class CurrencyApiImpl implements CurrencyAPI {
     }
 
     @Override
-    public List<CurrencyBO> listCurrency(CurrencyDTO currencyDTO) throws SerException {
-        return currencySer.listCurrency(currencyDTO);
+    public List<CurrencyBO> listCurren(CurrencyDTO currencyDTO) throws SerException {
+        return currencySer.listCurren(currencyDTO);
     }
 
     @Override
-    public CurrencyBO addCurrency(CurrencyTO currencyTO) throws SerException {
-        return currencySer.addCurrency(currencyTO);
+    public CurrencyBO addCurren(CurrencyTO currencyTO) throws SerException {
+        return currencySer.addCurren(currencyTO);
     }
 
     @Override
-    public CurrencyBO editCurrency(CurrencyTO currencyTO) throws SerException {
-        return currencySer.editCurrency(currencyTO);
+    public CurrencyBO editCurren(CurrencyTO currencyTO) throws SerException {
+        return currencySer.editCurren(currencyTO);
     }
 
     @Override
-    public void deleteCurrency(String id) throws SerException {
-        currencySer.deleteCurrency(id);
+    public void deleteCurren(String id) throws SerException {
+        currencySer.deleteCurren(id);
     }
 }

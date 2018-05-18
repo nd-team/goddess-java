@@ -14,14 +14,20 @@ import com.dounine.japi.core.impl.ProjectImpl;
 public class JapiTest {
 
     public static void main(String[] args) {
-        //        JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+//                JapiClient.delete(true);
+        JapiClient.setPrefixPath("/home/ike/CODE/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/dispatchcar/dispatchcar-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/dispatchcar/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/dispatchcar/dispatchcar-api",
+                "modules/carinfo/carinfo-api",
+                "modules/staffentry/staffentry-api",
+                "modules/oilcardmanage/oilcardmanage-api",
+                "modules/storage/storage-api",
+                "modules/organize/organize-api",
+                "modules/user/user-api",
                 "common/common-api"
         });
         //        JapiClient.saveHistory(false);

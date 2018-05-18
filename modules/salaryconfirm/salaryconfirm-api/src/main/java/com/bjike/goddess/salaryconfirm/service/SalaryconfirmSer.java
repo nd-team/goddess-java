@@ -121,4 +121,22 @@ public interface SalaryconfirmSer extends Ser<Salaryconfirm, SalaryconfirmDTO> {
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 
     Boolean sonPermission() throws SerException;
+
+    /**
+     * 根据计薪周期和员工姓名来查询薪资确认情况
+     */
+    SalaryconfirmBO findSalary(String salaryStart,String salaryEnd,String name) throws SerException;
+
+    /**
+     * 导出－"已确认薪资"
+     *
+     * @return class
+     * @version v1
+     */
+    byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException;
+
+    /**
+     * 正常的个人汇总
+     */
+//    List<SalaryconfirmBO> findByGood(Integer year, Integer mouth, String name) throws SerException;
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.CashInvestBO;
 import com.bjike.goddess.moneyside.dto.CashInvestDTO;
 import com.bjike.goddess.moneyside.service.CashInvestSer;
 import com.bjike.goddess.moneyside.to.CashInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,15 @@ public class CashInvestApiImpl implements CashInvestAPI {
 
     @Autowired
     private CashInvestSer cashInvestSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return cashInvestSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return cashInvestSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countCashInvest(CashInvestDTO cashInvestDTO) throws SerException {
         return cashInvestSer.countCashInvest(cashInvestDTO);

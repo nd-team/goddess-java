@@ -1,5 +1,6 @@
 package com.bjike.goddess.capability.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.capability.bo.CollectData;
 import com.bjike.goddess.capability.bo.CollectEmailBO;
 import com.bjike.goddess.capability.dto.CollectEmailDTO;
@@ -431,66 +432,75 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastSendTime( LocalDateTime.now());
                     }
                     break;
             }
 
-            if (flag && type.equals("公司能力展示汇总")) {
+            //商业能力展示汇总(0),个人能力展示汇总(1),合作对象能力汇总(2)
+            if (flag && type.equals("0")) {
                 companyCapEmails.add(str);
                 allEmails.add(str);
-            } else if (flag && type.equals("合作对象商务展示汇总")) {
-                cooperCapEmails.add(str);
-                allEmails.add(str);
-            } else if (flag && type.equals("个人能力展示汇总")) {
+            } else if (flag && type.equals("1")) {
                 selfCapEmails.add(str);
+                allEmails.add(str);
+            } else if (flag && type.equals("2")) {
+                cooperCapEmails.add(str);
                 allEmails.add(str);
             }
 
 
         }
 
+
         //调用发邮件
-        allEmails = sendObject(companyCapEmails, cooperCapEmails, selfCapEmails);
+        allEmails = sendObject(companyCapEmails,selfCapEmails, cooperCapEmails);
 
         //修改上次发送时间
         super.update(allEmails);
@@ -574,19 +584,19 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             sb.append("<td>公司名称</td>");
             for(CollectEmailBO bo : collectEmailBOList){
                 for(CollectData collectData : bo.getCollectDataList()){
-                    sb.append("<td>" + collectData.getName() + "<td>");
+                    sb.append("<td>" +( StringUtils.isBlank(collectData.getName() )?"" : collectData.getName())+ "</td>");
                 }
             }
-            sb.append("<tr>");
+            sb.append("</tr>");
 
             //拼body部分
             for (CollectEmailBO bo : collectEmailBOList) {
                 sb.append("<tr>");
-                sb.append("<td>" + bo.getType() + "</td>");
+                sb.append("<td>" + bo.getRemark() + "</td>");
                 for (CollectData collectData : bo.getCollectDataList()) {
-                    sb.append("<td>" + collectData.getCounts() + "</td>");
+                    sb.append("<td>" + (collectData.getCounts() == null ? 0d : collectData.getCounts()) + "</td>");
                 }
-                sb.append("<tr>");
+                sb.append("</tr>");
             }
 
             //结束
@@ -607,19 +617,19 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             sb.append("<td>公司名称</td>");
             for(CollectEmailBO bo : collectEmailBOList){
                 for(CollectData collectData : bo.getCollectDataList()){
-                    sb.append("<td>" + collectData.getName() + "<td>");
+                    sb.append("<td>" +( StringUtils.isBlank(collectData.getName() )?"" : collectData.getName())+ "</td>");
                 }
             }
-            sb.append("<tr>");
+            sb.append("</tr>");
 
             //拼body部分
             for (CollectEmailBO bo : collectEmailBOList) {
                 sb.append("<tr>");
-                sb.append("<td>" + bo.getType() + "</td>");
+                sb.append("<td>" + bo.getRemark() + "</td>");
                 for (CollectData collectData : bo.getCollectDataList()) {
-                    sb.append("<td>" + collectData.getCounts() + "</td>");
+                    sb.append("<td>" + (collectData.getCounts() == null ? 0d : collectData.getCounts()) + "</td>");
                 }
-                sb.append("<tr>");
+                sb.append("</tr>");
             }
 
             //结束
@@ -640,19 +650,20 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             sb.append("<td>个人名字</td>");
             for(CollectEmailBO bo : selfCapEmails){
                 for(CollectData collectData : bo.getCollectDataList()){
-                    sb.append("<td>" + collectData.getName() + "<td>");
+//                    sb.append("<td>" + collectData.getName() + "<td>");
+                    sb.append("<td>" +( StringUtils.isBlank(collectData.getName() )?"" : collectData.getName())+ "</td>");
                 }
             }
-            sb.append("<tr>");
+            sb.append("</tr>");
 
             //拼body部分
             for (CollectEmailBO bo : selfCapEmails) {
                 sb.append("<tr>");
-                sb.append("<td>" + bo.getType() + "</td>");
+                sb.append("<td>" + bo.getRemark() + "</td>");
                 for (CollectData collectData : bo.getCollectDataList()) {
-                    sb.append("<td>" + collectData.getCounts() + "</td>");
+                    sb.append("<td>" + (collectData.getCounts() == null ? 0d : collectData.getCounts()) + "</td>");
                 }
-                sb.append("<tr>");
+                sb.append("</tr>");
             }
 
             //结束
@@ -662,7 +673,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
 
-    private List<CollectEmail> sendObject(List<CollectEmail> companyCapEmails, List<CollectEmail> cooperCapEmails, List<CollectEmail> selfCapEmails) throws SerException {
+    private List<CollectEmail> sendObject(List<CollectEmail> companyCapEmails,  List<CollectEmail> selfCapEmails , List<CollectEmail> cooperCapEmails) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         List<CollectEmail> allEmails = new ArrayList<>();
         //公司能力展示汇总
@@ -699,10 +710,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = baseinfo.getCompanyOrName().split(";");
                 List<CollectEmailBO> collectEmailBOList = collectCooperEmail(condis);
                 //拼表格
-                String content = htmlcooperCap(collectEmailBOList);
+                String content = htmlselfCap(collectEmailBOList);
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent( content );
-                messageTO.setTitle("定时发送合作对象商务展示汇总");
+                messageTO.setTitle("定时发送个人能力展示汇总");
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);
@@ -723,10 +734,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = dispa.getCompanyOrName().split(";");
                 List<CollectEmailBO> dispatchBOList = collectSelfEmail(condis);
                 //拼表格
-                String content = htmlselfCap(dispatchBOList);
+                String content = htmlcooperCap(dispatchBOList);
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent( content );
-                messageTO.setTitle("定时发送个人能力展示汇总");
+                messageTO.setTitle("定时发送合作对象商务展示汇总");
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);

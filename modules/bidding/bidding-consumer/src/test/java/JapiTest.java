@@ -17,6 +17,7 @@ public class JapiTest {
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/bidding/bidding-api",
                 "modules/storage/storage-api",
+                "modules/user/user-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
@@ -25,7 +26,7 @@ public class JapiTest {
         JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
         japiClientStorage.setProject(project);
         japiClientStorage.autoSaveToDisk();
-        //JapiClient.delete(true);
+//        JapiClient.delete(true);
         new JapiClientTransfer().autoTransfer(japiClientStorage);
     }
 

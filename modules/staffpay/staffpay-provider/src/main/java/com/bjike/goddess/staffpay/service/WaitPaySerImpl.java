@@ -271,6 +271,9 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 //        }
         waitPay.setCreateTime(LocalDateTime.now());
         waitPay.setConfirmFirstSalary(ConfirmStatus.NO);
+        waitPay.setConfirmSalary(ConfirmStatus.NO);
+        waitPay.setFindType(FindType.WAIT);
+        waitPay.setIncomeTax(waitPayTO.getIncomeTax());
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
@@ -283,6 +286,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         BeanTransform.copyProperties(waitPayTO, waitPay, true);
         waitPay.setModifyTime(LocalDateTime.now());
         waitPay.setConfirmFirstSalary(ConfirmStatus.NO);
+        waitPay.setConfirmSalary(ConfirmStatus.NO);
+        waitPay.setFindType(FindType.WAIT);
         super.update(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
@@ -298,6 +303,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     public void firstPay(String id) throws SerException {
         WaitPay model = auditId(id);
         model.setConfirmFirstSalary(ConfirmStatus.YES);
+        model.setConfirmSalary(ConfirmStatus.NO);
         model.setFindType(FindType.FIRST);
         super.update(model);
     }

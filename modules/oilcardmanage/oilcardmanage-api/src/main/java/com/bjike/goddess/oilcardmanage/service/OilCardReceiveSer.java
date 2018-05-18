@@ -2,11 +2,17 @@ package com.bjike.goddess.oilcardmanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.entity.CusPermissionOperate;
 import com.bjike.goddess.oilcardmanage.entity.OilCardReceive;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.organize.bo.AreaBO;
 
 import java.util.List;
 
@@ -21,6 +27,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增油卡领用记录
@@ -61,7 +80,34 @@ public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO
      *
      * @param id                   id
      * @param auditSuggestion      审核意见
-     * @param oilCardReceiveResult 审核结果
+     * @param auditResult 审核结果
      */
-    void audit(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException;
+    void audit(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException;
+
+    /**
+     * 查询所有未冻结的油卡
+     * @throws SerException
+     */
+    List<String> findOilCard() throws SerException;
+
+    /**
+     * 查询所有地区
+     * @throws SerException
+     */
+    List<AreaBO> findArea() throws SerException;
+
+    /**
+     * 查询所有审核人
+     * @return
+     * @throws SerException
+     */
+    List<String> findOperate() throws SerException;
+
+    /**
+     * 根据iD查询油卡领用信息
+     *
+     * @param id id
+     */
+    OilCardReceiveBO findOne(String id) throws SerException;
+
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 用户职位
@@ -18,29 +20,54 @@ import javax.validation.constraints.NotNull;
 public class PositionDetailUserTO extends BaseTO {
 
     /**
-     * 用户信息
+     * 姓名
      */
-    @NotNull(message = "用户信息不能为空", groups = {ADD.class, EDIT.class})
-    private String userId;
-
+    @NotNull(message = "姓名", groups = {ADD.class})
+    private String name;
     /**
-     * 岗位详细数据id
+     * 员工编号
      */
-    private String[] positionIds;
+    @NotNull(message = "员工编号", groups = {ADD.class})
+    private String number;
+    /**
+     * 职位详情
+     */
+    private List<PositionUserDetailTO> detailTOS;
+    /**
+     * 人员状态
+     */
+    @NotNull(message = "人员状态不能为空", groups = {ADD.class, EDIT.class})
+    private StaffStatus staffStatus;
 
-    public String getUserId() {
-        return userId;
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
     }
 
-    public String[] getPositionIds() {
-        return positionIds;
+    public String getName() {
+        return name;
     }
 
-    public void setPositionIds(String[] positionIds) {
-        this.positionIds = positionIds;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public List<PositionUserDetailTO> getDetailTOS() {
+        return detailTOS;
+    }
+
+    public void setDetailTOS(List<PositionUserDetailTO> detailTOS) {
+        this.detailTOS = detailTOS;
     }
 }

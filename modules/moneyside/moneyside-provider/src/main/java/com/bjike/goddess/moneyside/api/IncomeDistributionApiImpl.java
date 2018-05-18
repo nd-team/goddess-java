@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.IncomeDistributionBO;
 import com.bjike.goddess.moneyside.dto.IncomeDistributionDTO;
 import com.bjike.goddess.moneyside.entity.IncomeDistribution;
 import com.bjike.goddess.moneyside.service.IncomeDistributionSer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.IncomeDistributionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,15 @@ import java.util.List;
 public class IncomeDistributionApiImpl implements IncomeDistributionAPI {
     @Autowired
     private IncomeDistributionSer incomeDistributionSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return incomeDistributionSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return incomeDistributionSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countIncomeDistribution(IncomeDistributionDTO incomeDistributionDTO) throws SerException {
         return incomeDistributionSer.countIncomeDistribution(incomeDistributionDTO);

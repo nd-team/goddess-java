@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.festival.bo.CompanyFestivalTimeBO;
 import com.bjike.goddess.festival.dto.CompanyFestivalTimeDTO;
 import com.bjike.goddess.festival.to.CompanyFestivalTimeTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,19 @@ import java.util.List;
  */
 public interface CompanyFestivalTimeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 公司放假时间安排列表总条数
      *

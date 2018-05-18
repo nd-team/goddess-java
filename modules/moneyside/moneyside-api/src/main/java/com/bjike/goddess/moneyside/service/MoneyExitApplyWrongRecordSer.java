@@ -7,6 +7,7 @@ import com.bjike.goddess.moneyside.bo.MoneyExitApplyWrongRecordBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyDTO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyWrongRecordDTO;
 import com.bjike.goddess.moneyside.entity.MoneyExitApplyWrongRecord;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyExitApplyWrongRecordSer extends Ser<MoneyExitApplyWrongRecord, MoneyExitApplyWrongRecordDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资金退出申请有误记录列表总条数
      */

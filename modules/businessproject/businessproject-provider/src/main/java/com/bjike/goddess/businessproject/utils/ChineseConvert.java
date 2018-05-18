@@ -4,6 +4,7 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
+
 /**
  * @Author: [tanghaixiang]
  * @Date: [2017-03-21 11:29]
@@ -37,4 +38,5 @@ public class ChineseConvert {
         }
         return number.toUpperCase();
     }
+
 }

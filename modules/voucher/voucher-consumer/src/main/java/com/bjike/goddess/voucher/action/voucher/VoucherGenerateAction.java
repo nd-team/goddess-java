@@ -1,5 +1,7 @@
 package com.bjike.goddess.voucher.action.voucher;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -7,24 +9,35 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.ProofWordsAPI;
+import com.bjike.goddess.financeinit.bo.ProofWordsBO;
+import com.bjike.goddess.financeinit.dto.ProofWordsDTO;
+import com.bjike.goddess.financeinit.enums.ProofCharacter;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
+import com.bjike.goddess.voucher.dto.VoucherChartDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.enums.ExportStatus;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
-import com.bjike.goddess.voucher.excel.VoucherTemplateExportExcel;
 import com.bjike.goddess.voucher.excel.VoucherTemplateImportExcel;
-import com.bjike.goddess.voucher.to.GuidePermissionTO;
-import com.bjike.goddess.voucher.to.VoucherFileTO;
-import com.bjike.goddess.voucher.to.VoucherGenerateTO;
-import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
+import com.bjike.goddess.voucher.to.*;
+import com.bjike.goddess.voucher.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -33,11 +46,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * 记账凭证生成
@@ -50,14 +62,23 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("vouchergenerate")
-public class VoucherGenerateAction extends BaseFileAction{
+public class VoucherGenerateAction extends BaseFileAction {
 
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ProofWordsAPI proofWordsAPI;
+    @Autowired
+    private UserAPI userAPI;
+
 
 
     /**
@@ -170,16 +191,16 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 一个记账凭证
      *
-     * @param id 记账凭证信息id
+     * @param uId 记账凭证信息id
      * @return class VoucherGenerateVO
      * @des 一个记账凭证
      * @version v1
      */
-    @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id) throws ActException {
+    @GetMapping("v1/getOne/{uId}")
+    public Result getOne(@PathVariable String uId) throws ActException {
         try {
             VoucherGenerateVO voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.getById(id), VoucherGenerateVO.class);
+                    voucherGenerateAPI.getById(uId), VoucherGenerateVO.class);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -206,6 +227,7 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
 
+
     /**
      * 编辑记账凭证
      *
@@ -216,7 +238,7 @@ public class VoucherGenerateAction extends BaseFileAction{
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result edit(VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -228,15 +250,34 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 删除
      *
-     * @param id id
+     * @param uId uid
      * @des 根据id删除记账凭证信息记录
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    @DeleteMapping("v1/delete/{uId                                                  }")
+    public Result delete(@PathVariable String uId) throws ActException {
         try {
-            voucherGenerateAPI.deleteVoucherGenerate(id);
+            voucherGenerateAPI.deleteVoucherGenerate(uId);
+            return new ActResult("delete success!");
+        } catch (SerException e) {                                                                                                                                                                                                                  
+            throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param to uIds
+     * @des 批量删除记账凭证信息记录
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/deleteBatch")
+    public Result deleteBatch(VoucherGenerateTO to) throws ActException {
+        try {
+
+            voucherGenerateAPI.deleteVoucherGenerateBatch(to.getuIds());
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
@@ -284,17 +325,17 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 审核记账凭证
      *
-     * @param id 记账凭证基本信息数据id
+     * @param voucherGenerateTO 记账凭证基本信息数据
      * @return class VoucherGenerateVO
      * @des 审核记账凭证
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id) throws ActException {
+    @PutMapping("v1/audit")
+    public Result audit(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.audit(id);
-            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
+            voucherGenerateAPI.audit(voucherGenerateTO);
+            return new ActResult("audit success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -309,7 +350,7 @@ public class VoucherGenerateAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/split")
+    @PutMapping("v1/split")
     public Result split(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.split(voucherGenerateTO);
@@ -365,11 +406,11 @@ public class VoucherGenerateAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/posting")
-    public Result posting(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    @PutMapping("v1/posting")
+    public Result posting(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
-            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
+//            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
+            return ActResult.initialize(voucherGenerateAPI.posting(voucherGenerateTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -378,17 +419,16 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 反审核
      *
-     * @param id 记账凭证基本信息数据id
-     * @return class VoucherGenerateVO
+     * @param voucherGenerateTO 记账凭证基本信息数据
      * @des 反审核
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/antiAudit/{id}")
-    public Result antiAudit(@PathVariable String id) throws ActException {
+    @PutMapping("v1/antiAudit")
+    public Result antiAudit(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiAudit(id);
-            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
+            voucherGenerateAPI.antiAudit(voucherGenerateTO);
+            return new ActResult("antiAudit success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -510,17 +550,19 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 反过账
      *
-     * @param id 记账凭证基本信息数据id
+     * @param to 只需要传uId就行
      * @return class VoucherGenerateVO
      * @des 反过账
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/antiPosting/{id}")
-    public Result antiPosting(@PathVariable String id) throws ActException {
+    @PutMapping("v1/antiPosting")
+    public Result antiPosting(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO to) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting(id);
-            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
+//            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting ( ids );
+//            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            voucherGenerateAPI.antiPosting(to);
+            return ActResult.initialize("反过账成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -535,8 +577,8 @@ public class VoucherGenerateAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/checkAccount")
-    public Result checkAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    @PutMapping("v1/checkAccount")
+    public Result checkAccount(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -659,6 +701,47 @@ public class VoucherGenerateAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 反结账
+     *
+     * @param voucherGenerateTO 记账凭证基本信息数据
+     * @return class VoucherGenerateVO
+     * @des 反结账
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/antiCheckAccount")
+    public Result antiCheckAccount(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
+        try {
+            voucherGenerateAPI.antiCheckAccount(voucherGenerateTO);
+            return new ActResult("antiCheckAccount success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看月度季度年度的结账记录
+     *
+     * @return class VoucherGenerateVO
+     * @version v1
+     */
+    @GetMapping("v1/findCkRecordByTime")
+    public Result findCkRecordByTime(String month, Integer quart, String year) throws ActException {
+        try {
+            List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.findCkRecordByTime(month, quart, year);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBOs, VoucherGenerateVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    public static void main(String args[]) {
+        String ll = DateUtil.dateToString(DateUtil.getStartQuart());
+        String lll = DateUtil.dateToString(DateUtil.getEndQuart());
+        System.out.println(DateUtil.getStartQuart());
+        System.out.println(String.valueOf(LocalDate.now().getMonth().getValue() - 1));
+    }
 
     /**
      * 已结帐科目汇总
@@ -793,6 +876,25 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
     /**
+     * 记账凭证记录柱状图
+     *
+     * @param dto VoucherChartDTO
+     * @return class OptionVO
+     * @des 根据月份汇总借方金额和贷方金额
+     * @version v1
+     */
+    @GetMapping("v1/ctReSubHistogram")
+    public Result ctReSubHistogram(VoucherChartDTO dto) throws ActException {
+        try {
+            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram(dto);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 记账凭证记录地区汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
@@ -844,6 +946,23 @@ public class VoucherGenerateAction extends BaseFileAction{
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
                     voucherGenerateAPI.ctRePname(voucherGenerateDTO), VoucherGenerateVO.class, true);
             return ActResult.initialize(voucherGenerateVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 记账凭证记录分析
+     *
+     * @param to 分析数据
+     * @return class AnalysisVO
+     * @version v1
+     */
+    @GetMapping("v1/analysis")
+    public Result analysis(@Validated(ADD.class) AnalysisTO to, BindingResult bindingResult) throws ActException {
+        try {
+            List<AnalysisBO> analysisBOs = voucherGenerateAPI.analysis(to);
+            return ActResult.initialize(BeanTransform.copyProperties(analysisBOs, AnalysisVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -946,6 +1065,143 @@ public class VoucherGenerateAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 明细账列表
+     *
+     * @param dto
+     * @return class AccountInfoVO
+     * @throws ActException
+     * @des 根据日期或地区或项目名称或项目组部门或科目进行列表查看
+     * @version v1
+     */
+    @GetMapping("v1/account")
+    public Result account(VoucherGenerateDTO dto) throws ActException {
+        try {
+            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto), AccountInfoVO.class);
+            for (AccountInfoVO accountInfoVO : accountInfoVOS) {
+                accountInfoVO.setId(UUID.randomUUID().toString());
+            }
+            return ActResult.initialize(accountInfoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto 明细账
+     * @des 导出明细账
+     * @version v1
+     */
+    @GetMapping("v1/exportAccount")
+    public Result exportReport(VoucherGenerateDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "明细账.xlsx";
+            super.writeOutFile(response, voucherGenerateAPI.exportExcelAccount(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountArea")
+    public Result accountArea() throws ActException {
+        try {
+            List<String> areaList = voucherGenerateAPI.accountArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountProjectName")
+    public Result accountProjectName() throws ActException {
+        try {
+            List<String> projectNameList = voucherGenerateAPI.accountProjectName();
+            return ActResult.initialize(projectNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的项目组部门
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountProjectGroup")
+    public Result accountProjectGroup() throws ActException {
+        try {
+            List<String> projectGroupList = voucherGenerateAPI.accountProjectGroup();
+            return ActResult.initialize(projectGroupList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的一级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountSubject")
+    public Result accountSubject() throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.accountSubject();
+            return ActResult.initialize(subjectList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的根据一级科目获取二级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/subSubject")
+    public Result subSubject(String firstSubject) throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.subSubject(firstSubject);
+            return ActResult.initialize(subjectList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的根据一级科目二级科目获取三级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/thirdSubject")
+    public Result thirdSubject(String firstSubject, String subSubject) throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.thirdSubject(firstSubject, subSubject);
+            return ActResult.initialize(subjectList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -1026,13 +1282,12 @@ public class VoucherGenerateAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(VoucherFileTO.TestDEL.class) VoucherFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
-
 
 
     /**
@@ -1077,7 +1332,6 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
 
-
     /**
      * excel模板下载
      *
@@ -1088,7 +1342,7 @@ public class VoucherGenerateAction extends BaseFileAction{
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "记账凭证数据导入模板.xlsx";
-            super.writeOutFile(response, voucherGenerateAPI.templateExport( ), fileName);
+            super.writeOutFile(response, voucherGenerateAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -1127,7 +1381,7 @@ public class VoucherGenerateAction extends BaseFileAction{
 //            //注意序列化
 //            voucherGenerateAPI.importExcel(tocs);
 
-            tocs = convertVoucherGenerateTO( tos );
+            tocs = convertVoucherGenerateTO(tos);
             voucherGenerateAPI.importExcel(tocs);
             return new ActResult("导入成功");
         } catch (SerException e) {
@@ -1135,9 +1389,9 @@ public class VoucherGenerateAction extends BaseFileAction{
         }
     }
 
-    private List<VoucherGenerateTO> convertVoucherGenerateTO(List<VoucherTemplateImportExcel> tos ) throws ActException {
+    private List<VoucherGenerateTO> convertVoucherGenerateTO(List<VoucherTemplateImportExcel> tos) throws ActException {
         List<VoucherGenerateTO> voucherGenerateTOS = new ArrayList<>();
-        if( tos != null && tos.size()>0 ){
+        if (tos != null && tos.size() > 0) {
             List<String> firstSubjects = new ArrayList<>();
             List<String> secondSubjects = new ArrayList<>();
             List<String> thirdSubjects = new ArrayList<>();
@@ -1146,67 +1400,70 @@ public class VoucherGenerateAction extends BaseFileAction{
 
             String num = tos.get(0).getNum();
             int index = 0;
-            VoucherGenerateTO voucherGenerateTO =  new VoucherGenerateTO();
+            VoucherGenerateTO voucherGenerateTO = new VoucherGenerateTO();
             for (VoucherTemplateImportExcel str : tos) {
-                checkVoucherWord( str );
-                if( num.equals( str.getNum() ) ){
-                    firstSubjects.add(str.getFirstSubject() );
-                    secondSubjects.add(str.getSecondSubject() );
-                    thirdSubjects.add(str.getThirdSubject() );
-                    borrowMoneys.add(str.getBorrowMoney() );
-                    loanMoneys.add(str.getLoanMoney() );
-                }else{
-                    if( index < tos.size()-1 ){
-                        voucherGenerateTO = BeanTransform.copyProperties( tos.get(index-1), VoucherGenerateTO.class,"firstSubject",
-                                "secondSubject","thirdSubject","borrowMoney","loanMoney");
-                        voucherGenerateTO.setFirstSubjects( firstSubjects );
-                        voucherGenerateTO.setSecondSubjects( secondSubjects );
-                        voucherGenerateTO.setThirdSubjects( thirdSubjects );
-                        voucherGenerateTO.setBorrowMoneys( borrowMoneys );
-                        voucherGenerateTO.setLoanMoneys( loanMoneys );
+                checkVoucherWord(str);
+                if (num.equals(str.getNum())) {
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
+                } else {
+                    voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 1), VoucherGenerateTO.class, "firstSubject",
+                            "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
+                    voucherGenerateTO.setFirstSubjects(firstSubjects);
+                    voucherGenerateTO.setSecondSubjects(secondSubjects);
+                    voucherGenerateTO.setThirdSubjects(thirdSubjects);
+                    voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+                    voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-                        voucherGenerateTOS.add( voucherGenerateTO );
-                    }
+                    voucherGenerateTOS.add(voucherGenerateTO);
+
                     firstSubjects = new ArrayList<>();
                     secondSubjects = new ArrayList<>();
                     thirdSubjects = new ArrayList<>();
                     borrowMoneys = new ArrayList<>();
                     loanMoneys = new ArrayList<>();
-                    num = str.getNum();
 
-
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
                 }
+                num = str.getNum();
                 index++;
             }
 
-            String temp = tos.get(index-1).getNum();
-            if( index == tos.size() && !num.equals( tos.get(index-2).getNum()) ){
-                firstSubjects = new ArrayList<>();
-                secondSubjects = new ArrayList<>();
-                thirdSubjects = new ArrayList<>();
-                borrowMoneys = new ArrayList<>();
-                loanMoneys = new ArrayList<>();
+//            String temp = tos.get(index - 1).getNum();
+//            if (index == tos.size() && !num.equals(tos.get(index - 2).getNum())) {
+//                firstSubjects = new ArrayList<>();
+//                secondSubjects = new ArrayList<>();
+//                thirdSubjects = new ArrayList<>();
+//                borrowMoneys = new ArrayList<>();
+//                loanMoneys = new ArrayList<>();
+//
+//
+//            }
+//            firstSubjects.add(tos.get(index - 2).getFirstSubject());
+//            secondSubjects.add(tos.get(index - 2).getSecondSubject());
+//            thirdSubjects.add(tos.get(index - 2).getThirdSubject());
+//            borrowMoneys.add(tos.get(index - 2).getBorrowMoney());
+//            loanMoneys.add(tos.get(index - 2).getLoanMoney());
 
+            voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 2), VoucherGenerateTO.class, "firstSubject",
+                    "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
 
-            }
-            firstSubjects.add(tos.get(index-2).getFirstSubject());
-            secondSubjects.add(tos.get(index-2).getSecondSubject());
-            thirdSubjects.add(tos.get(index-2).getThirdSubject());
-            borrowMoneys.add(tos.get(index-2).getBorrowMoney());
-            loanMoneys.add(tos.get(index-2).getLoanMoney());
+            voucherGenerateTO.setFirstSubjects(firstSubjects);
+            voucherGenerateTO.setSecondSubjects(secondSubjects);
+            voucherGenerateTO.setThirdSubjects(thirdSubjects);
+            voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+            voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-            voucherGenerateTO = BeanTransform.copyProperties( tos.get(index-2), VoucherGenerateTO.class,"firstSubject",
-                    "secondSubject","thirdSubject","borrowMoney","loanMoney");
-
-            voucherGenerateTO.setFirstSubjects( firstSubjects );
-            voucherGenerateTO.setSecondSubjects( secondSubjects );
-            voucherGenerateTO.setThirdSubjects( thirdSubjects );
-            voucherGenerateTO.setBorrowMoneys( borrowMoneys );
-            voucherGenerateTO.setLoanMoneys( loanMoneys );
-
-            voucherGenerateTOS.add( voucherGenerateTO );
+            voucherGenerateTOS.add(voucherGenerateTO);
         }
-        return  voucherGenerateTOS;
+        return voucherGenerateTOS;
     }
 
     private String checkVoucherWord(VoucherTemplateImportExcel voucherTemplateImportExcel) throws ActException {
@@ -1234,8 +1491,176 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
 
+    /**
+     * 获取组织结构所有地区
+     *
+     * @return class AreaBO
+     * @des 获取组织结构所有地区
+     * @version v1
+     */
+    @GetMapping("v1/listOrganArea")
+    public Result listOrganArea() throws ActException {
+        try {
+            List<AreaBO> userList = departmentDetailAPI.findArea();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
+    /**
+     * 获取组织结构所有项目组和部门
+     *
+     * @return class OpinionBO
+     * @des 获取组织结构所有项目组和部门
+     * @version v1
+     */
+    @GetMapping("v1/listOrganDepart")
+    public Result listOrganDepart() throws ActException {
+        try {
+            List<OpinionBO> userList = departmentDetailAPI.findThawOpinion();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取组织结构所有用户
+     *
+     * @return class UserBO
+     * @des 获取组织结构所有用户
+     * @version v1
+     */
+    @GetMapping("v1/listOrganUser")
+    public Result listOrganUser() throws ActException {
+        try {
+            List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 在已过账记录里面根据二级或三级统计金额
+     *
+     * @param dto
+     * @version v1
+     */
+    @GetMapping("v1/findByMoney")
+    public Result findByMoney(VoucherGenerateDTO dto) throws ActException {
+        try {
+            List<PartBO> userList = voucherGenerateAPI.findByMoney(dto);
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 科目汇总列表
+     *
+     * @param subjectCollectsDTO 更新条件
+     * @return class FirstSubjectVO
+     * @version v1
+     */
+    @GetMapping("v1/subject/pagelist")
+    public Result pageList(SubjectCollectsDTO subjectCollectsDTO) throws ActException {
+        try {
+            List<FirstSubjectBO> bos = voucherGenerateAPI.collect(subjectCollectsDTO);
+            List<FirstSubjectVO> vos = BeanTransform.copyProperties(bos, FirstSubjectVO.class);
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 科目汇总导出
+     *
+     * @param to       导出条件
+     * @param response
+     * @version v1
+     */
+    @GetMapping("v1/subject/exprot")
+    public Result exportExcel(ExportSubjectCollectTO to, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "科目汇总.xlsx";
+            super.writeOutFile(response, voucherGenerateAPI.exportExcel(to), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有会计科目
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findFirstSubject")
+    public Result findFirstSubject(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = voucherGenerateAPI.findFirstSubject();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 从财务初始化获取凭证字列表
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/proofWords")
+    public Result listProofWords(HttpServletRequest request) throws ActException {
+        try {
+            List<ProofWordsBO> list = proofWordsAPI.listProof(new ProofWordsDTO());
+            Set<String> set = new HashSet<>();
+            for (ProofWordsBO bo : list) {  //@see 若是ProofCharacter添加新的类型，则需修改if语句
+                String name = "";
+                if (bo.getProofCharacter().equals(ProofCharacter.POCTAA)) {
+                    name = "记账凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.POP)) {
+                    name = "付款凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.TV)) {
+                    name = "转账凭证";
+                } else if (bo.getProofCharacter().equals(ProofCharacter.WTROP)) {
+                    name = "收款凭证";
+                }
+
+                set.add(name);
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
+    /**
+     * 获取当前用户名
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/currentUserName")
+    public Result getCurrentUserName(HttpServletRequest request) throws ActException {
+        try {
+            String name = userAPI.currentUser().getUsername();
+            return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

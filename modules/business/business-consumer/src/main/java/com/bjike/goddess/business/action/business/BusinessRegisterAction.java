@@ -1,13 +1,16 @@
 package com.bjike.goddess.business.action.business;
 
 import com.bjike.goddess.business.api.BusinessRegisterAPI;
+import com.bjike.goddess.business.api.BusinessTaxChangeAPI;
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.BusinessRegisterListBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
+import com.bjike.goddess.business.excel.BusinessRegisterExcel;
 import com.bjike.goddess.business.excel.SonPermissionObject;
-import com.bjike.goddess.business.to.BusinessDeleteFileTO;
-import com.bjike.goddess.business.to.BusinessRegisterTO;
-import com.bjike.goddess.business.to.GuidePermissionTO;
+import com.bjike.goddess.business.to.*;
+import com.bjike.goddess.business.vo.BusinessRegisterListVO;
 import com.bjike.goddess.business.vo.BusinessRegisterVO;
+import com.bjike.goddess.business.vo.BusinessTaxChangeVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +20,9 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +51,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("businessregister")
-public class BusinessRegisterAction extends BaseFileAction{
+public class BusinessRegisterAction extends BaseFileAction {
     @Autowired
     private BusinessRegisterAPI businessRegisterAPI;
     @Autowired
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private BusinessTaxChangeAPI businessTaxChangeAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -91,7 +101,7 @@ public class BusinessRegisterAction extends BaseFileAction{
     public Result sonPermission() throws ActException {
         try {
 
-            List<SonPermissionObject> hasPermissionList =  businessRegisterAPI.sonPermission();
+            List<SonPermissionObject> hasPermissionList = businessRegisterAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 
         } catch (SerException e) {
@@ -138,6 +148,7 @@ public class BusinessRegisterAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个工商注册
      *
@@ -160,16 +171,16 @@ public class BusinessRegisterAction extends BaseFileAction{
      * 工商注册列表
      *
      * @param businessRegisterDTO 工商注册dto
-     * @return class BusinessRegisterVO
+     * @return class BusinessRegisterListVO
      * @des 获取所有工商注册
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(BusinessRegisterDTO businessRegisterDTO, HttpServletRequest request) throws ActException {
         try {
-            List<BusinessRegisterVO> businessRegisterVOS = BeanTransform.copyProperties
-                    (businessRegisterAPI.findListBusinessRegister(businessRegisterDTO),BusinessRegisterVO.class,request);
-            return ActResult.initialize(businessRegisterVOS);
+            List<BusinessRegisterListVO> businessRegisterListVOS = BeanTransform.copyProperties
+                    (businessRegisterAPI.findListBusinessRegister(businessRegisterDTO), BusinessRegisterListVO.class, request);
+            return ActResult.initialize(businessRegisterListVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -230,6 +241,7 @@ public class BusinessRegisterAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 上传附件
      *
@@ -310,13 +322,134 @@ public class BusinessRegisterAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(BusinessDeleteFileTO.TestDEL.class) BusinessDeleteFileTO businessDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != businessDeleteFileTO.getPaths() && businessDeleteFileTO.getPaths().length>=0 ){
+        if (null != businessDeleteFileTO.getPaths() && businessDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),businessDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), businessDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
 
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<BusinessRegisterExcel> tos = ExcelUtil.excelToClazz(is, BusinessRegisterExcel.class, excel);
+            List<BusinessRegisterExcelTO> tocs = new ArrayList<>();
+            for (BusinessRegisterExcel str : tos) {
+                BusinessRegisterExcelTO businessRegisterExcelTO = BeanTransform.copyProperties(str, BusinessRegisterExcelTO.class, "setUpDate", "issuingDate", "representativeLegal");
+                businessRegisterExcelTO.setSetUpDate(DateUtil.dateToString(str.getSetUpDate()));
+                businessRegisterExcelTO.setIssuingDate(DateUtil.dateToString(str.getIssuingDate()));
+                businessRegisterExcelTO.setRepresentativeLegal(stringToBool(str.getRepresentativeLegal(),"是否法定代表人"));
+                tocs.add(businessRegisterExcelTO);
+            }
+            //注意序列化
+            businessRegisterAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    private Boolean stringToBool(String representativeLegal, String name) throws ActException {
+        Boolean bool = null;
+        if (representativeLegal != null) {
+            switch (representativeLegal) {
+                case "是":
+                    bool = true;
+                    break;
+                case "否":
+                    bool = false;
+                    break;
+                default:
+                    throw new ActException(name + "的格式不正确,正确格式为(是/否)");
+            }
+        }
+        return bool;
+    }
+
+
+    /**
+     * 导出excel
+     *
+     * @des 导出工商注册
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "工商注册.xlsx";
+            super.writeOutFile(response, businessRegisterAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板高温补助
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "工商注册模板.xlsx";
+            super.writeOutFile(response, businessRegisterAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 工商变更
+     *
+     * @param businessTaxChangeTO 工商注册数据to
+     * @return class BusinessTaxChangeVO
+     * @des 编辑工商注册
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/taxChange")
+    public Result taxChange(@Validated(ADD.class) BusinessTaxChangeTO businessTaxChangeTO, BindingResult bindingResult) throws ActException {
+        try {
+            BusinessTaxChangeVO businessTaxChangeVO = BeanTransform.copyProperties(businessTaxChangeAPI.insertBusinessTaxChange(businessTaxChangeTO),BusinessTaxChangeVO.class);
+            return ActResult.initialize(businessTaxChangeVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取变更前内容
+     *
+     * @param id
+     * @return class BusinessRegisterListVO
+     * @des 获取变更前内容
+     * @version v1
+     */
+    @GetMapping("v1/findOneById/{id}")
+    public Result findOneById(@PathVariable String id) throws ActException {
+        try {
+            BusinessRegisterListBO businessRegisterListBO = businessRegisterAPI.findOneById(id);
+            return ActResult.initialize(BeanTransform.copyProperties(businessRegisterListBO, BusinessRegisterListVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

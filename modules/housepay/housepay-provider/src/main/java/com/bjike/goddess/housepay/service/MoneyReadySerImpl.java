@@ -19,8 +19,12 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 资金准备审核表业务实现
@@ -38,6 +42,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -177,6 +182,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countMoneyReady(MoneyReadyDTO moneyReadyDTO) throws SerException {
         Long count = super.count(moneyReadyDTO);
@@ -185,11 +191,11 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
 
     @Override
     public MoneyReadyBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         MoneyReady moneyReady = super.findById(id);
-        return BeanTransform.copyProperties(moneyReady,MoneyReadyBO.class);
+        return BeanTransform.copyProperties(moneyReady, MoneyReadyBO.class);
     }
 
     @Override
@@ -197,7 +203,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         checkSeeIdentity();
         moneyReadyDTO.getSorts().add("createTime=desc");
         List<MoneyReady> moneyReadies = super.findByPage(moneyReadyDTO);
-        List<MoneyReadyBO> moneyReadyBOS = BeanTransform.copyProperties(moneyReadies,MoneyReadyBO.class);
+        List<MoneyReadyBO> moneyReadyBOS = BeanTransform.copyProperties(moneyReadies, MoneyReadyBO.class);
         return moneyReadyBOS;
     }
 
@@ -205,10 +211,10 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     @Override
     public MoneyReadyBO insertMoneyReady(MoneyReadyTO moneyReadyTO) throws SerException {
         checkAddIdentity();
-        MoneyReady moneyReady = BeanTransform.copyProperties(moneyReadyTO,MoneyReady.class,true);
+        MoneyReady moneyReady = BeanTransform.copyProperties(moneyReadyTO, MoneyReady.class, true);
         moneyReady.setCreateTime(LocalDateTime.now());
         super.save(moneyReady);
-        return BeanTransform.copyProperties(moneyReady,MoneyReadyBO.class);
+        return BeanTransform.copyProperties(moneyReady, MoneyReadyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -216,22 +222,23 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public MoneyReadyBO editMoneyReady(MoneyReadyTO moneyReadyTO) throws SerException {
         checkAddIdentity();
         MoneyReady moneyReady = super.findById(moneyReadyTO.getId());
-        BeanTransform.copyProperties(moneyReadyTO,moneyReady,true);
+        BeanTransform.copyProperties(moneyReadyTO, moneyReady, true);
         moneyReady.setModifyTime(LocalDateTime.now());
         super.update(moneyReady);
-        return BeanTransform.copyProperties(moneyReady,MoneyReadyBO.class);
+        return BeanTransform.copyProperties(moneyReady, MoneyReadyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeMoneyReady(String id) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         super.remove(id);
     }
-//    public List<CollectCompareBO> time(String startMonth,String endMonth) throws SerException {
+
+    //    public List<CollectCompareBO> time(String startMonth,String endMonth) throws SerException {
 //        MoneyReadyDTO dto = new MoneyReadyDTO();
 //        LocalDate[] dates = new LocalDate[0];
 //        try {
@@ -267,8 +274,8 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
                     bo.setMonth(month);
                     bo.setReserveSum(reserveSum);
                     bo.setLastReserveSum(lastReserveSum);
-                    bo.setBalance(reserveSum-lastReserveSum);
-                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    bo.setBalance(reserveSum - lastReserveSum);
+                    bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum * 100);
                     /*if (lastReserveSum != 0) {
                         bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
                     } else {
@@ -296,8 +303,8 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
                     bo.setMonth(month);
                     bo.setReserveSum(reserveSum);
                     bo.setLastReserveSum(lastReserveSum);
-                    bo.setBalance(reserveSum-lastReserveSum);
-                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    bo.setBalance(reserveSum - lastReserveSum);
+                    bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum * 100);
                     /*if (lastReserveSum != 0) {
                         bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
                     } else {
@@ -311,6 +318,95 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
             return boList;
         }
     }
+
+    public static void main(String[] args) {
+        String date = "2017-05";
+//        LocalDate xx = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate d = LocalDate.now();
+        d.getMonth();
+        Integer month = Integer.parseInt(date.substring(date.indexOf("-") + 1), date.length());
+        Integer year = Integer.parseInt(date.substring(0, date.indexOf("-")));
+        System.out.println(month);
+    }
+
+    @Override
+    public List<CollectCompareBO> readyCollect(String date) throws SerException {
+        if (StringUtils.isNotBlank(date)) {
+
+
+            Integer year = Integer.parseInt(StringUtils.substringBefore(date, "-"));
+            Integer month = Integer.parseInt(StringUtils.substringAfterLast(date, "-"));
+            Set<String> projectGroups = findAllProjectGroup();
+            MoneyReadyDTO dto = new MoneyReadyDTO();
+            List<MoneyReady> list = super.findByCis(dto);
+            List<CollectCompareBO> boList = new ArrayList<>();
+            Double reserveSum = 0.0;
+            Double lastReserveSum = 0.0;
+            if (month != 1) {
+                for (String projectGroup : projectGroups) {
+                    for (MoneyReady m : list) {
+                        if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                            reserveSum += m.getReserves();
+                        }
+                        if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month - 1)) {
+                            lastReserveSum += m.getReserves();
+                        }
+                    }
+                    if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                        CollectCompareBO bo = new CollectCompareBO();
+                        bo.setProjectGroup(projectGroup);
+                        bo.setMonth(month);
+                        bo.setReserveSum(reserveSum);
+                        bo.setLastReserveSum(lastReserveSum);
+                        bo.setBalance(reserveSum - lastReserveSum);
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum * 100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                        boList.add(bo);
+                        reserveSum = 0.00;
+                        lastReserveSum = 0.00;    //置为0
+                    }
+                }
+                return boList;
+            } else {
+                for (String projectGroup : projectGroups) {
+                    for (MoneyReady m : list) {
+                        if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                            reserveSum += m.getReserves();
+                        }
+                        if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year - 1) && m.getMonth().equals(12)) {
+                            lastReserveSum += m.getReserves();
+                        }
+                    }
+                    if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                        CollectCompareBO bo = new CollectCompareBO();
+                        bo.setProjectGroup(projectGroup);
+                        bo.setMonth(month);
+                        bo.setReserveSum(reserveSum);
+                        bo.setLastReserveSum(lastReserveSum);
+                        bo.setBalance(reserveSum - lastReserveSum);
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum * 100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                        boList.add(bo);
+                        reserveSum = 0.00;
+                        lastReserveSum = 0.00;    //置为0
+                    }
+                }
+                return boList;
+            }
+        } else {
+
+            return null;
+        }
+    }
+
     private Set<String> findAllProjectGroup() throws SerException {
         List<MoneyReady> list = super.findAll();
         Set<String> set = new HashSet<String>();
@@ -431,7 +527,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         }
         return null;
     }*/
-        //DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    //DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         /*LocalDate startDate = LocalDate.parse("2017-11-11",DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate1 = startDate.minusMonths(1);
         String date = String.valueOf(startDate1);

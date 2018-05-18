@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.bo.CollectEmailBO;
 import com.bjike.goddess.bidding.dto.CollectEmailDTO;
+import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.entity.CollectEmail;
 import com.bjike.goddess.bidding.enums.CollectSendUnit;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
@@ -34,6 +35,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 招投标信息邮件发送定制业务实现
@@ -451,46 +454,57 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
             }
@@ -517,38 +531,71 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     private String htmlBidding(List<BiddingInfoCollectBO> biddingBOS) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if (biddingBOS != null && biddingBOS.size() > 0) {
+        if(biddingBOS!= null && biddingBOS.size()>0){
             sb = new StringBuffer("<h4>招标信息汇总:</h4>");
             sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
             //拼表头
-            BiddingInfoCollectBO title = biddingBOS.get(biddingBOS.size() - 1);
+            BiddingInfoCollectBO title = biddingBOS.get(biddingBOS.size()-1);
             sb.append("<tr>");
             sb.append("<td>地市</td>");
-            sb.append("<td>邀请招标</td>");
-            sb.append("<td>公开招标</td>");
-            sb.append("<td>移动通信</td>");
-            sb.append("<td>软件开发</td>");
-            sb.append("<td>智能系统集成</td>");
-            sb.append("<td>策划与营销方案</td>");
-            sb.append("<tr>");
-
-            //拼body部分
-            for (BiddingInfoCollectBO bo : biddingBOS) {
-                sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");
-                sb.append("<td>" + (null == bo.getInvite() ? "" : bo.getInvite()) + "</td>");
-                sb.append("<td>" + (null == bo.getOpenly() ? "" : bo.getOpenly()) + "</td>");
-                sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
-                sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
-                sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
-                sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
-
-                sb.append("<tr>");
+            for (Map<String,String> map : title.getBiddingMap()) {
+                sb.append("<td>"+map.get("remark")+"</td>");
             }
-
-            //结束
-            sb.append("</table>");
+            for (Map<String,String> map:title.getBusinessMap()){
+                sb.append("<td>"+map.get("remark")+"</td>");
+            }
+            sb.append("<tr>");
         }
+//            Map<String,Integer> biddingMap=bo.getBiddingMap();
+//            Set<String> set=biddingMap.keySet();
+//            for (String s:set){
+//                sb.append("<td>"+s+"</td>");
+//            }
+//            Map<String,Integer> businessMap = bo.getBusinessMap();
+//            Set<String> businessSet = businessMap.keySet();
+//            for(String business:businessSet){
+//                sb.append("<td>"+business+"</td>");
+//            }
+//            拼表头
+//            sb.append("</tr>");
+//            sb.append("<tr>");
+//            sb.append("<td>"+bo.getCities()+"</td>");
+//            for (String s:set){
+//                sb.append("<td>"+biddingMap.get(s)+"</td>");
+//            }
+//            for(String business:businessSet){
+//                sb.append("<td>"+businessMap.get(business)+"</td>");
+//            }
+//            sb.append("</tr>");
+
+        //拼body部分
+        for(BiddingInfoCollectBO bo:biddingBOS){
+            sb.append("<tr>");
+            sb.append("<td>"+bo.getCities()+"</td>");
+            for(Map<String,String> map:bo.getBiddingMap()){
+                sb.append("<td>"+map.get("counts")+"</td>");
+            }
+            for(Map<String,String> map:bo.getBusinessMap()){
+                sb.append("<td>"+map.get("counts")+"</td>");
+            }
+            sb.append("<tr>");
+        }
+//            for (BiddingInfoCollectBO bo : biddingBOS) {
+//                sb.append("<tr>");
+//                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");
+//                sb.append("<td>" + (null == bo.getInvite() ? "" : bo.getInvite()) + "</td>");
+//                sb.append("<td>" + (null == bo.getOpenly() ? "" : bo.getOpenly()) + "</td>");
+//                sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
+//                sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
+//                sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
+//                sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
+//
+//                sb.append("<tr>");
+//            }
+
+        //结束
+        sb.append("</table>");
+
         return sb.toString();
     }
 
@@ -589,8 +636,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = bidding.getCondi().split(";");
                 List<BiddingInfoCollectBO> biddingInfoCollectBOS = biddingInfoSer.collectBiddingInfo(condis);
                 //拼表格
-                String content = htmlBidding(biddingInfoCollectBOS);
                 MessageTO messageTO = new MessageTO();
+                String content = htmlBidding(biddingInfoCollectBOS);
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送招标信息汇总");
                 messageTO.setMsgType(MsgType.SYS);
@@ -613,8 +660,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = open.getCondi().split(";");
                 List<BidOpeningCollectBO> bidOpeningCollectBOS = bidOpeningInfoSer.collectBidOpening(condis);
                 //拼表格
-                String content = htmlBidOpen(bidOpeningCollectBOS);
                 MessageTO messageTO = new MessageTO();
+                String content = htmlBidOpen(bidOpeningCollectBOS);
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送开标信息汇总");
                 messageTO.setMsgType(MsgType.SYS);

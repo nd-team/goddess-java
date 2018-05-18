@@ -22,15 +22,32 @@ public class DepartMonIndexSetBO extends BaseBO {
      */
     private String indexName;
 
+
+    /**
+     * 年度指标编号
+     */
+
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    private Integer monthIndexNumber;
+
     /**
      * 年份
      */
-    private String year;
+    private Integer year;
 
     /**
      * 月份
      */
-    private String month;
+    private Integer month;
 
     /**
      * 指标类型
@@ -166,19 +183,19 @@ public class DepartMonIndexSetBO extends BaseBO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
@@ -371,6 +388,7 @@ public class DepartMonIndexSetBO extends BaseBO {
     }
 
     public void setCreateTime(String createTime) {
+
         this.createTime = createTime;
     }
 
@@ -380,5 +398,29 @@ public class DepartMonIndexSetBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
     }
 }

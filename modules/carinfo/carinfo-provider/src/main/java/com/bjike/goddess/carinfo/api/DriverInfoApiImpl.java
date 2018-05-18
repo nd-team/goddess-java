@@ -2,8 +2,10 @@ package com.bjike.goddess.carinfo.api;
 
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
+import com.bjike.goddess.carinfo.excel.SonPermissionObject;
 import com.bjike.goddess.carinfo.service.DriverInfoSer;
 import com.bjike.goddess.carinfo.to.DriverInfoTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 车辆信息管理业务接口实现
+ * 司机信息接口实现
  *
  * @Author: [ jason ]
  * @Date: [ 2017-07-13 07:46 ]
@@ -25,6 +27,16 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
 
     @Autowired
     private DriverInfoSer driverInfoSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return driverInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return driverInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DriverInfoBO save(DriverInfoTO to) throws SerException {
@@ -59,5 +71,20 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     @Override
     public void audit(String id, String suggest, Boolean audit) throws SerException {
         driverInfoSer.audit(id,suggest,audit);
+    }
+
+    @Override
+    public DriverInfoBO findByDriver(String driver) throws SerException {
+        return driverInfoSer.findByDriver(driver);
+    }
+
+    @Override
+    public void copyDriver() throws SerException {
+        driverInfoSer.copyDriver();
+    }
+
+    @Override
+    public DriverInfoBO findByName(String name) throws SerException {
+        return driverInfoSer.findByName(name);
     }
 }

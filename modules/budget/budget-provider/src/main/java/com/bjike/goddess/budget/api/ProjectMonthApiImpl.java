@@ -1,8 +1,6 @@
 package com.bjike.goddess.budget.api;
 
-import com.bjike.goddess.budget.bo.ProjectMonthBO;
-import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
-import com.bjike.goddess.budget.bo.ProjectWeekBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.service.ProjectMonthSer;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -48,6 +46,11 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     }
 
     @Override
+    public List<ProjectWeekListBO> listProjectMonth(ProjectMonthDTO dto) throws SerException {
+        return projectMonthSer.listProjectMonth(dto);
+    }
+
+    @Override
     public ProjectMonthBO findByID(String id) throws SerException {
         return projectMonthSer.findByID(id);
     }
@@ -85,5 +88,15 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectMonthSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return projectMonthSer.collect(dto);
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        return projectMonthSer.figureShow();
     }
 }

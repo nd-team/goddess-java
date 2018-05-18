@@ -78,7 +78,7 @@ public class SiginManageExcel extends BaseTO {
     /**
      * 完工时间
      */
-    @ExcelHeader(name = "完工时间",notNull = true)
+    @ExcelHeader(name = "完工时间")
     private LocalDate endProjectTime;
 
     /**
@@ -97,7 +97,7 @@ public class SiginManageExcel extends BaseTO {
      * 立项情况
      */
     @ExcelHeader(name = "立项情况",notNull = true)
-    private MakeProjectStatus makeProject;
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -122,7 +122,71 @@ public class SiginManageExcel extends BaseTO {
      */
     @ExcelHeader(name = "备注" )
     private String remark;
+    /**
+     * 派工单号
+     */
+    @ExcelHeader(name = "派工单号" )
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    @ExcelHeader(name = "项目状态" )
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    @ExcelHeader(name = "合同规模数量" )
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    @ExcelHeader(name = "规模数量" )
+    private Double scale;
+    /**
+     * 专业
+     */
+    @ExcelHeader(name = "专业" )
+    private String major;
 
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public BusinessType getBusinessType() {
         return businessType;
@@ -220,11 +284,11 @@ public class SiginManageExcel extends BaseTO {
         this.contractProperty = contractProperty;
     }
 
-    public MakeProjectStatus getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(MakeProjectStatus makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

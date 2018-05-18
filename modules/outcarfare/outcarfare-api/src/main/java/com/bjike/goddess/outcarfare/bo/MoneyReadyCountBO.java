@@ -17,9 +17,13 @@ public class MoneyReadyCountBO extends BaseBO {
      */
     private String groupTeam;
     /**
-     * 月份
+     * 地区
      */
-    private Integer month;
+    private String area;
+    /**
+     * 时间
+     */
+    private String time;
     /**
      * 上月准备金
      */
@@ -37,6 +41,14 @@ public class MoneyReadyCountBO extends BaseBO {
      */
     private Double growth;
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getGroupTeam() {
         return groupTeam;
     }
@@ -45,12 +57,12 @@ public class MoneyReadyCountBO extends BaseBO {
         this.groupTeam = groupTeam;
     }
 
-    public Integer getMonth() {
-        return month;
+    public String getTime() {
+        return time;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public Double getLastMonthReserveSum() {

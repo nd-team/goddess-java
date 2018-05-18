@@ -1,8 +1,7 @@
 package com.bjike.goddess.customer.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
+import com.bjike.goddess.customer.bo.*;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
@@ -114,4 +113,130 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     public List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException {
         return customerBaseInfoSer.findByOriganizion(origanizion);
     }
+
+    @Override
+    public List<CustomerNameNumBO> findNameNum() throws SerException {
+        return customerBaseInfoSer.findNameNum();
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return customerBaseInfoSer.exportExcel();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return customerBaseInfoSer.templateExport();
+    }
+
+    @Override
+    public List<SummationBO> summaDay(String summDate) throws SerException {
+        return customerBaseInfoSer.summaDay(summDate);
+    }
+
+    @Override
+    public List<SummationBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        return customerBaseInfoSer.summaWeek(year,month,week);
+    }
+
+    @Override
+    public List<SummationBO> summaMonth(Integer year, Integer month) throws SerException {
+        return customerBaseInfoSer.summaMonth(year,month);
+    }
+
+    @Override
+    public List<SummationBO> summaQuarter(Integer year, Integer quarter) throws SerException {
+        return customerBaseInfoSer.summaQuarter(year,quarter);
+    }
+
+    @Override
+    public List<SummationBO> summaYear(Integer year) throws SerException {
+        return customerBaseInfoSer.summaYear(year);
+    }
+
+    @Override
+    public List<SummationBO> summaTotal(String endDate) throws SerException {
+        return customerBaseInfoSer.summaTotal(endDate);
+    }
+
+    @Override
+    public OptionBO figureShowDay(String summDate) throws SerException {
+        return customerBaseInfoSer.figureShowDay(summDate);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return customerBaseInfoSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        return customerBaseInfoSer.figureShowMonth(year,month);
+    }
+
+    @Override
+    public OptionBO figureShowQuarter(Integer year, Integer quarter) throws SerException {
+        return customerBaseInfoSer.figureShowQuarter(year,quarter);
+    }
+
+    @Override
+    public OptionBO figureShowYear(Integer year) throws SerException {
+        return customerBaseInfoSer.figureShowYear(year);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        return customerBaseInfoSer.figureShowTotal(endDate);
+    }
+
+    @Override
+    public PieOptionBO areaPieShow() throws SerException {
+        return customerBaseInfoSer.areaPieShow();
+    }
+
+    @Override
+    public PieOptionBO areaBussTypePieShow(String area) throws SerException {
+        return customerBaseInfoSer.areaBussTypePieShow(area);
+    }
+
+    @Override
+    public List<String> findArea() throws SerException {
+        return customerBaseInfoSer.findArea();
+    }
+
+    @Override
+    public OptionBO bussTypeAreaBaiShow() throws SerException {
+        return customerBaseInfoSer.bussTypeAreaBaiShow();
+    }
+
+    @Override
+    public List<String> findBussType() throws SerException {
+        return customerBaseInfoSer.findBussType();
+    }
+
+    @Override
+    public OptionBO resouceBaiShow() throws SerException {
+        return customerBaseInfoSer.resouceBaiShow();
+    }
+
+    @Override
+    public PieOptionBO resoucePieShowBybussType(String bussType) throws SerException {
+        return customerBaseInfoSer.resoucePieShowBybussType(bussType);
+    }
+
+    @Override
+    public List<CustomerBaseInfoBO> computations() throws SerException {
+        return customerBaseInfoSer.computations();
+    }
+
+    @Override
+    public CustomerInfoBO findByNum(String customerNum) throws SerException {
+        return customerBaseInfoSer.findByNum(customerNum);
+    }
+
+    @Override
+    public List<String> findCode() throws SerException {
+        return customerBaseInfoSer.findCode();
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.enums.MakeProjectStatus;
@@ -12,24 +14,26 @@ import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.businessproject.vo.SiginManageVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
-import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.bean.DataTypeUtils;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,10 +41,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -63,6 +67,10 @@ public class SiginManageAction extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
 
     /**
@@ -87,6 +95,7 @@ public class SiginManageAction extends BaseFileAction {
                 obj.setFlag(true);
             }
             list.add(obj);
+
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -191,6 +200,7 @@ public class SiginManageAction extends BaseFileAction {
                 vo.setBusinessType(str.getBusinessType());
                 vo.setBusinessCooperate(str.getBusinessCooperate());
                 vo.setContractProperty(str.getContractProperty());
+                vo.setRemark(str.getRemark());
                 siginManageVOList.add(vo);
             });
 
@@ -375,9 +385,9 @@ public class SiginManageAction extends BaseFileAction {
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
@@ -388,7 +398,7 @@ public class SiginManageAction extends BaseFileAction {
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -399,11 +409,10 @@ public class SiginManageAction extends BaseFileAction {
             List<SiginManageTO> tocs = new ArrayList<>();
             for (SiginManageExcel str : tos) {
                 SiginManageTO siginManageTO = BeanTransform.copyProperties(str, SiginManageTO.class, "startProjectTime", "endProjectTime",
-                        "siginStatus", "makeProject", "manager", "auditAdvice");
+                        "siginStatus", "manager", "auditAdvice");
                 siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
                 siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
                 siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
-                siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
                 siginManageTO.setManager("");
                 siginManageTO.setAuditAdvice("");
                 tocs.add(siginManageTO);
@@ -460,7 +469,7 @@ public class SiginManageAction extends BaseFileAction {
      * @des 导出项目签订与立项
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
         try {
@@ -503,7 +512,7 @@ public class SiginManageAction extends BaseFileAction {
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "项目签订与立项导入模板.xlsx";
-            super.writeOutFile(response, siginManageAPI.templateExport( ), fileName);
+            super.writeOutFile(response, siginManageAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -512,7 +521,142 @@ public class SiginManageAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 各地区立项情况周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionMakeBO
+     * @version v1
+     */
+    @GetMapping("v1/weekCollectFigure")
+    public Result weekCollectFigure(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionMakeBO optionBO = siginManageAPI.weekCollectFigure(year, month, week);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 各地区立项情况月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionMakeBO
+     * @version v1
+     */
+    @GetMapping("v1/monthCollectFigure")
+    public Result monthCollectFigure(Integer year, Integer month) throws ActException {
+        try {
+            OptionMakeBO optionBO = siginManageAPI.monthCollectFigure(year, month);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 各地区立项情况季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionMakeBO
+     * @version v1
+     */
+    @GetMapping("v1/quarterCollectFigure")
+    public Result quarterCollectFigure(Integer year, Integer quarter) throws ActException {
+        try {
+            OptionMakeBO optionBO = siginManageAPI.quarterCollectFigure(year, quarter);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各地区立项情况年汇总
+     *
+     * @param year
+     * @return class OptionMakeBO
+     * @version v1
+     */
+    @GetMapping("v1/yearCollectFigure")
+    public Result yearCollectFigure(Integer year) throws ActException {
+        try {
+            OptionMakeBO optionBO = siginManageAPI.yearCollectFigure(year);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取当前月有几周
+     *
+     * @param year  年份
+     * @param month 月份
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWeek/{year}/{month}")
+    public Result findWeek(@PathVariable Integer year, @PathVariable Integer month) throws ActException {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);
+            int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= weekNum; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询未冻结部门项目组详细信息
+     *
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

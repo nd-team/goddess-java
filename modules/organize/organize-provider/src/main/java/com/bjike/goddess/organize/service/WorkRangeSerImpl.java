@@ -5,20 +5,22 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
+import com.bjike.goddess.organize.dto.WorkRangeFlatsDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.WorkRange;
-import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
-import com.bjike.goddess.organize.to.WorkRangeTO;
+import com.bjike.goddess.organize.entity.WorkRangeFlats;
+import com.bjike.goddess.organize.to.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +37,8 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
 
     @Autowired
     private DepartmentDetailSer departmentDetailSer;
+    @Autowired
+    private WorkRangeFlatsSer workRangeFlatsSer;
 
     @Override
     public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String departmentId, WorkRangeDTO dto) throws SerException {
@@ -248,4 +252,274 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             bos.add(new OpinionBO(entity.getId(), String.format("方向:%s 科目:%s 专业分类:%s 工作范围:%s", entity.getDirection(), entity.getProject(), entity.getClassify(), entity.getWorkRange())));
         return bos;
     }
+
+    @Override
+    public List<WorkRangeBO> findByStatus(Status status) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, status));
+        List<WorkRange> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, WorkRangeBO.class);
+    }
+
+    @Override
+    public List<String> findWorkScope() throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(workRanges)) {
+            list = workRanges.stream().map(WorkRange::getWorkRange).distinct().collect(Collectors.toList());
+        }
+        return list;
+    }
+
+    @Transactional
+    @Override
+    public List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        List<WorkRange> workRanges = super.findAll();
+        List<String> directions = new ArrayList<>(0);
+        List<String> projects = new ArrayList<>(0);
+        List<String> classifys = new ArrayList<>(0);
+        List<WorkRangeFlatBO> workRangeFlatBOList = new ArrayList<>(0);
+        if (null != workRanges && workRanges.size() > 0) {
+            directions = workRanges.stream().map(WorkRange::getDirection).distinct().collect(Collectors.toList());
+            for (String str : directions) {
+
+                WorkRangeFlatBO workRangeFlatBO = new WorkRangeFlatBO();
+                workRangeFlatBO.setDirection(str);
+                workRangeFlatBO.setStatus1(workRanges.stream().filter(obj -> str.equals(obj.getDirection())).map(WorkRange::getStatus1).distinct().collect(Collectors.toList()).get(0));
+                workRangeFlatBO.setId(UUID.randomUUID().toString());
+                WorkRangeFlats workRangeFlats = new WorkRangeFlats();
+                workRangeFlats.setId(workRangeFlatBO.getId());
+
+                projects = workRanges.stream().filter(obj -> obj.getDirection().equals(str)).map(WorkRange::getProject).distinct().collect(Collectors.toList());
+                List<ProjectFlatBO> projectFlatBOList = new ArrayList<>(0);
+                for (String project : projects) {
+                    ProjectFlatBO projectFlatBO = new ProjectFlatBO();
+                    projectFlatBO.setProject(project);
+                    classifys = workRanges.stream().filter(obj -> obj.getProject().equals(project)).map(WorkRange::getClassify).distinct().collect(Collectors.toList());
+                    List<ClassifyFlatBO> classifyFlatBOList = new ArrayList<>(0);
+                    for (String classify : classifys) {
+                        ClassifyFlatBO classifyFlatBO = new ClassifyFlatBO();
+                        classifyFlatBO.setClassify(classify);
+                        List<WorkRangeListBO> workRangeListBOList = new ArrayList<>(0);
+                        for (WorkRange workRange : workRanges) {
+                            if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
+                                WorkRangeListBO workRangeListBO = new WorkRangeListBO();
+                                workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
+                                workRangeListBO.setNode(workRange.getNode().split(","));
+                                workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
+                                workRangeListBOList.add(workRangeListBO);
+                            }
+                        }
+                        classifyFlatBO.setWorkRangeListBOs(workRangeListBOList);
+                        classifyFlatBOList.add(classifyFlatBO);
+                    }
+                    projectFlatBO.setClassifyFlatBOs(classifyFlatBOList);
+                    projectFlatBOList.add(projectFlatBO);
+                }
+                workRangeFlatBO.setProjectFlatBOs(projectFlatBOList);
+                workRangeFlatBOList.add(workRangeFlatBO);
+            }
+        }
+        if (null != workRangeFlatBOList && workRangeFlatBOList.size() > 0) {
+            List<String> ids = new ArrayList<>(0);
+            ids = workRangeFlatBOList.stream().map(WorkRangeFlatBO::getId).distinct().collect(Collectors.toList());
+            List<WorkRangeFlats> workRangeFlatses = new ArrayList<>(0);
+            for (String id : ids) {
+                WorkRangeFlats workRangeFlats = new WorkRangeFlats();
+                workRangeFlats.setFaltId(id);
+                workRangeFlatses.add(workRangeFlats);
+            }
+            List<WorkRangeFlats> workRangeFlatsList = workRangeFlatsSer.findAll();
+            if (null != workRangeFlatsList && workRangeFlatsList.size() > 0) {
+                workRangeFlatsSer.remove(workRangeFlatsList);
+            }
+            workRangeFlatsSer.save(workRangeFlatses);
+
+            WorkRangeFlatsDTO workRangeFlatsDTO = BeanTransform.copyProperties(dto, WorkRangeFlatsDTO.class, "serialVersionUID");
+            List<WorkRangeFlats> workRangeFlatsList1 = workRangeFlatsSer.findByPage(workRangeFlatsDTO);
+            List<String> flatIds = new ArrayList<>(0);
+            flatIds = workRangeFlatsList1.stream().map(WorkRangeFlats::getFaltId).collect(Collectors.toList());
+            List<WorkRangeFlatBO> returnBO = new ArrayList<>(0);
+            for (String flatID : flatIds) {
+                for (WorkRangeFlatBO workRangeFlatBO : workRangeFlatBOList) {
+                    if (workRangeFlatBO.getId().equals(flatID)) {
+                        returnBO.add(workRangeFlatBO);
+                    }
+                }
+            }
+            returnBO.sort( new Comparator<WorkRangeFlatBO>() {
+                @Override
+                public int compare(WorkRangeFlatBO o1, WorkRangeFlatBO o2) {
+                    int a = o1.getDirection().compareTo(o2.getDirection());
+                    return a;
+                }
+            });
+            return returnBO;
+        }
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public void flatAdd(WorkRangeFlatTO to) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", to.getDirection()));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        if (workRanges.size() > 0) {
+            throw new SerException("该方向数据已存在");
+        }
+
+        for (ProjectFlatTO projectFlatTO : to.getProjectFlatTOs()) {
+            for (ClassifyFlatTO classifyFlatTO : projectFlatTO.getClassifyFlatTOs()) {
+                String wr = "";
+                String node = "";
+                for (WorkRangeListTO workRangeListTO : classifyFlatTO.getWorkRangeListTOs()) {
+                    if (StringUtils.isNotBlank(workRangeListTO.getWorkRange())) {
+                        wr = wr + workRangeListTO.getWorkRange() + ",";
+                    }
+                    if (StringUtils.isNotBlank(workRangeListTO.getNode())) {
+                        node = node + workRangeListTO.getNode() + ",";
+                    }
+                }
+                if (StringUtils.isNotBlank(wr)) {
+                    wr = wr.substring(0, wr.lastIndexOf(","));
+                }
+                if (StringUtils.isNotBlank(node)) {
+                    node = node.substring(0, node.lastIndexOf(","));
+                }
+                WorkRange workRange = new WorkRange();
+                workRange.setWorkRange(wr);
+                workRange.setNode(node);
+                workRange.setClassify(classifyFlatTO.getClassify());
+                workRange.setProject(projectFlatTO.getProject());
+                workRange.setDirection(to.getDirection());
+                workRange.setCreateTime(LocalDateTime.now());
+                workRange.setStatus1(Status.THAW);
+                super.save(workRange);
+            }
+        }
+    }
+
+    @Override
+    public List<WorkRangeFlatBO> findByFlatDirection(String direction) throws SerException {
+        if (StringUtils.isBlank(direction)) {
+            throw new SerException("业务方向分类不能为空");
+        }
+        WorkRangeDTO workRangeDTO = new WorkRangeDTO();
+        workRangeDTO.getConditions().add(Restrict.eq("direction", direction));
+        List<WorkRange> workRanges = super.findByCis(workRangeDTO);
+
+        List<String> directions = new ArrayList<>(0);
+        List<String> projects = new ArrayList<>(0);
+        List<String> classifys = new ArrayList<>(0);
+        List<WorkRangeFlatBO> workRangeFlatBOList = new ArrayList<>(0);
+        if (null != workRanges && workRanges.size() > 0) {
+            directions = workRanges.stream().map(WorkRange::getDirection).distinct().collect(Collectors.toList());
+            for (String str : directions) {
+                WorkRangeFlatBO workRangeFlatBO = new WorkRangeFlatBO();
+                workRangeFlatBO.setDirection(str);
+                workRangeFlatBO.setStatus1(workRanges.stream().filter(obj -> str.equals(obj.getDirection())).map(WorkRange::getStatus1).distinct().collect(Collectors.toList()).get(0));
+                workRangeFlatBO.setId(UUID.randomUUID().toString());
+                WorkRangeFlats workRangeFlats = new WorkRangeFlats();
+                workRangeFlats.setId(workRangeFlatBO.getId());
+
+                projects = workRanges.stream().filter(obj -> obj.getDirection().equals(str)).map(WorkRange::getProject).distinct().collect(Collectors.toList());
+                List<ProjectFlatBO> projectFlatBOList = new ArrayList<>(0);
+                for (String project : projects) {
+                    ProjectFlatBO projectFlatBO = new ProjectFlatBO();
+                    projectFlatBO.setProject(project);
+                    classifys = workRanges.stream().filter(obj -> obj.getProject().equals(project)).map(WorkRange::getClassify).distinct().collect(Collectors.toList());
+                    List<ClassifyFlatBO> classifyFlatBOList = new ArrayList<>(0);
+                    for (String classify : classifys) {
+                        ClassifyFlatBO classifyFlatBO = new ClassifyFlatBO();
+                        classifyFlatBO.setClassify(classify);
+                        List<WorkRangeListBO> workRangeListBOList = new ArrayList<>(0);
+                        for (WorkRange workRange : workRanges) {
+                            if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
+                                WorkRangeListBO workRangeListBO = new WorkRangeListBO();
+                                workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
+                                workRangeListBO.setNode(workRange.getNode().split(","));
+                                workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
+//                                workRangeListBO.setStatus(workRange.getStatus());
+                                workRangeListBOList.add(workRangeListBO);
+                            }
+                        }
+                        classifyFlatBO.setWorkRangeListBOs(workRangeListBOList);
+                        classifyFlatBOList.add(classifyFlatBO);
+                    }
+                    projectFlatBO.setClassifyFlatBOs(classifyFlatBOList);
+                    projectFlatBOList.add(projectFlatBO);
+                }
+                workRangeFlatBO.setProjectFlatBOs(projectFlatBOList);
+                workRangeFlatBOList.add(workRangeFlatBO);
+            }
+        }
+        return workRangeFlatBOList;
+    }
+
+    @Transactional
+    @Override
+    public void faltDelete(String direction) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", direction));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        if (null == workRanges || workRanges.size() <= 0) {
+            throw new SerException("目标数据对象为空");
+        }
+        super.remove(workRanges);
+    }
+
+    @Transactional
+    @Override
+    public void flatUpdate(WorkRangeFlatTO to) throws SerException {
+        if (StringUtils.isBlank(to.getDirectionEdit())) {
+            throw new SerException("修改前的业务方向分类不能为空");
+        }
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", to.getDirectionEdit()));
+        super.remove(super.findByCis(dto));
+        flatAdd(to);
+    }
+
+    @Transactional
+    @Override
+    public void flatClose(String direction) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", direction));
+        List<WorkRange> workRanges = super.findByCis(dto);
+
+        if (null != workRanges && workRanges.size() > 0) {
+            for (WorkRange workRange : workRanges) {
+                workRange.setStatus1(Status.CONGEAL);
+                super.save(workRange);
+            }
+        } else {
+            throw new SerException("目标数据对象为空");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void flatOpen(String direction) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", direction));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        if (null != workRanges && workRanges.size() > 0) {
+            for (WorkRange workRange : workRanges) {
+                workRange.setStatus1(Status.THAW);
+                super.save(workRange);
+            }
+        } else {
+            throw new SerException("目标数据对象为空");
+        }
+    }
+
+    @Override
+    public Long getFlatTotal() throws SerException {
+        WorkRangeFlatsDTO dto = new WorkRangeFlatsDTO();
+        return workRangeFlatsSer.count(dto);
+    }
+
 }

@@ -34,6 +34,7 @@ public class AccountTO extends BaseTO {
     /**
      * 二级类别名
      */
+    @NotBlank(message = "二级类别名不能为空")
     private String secondSubject;
 
     /**
@@ -45,6 +46,11 @@ public class AccountTO extends BaseTO {
      * 开户行地址
      */
     private String bankAddr;
+
+    /**
+     * 金额
+     */
+    private Double amount;
 
     /**
      * 备注
@@ -108,6 +114,14 @@ public class AccountTO extends BaseTO {
 
     public void setBankAddr(String bankAddr) {
         this.bankAddr = bankAddr;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getRemark() {

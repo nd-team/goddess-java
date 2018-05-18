@@ -4,11 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.RemoveEmployeeDTO;
 import com.bjike.goddess.secure.service.RemoveEmployeeSer;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 减员名单业务接口实现
@@ -67,5 +69,19 @@ public class RemoveEmployeeApiImpl implements RemoveEmployeeAPI {
     @Override
     public Long count(RemoveEmployeeDTO dto) throws SerException {
         return removeEmployeeSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return removeEmployeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return removeEmployeeSer.guidePermission(guidePermissionTO);
+    }
+    @Override
+    public Set<String> allName() throws SerException {
+        return removeEmployeeSer.allName();
     }
 }

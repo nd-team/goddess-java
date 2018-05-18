@@ -2,15 +2,17 @@ package com.bjike.goddess.financeinit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
- * 币别
+ * 设置币别
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -27,16 +29,34 @@ public class Currency extends BaseEntity {
     /**
      * 名称
      */
-    @Column(name = "name",  columnDefinition = "VARCHAR(255)   COMMENT '名称'")
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '名称'")
     private String name;
 
     /**
      * 记账汇率
      */
-    @Column(name = "rate",  columnDefinition = "DECIMAL(10,2)   COMMENT '记账汇率'")
+    @Column(name = "rate", columnDefinition = "DECIMAL(10,2)   COMMENT '记账汇率'")
     private Double rate;
 
+    /**
+     * 是否本位币
+     */
+    @Column(name = "is_standardMoney", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否本位币'")
+    private Boolean standardMoney;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
 
     public String getCode() {
@@ -63,5 +83,11 @@ public class Currency extends BaseEntity {
         this.rate = rate;
     }
 
+    public Boolean getStandardMoney() {
+        return standardMoney;
+    }
 
+    public void setStandardMoney(Boolean standardMoney) {
+        this.standardMoney = standardMoney;
+    }
 }

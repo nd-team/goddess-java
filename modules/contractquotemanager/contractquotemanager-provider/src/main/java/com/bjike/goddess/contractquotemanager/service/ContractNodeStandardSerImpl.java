@@ -5,8 +5,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.excel.ContractNodeStandardExport;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
@@ -160,9 +163,21 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Transactional(rollbackFor = SerException.class)
     public List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
         checkPermission();
+        condiy(dto);
         List<ContractNodeStandard> list = super.findByPage(dto);
         List<ContractNodeStandardBO> boList = BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
         return boList;
+    }
+
+
+    @Override
+    public void condiy(ContractNodeStandardDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.eq("area",dto.getArea()));
+        }
+        if(StringUtils.isNotBlank(dto.getProject())){
+            dto.getConditions().add(Restrict.eq("project",dto.getProject()));
+        }
     }
 
     /**
@@ -311,8 +326,54 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
                     .filter(c -> c.getDate().getYear() == to.getYear() && c.getDate().getMonthValue() == to.getMonth())
                     .collect(Collectors.toList());
         }
-        if (null == list || list.size() == 0)
+        if (null == list || list.size() == 0){
             return new ArrayList<>(0);
+        }
         return BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        List<ContractNodeStandard> list = super.findAll();
+
+        List<ContractNodeStandardExport> contractNodeStandardExports = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ContractNodeStandardExport excel = BeanTransform.copyProperties(str, ContractNodeStandardExport.class);
+            contractNodeStandardExports.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(contractNodeStandardExports, excel);
+        return bytes;
+    }
+
+    @Override
+    public void importExcel(List<ContractNodeStandardTO> contractNodeStandardTOS) throws SerException {
+        List<ContractNodeStandard> contractNodeStandards = BeanTransform.copyProperties(contractNodeStandardTOS, ContractNodeStandard.class, true);
+        contractNodeStandards.stream().forEach(str -> {
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+        super.save(contractNodeStandards);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ContractNodeStandardExport> contractNodeStandardExports = new ArrayList<>();
+
+        ContractNodeStandardExport excel = new ContractNodeStandardExport();
+        excel.setDate("2017-12-12");
+        excel.setArea("上海");
+        excel.setProject("八大平台");
+        excel.setProjectInner("test");
+        excel.setDispatchCode("test");
+        excel.setType("test");
+        excel.setNode("test");
+        excel.setUnit("test");
+        excel.setNodeStandard(14);
+        contractNodeStandardExports.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(contractNodeStandardExports, exce);
+        return bytes;
     }
 }

@@ -3,11 +3,13 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 对外部门详细业务接口
@@ -96,6 +98,7 @@ public interface DepartmentDetailAPI {
         return null;
     }
 
+
     /**
      * 冻结
      *
@@ -141,17 +144,6 @@ public interface DepartmentDetailAPI {
     }
 
     /**
-     * 获取总条数
-     *
-     * @return
-     * @throws SerException
-     */
-    default Long getTotal() throws SerException {
-        return null;
-    }
-
-
-    /**
      * 查询所有地区
      *
      * @return
@@ -169,6 +161,41 @@ public interface DepartmentDetailAPI {
      * @throws SerException
      */
     default List<DepartmentDetailBO> findByArea(String area) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据地区查询部门
+     * tanghaixiang
+     *
+     * @param area
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartByArea(String area) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据地区和部门查询项目名称
+     * tanghaixiang
+     *
+     * @param area
+     * @return
+     * @throws SerException
+     */
+    default List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有内部项目名称
+     * tanghaixiang
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllProject() throws SerException {
         return null;
     }
 
@@ -200,6 +227,107 @@ public interface DepartmentDetailAPI {
      * @throws SerException
      */
     default List<OpinionBO> findAllOpinion() throws SerException {
+        return null;
+    }
+
+    /**
+     * 真实编号
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String number(DepartmentDetailTO to) throws SerException;
+
+    /**
+     * 总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    Long getTotal() throws SerException;
+
+    /**
+     * 一个部门的总人数
+     *
+     * @param department department
+     * @return
+     * @throws SerException
+     */
+    Integer departmentTotalPeople(String department) throws SerException;
+
+    /**
+     * 根据时间获取地区个数
+     */
+    default Integer getAreaNum(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 获取某部门下的所有员工
+     *
+     * @param departId
+     * @return
+     * @throws SerException
+     */
+    Set<String> departPersons(String departId) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过部门名称查找部门信息
+     *
+     * @param departs 部门数组
+     * @return
+     * @throws SerException
+     */
+    List<DepartmentDetailBO> departByName(String[] departs) throws SerException;
+
+    /**
+     * 查询所部的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllDepartment() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询所有部门下的人数
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询部门下所有人的信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> infoByDepartment(String dep) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名查询所在部门
+     *
+     * @param name
+     * @return class DepartmentPeopleBO
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据部门获取体系
+     */
+    default String findHierarchy(String department) throws SerException {
         return null;
     }
 }

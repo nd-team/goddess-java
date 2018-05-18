@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.bo.AttainmentWayBO;
 import com.bjike.goddess.attainment.dto.AttainmentWayDTO;
 import com.bjike.goddess.attainment.service.AttainmentWaySer;
 import com.bjike.goddess.attainment.to.AttainmentWayTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,20 @@ import java.util.List;
 @Service("attainmentWayApiImpl")
 public class AttainmentWayApiImpl implements AttainmentWayAPI {
 
+
+
     @Autowired
     private AttainmentWaySer attainmentWaySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return attainmentWaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return attainmentWaySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public AttainmentWayBO save(AttainmentWayTO to) throws SerException {

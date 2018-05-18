@@ -1,11 +1,13 @@
 package com.bjike.goddess.contacts.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.contacts.enums.ContactsStatus;
+import com.bjike.goddess.contacts.enums.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -21,23 +23,77 @@ import javax.persistence.Table;
 @Table(name = "contacts_internal_contacts")
 public class InternalContacts extends BaseEntity {
 
+//    /**
+//     * 用户ID
+//     */
+//    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户ID'")
+//    private String userId;
     /**
-     * 用户ID
+     * 更新时间
      */
-    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户ID'")
-    private String userId;
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
+
+    /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
+    /**
+     * 姓名
+     */
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    private String name;
+
+    /**
+     * 员工编号
+     */
+    @Column(name = "employeeNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    private String employeeNum;
+
+    /**
+     * 部门/项目组
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门/项目组'")
+    private String department;
+
+    /**
+     * 职位
+     */
+    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    private String position;
 
     /**
      * 联系电话
      */
     @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
     private String phone;
-
     /**
-     * 邮箱
+     * 个人邮箱
      */
-    @Column(name = "email", columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
-    private String email;
+    @Column(name = "personalEmail", columnDefinition = "VARCHAR(255)   COMMENT '个人邮箱'")
+    private String personalEmail;
+    /**
+     * 工作邮箱
+     */
+    @Column(name = "workEmail", columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱'")
+    private String workEmail;
+    /**
+     * 原始密码
+     */
+    @Column(name = "primalPassword", columnDefinition = "VARCHAR(255)   COMMENT '原始密码'")
+    private String primalPassword;
+    /**
+     * 更改密码
+     */
+    @Column(name = "updatePassword", columnDefinition = "VARCHAR(255)   COMMENT '更改密码'")
+    private String updatePassword;
+    /**
+     * 工作邮箱检测是否通过
+     */
+    @Column(name = "is_workEmailPass", columnDefinition = "TINYINT(1)   COMMENT '工作邮箱检测是否通过'")
+    private Boolean workEmailPass;
 
     /**
      * 集团号
@@ -46,10 +102,28 @@ public class InternalContacts extends BaseEntity {
     private String bloc;
 
     /**
+     * 联系电话1
+     */
+    @Column(name = "phoneNumberA", columnDefinition = "VARCHAR(255)   COMMENT '联系电话1'")
+    private String phoneNumberA;
+    /**
      * 联系电话2
      */
-    @Column(name = "phoneNumber", columnDefinition = "VARCHAR(255)   COMMENT '联系电话2'")
-    private String phoneNumber;
+    @Column(name = "phoneNumberB", columnDefinition = "VARCHAR(255)   COMMENT '联系电话2'")
+    private String phoneNumberB;
+
+    /**
+     * 联系电话3
+     */
+    @Column(name = "phoneNumberC", columnDefinition = "VARCHAR(255)   COMMENT '联系电话3'")
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    @Column(name = "phoneNumberD", columnDefinition = "VARCHAR(255)   COMMENT '联系电话4'")
+    private String phoneNumberD;
+
 
     /**
      * QQ号
@@ -84,16 +158,128 @@ public class InternalContacts extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0  COMMENT '状态'")
-    private Status status;
+    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0   COMMENT '状态'")
+    private ContactsStatus status;
 
-
-    public String getUserId() {
-        return userId;
+    public LocalDate getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getPersonalEmail() {
+        return personalEmail;
+    }
+
+    public void setPersonalEmail(String personalEmail) {
+        this.personalEmail = personalEmail;
+    }
+
+    public String getWorkEmail() {
+        return workEmail;
+    }
+
+    public void setWorkEmail(String workEmail) {
+        this.workEmail = workEmail;
+    }
+
+    public String getPrimalPassword() {
+        return primalPassword;
+    }
+
+    public void setPrimalPassword(String primalPassword) {
+        this.primalPassword = primalPassword;
+    }
+
+    public String getUpdatePassword() {
+        return updatePassword;
+    }
+
+    public void setUpdatePassword(String updatePassword) {
+        this.updatePassword = updatePassword;
+    }
+
+    public Boolean getWorkEmailPass() {
+        return workEmailPass;
+    }
+
+    public void setWorkEmailPass(Boolean workEmailPass) {
+        this.workEmailPass = workEmailPass;
+    }
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
+
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getPhone() {
@@ -104,13 +290,6 @@ public class InternalContacts extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getBloc() {
         return bloc;
@@ -120,13 +299,6 @@ public class InternalContacts extends BaseEntity {
         this.bloc = bloc;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getQq() {
         return qq;
@@ -168,11 +340,11 @@ public class InternalContacts extends BaseEntity {
         this.remark = remark;
     }
 
-    public Status getStatus() {
+    public ContactsStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ContactsStatus status) {
         this.status = status;
     }
 }

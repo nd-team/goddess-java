@@ -2,6 +2,8 @@ package com.bjike.goddess.businsurance.api;
 
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.InsureRecordNextTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +20,19 @@ import java.util.List;
  */
 public interface InsureRecordAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 意外险记录列表总条数
      *
@@ -45,6 +60,13 @@ public interface InsureRecordAPI {
     default InsureRecordBO editInsureRecord(InsureRecordTO insureRecordTO) throws SerException { return null;}
 
     /**
+     *  续保
+     * @param insureRecordNextTO 意外险记录信息
+     * @return class InsureRecordBO
+     */
+    default InsureRecordBO editNextInsureRecord(InsureRecordNextTO insureRecordNextTO) throws SerException { return null;}
+
+    /**
      * 删除
      * @param id id
      */
@@ -56,7 +78,13 @@ public interface InsureRecordAPI {
      */
     default InsureRecordBO getInsureRecord(String id ) throws SerException {return null;}
 
-
+    /**
+     * 导出excel
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel( ) throws SerException{return null;}
 
 
 }

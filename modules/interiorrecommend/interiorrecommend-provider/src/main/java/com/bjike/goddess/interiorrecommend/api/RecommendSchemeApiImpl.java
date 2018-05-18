@@ -5,11 +5,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendSchemeDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendSchemeSer;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐方案业务接口实现
@@ -38,7 +40,7 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        recommendSchemeSer.remove(id);
+        recommendSchemeSer.delete(id);
     }
 
     @Override
@@ -46,20 +48,20 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
         return recommendSchemeSer.pageList(dto);
     }
 
-    @Override
-    public void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException {
-        recommendSchemeSer.resourcesAudit(id, resourcesSuggest, resourcesAudit);
-    }
-
-    @Override
-    public void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException {
-        recommendSchemeSer.operateAudit(id, operateSuggest, operateAudit);
-    }
-
-    @Override
-    public void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException {
-        recommendSchemeSer.generalAudit(id, generalSuggest, generalAudit);
-    }
+//    @Override
+//    public void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException {
+//        recommendSchemeSer.resourcesAudit(id, resourcesSuggest, resourcesAudit);
+//    }
+//
+//    @Override
+//    public void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException {
+//        recommendSchemeSer.operateAudit(id, operateSuggest, operateAudit);
+//    }
+//
+//    @Override
+//    public void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException {
+//        recommendSchemeSer.generalAudit(id, generalSuggest, generalAudit);
+//    }
 
     @Override
     public RecommendSchemeBO findById(String id) throws SerException {
@@ -69,5 +71,20 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
     @Override
     public Long count(RecommendSchemeDTO dto) throws SerException {
         return recommendSchemeSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendSchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendSchemeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> findPosition() throws SerException {
+        return recommendSchemeSer.findPosition();
     }
 }

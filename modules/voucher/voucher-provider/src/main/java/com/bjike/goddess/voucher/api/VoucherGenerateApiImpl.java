@@ -1,13 +1,14 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
+import com.bjike.goddess.voucher.to.AnalysisTO;
+import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,10 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return voucherGenerateSer.sonPermission();
+    }
+    @Override
+    public List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        return voucherGenerateSer.sonPermissionAccount();
     }
 
     @Override
@@ -77,6 +82,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public void deleteVoucherGenerateBatch(String[] uIds) throws SerException {
+        voucherGenerateSer.deleteVoucherGenerateBatch(uIds);
+    }
+
+    @Override
     public Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return voucherGenerateSer.countAudit(voucherGenerateDTO);
     }
@@ -92,8 +102,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO audit(String id) throws SerException {
-        return voucherGenerateSer.audit(id);
+    public void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.audit(voucherGenerateTO);
     }
 
     @Override
@@ -107,13 +117,13 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    public Long posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return voucherGenerateSer.posting(voucherGenerateTO);
     }
 
     @Override
-    public VoucherGenerateBO antiAudit(String id) throws SerException {
-        return voucherGenerateSer.antiAudit(id);
+    public void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.antiAudit(voucherGenerateTO);
     }
 
     @Override
@@ -147,8 +157,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO antiPosting(String id) throws SerException {
-        return voucherGenerateSer.antiPosting(id);
+    public VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
+        return voucherGenerateSer.antiPosting(to);
     }
 
     @Override
@@ -267,6 +277,16 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public List<String> subSubject(String firstSubject) throws SerException {
+        return voucherGenerateSer.subSubject(firstSubject);
+    }
+
+    @Override
+    public List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
+        return voucherGenerateSer.thirdSubject(firstSubject, subSubject);
+    }
+
+    @Override
     public List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.findFundRecord(dto);
     }
@@ -297,8 +317,38 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<PartBO> findByCondition(String[] conditions) throws SerException {
-        return voucherGenerateSer.findByCondition(conditions);
+    public List<PartBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.findByMoney(dto);
+    }
+
+    @Override
+    public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.accountCollect(dto);
+    }
+
+    @Override
+    public byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.exportExcelAccount(dto);
+    }
+
+    @Override
+    public List<String> accountArea() throws SerException {
+        return voucherGenerateSer.accountArea();
+    }
+
+    @Override
+    public List<String> accountProjectName() throws SerException {
+        return voucherGenerateSer.accountProjectName();
+    }
+
+    @Override
+    public List<String> accountProjectGroup() throws SerException {
+        return voucherGenerateSer.accountProjectGroup();
+    }
+
+    @Override
+    public List<String> accountSubject() throws SerException {
+        return voucherGenerateSer.accountSubject();
     }
 
     @Override
@@ -308,7 +358,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException {
-        return voucherGenerateSer.exportExcel( dto );
+        return voucherGenerateSer.exportExcel(dto);
     }
 
     @Override
@@ -321,6 +371,105 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
         return voucherGenerateSer.importExcel(voucherGenerateTO);
     }
 
+    @Override
+    public VoucherGenerateBO getByIdCJh(String id) throws SerException {
+        return voucherGenerateSer.getByIdCJh(id);
+    }
+
+    @Override
+    public void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.antiCheckAccount(voucherGenerateTO);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> findCkRecordByTime(String month, Integer quart, String year) throws SerException {
+        return voucherGenerateSer.findCkRecordByTime(month, quart, year);
+    }
+
+    @Override
+    public List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
+        return voucherGenerateSer.analysis(to);
+    }
+
+    @Override
+    public OptionBO ctReSubHistogram(VoucherChartDTO dto) throws SerException {
+        return voucherGenerateSer.ctReSubHistogram(dto);
+    }
+
+    @Override
+    public SubjectCollectBO getSum(SubjectCollectDTO dto,String starTime, String time, Boolean tar) throws SerException {
+        return voucherGenerateSer.getSum(dto,starTime, time, tar);
+    }
+
+    @Override
+    public SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.specialCurr(i,firstSubject,startTime,endTime,tar);
+    }
+
+    @Override
+    public SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrentBySumary(i,sumary,startTime,endTime,tar);
+    }
+
+    @Override
+    public Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(subjectCollectDTO, s, s1, tar);
+    }
+
+    @Override
+    public List<String> findProjectName() throws SerException {
+        return voucherGenerateSer.findProjectName();
+    }
+
+    @Override
+    public List<String> findallarea() throws SerException {
+        return voucherGenerateSer.findAllArea();
+    }
+
+    @Override
+    public List<String> findprojectGroup() throws SerException {
+        return voucherGenerateSer.findAllGroup();
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime, String token) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime, token);
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, subjectCollectDTO);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return voucherGenerateSer.findByCourseName();
+    }
+
+    @Override
+    public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
+        return voucherGenerateSer.collect ( dto );
+    }
+
+
+    @Override
+    public byte[] exportExcel(ExportSubjectCollectTO to) throws SerException {
+        return new byte[0];
+    }
+
+    @Override
+    public List<String> findFirstSubject() throws SerException {
+        return voucherGenerateSer.findFirstSubject ();}
+
+    @Override
+    public SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(i,firstSubject,  startTime,  endTime,  tar);
+    }
+
+    @Override
+    public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+        return voucherGenerateSer.findCurrent(i,firstSubject,startTime,endTime);
+    }
 
 
 }

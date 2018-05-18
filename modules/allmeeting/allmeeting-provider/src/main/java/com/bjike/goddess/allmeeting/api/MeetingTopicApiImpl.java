@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.MeetingTopicBO;
 import com.bjike.goddess.allmeeting.dto.MeetingTopicDTO;
 import com.bjike.goddess.allmeeting.service.MeetingTopicSer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MeetingTopicTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -25,6 +26,16 @@ public class MeetingTopicApiImpl implements MeetingTopicAPI {
 
     @Autowired
     private MeetingTopicSer meetingTopicSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingTopicSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingTopicSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MeetingTopicBO add(MeetingTopicTO to) throws SerException {

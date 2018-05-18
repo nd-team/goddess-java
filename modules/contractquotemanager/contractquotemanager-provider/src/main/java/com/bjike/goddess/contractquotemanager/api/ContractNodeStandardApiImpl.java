@@ -61,6 +61,7 @@ public class ContractNodeStandardApiImpl implements ContractNodeStandardAPI {
      */
     @Override
     public Long count(ContractNodeStandardDTO dto) throws SerException {
+        contractNodeStandardSer.condiy(dto);
         return contractNodeStandardSer.count(dto);
     }
 
@@ -147,5 +148,20 @@ public class ContractNodeStandardApiImpl implements ContractNodeStandardAPI {
     @Override
     public List<ContractNodeStandardBO> findByTo(FilterTO to) throws SerException {
         return contractNodeStandardSer.findByTo(to);
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return contractNodeStandardSer.exportExcel();
+    }
+
+    @Override
+    public void importExcel(List<ContractNodeStandardTO> contractProjectInfoTOS) throws SerException {
+        contractNodeStandardSer.importExcel(contractProjectInfoTOS);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return contractNodeStandardSer.templateExport();
     }
 }

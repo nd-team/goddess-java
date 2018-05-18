@@ -2,13 +2,14 @@ package com.bjike.goddess.housepay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.housepay.bo.PayRecordBO;
-import com.bjike.goddess.housepay.bo.WaitPayBO;
+import com.bjike.goddess.housepay.bo.*;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.enums.PayStatus;
 import com.bjike.goddess.housepay.excel.SonPermissionObject;
 import com.bjike.goddess.housepay.service.WaitPaySer;
+import com.bjike.goddess.housepay.to.CollectAreaTO;
+import com.bjike.goddess.housepay.to.CollectProjectTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,6 @@ public class WaitPayApiImpl implements WaitPayAPI {
         return waitPaySer.findListWaitPay(waitPayDTO);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO insertWaitPay(WaitPayTO waitPayTO) throws SerException {
         return waitPaySer.insertWaitPay(waitPayTO);
@@ -67,7 +67,6 @@ public class WaitPayApiImpl implements WaitPayAPI {
         return waitPaySer.editWaitPay(waitPayTO);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeWaitPay(String id) throws SerException {
         waitPaySer.removeWaitPay(id);
@@ -75,6 +74,39 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public void payment(String id) throws SerException {
          waitPaySer.payment(id);
+    }
+    @Override
+    public List<AreaCollectBO> collectArea(CollectAreaTO to) throws SerException {
+        return waitPaySer.collectArea(to);
+    }
+    @Override
+    public List<CollectDetailBO> collectAreaDetail(CollectAreaTO to) throws SerException {
+        return waitPaySer.collectAreaDetail(to);
+    }
+    @Override
+    public List<String> getAreas() throws SerException {
+        return waitPaySer.getAreas();
+    }
+    @Override
+    public List<ProjectCollectBO> collectProject(CollectProjectTO to) throws SerException {
+        return waitPaySer.collectProject(to);
+    }
+    @Override
+    public List<CollectDetailBO> collectProjectDatail(CollectProjectTO to) throws SerException {
+        return waitPaySer.collectProjectDatail(to);
+    }
+
+    @Override
+    public List<String> getProject() throws SerException {
+        return waitPaySer.getProject();
+    }
+    @Override
+    public Double calculate(WaitPayTO to)throws SerException{
+        return waitPaySer.calculate(to);
+    }
+    @Override
+    public List<String> yearList() throws SerException {
+        return waitPaySer.yearList();
     }
 
 }

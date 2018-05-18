@@ -12,17 +12,21 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.ExternalContactsAPI;
+import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.excel.ExternalContactsExcel;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.vo.ExternalContactsVO;
+import com.bjike.goddess.contacts.vo.MobileExternalContactsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("externalcontacts")
-public class ExternalContactsAct extends BaseFileAction{
+public class ExternalContactsAct extends BaseFileAction {
 
     @Autowired
     private ExternalContactsAPI externalContactsAPI;
@@ -127,7 +131,7 @@ public class ExternalContactsAct extends BaseFileAction{
 
 
     /**
-     * 根据id获取外部通讯录数据
+     * 获取外部通讯录数据
      *
      * @param id 外部通讯录数据id
      * @return class ExternalContactsVO
@@ -206,4 +210,71 @@ public class ExternalContactsAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务通讯录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "外部通讯录导入模板.xlsx";
+            super.writeOutFile(response, externalContactsAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 移动端获取列表
+     *
+     * @return class MobileExternalContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/list")
+    public Result mobileList(ExternalContactsDTO dto) throws ActException {
+        try {
+            List<MobileExternalContactsBO> mobileExternalContactsBOs = externalContactsAPI.mobileList(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(mobileExternalContactsBOs, MobileExternalContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 移动端总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/mobile/total")
+    public Result getMobileTotal(ExternalContactsDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(externalContactsAPI.getMobileTotal(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取移动端数据
+     *
+     * @param id 列表id
+     * @return class MobileExternalContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/findByID/{id}")
+    public Result findByMobileID(@PathVariable String id) throws ActException {
+        try {
+            MobileExternalContactsBO bo = externalContactsAPI.findByMobileID(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, MobileExternalContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

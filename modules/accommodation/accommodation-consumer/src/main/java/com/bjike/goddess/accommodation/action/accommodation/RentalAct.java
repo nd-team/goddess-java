@@ -3,10 +3,11 @@ package com.bjike.goddess.accommodation.action.accommodation;
 
 import com.bjike.goddess.accommodation.api.RentalAPI;
 import com.bjike.goddess.accommodation.bo.RentalBO;
-import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalDeleteFileTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
+import com.bjike.goddess.accommodation.vo.CollectVO;
 import com.bjike.goddess.accommodation.vo.RentalVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -45,11 +46,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("rental")
-public class RentalAct extends BaseFileAction{
+public class RentalAct extends BaseFileAction {
     @Autowired
     private RentalAPI rentalAPI;
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = rentalAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 租房信息列表总条数
      *
@@ -66,6 +91,7 @@ public class RentalAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个租房信息
      *
@@ -97,30 +123,30 @@ public class RentalAct extends BaseFileAction{
     public Result list(RentalDTO rentalDTO, HttpServletRequest request) throws ActException {
         try {
             List<RentalVO> rentalVOS = BeanTransform.copyProperties(
-                    rentalAPI.findListRental(rentalDTO), RentalVO.class,request);
+                    rentalAPI.findListRental(rentalDTO), RentalVO.class, request);
             return ActResult.initialize(rentalVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 添加租房信息
-     *
-     * @param rentalTO 租房信息to
-     * @return class RentalVO
-     * @des 添加租房信息
-     * @version v1
-     */
-    @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
-        try {
-            RentalBO rentalBO = rentalAPI.insertRental(rentalTO);
-            return ActResult.initialize(rentalBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 添加租房信息
+//     *
+//     * @param rentalTO 租房信息to
+//     * @return class RentalVO
+//     * @des 添加租房信息
+//     * @version v1
+//     */
+//    @PostMapping("v1/add")
+//    public Result add(@Validated(ADD.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            RentalBO rentalBO = rentalAPI.insertRental(rentalTO);
+//            return ActResult.initialize(rentalBO);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 编辑租房信息
@@ -156,6 +182,25 @@ public class RentalAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 汇总
+     *
+     * @param areas 地区
+     * @return class CollectVO
+     * @des 根据地区汇总
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(String[] areas) throws ActException {
+        try {
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(rentalAPI.collect(areas), CollectVO.class);
+            return ActResult.initialize(collectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 上传附件
      *
@@ -176,6 +221,7 @@ public class RentalAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 文件附件列表
@@ -236,12 +282,13 @@ public class RentalAct extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(RentalDeleteFileTO.TestDEL.class) RentalDeleteFileTO rentalDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != rentalDeleteFileTO.getPaths() && rentalDeleteFileTO.getPaths().length>=0 ){
+        if (null != rentalDeleteFileTO.getPaths() && rentalDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),rentalDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), rentalDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 导出excel
      *
@@ -249,7 +296,7 @@ public class RentalAct extends BaseFileAction{
      * @des 导出租房信息
      * @version v1
      */
-    //@LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(RentalDTO dto, HttpServletResponse response) throws ActException {
         try {
@@ -262,6 +309,7 @@ public class RentalAct extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 获取地区
      *

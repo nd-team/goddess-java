@@ -27,6 +27,7 @@ import java.util.List;
 public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     @Autowired
     private IncomeCostAnalysisSer incomeCostAnalysisSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return incomeCostAnalysisSer.sonPermission();
@@ -36,6 +37,7 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return incomeCostAnalysisSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long countIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
         return incomeCostAnalysisSer.countIncomeCostAnalysis(incomeCostAnalysisDTO);
@@ -47,18 +49,18 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     }
 
     @Override
-    public List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
-        return incomeCostAnalysisSer.findListIncomeCostAnalysis(incomeCostAnalysisDTO);
+    public List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
+        return incomeCostAnalysisSer.findListIncomeCostAnalysis(dto);
     }
 
     @Override
-    public IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
+    public void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+        incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
     }
 
     @Override
-    public IncomeCostAnalysisBO editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
+    public void editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+        incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
     }
 
     @Override

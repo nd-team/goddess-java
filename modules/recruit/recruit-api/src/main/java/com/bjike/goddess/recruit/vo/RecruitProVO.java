@@ -1,11 +1,7 @@
 package com.bjike.goddess.recruit.vo;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.bjike.goddess.recruit.type.AuditType;
 
 /**
  * 招聘方案
@@ -132,6 +128,31 @@ public class RecruitProVO {
      * 备注
      */
     private String note;
+
+    /**
+     * 审核状态
+     */
+    private AuditType auditType;
+    /**
+     * 是否有资金准备
+     */
+    private Boolean moneyReady;
+
+    public Boolean getMoneyReady() {
+        return moneyReady;
+    }
+
+    public void setMoneyReady(Boolean moneyReady) {
+        this.moneyReady = moneyReady;
+    }
+
+    public AuditType getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(AuditType auditType) {
+        this.auditType = auditType;
+    }
 
     public String getId() {
         return id;

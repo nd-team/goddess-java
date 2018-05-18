@@ -120,4 +120,14 @@ public class MaterialAnalyzeApiImpl implements MaterialAnalyzeAPI {
     public List<MaterialAnalyzeBO> materialAnalyze(InventoryType inventoryType) throws SerException {
         return materialAnalyzeSer.materialAnalyze(inventoryType);
     }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialAnalyzeSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return materialAnalyzeSer.findallMonUser();
+    }
 }

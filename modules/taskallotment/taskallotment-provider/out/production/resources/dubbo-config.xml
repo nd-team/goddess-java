@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--发布接口,供其他模块调用-->
+
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.CustomTitleAPI" ref="customTitleApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.ProjectAPI" ref="projectApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TableAPI" ref="tableApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" ref="taskNodeApiImpl" timeout="1200000"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskNodeBaseAPI" ref="taskNodeBaseApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" ref="taskRemindApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" ref="timeSetApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.QuestionAPI" ref="questionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" ref="confirmCountEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" ref="finishCountEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.contacts.api.CommonalityAPI" id="commonalityApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+
+</beans>

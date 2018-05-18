@@ -1,26 +1,47 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.business.api.BusinessRegisterAPI;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.intromanage.api.FirmIntroAPI;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
-import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
-import com.bjike.goddess.intromanage.to.FirmIntroTO;
-import com.bjike.goddess.intromanage.vo.FirmIntroVO;
+import com.bjike.goddess.intromanage.entity.*;
+import com.bjike.goddess.intromanage.excel.FirmIntroExcel;
+import com.bjike.goddess.intromanage.to.*;
+import com.bjike.goddess.intromanage.vo.*;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介
@@ -33,10 +54,39 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("firmintro")
-public class FirmIntroAct {
+public class FirmIntroAct extends BaseFileAction{
 
     @Autowired
     private FirmIntroAPI firmIntroAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private FileAPI fileAPI;
+    @Autowired
+    private BusinessRegisterAPI businessRegisterAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = firmIntroAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询公司简介
@@ -51,7 +101,24 @@ public class FirmIntroAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             FirmIntroBO bo = firmIntroAPI.findById(id);
+            //查询荣誉与资质
+            List<HonorAndQualityVO> honorAndQualitieVOs = BeanTransform.copyProperties(bo.getHonorAndQualityBOS(), HonorAndQualityVO.class);
+            //查询主业介绍
+            List<MainBusinessIntroVO> mainBusinessIntroVOS = BeanTransform.copyProperties(bo.getMainBusinessIntroBOS(), MainBusinessIntroVO.class);
+            //查询成功案例
+            List<SuccessStoriesVO> successStoriesVOS = BeanTransform.copyProperties(bo.getSuccessStoriesBOS(), SuccessStoriesVO.class);
+            //查询客户及合作伙伴
+            List<CustomerAndPartnerVO> customerAndPartnerVOS = BeanTransform.copyProperties(bo.getCustomerAndPartnerBOS(), CustomerAndPartnerVO.class);
+            //查询通讯途径
+            List<CommunicationPathVO> communicationPathVOS = BeanTransform.copyProperties(bo.getCommunicationPathBOS(), CommunicationPathVO.class);
+
             FirmIntroVO vo = BeanTransform.copyProperties(bo, FirmIntroVO.class, request);
+            vo.setHonorAndQualityVOS(honorAndQualitieVOs);
+            vo.setMainBusinessIntroVOS(mainBusinessIntroVOS);
+            vo.setSuccessStoriesVOS(successStoriesVOS);
+            vo.setCustomerAndPartnerVOS(customerAndPartnerVOS);
+            vo.setCommunicationPathVOS(communicationPathVOS);
+
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -171,4 +238,302 @@ public class FirmIntroAct {
         }
     }
 
+    /**
+     * 获取所有的用户
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/findAllUser")
+    public Result findAllUser() throws ActException {
+        try {
+            List<String> userName = new ArrayList<>();
+            userName = firmIntroAPI.findallMonUser();
+            return ActResult.initialize(userName);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 公司名称公司性质公司资金下拉值
+     *
+     * @throws ActException
+     * @return class RegisterNaTypeCaVO
+     * @version v1
+     */
+    @GetMapping("v1/findNaTyCa")
+    public Result findNaTyCa() throws ActException {
+        try {
+            List<RegisterNaTypeCaBO> nameTypeCa = new ArrayList<>();
+            if (moduleAPI.isCheck("business")) {
+                nameTypeCa = businessRegisterAPI.findRegiNaTyCa();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(nameTypeCa, RegisterNaTypeCaVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地址下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findBussiness/address")
+    public Result findBussinessAdd() throws ActException {
+        try {
+            List<String> address = new ArrayList<>();
+            if (moduleAPI.isCheck("business")) {
+                address = businessRegisterAPI.findAddress();
+            }
+            return ActResult.initialize(address);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 上传附件
+     *
+     * @des 审核项目签订与立项
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String paths = "/businessproject/siginmanage/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id 签订与立项id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            String path = "/businessproject/siginmanage/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+
+
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id id
+     * @des 根据id冻结公司简介
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable String id) throws ActException {
+        try {
+            firmIntroAPI.congealFirmin(id);
+            return new ActResult("congeal success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 解冻
+     *
+     * @param id id
+     * @des 根据id解冻公司简介
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id ) throws ActException {
+        try {
+            firmIntroAPI.thawFirmin(id);
+            return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @des 导出公司简介
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport( HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "公司简介.xlsx";
+            super.writeOutFile(response, firmIntroAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板公司简介
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "公司简介模板.xlsx";
+            super.writeOutFile(response, firmIntroAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<FirmIntroExcel> tos = ExcelUtil.mergeExcelToClazz(is, FirmIntroExcel.class, excel);
+            List<FirmIntroTO> tocs = new ArrayList<>();
+            Set<Integer> seqNum = new HashSet<>();
+            for (FirmIntroExcel firmIntroExcel:tos){
+                seqNum.add(firmIntroExcel.getSeqNum());
+            }
+            for (Integer seq : seqNum){
+                List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
+                List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
+                List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
+                List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
+                List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
+                List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
+                for(FirmIntroExcel str : tos){
+                    if(str.getSeqNum().equals(seq)){
+                        firmIntroExcels.add(str);
+                        HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str,HonorAndQualityTO.class);
+                        MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str,MainBusinessIntroTO.class);
+                        SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str,SuccessStoriesTO.class);
+                        CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str,CustomerAndPartnerTO.class);
+                        CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str,CommunicationPathTO.class);
+                        if(isCheckNull(honorAndQualityTO)){honorAndQualityTOS.add(honorAndQualityTO);}
+                        if(isCheckNull(mainBusinessIntroTO)){mainBusinessIntroTOS.add(mainBusinessIntroTO);}
+                        if(isCheckNull(successStoriesTO)){successStoriesTOS.add(successStoriesTO);}
+                        if(isCheckNull(customerAndPartnerTO)){customerAndPartnerTOS.add(customerAndPartnerTO);}
+                        if(isCheckNull(communicationPathTO)){communicationPathTOS.add(communicationPathTO);}
+                    }
+                }
+                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
+                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
+                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
+                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
+                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
+                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
+                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                firmIntroAPI.save(firmIntroTO);
+            }
+
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    //判断某个类的所有属性是否都为空
+    public Boolean isCheckNull(Object obj){
+        Boolean bool = false;
+        if(null==obj){
+            bool = false;
+        }
+        for (Field f : obj.getClass().getDeclaredFields()) {
+                String name = f.getName(); // 获取属性的名字
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                try {
+                    Method m = obj.getClass().getMethod("get" + name);
+                    Object value = m.invoke(obj);// 调用getter方法获取属性值
+                    if (null!=value && !value.equals("")) {    //判断该属性值是否为空
+                        bool = true;
+                    }
+                } catch (Exception e) {
+
+                }
+
+        }
+        return bool;
+    }
 }

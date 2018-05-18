@@ -35,11 +35,6 @@ public class AttainmentTypeTO extends BaseTO {
     @NotNull(message = "是否定期不能为空", groups = {ADD.class, EDIT.class})
     private Boolean regular;
 
-    /**
-     * 状态
-     */
-    private Status status;
-
 
     public String getType() {
         return type;
@@ -71,13 +66,5 @@ public class AttainmentTypeTO extends BaseTO {
 
     public void setRegular(Boolean regular) {
         this.regular = regular;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

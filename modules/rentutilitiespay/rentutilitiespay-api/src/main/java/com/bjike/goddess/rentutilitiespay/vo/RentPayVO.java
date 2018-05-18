@@ -1,5 +1,7 @@
 package com.bjike.goddess.rentutilitiespay.vo;
 
+import com.bjike.goddess.rentutilitiespay.enums.PayParty;
+
 /**
  * 房租缴费表现层对象
  *
@@ -113,7 +115,7 @@ public class RentPayVO {
     /**
      * 房租缴费方
      */
-    private String rentPay;
+    private PayParty rentPay;
 
     /**
      * 水费初期数目
@@ -153,7 +155,7 @@ public class RentPayVO {
     /**
      * 水费缴费方
      */
-    private String waterPay;
+    private PayParty waterPay;
 
     /**
      * 电费初期数目
@@ -193,7 +195,7 @@ public class RentPayVO {
     /**
      * 电费缴费方
      */
-    private String energyPay;
+    private PayParty energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -213,7 +215,7 @@ public class RentPayVO {
     /**
      * 燃气费缴费方
      */
-    private String gasPay;
+    private PayParty gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -230,10 +232,6 @@ public class RentPayVO {
      */
     private Boolean rentMoneyMail;
 
-    /**
-     * 房租收据附件
-     */
-    private String rentReceiptAccessory;
 
     /**
      * 备注
@@ -401,13 +399,6 @@ public class RentPayVO {
         this.rentEndTime = rentEndTime;
     }
 
-    public String getRentPay() {
-        return rentPay;
-    }
-
-    public void setRentPay(String rentPay) {
-        this.rentPay = rentPay;
-    }
 
     public Double getWaterBeginNum() {
         return waterBeginNum;
@@ -465,13 +456,6 @@ public class RentPayVO {
         this.waterEndTime = waterEndTime;
     }
 
-    public String getWaterPay() {
-        return waterPay;
-    }
-
-    public void setWaterPay(String waterPay) {
-        this.waterPay = waterPay;
-    }
 
     public Double getEnergyBeginNum() {
         return energyBeginNum;
@@ -529,13 +513,6 @@ public class RentPayVO {
         this.energyEndTime = energyEndTime;
     }
 
-    public String getEnergyPay() {
-        return energyPay;
-    }
-
-    public void setEnergyPay(String energyPay) {
-        this.energyPay = energyPay;
-    }
 
     public Double getGasRechargeLines() {
         return gasRechargeLines;
@@ -561,13 +538,6 @@ public class RentPayVO {
         this.gasEndTime = gasEndTime;
     }
 
-    public String getGasPay() {
-        return gasPay;
-    }
-
-    public void setGasPay(String gasPay) {
-        this.gasPay = gasPay;
-    }
 
     public Double getPayMoneyCollect() {
         return payMoneyCollect;
@@ -593,13 +563,6 @@ public class RentPayVO {
         this.rentMoneyMail = rentMoneyMail;
     }
 
-    public String getRentReceiptAccessory() {
-        return rentReceiptAccessory;
-    }
-
-    public void setRentReceiptAccessory(String rentReceiptAccessory) {
-        this.rentReceiptAccessory = rentReceiptAccessory;
-    }
 
     public String getRemark() {
         return remark;
@@ -607,5 +570,37 @@ public class RentPayVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public PayParty getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(PayParty rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public PayParty getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(PayParty waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public PayParty getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(PayParty energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public PayParty getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(PayParty gasPay) {
+        this.gasPay = gasPay;
     }
 }

@@ -12,13 +12,15 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.api.TaxManagementAPI;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.foreigntax.bo.VoucherDataBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.ForeignTaxDeleteFileTO;
 import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
-import com.bjike.goddess.foreigntax.vo.TaxCollectVO;
+import com.bjike.goddess.foreigntax.to.VoucherDataTO;
 import com.bjike.goddess.foreigntax.vo.TaxManagementVO;
+import com.bjike.goddess.foreigntax.vo.VoucherDataVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -34,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -54,6 +57,7 @@ public class TaxManagementAction extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -129,14 +133,14 @@ public class TaxManagementAction extends BaseFileAction {
     /**
      * 税金管理列表总条数
      *
-     * @param taxManagementDTO 税金管理dto
+     * @param dto 税金管理dto
      * @des 获取所有税金管理总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(TaxManagementDTO taxManagementDTO) throws ActException {
+    public Result count(TaxManagementDTO dto) throws ActException {
         try {
-            Long count = taxManagementAPI.countTaxManagement(taxManagementDTO);
+            Long count = taxManagementAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -164,16 +168,16 @@ public class TaxManagementAction extends BaseFileAction {
     /**
      * 税金管理列表
      *
-     * @param taxManagementDTO 税金管理dto
+     * @param dto 税金管理dto
      * @return class TaxManagementVO
      * @des 获取所有税金管理
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(TaxManagementDTO taxManagementDTO, HttpServletRequest request) throws ActException {
+    public Result list(TaxManagementDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<TaxManagementVO> taxManagementVOS = BeanTransform.copyProperties
-                    (taxManagementAPI.findListTaxManagement(taxManagementDTO), TaxManagementVO.class, request);
+                    (taxManagementAPI.list(dto), TaxManagementVO.class, request);
             return ActResult.initialize(taxManagementVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -183,17 +187,17 @@ public class TaxManagementAction extends BaseFileAction {
     /**
      * 添加税金管理
      *
-     * @param taxManagementTO 税金管理数据to
+     * @param to 税金管理数据to
      * @return class TaxManagementVO
      * @des 添加税金管理
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) TaxManagementTO taxManagementTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) TaxManagementTO to, BindingResult bindingResult) throws ActException {
         try {
-            TaxManagementBO taxManagementBO = taxManagementAPI.insertTaxManagement(taxManagementTO);
-            return ActResult.initialize(taxManagementBO);
+            TaxManagementBO taxManagementBO = taxManagementAPI.insert(to);
+            return ActResult.initialize(BeanTransform.copyProperties(taxManagementBO, TaxManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -202,17 +206,17 @@ public class TaxManagementAction extends BaseFileAction {
     /**
      * 编辑税金管理
      *
-     * @param taxManagementTO 税金管理数据to
+     * @param to 税金管理数据to
      * @return class TaxManagementVO
      * @des 编辑税金管理
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) TaxManagementTO taxManagementTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) TaxManagementTO to, BindingResult bindingResult) throws ActException {
         try {
-            TaxManagementBO taxManagementBO = taxManagementAPI.editTaxManagement(taxManagementTO);
-            return ActResult.initialize(taxManagementBO);
+            TaxManagementBO taxManagementBO = taxManagementAPI.edit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(taxManagementBO, TaxManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -227,9 +231,9 @@ public class TaxManagementAction extends BaseFileAction {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result removeTaxManagement(@PathVariable String id) throws ActException {
+    public Result remove(@PathVariable String id) throws ActException {
         try {
-            taxManagementAPI.removeTaxManagement(id);
+            taxManagementAPI.remove(id);
             return new ActResult("delete success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -237,39 +241,107 @@ public class TaxManagementAction extends BaseFileAction {
     }
 
     /**
-     * 获取公司
+     * 根据税款所属期止获得申报期限
      *
-     * @des 获取公司集合
+     * @param taxEnd
      * @version v1
      */
-    @GetMapping("v1/company")
-    public Result company() throws ActException {
+    @GetMapping("v1/getDead")
+    public Result getDead(String taxEnd) throws ActException {
         try {
-            List<String> taxManagementList = taxManagementAPI.getCompany();
-            return ActResult.initialize(taxManagementList);
+            Map<String, String> map = taxManagementAPI.getDead(taxEnd);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 汇总公司
+     * 获取所有公司
      *
-     * @param company 公司
-     * @return class TaxCollectVO
-     * @des 汇总公司
      * @version v1
      */
-    @GetMapping("v1/collect")
-    public Result collect(@RequestParam String[] company) throws ActException {
+    @GetMapping("v1/company")
+    public Result company() throws ActException {
         try {
-            List<TaxCollectVO> taxCollectVOS = BeanTransform.copyProperties(
-                    taxManagementAPI.collectTaxManagement(company), TaxCollectVO.class);
-            return ActResult.initialize(taxCollectVOS);
+            List<String> companyList = taxManagementAPI.getCompany();
+            return ActResult.initialize(companyList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取所有税种
+     *
+     * @version v1
+     */
+    @GetMapping("v1/taxType")
+    public Result taxType() throws ActException {
+        try {
+            List<String> taxTypeList = taxManagementAPI.getTaxType();
+            return ActResult.initialize(taxTypeList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 汇总
+     *
+     * @param dto
+     * @return class TaxManagementVO
+     * @des 根据公司税种时间汇总
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(TaxManagementDTO dto) throws ActException {
+        try {
+            List<TaxManagementVO> taxManagementVOS = BeanTransform.copyProperties(
+                    taxManagementAPI.collect(dto), TaxManagementVO.class);
+            return ActResult.initialize(taxManagementVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 生成记账凭证
+     *
+     * @param ids 列表id数组
+     * @return class VoucherDataVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/vGenerate")
+    public Result vGenerate(String[] ids) throws ActException {
+        try {
+
+            VoucherDataBO voucherDataBO = taxManagementAPI.vGenerate(ids);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherDataBO, VoucherDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 提交记账凭证
+     *
+     * @param to to数据
+     * @return class VoucherDataVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/voucher")
+    public Result voucher(@Validated() VoucherDataTO to) throws ActException {
+        try {
+
+            VoucherDataBO voucherDataBO = taxManagementAPI.generate(to);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherDataBO, VoucherDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 上传附件

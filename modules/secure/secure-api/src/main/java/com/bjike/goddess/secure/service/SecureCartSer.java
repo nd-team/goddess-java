@@ -5,9 +5,11 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.SecureCartBO;
 import com.bjike.goddess.secure.dto.SecureCartDTO;
 import com.bjike.goddess.secure.entity.SecureCart;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保卡基本信息业务接口
@@ -19,6 +21,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SecureCartSer extends Ser<SecureCart, SecureCartDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -83,11 +94,17 @@ public interface SecureCartSer extends Ser<SecureCart, SecureCartDTO> {
      * @throws SerException
      */
     Long count(SecureCartDTO dto) throws SerException;
-
     /**
-     * 启动定时方法
+     * 获取所有姓名
      *
      * @throws SerException
      */
-    void quartz() throws SerException;
+    Set<String> allName() throws SerException;
+
+//    /**
+//     * 启动定时方法
+//     *
+//     * @throws SerException
+//     */
+//    void quartz() throws SerException;
 }

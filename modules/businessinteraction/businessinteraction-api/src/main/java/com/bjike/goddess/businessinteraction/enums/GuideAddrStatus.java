@@ -66,15 +66,7 @@ public enum GuideAddrStatus {
     /**
      * 查看附件
      */
-    SEEFILE(13),
-    /**
-     * 留言
-     */
-    MESSAGE(14),
-    /**
-     * 添加留言
-     */
-    ADDMESSAGE(15);
+    SEEFILE(13);
 
     private int code;
 

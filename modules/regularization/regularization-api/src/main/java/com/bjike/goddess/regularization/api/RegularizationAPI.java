@@ -4,12 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工转正业务接口
@@ -21,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RegularizationAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询员工转正
@@ -93,10 +107,10 @@ public interface RegularizationAPI {
     /**
      * 决策层评价
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param decisionLevelEvaluate 决策层评价
-     * @param decisionLevelRank 决策层评分等级
-     * @param decisionLevelScore 决策层具体评分
+     * @param decisionLevelRank     决策层评分等级
+     * @param decisionLevelScore    决策层具体评分
      * @throws SerException
      */
     void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException;
@@ -112,7 +126,7 @@ public interface RegularizationAPI {
     /**
      * 预算模块补充
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
@@ -125,4 +139,69 @@ public interface RegularizationAPI {
      * @throws SerException
      */
     void zjbApproval(ZjbApprovalTO to) throws SerException;
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 链接入职信息
+     *
+     * @return
+     * @throws SerException
+     */
+
+    default RegularizationBO findAddRusult(String empNumer) throws SerException {
+        return null;
+    }
+
+    /**
+     * chenjunhao
+     * 根据员工编号查找转正时间
+     *
+     * @param empNo 员工编号
+     * @return
+     * @throws SerException
+     */
+    String time(String empNo) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有员工编号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allNum() throws SerException;
+
+    /**
+     * 根据员工姓名查找转正时间
+     * zhuangkaiqin
+     */
+    default String getTime(String userName) throws SerException {
+        return null;
+    }
+    /**
+     * 根据员工姓名判断是否转正
+     * jiangzaixuan
+     */
+    default Boolean checkTran(String userName) throws SerException {
+        return null;
+    }
 }

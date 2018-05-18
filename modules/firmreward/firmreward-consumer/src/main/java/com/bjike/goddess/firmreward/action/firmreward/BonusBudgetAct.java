@@ -1,5 +1,7 @@
 package com.bjike.goddess.firmreward.action.firmreward;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.bonusmoneyperparepay.api.MoneyPerpareAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -12,16 +14,21 @@ import com.bjike.goddess.firmreward.api.BonusBudgetAPI;
 import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
 import com.bjike.goddess.firmreward.vo.BonusBudgetVO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.firmreward.vo.RewardProgramRatioVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +46,84 @@ public class BonusBudgetAct {
 
     @Autowired
     private BonusBudgetAPI bonusBudgetAPI;
+
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private MoneyPerpareAPI moneyPerpareAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = bonusBudgetAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = bonusBudgetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询奖金预算
@@ -157,14 +242,14 @@ public class BonusBudgetAct {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/addRewardProgramRatios")
-    public Result addRewardProgramRatios(@Validated(value = {RewardProgramRatiosTO.IRewardProgramRatio.class}) RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result addRewardProgramRatios(@Validated(value = {RewardProgramRatiosTO.IRewardProgramRatio.class}) RewardProgramTO rewardProgramTO, BindingResult result) throws ActException {
         try {
-            bonusBudgetAPI.addRewardProgramRatios(to);
+            bonusBudgetAPI.addRewardProgramRatios(rewardProgramTO);
             return new ActResult("addRewardProgramRatios success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -174,15 +259,15 @@ public class BonusBudgetAct {
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/updateRewardProgramRatios")
-    public Result updateRewardProgramRatios(@Validated(RewardProgramRatiosTO.IRewardProgramRatio.class) RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result updateRewardProgramRatios(@Validated(RewardProgramRatiosTO.IRewardProgramRatio.class) RewardProgramTO rewardProgramTO, BindingResult result) throws ActException {
         try {
-            bonusBudgetAPI.updateRewardProgramRatios(to);
+            bonusBudgetAPI.updateRewardProgramRatios(rewardProgramTO);
             return new ActResult("updateRewardProgramRatios success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -204,6 +289,25 @@ public class BonusBudgetAct {
             List<RewardProgramRatioBO> boList = bonusBudgetAPI.checkRewardProgramRatios(ratioId);
             List<RewardProgramRatioVO> voList = BeanTransform.copyProperties(boList, RewardProgramRatioVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 当月预算范围下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findPay/reserve")
+    public Result findPayReserve() throws ActException {
+        try {
+            List<Double> date = new ArrayList<>();
+            if (moduleAPI.isCheck("bonusmoneyperparepay")) {
+                date = moneyPerpareAPI.findReserve();
+            }
+            return ActResult.initialize(date);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

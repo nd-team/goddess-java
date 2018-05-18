@@ -20,6 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 项目成本控制
@@ -175,6 +177,55 @@ public class CostControlAct {
     public Result findByTo(FindTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(costControlAPI.findByTo(to), CostControlVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea() throws ActException {
+        try {
+            List<String> area = new ArrayList<>();
+            area = costControlAPI.findAllArea();
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有项目名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findName")
+    public Result findName() throws ActException {
+        try {
+            List<String> name = new ArrayList<>();
+            name = costControlAPI.findAllName();
+            return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询所有项目组
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findGroup")
+    public Result findGroup() throws ActException {
+        try {
+            List<String> projectGroup = new ArrayList<>();
+            projectGroup = costControlAPI.findAllGroup();
+            return ActResult.initialize(projectGroup);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

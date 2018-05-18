@@ -1,7 +1,9 @@
 package com.bjike.goddess.archive;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
 
@@ -13,7 +15,9 @@ import java.io.IOException;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.archive.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.archive.config"})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource("classpath:app.xml")
+@EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
     @Bean
     public MultipartConfigElement multipartConfigElement() {

@@ -1,5 +1,8 @@
 package com.bjike.goddess.regularization.action.regularization;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
+import com.bjike.goddess.bonus.bo.ScoreBO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -8,22 +11,27 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.vo.ManagementScoreVO;
 import com.bjike.goddess.regularization.vo.RegularizationVO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +49,88 @@ public class RegularizationAct {
 
     @Autowired
     private RegularizationAPI regularizationAPI;
+    @Autowired
+    private ArrangementAPI arrangementAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DisciplineRecordAPI disciplineRecordAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = regularizationAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = regularizationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询员工转正
@@ -226,7 +316,7 @@ public class RegularizationAct {
     /**
      * 预算模块补充
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param budgetPositiveComment 预算模块转正意见
      * @version v1
      */
@@ -253,6 +343,121 @@ public class RegularizationAct {
         try {
             regularizationAPI.zjbApproval(to);
             return new ActResult("zjbApproval success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+            List<String> detail = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                detail = regularizationAPI.findAddAllDetails();
+            }
+            return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                getPerson = regularizationAPI.findallMonUser();
+            }
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有岗位层级
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allHierarchy")
+    public Result allHierarchy() throws ActException {
+        try {
+            List<OpinionBO> thawOpinion = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                thawOpinion = arrangementAPI.findThawOpinion();
+            }
+            return ActResult.initialize(thawOpinion);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取员工编号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allEntryNum")
+    public Result allEntryNum(@RequestParam String name) throws ActException {
+        try {
+            String empNum = "";
+            if (moduleAPI.isCheck("archive")) {
+                empNum = entryRegisterAPI.findEmpNum(name);
+            }
+            return ActResult.initialize(empNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加时链接数据
+     *
+     * @return class RegularizationVO
+     * @version v1
+     */
+    @GetMapping("v1/addReturn")
+    public Result addReturn(@RequestParam String name, @RequestParam String empNumer, HttpServletRequest request) throws ActException {
+        try {
+            RegularizationBO regularizationBO = new RegularizationBO();
+            if (moduleAPI.isCheck("staffentry")) {
+                regularizationBO = regularizationAPI.findAddRusult(empNumer);
+            }
+            if (moduleAPI.isCheck("bonus")) {
+                ScoreBO scoreBO = disciplineRecordAPI.getRePuTotal(name);
+                regularizationBO.setAwardSoce(Integer.parseInt(new java.text.DecimalFormat("0").format(scoreBO.getRewardTotal())));
+                regularizationBO.setPenaltyScore(Integer.parseInt(new java.text.DecimalFormat("0").format(scoreBO.getPushTotal())));
+            }
+            RegularizationVO regularizationVO = BeanTransform.copyProperties(regularizationBO, RegularizationVO.class, request);
+            return ActResult.initialize(regularizationVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -96,4 +96,9 @@ public class CostAnalysisApiImpl implements CostAnalysisAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return costAnalysisSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<Double> allExMarketCost() throws SerException {
+        return costAnalysisSer.allExMarketCost();
+    }
 }

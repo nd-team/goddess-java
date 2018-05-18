@@ -1,13 +1,15 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.service.SkillPromotionApplySer;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +26,15 @@ import java.util.List;
 public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
     @Autowired
     private SkillPromotionApplySer skillPromotionApplySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return skillPromotionApplySer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return skillPromotionApplySer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countSkillPromotionApply(SkillPromotionApplyDTO skillPromotionApplyDTO) throws SerException {
         return skillPromotionApplySer.countSkillPromotionApply(skillPromotionApplyDTO);
@@ -48,5 +58,62 @@ public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
     public SkillPromotionApplyBO editSkillPromotionApply(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         return skillPromotionApplySer.editSkillPromotionApply(skillPromotionApplyTO);
     }
+    @Override
+    public SkillPromotionApplyBO headAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.headAudit(skillPromotionApplyTO);
+    }
 
+    @Override
+    public SkillPromotionApplyBO budgetAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.budgetAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO projectManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.projectManagerAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO planAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.planAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.generalManagerAudit(skillPromotionApplyTO);
+    }
+    @Override
+    public List<SkillLevelCollectBO> dayLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.dayLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.weekLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.monthLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.totalLevelCollect(to);
+    }
+
+    @Override
+    public Integer monthPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.monthPromotedNum(to);
+    }
+
+    @Override
+    public Integer quartPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.quartPromotedNum(to);
+    }
+
+    @Override
+    public Integer yearPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.yearPromotedNum(to);
+    }
 }

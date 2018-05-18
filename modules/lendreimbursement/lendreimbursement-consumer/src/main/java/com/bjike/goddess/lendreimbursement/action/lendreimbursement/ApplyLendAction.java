@@ -7,13 +7,20 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.financeinit.api.AccountAPI;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.vo.SecondSubjectDataVO;
+import com.bjike.goddess.financeinit.vo.SubjectDataVO;
+import com.bjike.goddess.financeinit.vo.SubjectDatasVO;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendReturnSendTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
 import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
@@ -31,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,12 +57,14 @@ public class ApplyLendAction extends BaseFileAction {
 
     @Autowired
     private ApplyLendAPI applyLendAPI;
-
+    @Autowired
+    private AccountAPI accountAPI;
     @Autowired
     private FileAPI fileAPI;
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -63,16 +74,17 @@ public class ApplyLendAction extends BaseFileAction {
         try {
 
             Boolean isHasPermission = applyLendAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 申请借款列表总条数
      *
@@ -212,7 +224,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/exportExcel")
-    public Result exportExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "申请借款.xlsx";
             super.writeOutFile(response, applyLendAPI.exportExcel(applyLendDTO), fileName);
@@ -525,6 +537,26 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
+     * 分析
+     *
+     * @param applyLendTO 申请借款基本信息数据bo
+     * @return class ApplyLendVO
+     * @des 分析
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/analyse")
+    public Result analyse(ApplyLendTO applyLendTO) throws ActException {
+        try {
+            ApplyLendBO applyLendBO1 = applyLendAPI.analyse(applyLendTO);
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 已审核或分析记录总条数
      *
      * @param applyLendDTO 申请借款信息dto
@@ -596,21 +628,6 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
-    /**
-     * 获取付款来源
-     *
-     * @des 获取付款来源
-     * @version v1
-     */
-    @GetMapping("v1/listAccountCom")
-    public Result listAccountCom() throws ActException {
-        try {
-            List<String> list = applyLendAPI.listAccountCom();
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 付款
@@ -639,7 +656,7 @@ public class ApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exportPayExcel")
-    public Result exportPayExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportPayExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "等待付款.xlsx";
             super.writeOutFile(response, applyLendAPI.waitingPayExcel(applyLendDTO), fileName);
@@ -802,12 +819,12 @@ public class ApplyLendAction extends BaseFileAction {
     /**
      * 借款记录导出
      *
-     * @param  applyLendDTO
+     * @param applyLendDTO
      * @des
      * @version v1
      */
     @GetMapping("v1/exportBorrowExcel")
-    public Result exportBorrowExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportBorrowExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "借款记录.xlsx";
             super.writeOutFile(response, applyLendAPI.borrowExcel(applyLendDTO), fileName);
@@ -865,7 +882,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/exportReturnExcel")
-    public Result exportReturnExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportReturnExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "还款记录.xlsx";
             super.writeOutFile(response, applyLendAPI.returnExcel(applyLendDTO), fileName);
@@ -916,6 +933,34 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+
+    /**
+     * 网页版还款核对有误编辑
+     *
+     * @param lendReturnSendTO 申请借款信息lendReturnSendTO
+     * @return class ApplyLendVO
+     * @des 网页版还款核对有误编辑
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/edit/errorCheckReturn")
+    public Result editErrorCheckReturn(@Validated(LendReturnSendTO.TESTRETURNSEND.class) LendReturnSendTO lendReturnSendTO, BindingResult bindingResult) throws ActException {
+        try {
+            ApplyLendTO applyLendTO = new ApplyLendTO();
+            applyLendTO.setId(lendReturnSendTO.getId());
+            applyLendTO.setReimMoney(lendReturnSendTO.getReimMoney());
+            applyLendTO.setLendMoney(lendReturnSendTO.getLendMoney());
+            applyLendTO.setReturnMoney(lendReturnSendTO.getReturnMoney());
+            applyLendTO.setReturnDate(lendReturnSendTO.getReturnDate());
+            applyLendTO.setReturnWays(lendReturnSendTO.getReturnWays());
+            applyLendTO.setReturnAccount(lendReturnSendTO.getReturnAccount());
+            ApplyLendBO applyLendBO1 = applyLendAPI.editErrorReturn(applyLendTO);
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 帐务核对总条数
      *
@@ -933,6 +978,7 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+
     /**
      * 帐务核对记录
      *
@@ -949,6 +995,24 @@ public class ApplyLendAction extends BaseFileAction {
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 账户核对导出
+     *
+     * @version v1
+     */
+    @GetMapping("v1/businessCheckOut")
+    public Result businessCheckOut(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "账户核对.xlsx";
+            super.writeOutFile(response, applyLendAPI.businessCheckOut(applyLendDTO), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -1016,7 +1080,7 @@ public class ApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exportReceiveExcel")
-    public Result exportReceiveExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportReceiveExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "已收票记录.xlsx";
             super.writeOutFile(response, applyLendAPI.receiveExcel(applyLendDTO), fileName);
@@ -1105,7 +1169,32 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取借款人
+     * 获取用户
+     *
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @des 用于所有用户
+     * @version v1
+     */
+    @GetMapping("v1/getAllUser")
+    public Result getAllUser() throws ActException {
+        try {
+            List<String> areaList = applyLendAPI.getAllUser();
+//            areaLis
+            Collections.sort(areaList, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+
+                    return -1;
+                }
+            });
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取汇总的借款人条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取借款人集合
@@ -1122,7 +1211,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取地区
+     * 获取汇总的地区条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取地区集合
@@ -1139,7 +1228,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目组
+     * 获取汇总的项目组条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目组集合
@@ -1156,7 +1245,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目名
+     * 获取汇总的项目名称条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目名集合
@@ -1166,6 +1255,23 @@ public class ApplyLendAction extends BaseFileAction {
     public Result getPNameList() throws ActException {
         try {
             List<String> areaList = applyLendAPI.listProjectName();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取账户(付款)来源
+     *
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @des 获取账户来源
+     * @version v1
+     */
+    @GetMapping("v1/listAccountOrigin")
+    public Result listAccountOrigin() throws ActException {
+        try {
+            List<String> areaList = accountAPI.listAccountOrigin();
             return ActResult.initialize(areaList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -1225,6 +1331,7 @@ public class ApplyLendAction extends BaseFileAction {
     public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
             //该文件的路径
+
             FileInfo fileInfo = new FileInfo();
             Object storageToken = request.getAttribute("storageToken");
             fileInfo.setStorageToken(storageToken.toString());
@@ -1247,12 +1354,179 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, BindingResult bindingResult, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
+
+    /**
+     * 报销根据报销人获取一级三级科目
+     *
+     * @param name 报销人姓名
+     * @return class SubjectDataVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects")
+    public Result findSubjects(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendAPI.findSubjects(name), SubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款根据借款人获取三级科目和一级科目
+     *
+     * @param name 借款人姓名
+     * @return class SubjectDatasVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects1")
+    public Result findSubjects1(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendAPI.findSubjects1(name), SubjectDatasVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据一级科目代码获取二级科目
+     *
+     * @param firstSubjectCode 一级科目代码
+     * @version v1
+     */
+    @GetMapping("v1/findSecondSubject")
+    public Result findSecondSubject(@RequestParam String firstSubjectCode) throws ActException {
+        try {
+            List<SecondSubjectDataBO> list = applyLendAPI.findSecondSubject(firstSubjectCode);
+            return ActResult.initialize(BeanTransform.copyProperties(list, SecondSubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款数据分析图
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/analysisDiagram")
+    public Result analysisDiagram() throws ActException {
+        try {
+            OptionBO bo = applyLendAPI.analysisDiagram();
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有人名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAllName")
+    public Result findAllName() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findAllName());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAllArea")
+    public Result findAllArea() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findAllArea());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的项目组
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findDepartment")
+    public Result findDepartment() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findDepartment());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的项目名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findProject")
+    public Result findProject() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findProject());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 个人提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/sendEmail")
+    public Result sendEmail() throws ActException{
+        try {
+            applyLendAPI.sendEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 部门提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/departmentEmail")
+    public Result departmentEmail() throws ActException{
+        try {
+            applyLendAPI.departmentEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 财务部提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/finanEmail")
+    public Result finanEmail() throws ActException{
+        try {
+            applyLendAPI.finanEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 }

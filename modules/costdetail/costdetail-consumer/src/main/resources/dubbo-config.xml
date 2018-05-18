@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/context
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-          http://code.alibabatech.com/schema/dubbo 
+          http://code.alibabatech.com/schema/dubbo
 		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+<!--<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+	<!--xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"-->
+	<!--xsi:schemaLocation="http://www.springframework.org/schema/context-->
+          <!--http://www.springframework.org/schema/context/spring-context-3.0.xsd-->
+          <!--http://www.springframework.org/schema/beans+-->
+
+          <!--http://www.springframework.org/schema/beans/spring-beans-3.0.xsd-->
+          <!--http://code.alibabatech.com/schema/dubbo -->
+		  <!--http://code.alibabatech.com/schema/dubbo/dubbo.xsd">-->
 
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
@@ -18,6 +27,8 @@
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="costDetailApiImpl" interface="com.bjike.goddess.costdetail.api.CostDetailAPI" />
+	<dubbo:reference  validation="true" id="collectApiImpl" interface="com.bjike.goddess.costdetail.api.CollectAPI" />
 
 
 	<dubbo:reference  validation="true" id="costDetailsApiImpl" interface="com.bjike.goddess.costdetail.api.CostDetailsAPI" />

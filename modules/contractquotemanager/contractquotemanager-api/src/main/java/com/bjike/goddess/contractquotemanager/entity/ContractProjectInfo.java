@@ -33,13 +33,14 @@ public class ContractProjectInfo extends BaseEntity {
     private String projectGroup;
 
     /**
-     * 项目内部结构
+     * 项目内部名称
      */
     @Column(name = "projectInner", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目内部结构'")
     private String projectInner;
 
     /**
      * 派工项目名称
+     *
      */
     @Column(name = "dispatchProject", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工项目名称'")
     private String dispatchProject;
@@ -75,7 +76,7 @@ public class ContractProjectInfo extends BaseEntity {
     private Integer completeTime;
 
     /**
-     * 合同金额(单位:万元)
+     * 合同金额
      */
     @Column(name = "money", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同金额(单位:万元)'")
     private Double money;
@@ -87,13 +88,13 @@ public class ContractProjectInfo extends BaseEntity {
     private String majorCompany;
 
     /**
-     * 合同规模数
+     * 合同预估规模
      */
-    @Column(name = "contractScale", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '合同规模数'")
-    private String contractScale;
+    @Column(name = "contractScale", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同规模数'")
+    private Double contractScale;
 
     /**
-     * 回款周期
+     * 回款周期(天)
      */
     @Column(name = "receivableNum", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '回款周期'")
     private Double receivableNum;
@@ -109,6 +110,11 @@ public class ContractProjectInfo extends BaseEntity {
      */
     @Column(name = "difficulty", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '难易程度'")
     private String difficulty;
+    /**
+     * 合同单价
+     */
+    @Column(name = "contractPrice", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同单价'")
+    private Double contractPrice;
 
 
     public String getArea() {
@@ -199,11 +205,11 @@ public class ContractProjectInfo extends BaseEntity {
         this.majorCompany = majorCompany;
     }
 
-    public String getContractScale() {
+    public Double getContractScale() {
         return contractScale;
     }
 
-    public void setContractScale(String contractScale) {
+    public void setContractScale(Double contractScale) {
         this.contractScale = contractScale;
     }
 
@@ -229,5 +235,13 @@ public class ContractProjectInfo extends BaseEntity {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public Double getContractPrice() {
+        return contractPrice;
+    }
+
+    public void setContractPrice(Double contractPrice) {
+        this.contractPrice = contractPrice;
     }
 }

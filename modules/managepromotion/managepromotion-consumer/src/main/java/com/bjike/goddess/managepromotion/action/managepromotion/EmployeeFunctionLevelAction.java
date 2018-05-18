@@ -1,5 +1,11 @@
 package com.bjike.goddess.managepromotion.action.managepromotion;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -13,8 +19,9 @@ import com.bjike.goddess.managepromotion.bo.EmployeeFunctionLevelBO;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
 import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.vo.EmployeeFunctionLevelVO;
+import com.bjike.goddess.managepromotion.vo.OverviewSkillLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +44,34 @@ import java.util.List;
 public class EmployeeFunctionLevelAction {
     @Autowired
     private EmployeeFunctionLevelAPI employeeFunctionLevelAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = employeeFunctionLevelAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 员工职能定级列表总条数
      *
@@ -53,6 +88,7 @@ public class EmployeeFunctionLevelAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个员工职能定级
      *
@@ -146,6 +182,7 @@ public class EmployeeFunctionLevelAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 技能等级情况概览
      *
@@ -158,7 +195,29 @@ public class EmployeeFunctionLevelAction {
     public Result skill(@Validated EmployeeFunctionLevelTO employeeFunctionLevelTO, BindingResult bindingResult) throws ActException {
         try {
             OverviewSkillLevelBO overviewSkillLevelBO = employeeFunctionLevelAPI.skill(employeeFunctionLevelTO);
-            return ActResult.initialize(overviewSkillLevelBO);
+            return ActResult.initialize(BeanTransform.copyProperties(overviewSkillLevelBO, OverviewSkillLevelVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名查询入职时间
+     *
+     * @return class StaffRecordsVO
+     * @version v1
+     */
+    @GetMapping("v1/entryTime")
+    public Result entryTime(String username, HttpServletRequest request) throws ActException {
+        try {
+            StaffRecordsBO bo = null;
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("archive")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                bo = staffRecordsAPI.findByName(username);
+
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

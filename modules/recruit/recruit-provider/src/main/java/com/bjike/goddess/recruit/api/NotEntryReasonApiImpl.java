@@ -6,11 +6,13 @@ import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
 import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
 import com.bjike.goddess.recruit.entity.NotEntryReason;
 import com.bjike.goddess.recruit.service.NotEntryReasonSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.NotEntryReasonTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未入职原因
@@ -95,5 +97,20 @@ public class NotEntryReasonApiImpl implements NotEntryReasonAPI {
     @Override
     public void update(NotEntryReasonTO notEntryReasonTO) throws SerException {
         notEntryReasonSer.update(notEntryReasonTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return notEntryReasonSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return notEntryReasonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        return notEntryReasonSer.allReason();
     }
 }

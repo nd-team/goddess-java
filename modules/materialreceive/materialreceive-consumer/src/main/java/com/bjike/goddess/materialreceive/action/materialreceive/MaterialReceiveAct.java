@@ -1,26 +1,38 @@
 package com.bjike.goddess.materialreceive.action.materialreceive;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialreceive.api.MaterialReceiveAPI;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
 import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import com.bjike.goddess.materialreceive.vo.MaterialReceiveVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 物资领用归还登记
@@ -37,6 +49,35 @@ public class MaterialReceiveAct {
 
     @Autowired
     private MaterialReceiveAPI materialReceiveAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private MaterialInStockAPI materialInStockAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = materialReceiveAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询物资领用归还登记
@@ -101,6 +142,7 @@ public class MaterialReceiveAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) MaterialReceiveTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -119,6 +161,7 @@ public class MaterialReceiveAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -136,6 +179,7 @@ public class MaterialReceiveAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) MaterialReceiveTO to, BindingResult result) throws ActException {
         try {
@@ -155,6 +199,7 @@ public class MaterialReceiveAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/audit")
     public Result audit(@RequestParam(value = "id") String id, @RequestParam(value = "auditState") AuditState auditState, @RequestParam(value = "auditOpinion") String auditOpinion) throws ActException {
         try {
@@ -199,4 +244,77 @@ public class MaterialReceiveAct {
         }
     }
 
+    /**
+     * 添加所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+//            List<String> detail = new ArrayList<>();
+//            detail = materialReceiveAPI.findAddAllDetails();
+//            return ActResult.initialize(detail);
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> opinionBOs = departmentDetailAPI.findThawOpinion();
+                if (!CollectionUtils.isEmpty(opinionBOs)) {
+                    list = opinionBOs.stream().map(OpinionBO::getValue).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            getPerson = materialReceiveAPI.findallMonUser();
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有入库编号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetNo")
+    public Result allGetNo() throws ActException {
+        try {
+            Set<String> getNo = new HashSet<>();
+            getNo = materialInStockAPI.allstockEncoding();
+            return ActResult.initialize(new ArrayList<>(getNo));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

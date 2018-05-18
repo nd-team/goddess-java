@@ -1,13 +1,16 @@
 package com.bjike.goddess.accommodation.service;
 
+import com.bjike.goddess.accommodation.bo.CollectBO;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.Rental;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -17,6 +20,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RentalSer extends Ser<Rental, RentalDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租房信息列表总条数
      */
@@ -44,16 +60,16 @@ public interface RentalSer extends Ser<Rental, RentalDTO> {
         return null;
     }
 
-    /**
-     * 添加租房信息
-     *
-     * @param rentalTO 租房信息数据集合
-     * @return class RentalBO
-     * @throws SerException
-     */
-    default RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        return null;
-    }
+//    /**
+//     * 添加租房信息
+//     *
+//     * @param rentalTO 租房信息数据集合
+//     * @return class RentalBO
+//     * @throws SerException
+//     */
+//    default RentalBO insertRental(RentalTO rentalTO) throws SerException {
+//        return null;
+//    }
 
     /**
      * 编辑租房信息
@@ -94,5 +110,23 @@ public interface RentalSer extends Ser<Rental, RentalDTO> {
     default List<String> getArea() throws SerException {
         return null;
     }
+    /**
+     * 汇总
+     *
+     * @param areas 地区
+     * @return class CollectBO
+     * @throws SerException
+     */
+    default List<CollectBO> collect(String [] areas) throws SerException {
+        return null;
+    }
 
+    /**
+     * chenjunhao
+     * 获取所有租房地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 }

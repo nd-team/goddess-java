@@ -2,13 +2,17 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
+import com.bjike.goddess.secure.bo.SecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.service.EmployeeSecureSer;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工社保基本信息业务接口实现
@@ -62,5 +66,30 @@ public class EmployeeSecureApiImpl implements EmployeeSecureAPI {
     @Override
     public Long count(EmployeeSecureDTO dto) throws SerException {
         return employeeSecureSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return employeeSecureSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return employeeSecureSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<EmployeeSecureBO> byName(NameTO to) throws SerException {
+        return employeeSecureSer.byName(to);
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        return employeeSecureSer.allName();
+    }
+
+    @Override
+    public SecureBO findSecureBO(String name) throws SerException {
+        return employeeSecureSer.findSecureBo(name);
     }
 }

@@ -1,12 +1,10 @@
 package com.bjike.goddess.bidding.action.bidding;
 
 import com.bjike.goddess.bidding.api.BiddingWebInfoAPI;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.bidding.vo.BiddingWebInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -176,6 +174,43 @@ public class BiddingWebInfoAction {
     }
 
     /**
+     * 冻结
+     *
+     * @param id 用户id
+     * @des 根据用户id冻结招投标网站信息记录
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/congel/{id}")
+    public Result congel(@PathVariable String id) throws ActException {
+        try {
+            biddingWebInfoAPI.congel(id);
+            return new ActResult("congel success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 用户id
+     * @des 根据用户id解冻招投标网站信息记录
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id) throws ActException {
+        try {
+            biddingWebInfoAPI.thaw(id);
+            return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 获取网站名称
      *
      * @des 获取网站名称集合
@@ -206,6 +241,7 @@ public class BiddingWebInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取网站信息
      *
@@ -215,14 +251,31 @@ public class BiddingWebInfoAction {
      * @version v1
      */
     @GetMapping("v1/getWebInfo")
-    public Result getWebInfo(String webName,HttpServletRequest request) throws ActException {
+    public Result getWebInfo(String webName, HttpServletRequest request) throws ActException {
         try {
-            logger.info("获取网站信息开始:"+webName);
+//            logger.info("获取网站信息开始:" + webName);
             BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.getWebInfo(webName);
-            logger.info("获取网站信息结果:"+webName);
-            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class,request));
+//            logger.info("获取网站信息结果:" + webName);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+//    /**
+//     * 获取网址内的信息
+//     * @param url
+//     * @param key
+//     * @throws ActException
+//     */
+//    @GetMapping("v1/info")
+//    public Result info(String url,String key) throws ActException {
+//        try {
+//            String string = biddingWebInfoAPI.info(url,key);
+//            return ActResult.initialize(string);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
 }

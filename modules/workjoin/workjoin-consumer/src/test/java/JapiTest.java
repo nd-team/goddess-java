@@ -9,7 +9,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath(
 				"modules/workjoin/workjoin-consumer");//主项目位置
@@ -17,6 +17,9 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/workjoin/workjoin-api",
 				"modules/storage/storage-api",
+				"modules/organize/organize-api",
+				"modules/datastore/datastore-api",
+				"modules/position/position-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
@@ -24,6 +27,7 @@ public class JapiTest {
 		IProject project = ProjectImpl.init();
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
 		japiClientStorage.setProject(project);
+//		JapiClient.delete(true);
 		japiClientStorage.autoSaveToDisk();
 		new JapiClientTransfer().autoTransfer(japiClientStorage);
 

@@ -11,6 +11,7 @@ import com.bjike.goddess.enterpriseculturemanage.api.EnterpriseCultureInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.EnterpriseCultureInfoVO;
 import com.bjike.goddess.enterpriseculturemanage.vo.PeriodicalProgramInfoVO;
 import com.bjike.goddess.enterpriseculturemanage.vo.PublicizeProgramInfoVO;
@@ -37,6 +38,29 @@ public class EnterpriseCultureInfoAct {
 
     @Autowired
     private EnterpriseCultureInfoAPI enterpriseCultureInfoAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = enterpriseCultureInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -141,7 +165,7 @@ public class EnterpriseCultureInfoAct {
 
 
     /**
-     * 宣传方案
+     * 宣传方案e
      *
      * @param id 企业文化信息id
      * @return class PublicizeProgramInfoVO
@@ -151,7 +175,7 @@ public class EnterpriseCultureInfoAct {
     @GetMapping("v1/publicize/{id}")
     public Result findPublicize(@PathVariable String id) throws ActException {
         try {
-            PublicizeProgramInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), PublicizeProgramInfoVO.class);
+           List<PublicizeProgramInfoVO> vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), PublicizeProgramInfoVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -107,4 +107,26 @@ public interface CategorySer extends Ser<Category, CategoryDTO> {
     default List<String> listFirstName(CategoryTO categoryTO) throws SerException {return null;}
 
 
+    /**
+     * 获取所有三级科目
+     * zhuangkaiqin
+     */
+    default List<String> listAllThirdName( ) throws SerException {return null;}
+
+
+    /**
+     * 通过一级科目查询对应的三级科目
+     * zhuangkaiqin
+     */
+    default List<String> findByFirstName(String firstName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目判断是否属于资产类
+     * zhuangkaiqin
+     */
+    default Boolean isAssets(String firstSubject) throws SerException {
+        return null;
+    }
 }

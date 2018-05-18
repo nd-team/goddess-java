@@ -49,7 +49,7 @@ public class PositionDetail extends BaseEntity {
      * 模块
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "module_id", columnDefinition = "VARCHAR(36) COMMENT '模块'")
+    @JoinColumn(name = "module_id", columnDefinition = "VARCHAR(36) COMMENT '模块'")
     private ModuleType module;
 
     /**
@@ -76,6 +76,19 @@ public class PositionDetail extends BaseEntity {
      */
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '岗位状态' ", nullable = false, insertable = false)
     private Status status;
+    /**
+     * 是否有岗位说明书
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否有岗位说明书' ", nullable = false)
+    private Boolean book;
+
+    public Boolean getBook() {
+        return book;
+    }
+
+    public void setBook(Boolean book) {
+        this.book = book;
+    }
 
     public String getSerialNumber() {
         return serialNumber;

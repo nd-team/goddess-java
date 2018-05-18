@@ -1,6 +1,7 @@
 package com.bjike.goddess.lendreimbursement.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.lendreimbursement.enums.LendRetunStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -99,7 +100,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 是否补写(是或否)
      */
-    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否补写不能为空,填是或否" )
+//    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否补写不能为空,填是或否" )
     private String writeUp;
 
     /**
@@ -122,7 +123,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 是否有发票(是或否)
      */
-    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否有发票不能为空,填是或否" )
+//    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否有发票不能为空,填是或否" )
     private String invoice;
 
     /**
@@ -146,7 +147,7 @@ public class ApplyLendTO extends BaseTO {
     private String fillSingler;
 
     /**
-     * 借款日期
+     * 借款日期(付款后才有，相当于付款日期)
      */
     private String lendDate;
 
@@ -232,7 +233,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 报销金额
      */
-    @NotNull(groups = {ApplyLendTO.TESTReturnMoney.class},message ="预计借款日期不能为空，且为数字double" )
+    @NotNull(groups = {ApplyLendTO.TESTReturnMoney.class},message ="报销金额不能为空，且为数字double" )
     private Double reimMoney;
 
     /**
@@ -321,6 +322,17 @@ public class ApplyLendTO extends BaseTO {
      */
     @NotBlank(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
     private String checkcontent;
+    /**
+     * 还款核对是否通过（是/否）
+     */
+    @NotBlank(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "还款核对是否通过（是/否）不能为空")
+    private String checkPassOr;
+
+    /**
+     * 还款核对状态
+     */
+    @NotNull(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
+    private LendRetunStatus lendRetunStatus;
 
     /**
      * 状态
@@ -336,6 +348,12 @@ public class ApplyLendTO extends BaseTO {
      * 申请单有误状态标识
      */
     private Integer lendError;
+
+
+    /**
+     * 是否分析(是/否)
+     */
+    private String analyse;
 
 
     /**
@@ -818,5 +836,29 @@ public class ApplyLendTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public LendRetunStatus getLendRetunStatus() {
+        return lendRetunStatus;
+    }
+
+    public void setLendRetunStatus(LendRetunStatus lendRetunStatus) {
+        this.lendRetunStatus = lendRetunStatus;
+    }
+
+    public String getCheckPassOr() {
+        return checkPassOr;
+    }
+
+    public void setCheckPassOr(String checkPassOr) {
+        this.checkPassOr = checkPassOr;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

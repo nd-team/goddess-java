@@ -10,12 +10,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.ReportAddressInforAPI;
 import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
-import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
 import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
-import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
-import com.bjike.goddess.recruit.to.ReportAddressInforTO;
-import com.bjike.goddess.recruit.vo.ReportAddressInforVO;
 import com.bjike.goddess.recruit.vo.ReportAddressInforVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -40,6 +37,29 @@ public class ReportAddressInforAct {
 
     @Autowired
     private ReportAddressInforAPI reportAddressInforAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = reportAddressInforAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询报道地址信息
@@ -152,4 +172,18 @@ public class ReportAddressInforAct {
         }
     }
 
+    /**
+     * 获取所有入职报道地址
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allAddress")
+    public Result allAddress() throws ActException {
+        try {
+            return ActResult.initialize(reportAddressInforAPI.allAddress());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

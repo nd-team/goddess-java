@@ -2,6 +2,7 @@ package com.bjike.goddess.buyticket.service;
 
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.buyticket.entity.BasicInfo;
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface BasicInfoSer extends Ser<BasicInfo, BasicInfoDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 基本信息设置列表总条数
      */
@@ -74,4 +88,42 @@ public interface BasicInfoSer extends Ser<BasicInfo, BasicInfoDTO> {
     default void removeBasicInfo(String id) throws SerException {
 
     }
+
+    /**
+     * 购票原因
+     */
+    default List<String> findAllTicketCause() throws SerException{
+        return null;
+    }
+    /**
+     * 车票类型
+     */
+    default List<String> findAllTicketType() throws SerException{
+        return null;
+    }
+    /**
+     * 购买方式
+     */
+    default List<String> findAllBuyPattern() throws SerException{
+        return null;
+    }
+    /**
+     * 汇总类型
+     */
+    default List<String> findAllSummaryType() throws SerException{
+        return null;
+    }
+    /**
+     * 汇总周期
+     */
+    default List<String> findAllSummaryCycle() throws SerException{
+        return null;
+    }
+    /**
+     * 数据汇总呈现类型
+     */
+    default List<String> findAllDataAggregationType() throws SerException{
+        return null;
+    }
+
 }

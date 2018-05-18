@@ -21,7 +21,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "workjoin_workjoin")
 public class WorkJoin extends BaseEntity {
-
+    /**
+     * 工作交接编号
+     */
+    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'",unique = true)
+    private String workJoinNum;
     /**
      * 工作交接开始时间
      */
@@ -55,13 +59,13 @@ public class WorkJoin extends BaseEntity {
     /**
      * 工作范围
      */
-    @Column(name = "workScope", columnDefinition = "VARCHAR(255)   COMMENT '工作范围'")
+    @Column(name = "workScope", columnDefinition = "TEXT   COMMENT '工作范围'")
     private String workScope;
 
     /**
      * 工作目的
      */
-    @Column(name = "workPurpose", columnDefinition = "VARCHAR(255)   COMMENT '工作目的'")
+    @Column(name = "workPurpose", columnDefinition = "TEXT   COMMENT '工作目的'")
     private String workPurpose;
 
     /**
@@ -97,7 +101,7 @@ public class WorkJoin extends BaseEntity {
     /**
      * 负责人
      */
-    @Column(name = "principal", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
+    @Column(name = "principal",  columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
     private String principal;
 
     /**
@@ -106,6 +110,13 @@ public class WorkJoin extends BaseEntity {
     @Column(name = "is_head", columnDefinition = "TINYINT(2) COMMENT '负责人确认(是/否)'")
     private Boolean head;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public LocalDate getWorkJoinStartTime() {
         return workJoinStartTime;

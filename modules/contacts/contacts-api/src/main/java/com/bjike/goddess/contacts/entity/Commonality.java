@@ -1,11 +1,13 @@
 package com.bjike.goddess.contacts.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.contacts.enums.Status;
+import scala.util.parsing.combinator.testing.Str;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -21,11 +23,28 @@ import javax.persistence.Table;
 @Table(name = "contacts_commonality")
 public class Commonality extends BaseEntity {
 
+//    /**
+//     * 项目组/部门ID
+//     */
+//    @Column(name = "department_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目组/部门ID'", unique = true)
+//    private String departmentId;
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
+
+    /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
     /**
      * 项目组/部门ID
      */
-    @Column(name = "department_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目组/部门ID'", unique = true)
-    private String departmentId;
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目组/部门ID'")
+    private String department;
 
     /**
      * 邮箱地址
@@ -39,13 +58,36 @@ public class Commonality extends BaseEntity {
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0   COMMENT '状态'")
     private Status status;
 
-
-    public String getDepartmentId() {
-        return departmentId;
+    public LocalDate getUpdateTime() {
+        return updateTime;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getEmail() {
@@ -56,11 +98,4 @@ public class Commonality extends BaseEntity {
         this.email = email;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

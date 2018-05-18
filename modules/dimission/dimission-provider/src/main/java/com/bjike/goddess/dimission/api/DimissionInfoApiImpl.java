@@ -1,11 +1,14 @@
 package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
+import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.DimissionType;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.service.DimissionInfoSer;
 import com.bjike.goddess.dimission.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +32,32 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     private DimissionInfoSer dimissionInfoSer;
 
     @Override
-    public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return dimissionInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dimissionInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
         return dimissionInfoSer.apply(to);
     }
 
     @Override
-    public DimissionInfoBO update(DimissionInfoTO to) throws SerException {
-        return dimissionInfoSer.update(to);
+    public DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
+        return dimissionInfoSer.applyUpdate(to);
     }
 
     @Override
-    public DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
+        return dimissionInfoSer.preUpdate(to);
+    }
+
+    @Override
+    public DimissionInfoBO presume(FromInfoTO to) throws SerException {
         return dimissionInfoSer.presume(to);
     }
 
@@ -136,5 +154,41 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     @Override
     public Long getTotal() throws SerException {
         return dimissionInfoSer.getTotal();
+    }
+
+    @Override
+    public List<String> getAllName() throws SerException {
+        return dimissionInfoSer.getAllName();
+    }
+
+    @Override
+    public String getDate() throws SerException {
+        return dimissionInfoSer.getDate();
+    }
+
+    @Override
+    public List<DimissionInfo> findByName(String userName) throws SerException {
+        return dimissionInfoSer.findByName(userName);
+    }
+
+    @Override
+    public Integer getDimissionNum(String[] date) throws SerException {
+        return dimissionInfoSer.getDimissionNum(date);
+    }
+
+    @Override
+
+    public String getTime(String name) throws SerException {
+        return dimissionInfoSer.getTime(name);
+    }
+
+    @Override
+    public Long getSelfTotal() throws SerException {
+        return dimissionInfoSer.getSelfTotal();
+    }
+
+    @Override
+    public DataBO findDataByName(String name) throws SerException {
+        return dimissionInfoSer.findDataByName(name);
     }
 }

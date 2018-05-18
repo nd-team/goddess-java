@@ -5,9 +5,11 @@ import com.bjike.goddess.staffactivity.bo.ActivityFundSummaryBO;
 import com.bjike.goddess.staffactivity.bo.ActivitySchemeBO;
 import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 活动方案业务接口
@@ -19,6 +21,19 @@ import java.util.Map;
  * @Copy: [ com.bjike ]
  */
 public interface ActivitySchemeAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动方案
@@ -145,4 +160,30 @@ public interface ActivitySchemeAPI {
      * @throws SerException
      */
     List<ActivityFundSummaryBO> activityFundSummary(String startDate, String endDate) throws SerException;
+
+    /**
+     * 查找所有活动主题
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allTheme() throws SerException;
+
+    /**
+     * 根据活动主题查找id
+     *
+     * @param theme
+     * @return
+     * @throws SerException
+     */
+    String findIdByTheme(String theme) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有活动主题
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> themes() throws SerException;
 }

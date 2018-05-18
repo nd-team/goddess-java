@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rentcar.bo.DriverInfoBO;
 import com.bjike.goddess.rentcar.dto.DriverInfoDTO;
 import com.bjike.goddess.rentcar.entity.DriverInfo;
+import com.bjike.goddess.rentcar.excel.SonPermissionObject;
 import com.bjike.goddess.rentcar.to.DriverInfoTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -54,4 +70,14 @@ public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
      * @param audit   结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+    /**
+     * 解除协议
+     */
+    void recissionAgreement(String id,Boolean breakAgreement,String liftTime ) throws SerException;
+
+    /**
+     * 根据司机名称获取数据
+     */
+    DriverInfoBO findByName(String driverName) throws SerException;
 }

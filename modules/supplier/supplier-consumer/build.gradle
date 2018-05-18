@@ -38,6 +38,8 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:supplier:supplier-api")
+    compile project(":modules:message:message-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

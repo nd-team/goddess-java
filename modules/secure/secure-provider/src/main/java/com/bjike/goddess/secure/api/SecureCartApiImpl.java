@@ -4,11 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.SecureCartBO;
 import com.bjike.goddess.secure.dto.SecureCartDTO;
 import com.bjike.goddess.secure.service.SecureCartSer;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保卡基本信息业务接口实现
@@ -54,13 +56,28 @@ public class SecureCartApiImpl implements SecureCartAPI {
         return secureCartSer.count(dto);
     }
 
-    @Override
-    public void quartz() throws SerException {
-        secureCartSer.quartz();
-    }
+//    @Override
+//    public void quartz() throws SerException {
+//        secureCartSer.quartz();
+//    }
 
     @Override
     public SecureCartBO save(SecureCartTO to) throws SerException {
         return secureCartSer.save(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return secureCartSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return secureCartSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        return secureCartSer.allName();
     }
 }

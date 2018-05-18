@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.excel;
 
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.ProjectStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
@@ -169,6 +171,84 @@ public class DispatchSheetExcel extends BaseTO {
      */
     @ExcelHeader(name = "临时合同编号")
     private String tempContractNum;
+    /**
+     * 立项情况
+     */
+    @ExcelHeader(name = "立项情况",notNull = true)
+    private MakeContract makeContract;
+    /**
+     * 派工单号
+     */
+    @ExcelHeader(name = "派工单号")
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    @ExcelHeader(name = "项目状态",notNull = true)
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    @ExcelHeader(name = "合同规模数量",notNull = true)
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    @ExcelHeader(name = "规模数量",notNull = true)
+    private Double scale;
+    /**
+     * 专业
+     */
+    @ExcelHeader(name = "专业",notNull = true)
+    private String major;
+
+    public MakeContract getMakeContract() {
+        return makeContract;
+    }
+
+    public void setMakeContract(MakeContract makeContract) {
+        this.makeContract = makeContract;
+    }
+
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public String getTempContractNum() {
         return tempContractNum;

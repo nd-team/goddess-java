@@ -1,11 +1,10 @@
 package com.bjike.goddess.contractcommunicat.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
@@ -62,12 +61,12 @@ public interface ProjectOutsourcingAPI {
      */
     List<ProjectOutsourcingCollectBO> collect(CollectConditionTO to) throws SerException;
 
-    /**
-     * 定时发送汇总
-     *
-     * @param cycleType 定时器条件
-     */
-    void setCollectSend(QuartzCycleType cycleType) throws SerException;
+//    /**
+//     * 定时发送汇总
+//     *
+//     * @param cycleType 定时器条件
+//     */
+//    void setCollectSend(QuartzCycleType cycleType) throws SerException;
 
     /**
      * 查询总记录数
@@ -103,9 +102,22 @@ public interface ProjectOutsourcingAPI {
 
     List<ProjectOutsourcingBO> projects() throws SerException;
 
-    List<SonPermissionObject> sonPermission() throws SerException;
+    Boolean sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 
     byte[] exportExcelModule() throws SerException;
+
+    /**
+     * 获取所有合同外部项目名称和合同项目外部编号
+     * @throws SerException
+     */
+    List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
+
+
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
 }

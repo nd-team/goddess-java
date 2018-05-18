@@ -1,8 +1,13 @@
 package com.bjike.goddess.buyticket.to;
 
-import com.bjike.goddess.buyticket.enums.AuditorType;
+import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.enums.TripType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -19,66 +24,79 @@ public class BuyTicketApplyTO extends BaseTO {
     /**
      * 申请人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "申请人不能为空")
     private String applicant;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 部门/项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "部门/项目组不能为空")
     private String department;
 
     /**
      * 乘车人
      */
-    private String passenger;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "乘车人不能为空")
+    private String[] passenger;
 
     /**
      * 乘车人数
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "乘车人数不能为空")
     private String passengerNum;
 
     /**
      * 购票原因
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "购票原因不能为空")
     private String ticketCause;
 
     /**
      * 车票类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "车票类型不能为空")
     private String ticketType;
 
     /**
      * 购买方式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "购买方式不能为空")
     private String buyPattern;
 
     /**
      * 行程类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "行程类型不能为空")
     private TripType tripType;
 
     /**
      * 出发地
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "出发地不能为空")
     private String origin;
 
     /**
      * 目的地
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "目的地不能为空")
     private String destination;
 
     /**
      * 计划出发时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划出发时间不能为空")
     private String planDepartureTime;
 
     /**
      * 计划到达时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划到达时间不能为空")
     private String planArrivalTime;
 
     /**
@@ -87,15 +105,54 @@ public class BuyTicketApplyTO extends BaseTO {
     private String remark;
 
     /**
-     * 负责人
+     * 规划模块负责人
      */
-    private AuditorType auditor;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "规划模块负责人不能为空")
+    private String planAuditor;
 
     /**
-     * 审核意见
+     * 规划模块审核意见
      */
-    private String auditOpinion;
+    private AuditType planAuditOpinion;
 
+    /**
+     * 福利模块负责人
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "福利模块负责人不能为空")
+    private String welfAuditor;
+
+    /**
+     * 福利模块审核意见
+     */
+    private AuditType welfAuditOpinion;
+
+    /**
+     * 是否发送邮件
+     */
+    @NotNull(groups = {ADD.class}, message = "是否发送邮件不能为空")
+    private Boolean sendEmail;
+
+    /**
+     * 发送对象
+     */
+    private String[] sendObject;
+
+
+    public Boolean getSendEmail() {
+        return sendEmail;
+    }
+
+    public void setSendEmail(Boolean sendEmail) {
+        this.sendEmail = sendEmail;
+    }
+
+    public String[] getSendObject() {
+        return sendObject;
+    }
+
+    public void setSendObject(String[] sendObject) {
+        this.sendObject = sendObject;
+    }
 
     public String getApplicant() {
         return applicant;
@@ -121,11 +178,11 @@ public class BuyTicketApplyTO extends BaseTO {
         this.department = department;
     }
 
-    public String getPassenger() {
+    public String[] getPassenger() {
         return passenger;
     }
 
-    public void setPassenger(String passenger) {
+    public void setPassenger(String[] passenger) {
         this.passenger = passenger;
     }
 
@@ -209,19 +266,35 @@ public class BuyTicketApplyTO extends BaseTO {
         this.remark = remark;
     }
 
-    public AuditorType getAuditor() {
-        return auditor;
+    public String getPlanAuditor() {
+        return planAuditor;
     }
 
-    public void setAuditor(AuditorType auditor) {
-        this.auditor = auditor;
+    public void setPlanAuditor(String planAuditor) {
+        this.planAuditor = planAuditor;
     }
 
-    public String getAuditOpinion() {
-        return auditOpinion;
+    public AuditType getPlanAuditOpinion() {
+        return planAuditOpinion;
     }
 
-    public void setAuditOpinion(String auditOpinion) {
-        this.auditOpinion = auditOpinion;
+    public void setPlanAuditOpinion(AuditType planAuditOpinion) {
+        this.planAuditOpinion = planAuditOpinion;
+    }
+
+    public String getWelfAuditor() {
+        return welfAuditor;
+    }
+
+    public void setWelfAuditor(String welfAuditor) {
+        this.welfAuditor = welfAuditor;
+    }
+
+    public AuditType getWelfAuditOpinion() {
+        return welfAuditOpinion;
+    }
+
+    public void setWelfAuditOpinion(AuditType welfAuditOpinion) {
+        this.welfAuditOpinion = welfAuditOpinion;
     }
 }

@@ -39,7 +39,6 @@ public class OilCardRechargeTO extends BaseTO {
     /**
      * 充值人
      */
-    @NotBlank(message = "充值人不能为空!",groups = {ADD.class,EDIT.class})
     private String rechargeUser;
 
     /**
@@ -51,7 +50,6 @@ public class OilCardRechargeTO extends BaseTO {
     /**
      * 期初金额
      */
-    @NotNull(message = "期初金额不能为空!",groups = {ADD.class,EDIT.class})
     private Double cycleEarlyMoney;
 
     public String getOilCardBasicId() {

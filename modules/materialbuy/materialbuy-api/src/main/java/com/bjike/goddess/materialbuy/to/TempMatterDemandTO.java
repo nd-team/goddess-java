@@ -1,7 +1,7 @@
 package com.bjike.goddess.materialbuy.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
@@ -79,6 +79,7 @@ public class TempMatterDemandTO extends BaseTO {
     /**
      * 需求原因
      */
+    @NotBlank(groups = {TempMatterDemandTO.TempMatterDemandAdd.class, TempMatterDemandTO.TempMatterDemandEdit.class}, message = "需求原因不能为空")
     private String needReason;
 
     /**

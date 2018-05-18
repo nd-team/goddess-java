@@ -106,6 +106,61 @@ public class RecommendRotation extends BaseEntity {
     @Column(name = "rotationDate", columnDefinition = "DATE   COMMENT '轮换时间'")
     private LocalDate rotationDate;
 
+    /**
+     * 入职时间（冗余处理）
+     */
+    @Column(name = "entryTime", columnDefinition = "DATE   COMMENT '转正时间'")
+    private String entryTime;
+
+    /**
+     * 转正时间（冗余处理）
+     */
+    @Column(name = "regularTime", columnDefinition = "DATE   COMMENT '转正时间'")
+    private String regularTime;
+
+
+    /**
+     * 获得时间
+     */
+    @Column(name = "getTime", columnDefinition = "DATE   COMMENT '获得时间'")
+    private String getTime;
+
+    /**
+     * 申请人/举荐人
+     */
+    @Column(name = "applyPerson", columnDefinition = "VARCHAR(255)   COMMENT '申请人/举荐人'")
+    private String applyPerson;
+
+    /**
+     * 模块负责人意见
+     */
+    @Column(name = "moduleChargerAdvice", columnDefinition = "VARCHAR(255)   COMMENT '模块负责人意见'")
+    private String moduleChargerAdvice;
+
+    /**
+     * 原模块负责人意见
+     */
+    @Column(name = "oldModuleChargerAdvice", columnDefinition = "VARCHAR(255)   COMMENT '原模块负责人意见'")
+    private String oldModuleChargerAdvice;
+
+    /**
+     * 项目经理
+     */
+    @Column(name = "manager", columnDefinition = "VARCHAR(255)   COMMENT '项目经理'")
+    private String manager;
+
+    /**
+     * 项目经理意见
+     */
+    @Column(name = "managerAdvice", columnDefinition = "VARCHAR(255)   COMMENT '项目经理意见'")
+    private String managerAdvice;
+
+    /**
+     * 是否已通报结果
+     */
+    @Column(name = "hadNotify", columnDefinition = "INT(2)   COMMENT '是否已通报结果'")
+    private Boolean hadNotify;
+
 
     public String getUsername() {
         return username;
@@ -217,5 +272,77 @@ public class RecommendRotation extends BaseEntity {
 
     public void setRotationDate(LocalDate rotationDate) {
         this.rotationDate = rotationDate;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public String getRegularTime() {
+        return regularTime;
+    }
+
+    public void setRegularTime(String regularTime) {
+        this.regularTime = regularTime;
+    }
+
+    public String getGetTime() {
+        return getTime;
+    }
+
+    public void setGetTime(String getTime) {
+        this.getTime = getTime;
+    }
+
+    public String getApplyPerson() {
+        return applyPerson;
+    }
+
+    public void setApplyPerson(String applyPerson) {
+        this.applyPerson = applyPerson;
+    }
+
+    public String getModuleChargerAdvice() {
+        return moduleChargerAdvice;
+    }
+
+    public void setModuleChargerAdvice(String moduleChargerAdvice) {
+        this.moduleChargerAdvice = moduleChargerAdvice;
+    }
+
+    public String getOldModuleChargerAdvice() {
+        return oldModuleChargerAdvice;
+    }
+
+    public void setOldModuleChargerAdvice(String oldModuleChargerAdvice) {
+        this.oldModuleChargerAdvice = oldModuleChargerAdvice;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getManagerAdvice() {
+        return managerAdvice;
+    }
+
+    public void setManagerAdvice(String managerAdvice) {
+        this.managerAdvice = managerAdvice;
+    }
+
+    public Boolean getHadNotify() {
+        return hadNotify;
+    }
+
+    public void setHadNotify(Boolean hadNotify) {
+        this.hadNotify = hadNotify;
     }
 }

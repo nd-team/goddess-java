@@ -37,6 +37,11 @@ public class ReimburseAnalisisorApiImpl implements ReimburseAnalisisorAPI {
     }
 
     @Override
+    public ReimburseAnalisisorBO getOne(String id) throws SerException {
+        return reimburseAnalisisorSer.getOne(id);
+    }
+
+    @Override
     public ReimburseAnalisisorBO addReimburseAnalisisor(ReimburseAnalisisorTO reimburseAnalisisorTO) throws SerException {
         return reimburseAnalisisorSer.addReimburseAnalisisor(reimburseAnalisisorTO);
     }

@@ -1,22 +1,47 @@
 package com.bjike.goddess.materialbuy.action.materialbuy;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialbuy.api.DeviceTypeAPI;
 import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
+import com.bjike.goddess.materialbuy.to.DeleteFileTO;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
 import com.bjike.goddess.materialbuy.vo.MaterialBuyVO;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 物资购买
@@ -29,11 +54,177 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("materialbuy")
-public class MaterialBuyAct {
+public class MaterialBuyAct extends BaseFileAction{
 
     @Autowired
     private MaterialBuyAPI materialBuyAPI;
+    @Autowired
+    private FileAPI fileAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DeviceTypeAPI deviceTypeAPI;
 
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = materialBuyAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = materialBuyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/materialbuy/materialbuy/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/materialbuy/materialbuy/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param deleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(DeleteFileTO.TestDEL.class) DeleteFileTO deleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != deleteFileTO.getPaths() && deleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), deleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+    
     /**
      * 根据id查询物资购买
      *
@@ -145,17 +336,6 @@ public class MaterialBuyAct {
     }
 
     /**
-     * 上传文件
-     *
-     * @throws ActException
-     * @version v1
-     */
-    @PutMapping("v1/upload")
-    public Result upload(HttpServletRequest request) throws ActException {
-        return new ActResult("upload success!");
-    }
-
-    /**
      * 地区负责人审核
      *
      * @param to 物资购买to
@@ -167,6 +347,143 @@ public class MaterialBuyAct {
         try {
             materialBuyAPI.areaPrincipalAudit(to);
             return new ActResult("areaPrincipalAudit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有员工姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findUserNames")
+    public Result findUserNames() throws ActException {
+        try {
+            Set<String> set = new HashSet<>();
+            if(moduleAPI.isCheck("organize")){
+                List<UserBO> boList = userAPI.findAllUser();
+                for (UserBO userBO : boList) {
+                    set.add(userBO.getUsername());
+                }
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有设备类型名称
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findDeviceType")
+    public Result findDeviceType(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = deviceTypeAPI.findAllDeviceNames();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目组
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findStatus")
+    public Result findStatus(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(MaterialBuyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(materialBuyAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 汇总
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/materialBuySum")
+    public Result materialBuySum(MaterialBuyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(materialBuyAPI.materialBuySum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 图形化汇总
+     * @version v1
+     */
+    @GetMapping("v1/Gui")
+    public Result GUI(String year,String month) throws ActException{
+        try {
+            return ActResult.initialize(materialBuyAPI.GUI(year,month));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 图形化汇总--周汇总
+     * @version v1
+     */
+    @GetMapping("v1/GuiByWeek")
+    public Result GuiByWeek(String year,String month,String week) throws ActException{
+        try {
+            return ActResult.initialize(materialBuyAPI.GuiByWeek(year,month,week));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

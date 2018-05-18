@@ -1,28 +1,35 @@
 package com.bjike.goddess.courier.service;
 
+import com.bjike.goddess.announcement.api.AnnouncementAPI;
+import com.bjike.goddess.announcement.to.AnnouncementTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.courier.bo.CourierBO;
 import com.bjike.goddess.courier.bo.CourierCountBO;
 import com.bjike.goddess.courier.dto.CourierDTO;
 import com.bjike.goddess.courier.entity.Courier;
-import com.bjike.goddess.courier.entity.CourierCompany;
+import com.bjike.goddess.courier.enums.GuideAddrStatus;
 import com.bjike.goddess.courier.to.CourierTO;
-import com.bjike.goddess.user.entity.UserDetail;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
+import com.bjike.goddess.courier.vo.SonPermissionObject;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 快递收发业务实现
@@ -37,21 +44,187 @@ import java.util.Set;
 @Service
 public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements CourierSer {
     @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private AnnouncementAPI announcementAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
     private CourierCompanySer courierCompanySer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("courier");
+        obj.setDescribesion("快递收发");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = courierCompanySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("couriercompany");
+        obj.setDescribesion("快递公司信息");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public CourierBO save(CourierTO to) throws SerException {
+        checkAddIdentity();
         Courier courier = BeanTransform.copyProperties(to, Courier.class, true);
-        String sendTime = courier.getSendTime();
-        LocalDateTime localDateTime = DateUtil.parseDateTime(sendTime);
-        int year = localDateTime.getYear();
-        int month = localDateTime.getMonthValue();
-        courier.setYear(year);
-        courier.setMonth(month);
+        LocalDate sendTime = courier.getSendTime();
+        courier.setYear(sendTime.getYear());
+        courier.setMonth(sendTime.getMonthValue());
+        courier.setFeeSum(courier.getFreight() + courier.getSecure());
+        courier.setRemainingSum(courier.getCourierSum() - courier.getFeeSum());
+        courier.setCourierTel(courierCompanySer.findTel(to.getCourierCompany()));
         super.save(courier);
-        if (!courier.getIsConfirm()) {
-            //TODO:发邮件给寄件人
+        if (courier.getIsConfirm() != null && !courier.getIsConfirm()) {
+            String sendPerson = courier.getSendPerson();
+            MessageTO messageTO = new MessageTO();
+            messageTO.setTitle("您寄送到的物品与寄件清单不符合");
+            messageTO.setContent("您寄送到的物品与寄件清单不符合,请进行核对");
+            messageTO.setReceivers(new String[]{userAPI.findByUsername(sendPerson).getId()});
+            messageAPI.send(messageTO);
         }
         return BeanTransform.copyProperties(courier, CourierBO.class);
     }
@@ -59,21 +232,34 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public CourierBO edit(CourierTO to) throws SerException {
+        checkAddIdentity();
         Courier courier = super.findById(to.getId());
-        LocalDateTime a=courier.getCreateTime();
-        LocalDateTime b=courier.getModifyTime();
+        LocalDateTime a = courier.getCreateTime();
         courier = BeanTransform.copyProperties(to, Courier.class, true);
+        LocalDate sendTime = courier.getSendTime();
+        courier.setYear(sendTime.getYear());
+        courier.setMonth(sendTime.getMonthValue());
+        courier.setFeeSum(courier.getFreight() + courier.getSecure());
+        courier.setRemainingSum(courier.getCourierSum() - courier.getFeeSum());
+        courier.setCourierTel(courierCompanySer.findTel(to.getCourierCompany()));
         courier.setCreateTime(a);
-        courier.setModifyTime(b);
+        courier.setModifyTime(LocalDateTime.now());
         super.update(courier);
-        if (!courier.getIsConfirm()) {
-            //TODO:发邮件给寄件人
+        if (courier.getIsConfirm() != null && !courier.getIsConfirm()) {
+            String sendPerson = courier.getSendPerson();
+            MessageTO messageTO = new MessageTO();
+            messageTO.setTitle("您寄送到的物品与寄件清单不符合");
+            messageTO.setContent("您寄送到的物品与寄件清单不符合,请进行核对");
+            messageTO.setReceivers(new String[]{userAPI.findByUsername(sendPerson).getId()});
+            messageAPI.send(messageTO);
         }
         return BeanTransform.copyProperties(courier, CourierBO.class);
     }
 
     @Override
     public List<CourierBO> list(CourierDTO dto) throws SerException {
+        checkSeeIdentity();
+        dto.getSorts().add("createTime=asc");
         List<Courier> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, CourierBO.class);
     }
@@ -81,6 +267,7 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 
@@ -91,66 +278,9 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     }
 
     @Override
-    public List<String> findNameByDepartment(String[] departmentName) throws SerException {
-        List<UserDetail> list = null;
-        List<String> l = new ArrayList<String>();
-        for (String s : departmentName) {
-            String sql = "select user_detail.realName from user_detail INNER JOIN user_department\n" +
-                    "where user_detail.department_id=user_department.id\n" +
-                    "and user_department.name='" + s + "'";
-            list = super.findBySql(sql, UserDetail.class, new String[]{"realName"});
-        }
-        for (UserDetail u : list) {
-            l.add(u.getRealName());
-        }
-        return l;
-    }
-
-    @Override
-    public List<String> findNameByGroup(String[] groupName) throws SerException {
-        List<UserDetail> list = null;
-        List<String> l = new ArrayList<String>();
-        for (String s : groupName) {
-            String sql = "SELECT user_detail.realName FROM user_detail INNER JOIN user_group\n" +
-                    "where user_detail.group_id=user_group.id\n" +
-                    "and user_group.name='" + s + "'";
-            list = super.findBySql(sql, UserDetail.class, new String[]{"realName"});
-        }
-        for (UserDetail u : list) {
-            l.add(u.getRealName());
-        }
-        return l;
-    }
-
-    @Override
-    public Double findRemainSum() throws SerException {
-        List<String> l = new ArrayList<String>();
-        List<Courier> couriers = null;
-        String sql = "SELECT max(sendTime) from courier_courier";
-        List<Courier> courierss = super.findBySql(sql, Courier.class, new String[]{"sendTime"});
-        for (Courier courier : courierss) {
-            l.add(courier.getSendTime());
-        }
-        for (String s : l) {
-            String sql1 = "SELECT remainingSum from courier_courier\n" +
-                    "where sendTime='" + s + "'";
-            couriers = super.findBySql(sql1, Courier.class, new String[]{"remainingSum"});
-        }
-        return couriers.get(0).getFeeSum();
-    }
-
-    /**
-     * 日汇总
-     *
-     * @param arrival        是否汇地区
-     * @param sendTime       汇总的日期
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @return class CourierCountVO
-     * @throws SerException
-     */
-    @Override
-    public List<CourierCountBO> dayCount(boolean arrival, String sendTime, boolean courierCompany, boolean department) throws SerException {
+    public List<CourierCountBO> dayCount(CourierDTO dto1) throws SerException {
+        checkSeeIdentity();
+        String sendTime = dto1.getSendTime();
         List<CourierCountBO> boList = new ArrayList<CourierCountBO>(0);
         List<String> arrivals = findAllArrivals();
         List<String> departments = findAllDepartments();
@@ -158,119 +288,32 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
         List<Courier> list = null;
         Integer count = 0;
         double sum = 0;
+        int departmentCount = 0;
+        double departmentSum = 0;
 
-        /**
-         * 地区部门快递公司日汇总
-         */
-        if (arrival && department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (String c : companys) {
-                        for (Courier courier : list) {
-                            if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                                count++;
-                                sum += courier.getFeeSum();
-                            }
-                        }
-                        if (count != 0) {
-                            CourierCountBO courierCountBO = new CourierCountBO();
-                            courierCountBO.setArrival(a);
-                            courierCountBO.setDepartment(d);
-                            courierCountBO.setCourierCompany(c);
-                            courierCountBO.setCountNum(count);
-                            courierCountBO.setTotal(sum);
-                            boList.add(courierCountBO);
-                            count = 0;
-                            sum = 0;     //置为0
-                        }
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区快递公司日汇总
-         */
-        if (arrival && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区部门日汇总
-         */
-        if (arrival && department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门快递公司日汇总
-         */
-        if (department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
+        CourierDTO dto = new CourierDTO();
+        dto.getConditions().add(Restrict.eq("sendTime", sendTime));
+        list = super.findByCis(dto);
+        for (String a : arrivals) {
             for (String d : departments) {
                 for (String c : companys) {
                     for (Courier courier : list) {
-                        if (d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
+                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
                             count++;
                             sum += courier.getFeeSum();
+                            departmentCount++;
+                            departmentSum += courier.getFeeSum();
                         }
+//                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
+//                            departmentCount++;
+//                            departmentSum += courier.getFeeSum();
+//                        }
                     }
-                    if (count != 0) {
+                    if ((count != 0) || (sum != 0)) {
                         CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setArrival(a);
                         courierCountBO.setDepartment(d);
+                        courierCountBO.setCourierCompany(c);
                         courierCountBO.setCountNum(count);
                         courierCountBO.setTotal(sum);
                         boList.add(courierCountBO);
@@ -278,146 +321,28 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum = 0;     //置为0
                     }
                 }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区日汇总
-         */
-        if (arrival) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (Courier courier : list) {
-                    if (a.equals(courier.getArrival())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
+                if ((departmentCount != 0) || (departmentSum != 0)) {
                     CourierCountBO courierCountBO = new CourierCountBO();
                     courierCountBO.setArrival(a);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
+                    courierCountBO.setDepartment("合计");
+                    courierCountBO.setCountNum(departmentCount);
+                    courierCountBO.setTotal(departmentSum);        //部门合计
                     boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    departmentCount = 0;
+                    departmentSum = 0;
                 }
             }
-            return boList;
         }
-
-        /**
-         * 部门日汇总
-         */
-        if (department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (Courier courier : list) {
-                    if (d.equals(courier.getDepartment())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 快递公司日汇总
-         */
-        if (courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.like("sendTime", sendTime));
-            list = super.findByCis(dto);
-            for (String c : companys) {
-                for (Courier courier : list) {
-                    if (c.equals(courier.getCourierCompany())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 日汇总
-         */
-        CourierDTO dto = new CourierDTO();
-        dto.getConditions().add(Restrict.like("sendTime", sendTime));
-        list = super.findByCis(dto);
-        for (Courier courier : list) {
-            count++;
-            sum += courier.getFeeSum();
-        }
-        CourierCountBO courierCountBO = new CourierCountBO();
-        courierCountBO.setCountNum(count);
-        courierCountBO.setTotal(sum);
-        boList.add(courierCountBO);
         return boList;
     }
 
-    /**
-     * 周汇总
-     *
-     * @param arrival        是否回地区
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @return class CourierCountVO
-     * @throws SerException
-     */
     @Override
-    public List<CourierCountBO> weekCount(boolean arrival, boolean courierCompany, boolean department, boolean lastWeek) throws SerException {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate startTime = null;
-        LocalDate endTime = null;
-        int day = now.getDayOfWeek().getValue();
-        if (day == 1) {
-            startTime = now.toLocalDate();
-            endTime = now.plusDays(6).toLocalDate();
-        } else if (day == 2) {
-            startTime = now.minusDays(1).toLocalDate();
-            endTime = now.plusDays(5).toLocalDate();
-        } else if (day == 3) {
-            startTime = now.minusDays(2).toLocalDate();
-            endTime = now.plusDays(4).toLocalDate();
-        } else if (day == 4) {
-            startTime = now.minusDays(3).toLocalDate();
-            endTime = now.plusDays(3).toLocalDate();
-        } else if (day == 5) {
-            startTime = now.minusDays(4).toLocalDate();
-            endTime = now.plusDays(2).toLocalDate();
-        } else if (day == 6) {
-            startTime = now.minusDays(5).toLocalDate();
-            endTime = now.plusDays(1).toLocalDate();
-        } else {
-            startTime = now.minusDays(6).toLocalDate();
-            endTime = now.toLocalDate();
-        }
-        LocalDate[] time = new LocalDate[]{startTime, endTime};
+    public List<CourierCountBO> weekCount(CourierDTO dto1) throws SerException {
+        checkSeeIdentity();
+        Integer year = dto1.getYear();
+        Integer month = dto1.getMonth();
+        Integer week = dto1.getWeek();
+        LocalDate[] time = getTimes(year, month, week);
         List<CourierCountBO> boList = new ArrayList<CourierCountBO>(0);
         List<String> arrivals = findAllArrivals();
         List<String> departments = findAllDepartments();
@@ -425,614 +350,119 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
         List<Courier> list = null;
         Integer count = 0;
         double sum = 0;
+        int departmentCount = 0;
+        double departmentSum = 0;
 
-        /**
-         * 地区部门快递公司上周汇总
-         */
-        if (arrival && department && courierCompany && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (String c : companys) {
-                        for (Courier courier : list) {
-                            if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                                count++;
-                                sum += courier.getFeeSum();
-                            }
-                        }
-                        if (count != 0) {
-                            CourierCountBO courierCountBO = new CourierCountBO();
-                            courierCountBO.setArrival(a);
-                            courierCountBO.setDepartment(d);
-                            courierCountBO.setCourierCompany(c);
-                            courierCountBO.setCountNum(count);
-                            courierCountBO.setTotal(sum);
-                            boList.add(courierCountBO);
-                            count = 0;
-                            sum = 0;     //置为0
-                        }
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区快递公司上周汇总
-         */
-        if (arrival && courierCompany && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区部门上周汇总
-         */
-        if (arrival && department && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门快递公司上周汇总
-         */
-        if (department && courierCompany && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区上周汇总
-         */
-        if (arrival && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (Courier courier : list) {
-                    if (a.equals(courier.getArrival())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门上周汇总
-         */
-        if (department && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (Courier courier : list) {
-                    if (d.equals(courier.getDepartment())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 快递公司上周汇总
-         */
-        if (courierCompany && lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String c : companys) {
-                for (Courier courier : list) {
-                    if (c.equals(courier.getCourierCompany())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 上周汇总
-         */
-        if (lastWeek) {
-            CourierDTO dto = new CourierDTO();
-            startTime = startTime.minusDays(7);
-            endTime = endTime.minusDays(7);
-            time = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (Courier courier : list) {
-                count++;
-                sum += courier.getFeeSum();
-            }
-            if (count != 0) {
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                return boList;
-            }
-        }
-
-        /**
-         * 地区部门快递公司周汇总
-         */
-        if (arrival && department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (String c : companys) {
-                        for (Courier courier : list) {
-                            if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                                count++;
-                                sum += courier.getFeeSum();
-                            }
-                        }
-                        if (count != 0) {
-                            CourierCountBO courierCountBO = new CourierCountBO();
-                            courierCountBO.setArrival(a);
-                            courierCountBO.setDepartment(d);
-                            courierCountBO.setCourierCompany(c);
-                            courierCountBO.setCountNum(count);
-                            courierCountBO.setTotal(sum);
-                            boList.add(courierCountBO);
-                            count = 0;
-                            sum = 0;     //置为0
-                        }
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区快递公司周汇总
-         */
-        if (arrival && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区部门周汇总
-         */
-        if (arrival && department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门快递公司周汇总
-         */
-        if (department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区周汇总
-         */
-        if (arrival) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (Courier courier : list) {
-                    if (a.equals(courier.getArrival())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门周汇总
-         */
-        if (department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (Courier courier : list) {
-                    if (d.equals(courier.getDepartment())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 快递公司周汇总
-         */
-        if (courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.between("sendTime", time));
-            list = super.findByCis(dto);
-            for (String c : companys) {
-                for (Courier courier : list) {
-                    if (c.equals(courier.getCourierCompany())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 周汇总
-         */
         CourierDTO dto = new CourierDTO();
         dto.getConditions().add(Restrict.between("sendTime", time));
         list = super.findByCis(dto);
-        for (Courier courier : list) {
-            count++;
-            sum += courier.getFeeSum();
+        for (String a : arrivals) {
+            for (String d : departments) {
+                for (String c : companys) {
+                    for (Courier courier : list) {
+                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
+                            count++;
+                            sum += courier.getFeeSum();
+                            departmentCount++;
+                            departmentSum += courier.getFeeSum();
+                        }
+//                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
+//                            departmentCount++;
+//                            departmentSum += courier.getFeeSum();
+//                        }
+                    }
+                    if ((count != 0) || (sum != 0)) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
+                }
+                if ((departmentCount != 0) || (departmentSum != 0)) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setDepartment("合计");
+                    courierCountBO.setCountNum(departmentCount);
+                    courierCountBO.setTotal(departmentSum);        //部门合计
+                    boList.add(courierCountBO);
+                    departmentCount = 0;
+                    departmentSum = 0;
+                }
+            }
         }
-        CourierCountBO courierCountBO = new CourierCountBO();
-        courierCountBO.setCountNum(count);
-        courierCountBO.setTotal(sum);
-        boList.add(courierCountBO);
         return boList;
     }
 
-    /**
-     * 月汇总
-     *
-     * @param arrival        是否汇地区
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @param month          汇总的月份
-     * @return class CourierCountVO
-     * @throws SerException
-     */
+    private LocalDate[] getTimes(int year, int month, int week) throws SerException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String end = dateFormat.format(calendar.getTime());
+        LocalDate e = DateUtil.parseDate(end);
+        if (week == 1) {
+            if (String.valueOf(month).length() == 1) {
+                start = year + "-0" + month + "-01";
+            } else {
+                start = year + "-" + month + "-01";
+            }
+        }
+        if (week == weekNum) {
+            if (month != e.getMonthValue()) {
+                e = DateUtil.parseDate(end);
+                e = e.minusDays(e.getDayOfMonth());
+            }
+        }
+        LocalDate s = DateUtil.parseDate(start);
+        LocalDate[] time = new LocalDate[]{s, e};
+        return time;
+    }
+
     @Override
-    public List<CourierCountBO> monthCount(boolean arrival, boolean courierCompany, boolean department, Integer month) throws SerException {
-        LocalDateTime now = LocalDateTime.now();
-        Integer year = now.getYear();
+    public List<CourierCountBO> monthCount(CourierDTO dto1) throws SerException {
+        checkSeeIdentity();
+        Integer year = dto1.getYear();
+        Integer month = dto1.getMonth();
         List<CourierCountBO> boList = new ArrayList<CourierCountBO>(0);
         List<String> arrivals = findAllArrivals();
         List<String> departments = findAllDepartments();
         List<String> companys = findAllCompanys();
-        List<Courier> list = null;
         Integer count = 0;
         double sum = 0;
+        int departmentCount = 0;
+        double departmentSum = 0;
 
-        /**
-         * 地区部门快递公司月汇总
-         */
-        if (arrival && department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (String c : companys) {
-                        for (Courier courier : list) {
-                            if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                                count++;
-                                sum += courier.getFeeSum();
-                            }
-                        }
-                        if (count != 0) {
-                            CourierCountBO courierCountBO = new CourierCountBO();
-                            courierCountBO.setArrival(a);
-                            courierCountBO.setDepartment(d);
-                            courierCountBO.setCourierCompany(c);
-                            courierCountBO.setCountNum(count);
-                            courierCountBO.setTotal(sum);
-                            boList.add(courierCountBO);
-                            count = 0;
-                            sum = 0;     //置为0
-                        }
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区快递公司月汇总
-         */
-        if (arrival && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区部门月汇总
-         */
-        if (arrival && department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门快递公司月汇总
-         */
-        if (department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
+        List<Courier> list = super.findAll();
+        for (String a : arrivals) {
             for (String d : departments) {
                 for (String c : companys) {
                     for (Courier courier : list) {
-                        if (d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
+                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany()) && year.equals(courier.getYear()) && month.equals(courier.getMonth())) {
                             count++;
                             sum += courier.getFeeSum();
+                            departmentCount++;
+                            departmentSum += courier.getFeeSum();
                         }
+//                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && year.equals(courier.getYear()) && month.equals(courier.getMonth())) {
+//                            departmentCount++;
+//                            departmentSum += courier.getFeeSum();
+//                        }
                     }
-                    if (count != 0) {
+                    if ((count != 0) || (sum != 0)) {
                         CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setArrival(a);
                         courierCountBO.setDepartment(d);
+                        courierCountBO.setCourierCompany(c);
                         courierCountBO.setCountNum(count);
                         courierCountBO.setTotal(sum);
                         boList.add(courierCountBO);
@@ -1040,244 +470,56 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum = 0;     //置为0
                     }
                 }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区月汇总
-         */
-        if (arrival) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (Courier courier : list) {
-                    if (a.equals(courier.getArrival())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
+                if ((departmentCount != 0) || (departmentSum != 0)) {
                     CourierCountBO courierCountBO = new CourierCountBO();
                     courierCountBO.setArrival(a);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
+                    courierCountBO.setDepartment("合计");
+                    courierCountBO.setCountNum(departmentCount);
+                    courierCountBO.setTotal(departmentSum);        //部门合计
                     boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    departmentCount = 0;
+                    departmentSum = 0;
                 }
             }
-            return boList;
         }
-
-        /**
-         * 部门月汇总
-         */
-        if (department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (Courier courier : list) {
-                    if (d.equals(courier.getDepartment())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 快递公司月汇总
-         */
-        if (courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            dto.getConditions().add(Restrict.eq("month", month));
-            list = super.findByCis(dto);
-            for (String c : companys) {
-                for (Courier courier : list) {
-                    if (c.equals(courier.getCourierCompany())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 月汇总
-         */
-        CourierDTO dto = new CourierDTO();
-        dto.getConditions().add(Restrict.eq("year", year));
-        dto.getConditions().add(Restrict.eq("month", month));
-        list = super.findByCis(dto);
-        for (Courier courier : list) {
-            count++;
-            sum += courier.getFeeSum();
-        }
-        CourierCountBO courierCountBO = new CourierCountBO();
-        courierCountBO.setCountNum(count);
-        courierCountBO.setTotal(sum);
-        boList.add(courierCountBO);
         return boList;
+
     }
 
-    /**
-     * 年汇总
-     *
-     * @param arrival        是否汇地区
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @param year           汇总的年份
-     * @return class CourierCountVO
-     * @throws SerException
-     */
     @Override
-    public List<CourierCountBO> yearCount(boolean arrival, boolean courierCompany, boolean department, Integer year) throws SerException {
+    public List<CourierCountBO> yearCount(CourierDTO dto1) throws SerException {
+        checkSeeIdentity();
+        Integer year = dto1.getYear();
         List<CourierCountBO> boList = new ArrayList<CourierCountBO>(0);
         List<String> arrivals = findAllArrivals();
         List<String> departments = findAllDepartments();
         List<String> companys = findAllCompanys();
-        List<Courier> list = null;
         Integer count = 0;
         double sum = 0;
+        int departmentCount = 0;
+        double departmentSum = 0;
 
-        /**
-         * 地区部门快递公司年汇总
-         */
-        if (arrival && department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (String c : companys) {
-                        for (Courier courier : list) {
-                            if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
-                                count++;
-                                sum += courier.getFeeSum();
-                            }
-                        }
-                        if (count != 0) {
-                            CourierCountBO courierCountBO = new CourierCountBO();
-                            courierCountBO.setArrival(a);
-                            courierCountBO.setDepartment(d);
-                            courierCountBO.setCourierCompany(c);
-                            courierCountBO.setCountNum(count);
-                            courierCountBO.setTotal(sum);
-                            boList.add(courierCountBO);
-                            count = 0;
-                            sum = 0;     //置为0
-                        }
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区快递公司年汇总
-         */
-        if (arrival && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String c : companys) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && c.equals(courier.getCourierCompany())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区部门年汇总
-         */
-        if (arrival && department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (String d : departments) {
-                    for (Courier courier : list) {
-                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment())) {
-                            count++;
-                            sum += courier.getFeeSum();
-                        }
-                    }
-                    if (count != 0) {
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
-                    }
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 部门快递公司年汇总
-         */
-        if (department && courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
+        List<Courier> list = super.findAll();
+        for (String a : arrivals) {
             for (String d : departments) {
                 for (String c : companys) {
                     for (Courier courier : list) {
-                        if (d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany())) {
+                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && c.equals(courier.getCourierCompany()) && year.equals(courier.getYear())) {
                             count++;
                             sum += courier.getFeeSum();
+                            departmentCount++;
+                            departmentSum += courier.getFeeSum();
                         }
+//                        if (a.equals(courier.getArrival()) && d.equals(courier.getDepartment()) && year.equals(courier.getYear())) {
+//                            departmentCount++;
+//                            departmentSum += courier.getFeeSum();
+//                        }
                     }
-                    if (count != 0) {
+                    if ((count != 0) || (sum != 0)) {
                         CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setArrival(a);
                         courierCountBO.setDepartment(d);
+                        courierCountBO.setCourierCompany(c);
                         courierCountBO.setCountNum(count);
                         courierCountBO.setTotal(sum);
                         boList.add(courierCountBO);
@@ -1285,105 +527,18 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum = 0;     //置为0
                     }
                 }
-            }
-            return boList;
-        }
-
-        /**
-         * 地区年汇总
-         */
-        if (arrival) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String a : arrivals) {
-                for (Courier courier : list) {
-                    if (a.equals(courier.getArrival())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
+                if ((departmentCount != 0) || (departmentSum != 0)) {
                     CourierCountBO courierCountBO = new CourierCountBO();
                     courierCountBO.setArrival(a);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
+                    courierCountBO.setDepartment("合计");
+                    courierCountBO.setCountNum(departmentCount);
+                    courierCountBO.setTotal(departmentSum);        //部门合计
                     boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    departmentCount = 0;
+                    departmentSum = 0;
                 }
             }
-            return boList;
         }
-
-        /**
-         * 部门年汇总
-         */
-        if (department) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String d : departments) {
-                for (Courier courier : list) {
-                    if (d.equals(courier.getDepartment())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 快递公司年汇总
-         */
-        if (courierCompany) {
-            CourierDTO dto = new CourierDTO();
-            dto.getConditions().add(Restrict.eq("year", year));
-            list = super.findByCis(dto);
-            for (String c : companys) {
-                for (Courier courier : list) {
-                    if (c.equals(courier.getCourierCompany())) {
-                        count++;
-                        sum += courier.getFeeSum();
-                    }
-                }
-                if (count != 0) {
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
-                }
-            }
-            return boList;
-        }
-
-        /**
-         * 年汇总
-         */
-        CourierDTO dto = new CourierDTO();
-        dto.getConditions().add(Restrict.eq("year", year));
-        list = super.findByCis(dto);
-        for (Courier courier : list) {
-            count++;
-            sum += courier.getFeeSum();
-        }
-        CourierCountBO courierCountBO = new CourierCountBO();
-        courierCountBO.setCountNum(count);
-        courierCountBO.setTotal(sum);
-        boList.add(courierCountBO);
         return boList;
     }
 
@@ -1425,12 +580,11 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
      * @return String
      * @throws SerException
      */
-    @Override
-    public List<String> findAllCompanys() throws SerException {
-        List<CourierCompany> list = courierCompanySer.findAll();
+    private List<String> findAllCompanys() throws SerException {
+        List<Courier> list = super.findAll();
         Set<String> set = new HashSet<String>();
         List<String> l = new ArrayList<String>();
-        for (CourierCompany c : list) {
+        for (Courier c : list) {
             set.add(c.getCourierCompany());
         }
         for (String s : set) {
@@ -1440,14 +594,67 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     }
 
     @Override
-    public Set<String> findAllAreas() throws SerException {
-        //TODO:查找所有寄件地和收件地
+    //获取上条记录的快递费总额
+    public Double lastCourierSum() throws SerException {
+        checkSeeIdentity();
+        CourierDTO dto = new CourierDTO();
+        dto.getSorts().add("createTime=asc");
+        List<Courier> list = super.findByCis(dto);
+        if (list != null && !list.isEmpty()) {
+            return list.get(list.size() - 1).getCourierSum();
+        }
         return null;
     }
 
     @Override
-    public List<String> findAllNames() throws SerException {
-        //TODO:查找所有收件人
-        return null;
+    public Set<Integer> allYear() throws SerException {
+        List<Courier> list = super.findAll();
+        Set<Integer> set = new HashSet<>();
+        for (Courier courier : list) {
+            set.add(courier.getYear());
+        }
+        return set;
+    }
+
+    @Override
+    public Set<Integer> allMonth() throws SerException {
+        List<Courier> list = super.findAll();
+        Set<Integer> set = new HashSet<>();
+        for (Courier courier : list) {
+            set.add(courier.getMonth());
+        }
+        return set;
+    }
+
+    @Override
+    public Long count(CourierDTO dto) throws SerException {
+        return super.count(dto);
+    }
+
+    @Override
+    public void send() throws SerException {
+        List<Courier> list = super.findAll();
+        LocalDate now = LocalDate.now();
+        for (Courier courier : list) {
+            LocalDate receiptTime = courier.getReceiptTime();
+            String sendPerson = courier.getSendPerson();
+            String receiptPerson = courier.getReceiptPerson();
+            if (now == receiptTime.minusDays(1)) {
+                AnnouncementTO to = new AnnouncementTO();
+                to.setTitle("您有一份快递即将到达");
+                to.setAuthor("system");
+                to.setPublishContent("您有一份快递即将达到，快递寄送到达后请上系统操作");
+                String send = userAPI.findByUsername(sendPerson).getId();
+                String receipt = userAPI.findByUsername(receiptPerson).getId();
+                to.setRecipients(new String[]{send, receipt});
+                to.setRequired(false);
+                to.setSend(false);
+                String token=RpcTransmit.getUserToken();
+                if (moduleAPI.isCheck("announcement")) {
+                    RpcTransmit.transmitUserToken(token);
+                    announcementAPI.addPerson(to);
+                }
+            }
+        }
     }
 }

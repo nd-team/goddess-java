@@ -22,14 +22,35 @@ public class PositionIndexSetBO extends BaseBO {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    private Integer monthIndexNumber;
+
+    /**
+     * 岗位指标编号
+     */
+    private Integer postIndexNumber;
+
+
+    /**
      * 年份
      */
-    private String year;
+    private Integer year;
 
     /**
      * 月份
      */
-    private String month;
+    private Integer month;
 
     /**
      * 指标类型
@@ -70,6 +91,11 @@ public class PositionIndexSetBO extends BaseBO {
      * 责任人
      */
     private String positioner;
+
+    /**
+     * 责任人工号
+     */
+    private String positionerNumber;
 
     /**
      * 岗位指标权重
@@ -175,19 +201,19 @@ public class PositionIndexSetBO extends BaseBO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
@@ -405,5 +431,46 @@ public class PositionIndexSetBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
+    }
+
+    public Integer getPostIndexNumber() {
+        return postIndexNumber;
+    }
+
+    public void setPostIndexNumber(Integer postIndexNumber) {
+
+        this.postIndexNumber = postIndexNumber;
+    }
+
+    public String getPositionerNumber() {
+        return positionerNumber;
+    }
+
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
 }

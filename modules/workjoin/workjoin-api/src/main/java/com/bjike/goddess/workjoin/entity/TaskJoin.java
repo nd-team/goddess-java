@@ -21,6 +21,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "workjoin_taskjoin")
 public class TaskJoin extends BaseEntity {
+    /**
+     * 工作交接编号
+     */
+    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'")
+    private String workJoinNum;
 
     /**
      * 任务名称
@@ -76,6 +81,13 @@ public class TaskJoin extends BaseEntity {
     @Column(name = "taskPath", columnDefinition = "VARCHAR(255)   COMMENT '任务来源路径'")
     private String taskPath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getTaskName() {
         return taskName;

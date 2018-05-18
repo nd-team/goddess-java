@@ -3,9 +3,7 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
@@ -19,6 +17,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +27,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,7 +63,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -81,7 +81,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -99,7 +99,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -116,7 +116,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -207,6 +207,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         }
     }
 
+
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         searchCondition(baseInfoManageDTO);
@@ -225,6 +226,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        baseInfoManageDTO.getSorts().add("createTime=desc");
         checkSeeIdentity();
 
         searchCondition(baseInfoManageDTO);
@@ -282,6 +284,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         super.remove(id);
     }
 
+    @Override
+    public Double contractScale(String project) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("outerProject", project));
+        List<BaseInfoManage> list = super.findByCis(dto);
+        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
+            return list.get(0).getContractScale();
+        }
+        return 0d;
+    }
 
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
@@ -385,9 +397,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
-        searchCondition( baseInfoManageDTO );
-        List<BaseInfoManage> list = super.findByCis( baseInfoManageDTO );
-        List<BaseInfoManageBO> listBO = BeanTransform.copyProperties(list , BaseInfoManageBO.class);
+        searchCondition(baseInfoManageDTO);
+        List<BaseInfoManage> list = super.findByCis(baseInfoManageDTO);
+        List<BaseInfoManageBO> listBO = BeanTransform.copyProperties(list, BaseInfoManageBO.class);
         return listBO;
     }
 
@@ -426,13 +438,111 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     }
 
     @Override
+    public Set<String> outerProjects() throws SerException {
+        List<BaseInfoManage> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (BaseInfoManage b : list) {
+            set.add(b.getOuterProject());
+        }
+        return set;
+    }
+
+    @Override
     public byte[] templateExcel() throws SerException {
         List<BaseInfoManageLeadExcel> toList = new ArrayList<BaseInfoManageLeadExcel>();
         BaseInfoManageLeadExcel baseInfoManageLeadExcel = new BaseInfoManageLeadExcel();
+        baseInfoManageLeadExcel.setBusinessType(BusinessType.ADVERT);
+        baseInfoManageLeadExcel.setBusinessSubject("test");
+        baseInfoManageLeadExcel.setOuterProject("test");
+        baseInfoManageLeadExcel.setOutProjectNum("test");
+        baseInfoManageLeadExcel.setSaleContractNum("test");
+        baseInfoManageLeadExcel.setBusinessCooperate(BusinessCooperate.BACKTOBACK);
+        baseInfoManageLeadExcel.setInnerProject("test");
+        baseInfoManageLeadExcel.setArea("test");
+        baseInfoManageLeadExcel.setProjectGroup("test");
+        baseInfoManageLeadExcel.setSiginTime(LocalDate.now());
+        baseInfoManageLeadExcel.setMoney(0d);
+        baseInfoManageLeadExcel.setStartProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setEndProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setContractRang("test");
+        baseInfoManageLeadExcel.setFirstCompany("test");
+        baseInfoManageLeadExcel.setFirstRelation("test");
+        baseInfoManageLeadExcel.setFirstTel("test");
+        baseInfoManageLeadExcel.setSecondCompany("test");
+        baseInfoManageLeadExcel.setProjectCharge("test");
+        baseInfoManageLeadExcel.setProjectChargeTel("test");
+        baseInfoManageLeadExcel.setCustomerName("test");
+        baseInfoManageLeadExcel.setContractText("test");
+        baseInfoManageLeadExcel.setRate(0d);
+        baseInfoManageLeadExcel.setContractProperty(ContractProperty.FRAMECONTRACT);
+        baseInfoManageLeadExcel.setPayWays(PayWays.BANK);
+        baseInfoManageLeadExcel.setPayRate("test");
+        baseInfoManageLeadExcel.setPayFeeOrigin(PayFeeOrigin.ADVANCE);
+        baseInfoManageLeadExcel.setFileCondition("已归档");
+        baseInfoManageLeadExcel.setFileCount(0d);
+        baseInfoManageLeadExcel.setRemark("test");
+        baseInfoManageLeadExcel.setTempContractNum("test");
+        baseInfoManageLeadExcel.setMakeContract(MakeContract.HADMAKE);
+        baseInfoManageLeadExcel.setTaskNum("test");
+        baseInfoManageLeadExcel.setProjectStatus(ProjectStatus.APPROACH);
+        baseInfoManageLeadExcel.setContractScale(0d);
+        baseInfoManageLeadExcel.setScale(0d);
+        baseInfoManageLeadExcel.setMajor("test");
+
+
         toList.add(baseInfoManageLeadExcel);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public List<BaseInfoManageBO> getgetAll() throws SerException {
+        return null;
+    }
+
+    @Override
+    public Long getInterProject(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"projectNum"};
+        StringBuilder sql = new StringBuilder("select count(innerProject) as projectNum from businessproject_baseinfomanage");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where siginTime between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Long> pros = managerBOs.stream().map(ManagerBO::getProjectNum).distinct().collect(Collectors.toList());
+            return pros.get(0);
+        }
+        return 0l;
+    }
+
+    @Override
+    public List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"innerProject"};
+        StringBuilder sql = new StringBuilder("select innerProject from businessproject_baseinfomanage");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where siginTime between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<BaseInfoManage> baseInfoManages = super.findBySql(sql.toString(), BaseInfoManage.class, fields);
+        if (null != baseInfoManages && baseInfoManages.size() > 0) {
+            List<String> pros = baseInfoManages.stream().map(BaseInfoManage::getInnerProject).distinct().collect(Collectors.toList());
+            return pros;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getArea(String projectNane) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("innerProject", projectNane));
+        List<BaseInfoManage> baseInfoManages = super.findByCis(dto);
+        if (null != baseInfoManages && baseInfoManages.size() > 0) {
+            List<String> list = baseInfoManages.stream().map(BaseInfoManage::getArea).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
     }
 
     @Override
@@ -446,7 +556,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
                     for (BaseInfoManage b : list) {
                         if (s.equals(b.getInnerProject())) {
                             BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                            BeanUtils.copyProperties(b, excel);
+                            BeanUtils.copyProperties(b, excel, "makeContract", "projectStatus");
+                            excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
+                            excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                             toList.add(excel);
                         }
                     }
@@ -456,7 +568,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             List<BaseInfoManage> list = super.findByCis(dto);
             for (BaseInfoManage b : list) {
                 BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                BeanUtils.copyProperties(b, excel);
+                BeanUtils.copyProperties(b, excel, "makeContract", "projectStatus");
+                excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
+                excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                 toList.add(excel);
             }
         }
@@ -649,5 +763,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         }
 
     }
+
+//    @Override
+//    public Double contractScale(String project) throws SerException {
+//        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+//        dto.getConditions().add(Restrict.eq("outerProject", project));
+//        List<BaseInfoManage> list = super.findByCis(dto);
+//        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
+//            return list.get(0).getContractScale();
+//        }
+//        return 0d;
+//    }
 
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,8 +11,10 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitProAPI;
+import com.bjike.goddess.recruit.api.RecruitWayAPI;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
 import com.bjike.goddess.recruit.vo.RecruitProVO;
@@ -37,6 +41,31 @@ public class RecruitProAct {
 
     @Autowired
     private RecruitProAPI recruitProAPI;
+    @Autowired
+    private RecruitWayAPI recruitWayAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recruitProAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询招聘方案
@@ -67,6 +96,7 @@ public class RecruitProAct {
     @GetMapping("v1/count")
     public Result count(@Validated RecruitProDTO dto, BindingResult result) throws ActException {
         try {
+
             Long count = recruitProAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
@@ -85,8 +115,12 @@ public class RecruitProAct {
     @GetMapping("v1/list")
     public Result list(@Validated RecruitProDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+//            String aa= RpcContext.getContext().getAttachment(RpcCommon.USER_TOKEN);
             List<RecruitProBO> boList = recruitProAPI.list(dto);
             List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class, request);
+
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -152,7 +186,7 @@ public class RecruitProAct {
     /**
      * 综合资源部审核
      *
-     * @param id 招聘方案唯一标识
+     * @param id        招聘方案唯一标识
      * @param zhOpinion 综合资源部意见
      * @version v1
      */
@@ -170,15 +204,15 @@ public class RecruitProAct {
     /**
      * 运营商务部审核
      *
-     * @param id 招聘方案唯一标识
+     * @param id        招聘方案唯一标识
      * @param yyOpinion 运营商务部意见
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/yyOpinion/{id}")
-    public Result yyOpinion(@PathVariable String id, @RequestParam(value = "yyOpinion") String yyOpinion) throws ActException {
+    public Result yyOpinion(@PathVariable String id, @RequestParam(value = "yyOpinion") String yyOpinion,@RequestParam(value = "moneyReady")Boolean moneyReady) throws ActException {
         try {
-            recruitProAPI.yyOpinion(id, yyOpinion);
+            recruitProAPI.yyOpinion(id, yyOpinion,moneyReady);
             return new ActResult("yyOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -188,9 +222,9 @@ public class RecruitProAct {
     /**
      * 总经办意见
      *
-     * @param id 招聘方案唯一标识
+     * @param id         招聘方案唯一标识
      * @param zjbOpinion 总经办意见
-     * @param auditType 审核类型
+     * @param auditType  审核类型
      * @version v1
      */
     @LoginAuth
@@ -204,4 +238,18 @@ public class RecruitProAct {
         }
     }
 
+    /**
+     * 查看所有招聘网站（招聘渠道）
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allRecruitName")
+    public Result allRecruitName() throws ActException {
+        try {
+            return ActResult.initialize(recruitWayAPI.allRecruitName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

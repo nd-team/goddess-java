@@ -11,6 +11,7 @@ import com.bjike.goddess.outcarfare.to.MoneyReadyTO;
 import com.bjike.goddess.outcarfare.vo.SonPermissionObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 资金准备审核业务接口
@@ -91,13 +92,87 @@ public interface MoneyReadySer extends Ser<MoneyReady, MoneyReadyDTO> {
     }
 
     /**
-     * 汇总
+     * 总条数
      *
-     * @param month 汇总的月份
-     * @return class MoneyReadyCountBO
+     * @param dto
+     * @return
      * @throws SerException
      */
-    default List<MoneyReadyCountBO> count(Integer month) throws SerException {
-        return null;
-    }
+    Long countSum(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 删除列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<MoneyReadyBO> delList(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 删除列表总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long delCount(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 定时检测删除
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 部门汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<MoneyReadyCountBO> departCount(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 地区汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<MoneyReadyCountBO> areaCount(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 撤销删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void reback(String id) throws SerException;
+
+    /**
+     * 汇总明细
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<MoneyReadyBO> details(MoneyReadyDTO dto) throws SerException;
+
+    /**
+     * 所有部门
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> findAllGroupTeams() throws SerException;
+
+    /**
+     * 所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> areas() throws SerException;
 }

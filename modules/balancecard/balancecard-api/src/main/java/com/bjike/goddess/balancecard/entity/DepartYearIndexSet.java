@@ -28,10 +28,24 @@ public class DepartYearIndexSet extends BaseEntity {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    @Column(name = "indexNumber", nullable = false, columnDefinition = "INT   COMMENT '年度指标编号'")
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    @Column(name = "yearIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '部门年度指标编号'")
+    private Integer yearIndexNumber;
+
+
+
+    /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
-    private String year;
+    @Column(name = "year", nullable = false, columnDefinition = "Integer   COMMENT '年份'")
+    private Integer year;
 
     /**
      * 指标类型
@@ -45,6 +59,16 @@ public class DepartYearIndexSet extends BaseEntity {
     @Column(name = "dimension", columnDefinition = "VARCHAR(255)   COMMENT '维度'")
     private String dimension;
 
+
+
+
+
+    /**
+     * 责任部门
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '责任部门'")
+    private String department;
+
     /**
      * 总指标权重
      */
@@ -56,12 +80,6 @@ public class DepartYearIndexSet extends BaseEntity {
      */
     @Column(name = "yearTarget", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '年度目标值'")
     private Double yearTarget;
-
-    /**
-     * 责任部门
-     */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '责任部门'")
-    private String department;
 
     /**
      * 部门年度指标权重
@@ -180,11 +198,11 @@ public class DepartYearIndexSet extends BaseEntity {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -370,6 +388,22 @@ public class DepartYearIndexSet extends BaseEntity {
 
     public void setYearIndexSetId(String yearIndexSetId) {
         this.yearIndexSetId = yearIndexSetId;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
     }
 
 }

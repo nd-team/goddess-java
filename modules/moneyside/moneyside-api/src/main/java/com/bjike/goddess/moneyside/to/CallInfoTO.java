@@ -199,11 +199,13 @@ public class CallInfoTO extends BaseTO {
     /**
      * 打款账户
      */
+    @NotBlank(message = "打款账户不能为空",groups = {CallInfoTO.TestApply.class})
     private String moneyAccountName;
 
     /**
      * 打款账号
      */
+    @NotBlank(message = "打款账号不能为空",groups = {CallInfoTO.TestApply.class})
     private String moneyAccount;
 
     /**

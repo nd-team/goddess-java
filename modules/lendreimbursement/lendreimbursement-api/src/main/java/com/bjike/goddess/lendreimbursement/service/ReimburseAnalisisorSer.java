@@ -52,6 +52,23 @@ public interface ReimburseAnalisisorSer extends Ser<ReimburseAnalisisor, Reimbur
     }
 
     /**
+     * 根据报销id获取报销分析人员列表
+     *
+     * @return class ReimburseAnalisisorBO
+     */
+    default List<ReimburseAnalisisorBO> listReimburseAnalisisor(String reimid) throws SerException {
+        return null;
+    }
+
+    /**
+     * 报销分析人员列表
+     *
+     * @return class ReimburseAnalisisorBO
+     */
+    default ReimburseAnalisisorBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 添加
      *
      * @param reimburseAnalisisorTO 报销分析人员信息

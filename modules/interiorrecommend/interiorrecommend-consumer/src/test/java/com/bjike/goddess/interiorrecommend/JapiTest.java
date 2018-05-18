@@ -16,6 +16,7 @@ import com.dounine.japi.core.impl.ProjectImpl;
 public class JapiTest {
 
     public static void main(String[] args) {
+//        JapiClient.delete(true);
         JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
@@ -23,6 +24,8 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/interiorrecommend/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/interiorrecommend/interiorrecommend-api",
+                "modules/staffentry/staffentry-api",
+                "modules/staffentry/staffentry-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

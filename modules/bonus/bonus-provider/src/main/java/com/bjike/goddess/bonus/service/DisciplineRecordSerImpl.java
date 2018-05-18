@@ -1,30 +1,35 @@
 package com.bjike.goddess.bonus.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.bonus.bo.*;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.entity.DisciplineRecord;
+import com.bjike.goddess.bonus.enums.GuideAddrStatus;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,18 +48,304 @@ import java.util.stream.Collectors;
 public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, DisciplineRecordDTO> implements DisciplineRecordSer {
 
     @Autowired
-    private UserAPI userAPI;
-    @Autowired
-    private UserDetailAPI userDetailAPI;
-    @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 调整(总经办)
+     *
+     * @throws SerException
+     */
+    private Boolean checkPosin() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.positCusPermission("2");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整(决策层)
+     *
+     * @throws SerException
+     */
+    private Boolean checkLeve() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.leveCusPermission("3");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整(规划模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkModule() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.getCusPermission("4");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整权限(总经办,决策层,规划模块)
+     *
+     * @throws SerException
+     */
+    private void checkAdjustPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean posinFlag = checkPosin();
+        Boolean leveFlag = checkLeve();
+        Boolean moduleFlag = checkModule();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (posinFlag || leveFlag || moduleFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 发起奖励处罚(综合资源部)
+     *
+     * @throws SerException
+     */
+    private Boolean checkDetail() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.positCusPermission("5");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(福利模块或规划模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkModulePlan() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.leveCusPermission("6");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(总经办,决策层,规划模块)
+     *
+     * @throws SerException
+     */
+    private void checkInitiPerm() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean detailFlag = checkDetail();
+        Boolean planFlag = checkModulePlan();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (detailFlag || planFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 调整权限(总经办,决策层,规划模块)
+     */
+    private Boolean guideAdjustIdentity() throws SerException {
+        Boolean flag = false;
+        Boolean posinFlag = checkPosin();
+        Boolean leveFlag = checkLeve();
+        Boolean moduleFlag = checkModule();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (posinFlag || leveFlag || moduleFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(总经办,决策层,规划模块)
+     */
+    private Boolean guideInitiPerm() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean detailFlag = checkDetail();
+        Boolean planFlag = checkModulePlan();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (detailFlag || planFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrue() throws SerException {
+        return true;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdjust = guideAdjustIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagIniti = guideInitiPerm();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagTrue = guideAllTrue();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdjust || flagIniti || flagTrue) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case OPERS:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case CLOSES:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case SUMMARY:
+                flag = guideInitiPerm();
+                break;
+            case PROJECTRANK:
+                flag = guideInitiPerm();
+                break;
+            case PERSONRANK:
+                flag = guideAllTrue();
+                break;
+            case JCLIST:
+                flag = guideInitiPerm();
+                break;
+            case JCADD:
+                flag = guideInitiPerm();
+                break;
+            case JCEDIT:
+                flag = guideInitiPerm();
+                break;
+            case JCDELETE:
+                flag = guideInitiPerm();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         DisciplineRecord entity = BeanTransform.copyProperties(to, DisciplineRecord.class, true);
         entity = this.checkEntity(entity);
@@ -62,10 +353,24 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             entity.setLaunch(user.getUsername());
         if (StringUtils.isBlank(entity.getName()))
             entity.setName(" ");
-        if (StringUtils.isBlank(entity.getProject()))
-            entity.setProject(" ");
-        if (StringUtils.isBlank(entity.getArea()))
-            entity.setArea(" ");
+        if (StringUtils.isBlank(entity.getProject())) {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getDepartmentName());
+                }
+            }
+        }
+        if (StringUtils.isBlank(entity.getArea())) {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getArea());
+                }
+            }
+        }
         super.save(entity);
         return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
     }
@@ -78,19 +383,42 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
      * @throws SerException
      */
     private DisciplineRecord checkEntity(DisciplineRecord entity) throws SerException {
-        UserBO user = userAPI.findByUsername(entity.getUsername());
+
+        UserBO user = null;
+        if (moduleAPI.isCheck("organize")) {
+            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+            if (!CollectionUtils.isEmpty(userBOList)) {
+                userBOList = userBOList.stream().filter(obj -> obj.getUsername().equals(entity.getUsername())).collect(Collectors.toList());
+                user = userBOList.get(0);
+            }
+
+        }
+//        UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null == user)
             throw new SerException("该用户不存在");
         entity.setSerialNumber(user.getEmployeeNumber());
-        PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        PositionDetailUserBO detailBO = null;
+        if (moduleAPI.isCheck("organize")) {
+            detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        }
         entity.setArea("");
         entity.setProject("");
-        if (null != detailBO)
-            for (String id : detailBO.getPositionIds().split(",")) {
-                PositionDetailBO position = positionDetailAPI.findBOById(id);
-                entity.setProject(entity.getProject() + "," + position.getDepartmentName());
-                entity.setArea(entity.getArea() + "," + position.getArea());
+        if (null != detailBO) {
+            List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+            if (null != positionUserDetailBOSList) {
+                for (PositionUserDetailBO p : positionUserDetailBOSList) {
+                    if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+                        for (String id : p.getPositionId().split(",")) {
+                            if (moduleAPI.isCheck("organize")) {
+                                PositionDetailBO position = positionDetailAPI.findBOById(id);
+                                entity.setProject(entity.getProject() + "," + position.getDepartmentName());
+                                entity.setArea(entity.getArea() + "," + position.getArea());
+                            }
+                        }
+                    }
+                }
             }
+        }
         if (entity.getStatus()) {//检测奖罚分数填写是否符合规范 true 为奖励 false 为处罚
             if (entity.getBallot() < 0)
                 entity.setBallot(-entity.getBallot());
@@ -105,6 +433,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO update(DisciplineRecordTO to) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         if (StringUtils.isNotBlank(to.getId())) {
             DisciplineRecord entity = super.findById(to.getId());
@@ -123,6 +452,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO delete(String id) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         DisciplineRecord entity = super.findById(id);
         if (null == entity)
@@ -135,6 +465,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordRankBO> projectRank(CollectFilterTO to, Boolean status) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("project=asc");
         List<DisciplineRecord> list = this.getListByFilter(to, dto).stream()
@@ -212,6 +543,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordDetailBO> disciplineDetailCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("occurrence=asc");
         dto.getSorts().add("username=asc");
@@ -246,21 +578,24 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordQuantityBO> disciplineQuantityCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("area=asc");
         dto.getSorts().add("project=asc");
         List<DisciplineRecord> list = this.getListByFilter(to, dto);
         List<DisciplineRecordQuantityBO> quantityBOs = new ArrayList<>(0);
-        String area = "", project = "";
+        String area = "", project = "", name = "";
         for (DisciplineRecord entity : list)
-            if (!entity.getArea().equals(area) || !entity.getProject().equals(project)) {
+            if (!entity.getArea().equals(area) || !entity.getProject().equals(project) || !entity.getName().equals(name)) {
                 project = entity.getProject();
                 area = entity.getArea();
+                name = entity.getName();
                 DisciplineRecordQuantityBO quantity = new DisciplineRecordQuantityBO();
                 quantity.setStart(to.getStart());
                 quantity.setEnd(to.getEnd());
                 quantity.setDepartment(entity.getProject());
                 quantity.setArea(entity.getArea());
+                quantity.setName(entity.getName());
                 quantity.setReward(list.stream()
                         .filter(d -> d.getProject().equals(entity.getProject()) && d.getStatus() == Boolean.TRUE)
                         .collect(Collectors.toList()).size());
@@ -277,6 +612,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordScoreBO> disciplineScoreCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("area=asc");
         dto.getSorts().add("project=asc");
@@ -353,12 +689,14 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        checkDetail();
         dto.getConditions().add(Restrict.eq("status", !Boolean.TRUE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }
 
     @Override
     public List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        checkDetail();
         dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }
@@ -384,4 +722,271 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return super.count(dto);
     }
+
+    @Override
+    public List<String> getarea() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getArea());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getGroup() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getProject());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getTarget() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getName());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Integer getPushNum(String userName) throws SerException {
+        CollectFilterTO to = new CollectFilterTO();
+        List<DisciplineRecordRankBO> disciplineRecordRankBOList = personalRank(to, false);
+        if (!CollectionUtils.isEmpty(disciplineRecordRankBOList)) {
+            List<DisciplineRecordRankBO> disciplineRecordRankBOs = disciplineRecordRankBOList.stream().filter(str -> str.getUsername().equals(userName)).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(disciplineRecordRankBOs)) {
+                return disciplineRecordRankBOs.get(0).getFrequency();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer getRewardNum(String userName) throws SerException {
+        CollectFilterTO to = new CollectFilterTO();
+        List<DisciplineRecordRankBO> disciplineRecordRankBOList = personalRank(to, true);
+        if (!CollectionUtils.isEmpty(disciplineRecordRankBOList)) {
+            List<DisciplineRecordRankBO> disciplineRecordRankBOs = disciplineRecordRankBOList.stream().filter(str -> str.getUsername().equals(userName)).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(disciplineRecordRankBOs)) {
+                return disciplineRecordRankBOs.get(0).getFrequency();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getConditions().add(Restrict.eq("username", userName));
+        List<DisciplineRecord> disciplineRecords = super.findByCis(dto);
+        Double rewardTotal = 0d;
+        Double pushTotal = 0d;
+        if (disciplineRecords != null && disciplineRecords.size() > 0) {
+            for (DisciplineRecord disciplineRecord : disciplineRecords) {
+                if (disciplineRecord.getStatus()) {
+                    rewardTotal += disciplineRecord.getBallot();
+                } else {
+                    pushTotal += disciplineRecord.getBallot();
+                }
+            }
+        }
+        ScoreBO scoreBO = new ScoreBO();
+        scoreBO.setRewardTotal(rewardTotal);
+        scoreBO.setPushTotal(pushTotal);
+        return scoreBO;
+    }
+
+    public String getRewardBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 1 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            if (null != ballots) {
+                return ballots.toString();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getPushBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 0 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            if (null != ballots) {
+                return ballots.toString();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public OptionBonusBO annular() throws SerException {
+        List<DisciplineRecordDataBO> bos = new ArrayList<>(0);
+        for (int i = 1; i <= 4; i++) {
+            //奖励
+            bos.add(createEntity(i, false));
+            //惩罚
+            bos.add(createEntity(i, true));
+        }
+
+        String text_1 = "项目奖金包";
+
+        return getOptionBO(text_1, bos);
+    }
+
+    //柱状图数据
+    private OptionBonusBO getOptionBO(String text_1, List<DisciplineRecordDataBO> list) throws SerException {
+        Double num1 = 0d;
+        Double num2 = 0d;
+        List<String> departList = list.stream().map(DisciplineRecordDataBO::getQuarter).distinct().sorted(String::compareTo).collect(Collectors.toList());
+        String[] text_3 = departList.toArray(new String[departList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_2 = new String[]{"奖励", "惩罚"};
+        text_list2 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBonusBO> seriesBOList = new ArrayList<>();
+
+        if (list != null && list.size() > 0) {
+
+            for (String str : text_list2) {
+                Double j = 0d;
+                SeriesBonusBO seriesBO = new SeriesBonusBO();
+                seriesBO.setName(str);
+                seriesBO.setType("bar");
+                List<Double> number = new ArrayList<>(0);
+                if (str.equals("奖励")) {
+                    for (DisciplineRecordDataBO bo : list.stream().filter(obj -> !obj.getStatus()).collect(Collectors.toList())) {
+                        j = bo.getBallot();
+                        number.add(j);
+                        num1 += j;
+                    }
+                }
+                if (str.equals("惩罚")) {
+                    for (DisciplineRecordDataBO bo : list.stream().filter(obj -> obj.getStatus()).collect(Collectors.toList())) {
+                        j = bo.getBallot();
+                        number.add(j);
+                        num2 += j;
+                    }
+                }
+                //柱状图数据
+                Double[] numbers = number.toArray(new Double[number.size()]);
+                seriesBO.setData(numbers);
+                seriesBOList.add(seriesBO);
+            }
+        }
+
+//        String[] text_2 = new String[text_list2.size()];
+//        text_2 = text_list2.toArray(text_2);
+
+        SeriesBonusBO[] text_4 = new SeriesBonusBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBonusBO optionBO = new OptionBonusBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setNum1(num1);
+        optionBO.setNum2(num2);
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
+    private DisciplineRecordDataBO createEntity(int i, Boolean flag) throws SerException {
+        int tar = 0;
+        if(flag){
+            tar = 1;
+        }
+        DisciplineRecordDataBO bo = new DisciplineRecordDataBO();
+        bo.setQuarter("第" + i + "季度");
+        bo.setBallot(findData(getTimes(i)[0], getTimes(i)[1], tar));
+        bo.setStatus(flag);
+        return bo;
+    }
+
+    private Double findData(String startTime, String endTime, int tar) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+            StringBuilder sql = new StringBuilder("select ifnull(sum(ballot),0) from bonus_discipline_record ");
+        sql.append(" WHERE username = '" + userBO.getUsername() + "' ");
+        sql.append(" and occurrence between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        sql.append(" and is_status = " + tar);
+
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double sum = Double.parseDouble(String.valueOf(objectList.get(0)));
+
+        return sum;
+    }
+
+    //获取当年季度的开始时间与结束时间
+    private String[] getTimes(int quartOfYear) throws SerException {
+        String startTime = "";
+        String endTime = "";
+        int year = LocalDate.now().getYear();
+        switch (quartOfYear) {
+            case 1:
+                startTime = year + "-01-01";
+                endTime = year + "-03-31";
+                break;
+            case 2:
+                startTime = year + "-04-01";
+                endTime = year + "-06-30";
+                break;
+            case 3:
+                startTime = year + "-07-01";
+                endTime = year + "-09-30";
+                break;
+            case 4:
+                startTime = year + "-10-01";
+                endTime = year + "-12-31";
+                break;
+        }
+
+        return new String[]{startTime, endTime};
+    }
+
+
 }

@@ -1,6 +1,9 @@
 package com.bjike.goddess.voucher.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 记账凭证生成数据传输对象
@@ -12,6 +15,9 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class VoucherGenerateDTO extends BaseDTO {
+    public interface TestList {
+    }
+
 
     /**
      * 一级科目
@@ -31,6 +37,7 @@ public class VoucherGenerateDTO extends BaseDTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {VoucherGenerateDTO.TestList.class})
     private String area;
 
     /**
@@ -39,8 +46,19 @@ public class VoucherGenerateDTO extends BaseDTO {
     private String projectName;
 
     /**
+     * 年份
+     */
+    @NotNull(message = "年份不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    private Integer year;
+    /**
+     * 月份
+     */
+    @NotNull(message = "月份不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    private Integer month;
+    /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空", groups = {VoucherGenerateDTO.TestList.class})
     private String projectGroup;
 
     /**
@@ -52,6 +70,52 @@ public class VoucherGenerateDTO extends BaseDTO {
      */
     private String endTime;
 
+    /**
+     * 凭证日期
+     */
+    private String voucherDate;
+
+    /**
+     * 升降序
+     */
+    private String ascOrDesc;
+
+    /**
+     * 类别
+     */
+    private String[] types;
+
+    public String[] getTypes() {
+        return types;
+    }
+
+    public void setTypes(String[] types) {
+        this.types = types;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getFirstSubject() {
         return firstSubject;
@@ -101,6 +165,7 @@ public class VoucherGenerateDTO extends BaseDTO {
         this.projectGroup = projectGroup;
     }
 
+
     public String getStartTime() {
         return startTime;
     }
@@ -115,5 +180,21 @@ public class VoucherGenerateDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getVoucherDate() {
+        return voucherDate;
+    }
+
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
+    }
+
+    public String getAscOrDesc() {
+        return ascOrDesc;
+    }
+
+    public void setAscOrDesc(String ascOrDesc) {
+        this.ascOrDesc = ascOrDesc;
     }
 }

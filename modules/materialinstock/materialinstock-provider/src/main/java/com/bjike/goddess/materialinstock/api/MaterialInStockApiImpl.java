@@ -9,6 +9,8 @@ import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
+import com.bjike.goddess.materialinstock.type.InstockType;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -221,5 +223,60 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
     //cjh
     public Set<String> allstockEncoding() throws SerException {
         return materialInStockSer.allstockEncoding();
+    }
+
+    @Override
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        materialInStockSer.updateLijuntao(to);
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialInStockSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallUser() throws SerException {
+        return materialInStockSer.findallUser();
+    }
+
+    @Override
+    public List<InstockType> findStockType(String[] intervalTime) throws SerException {
+        return materialInStockSer.findStockType(intervalTime);
+    }
+
+    @Override
+    public List<String> findAreaByType(InstockType instockType, String[] intervalTime) throws SerException {
+        return materialInStockSer.findAreaByType(instockType,intervalTime);
+    }
+
+    @Override
+    public List<String> findAllArea(String[] intervalTime) throws SerException {
+        return materialInStockSer.findAllArea(intervalTime);
+    }
+
+    @Override
+    public List<String> findProByAre(String[] intervalTime, String area) throws SerException {
+        return materialInStockSer.findProByAre(intervalTime,area);
+    }
+
+    @Override
+    public List<String> findDepartByTyAnAr(InstockType instockType, String storageArea, String[] intervalTime) throws SerException {
+        return materialInStockSer.findDepartByTyAnAr(instockType,storageArea,intervalTime);
+    }
+
+    @Override
+    public List<MaterialInStockBO> findByTyAnAr(InstockType instockType, String storageArea, String deptment, String[] intervalTime) throws SerException {
+        return materialInStockSer.findByTyAnAr(instockType,storageArea,deptment,intervalTime);
+    }
+
+    @Override
+    public List<MaterialState> findStatusByAreAnpro(String[] intervalTime, String area, String projectGroup) throws SerException {
+        return materialInStockSer.findStatusByAreAnpro(intervalTime,area,projectGroup);
+    }
+
+    @Override
+    public List<MaterialInStockBO> findByAreAnpro(String[] intervalTime, String area, String projectGroup, MaterialState materialState) throws SerException {
+        return materialInStockSer.findByAreAnpro(intervalTime,area,projectGroup,materialState);
     }
 }

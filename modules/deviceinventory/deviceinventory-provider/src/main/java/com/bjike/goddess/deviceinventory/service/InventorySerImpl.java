@@ -270,6 +270,7 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
                 super.remove(p.getId());
             }
         }
+        dto.getConditions().add(Restrict.in("stockEncoding", stockEncodings));
         List<Inventory> list1 = super.findByCis(dto, true);
         List<InventoryBO> boList = new ArrayList<InventoryBO>();
         for (Inventory i : list1) {
@@ -292,8 +293,8 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
         if (inventory == null) {
             throw new SerException("该对象不存在");
         }
-        Boolean isInventory=inventory.getIsInventory();
-        if (isInventory!=null&&isInventory){
+        Boolean isInventory = inventory.getIsInventory();
+        if (isInventory != null && isInventory) {
             throw new SerException("您已盘点过该记录");
         }
         inventory.setInventoryTime(DateUtil.parseDate(to.getInventoryTime()));
@@ -316,7 +317,7 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
 
     @Override
     public byte[] export(String startTime, String endTime) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         LocalDate s = null;
         LocalDate e = null;
         try {
@@ -329,9 +330,9 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
         InventoryDTO dto = new InventoryDTO();
         dto.getConditions().add(Restrict.between("inventoryTime", time));
         List<Inventory> list = super.findByCis(dto);
-        if (list == null || list.isEmpty()) {
-            throw new SerException("该时间段没有数据");
-        }
+//        if (list == null || list.isEmpty()) {
+//            throw new SerException("该时间段没有数据");
+//        }
         List<InventoryBO> boList = new ArrayList<InventoryBO>();
         for (Inventory i : list) {
             InventoryBO bo = BeanTransform.copyProperties(i, InventoryBO.class);
@@ -350,6 +351,10 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
 
     @Override
     public Long count(InventoryDTO dto) throws SerException {
+        String[] stockEncodings = dto.getStockEncodings();
+        if (null != stockEncodings) {
+            dto.getConditions().add(Restrict.in("stockEncoding", stockEncodings));
+        }
         return super.count(dto);
     }
 

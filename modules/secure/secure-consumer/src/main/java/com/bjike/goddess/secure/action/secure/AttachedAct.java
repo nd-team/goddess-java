@@ -10,9 +10,14 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.AttachedAPI;
 import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.bo.EmployeeSecureBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.to.AttachedTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.secure.vo.AttachedVO;
+import com.bjike.goddess.secure.vo.EmployeeSecureVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 挂靠
@@ -35,6 +41,29 @@ import java.util.List;
 public class AttachedAct {
     @Autowired
     private AttachedAPI attachedAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = attachedAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加
@@ -65,7 +94,7 @@ public class AttachedAct {
      */
     @LoginAuth
     @PutMapping("v1/complete")
-    public Result complete(@Validated({AttachedTO.complete.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result complete(@Validated({AttachedTO.COM.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AttachedBO bo = attachedAPI.complete(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AttachedVO.class, request));
@@ -149,15 +178,16 @@ public class AttachedAct {
     /**
      * 审核通过
      *
-     * @param id 挂靠id
+     * @param id  挂靠id
+     * @param dto dto
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PatchMapping("v1/pass/{id}")
-    public Result pass(@PathVariable String id) throws ActException {
+    public Result pass(@Validated(AddEmployeeDTO.CONFIRM.class) AddEmployeeDTO dto, BindingResult result, @PathVariable String id) throws ActException {
         try {
-            attachedAPI.pass(id);
+            attachedAPI.pass(dto, id);
             return new ActResult("审核通过");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -167,15 +197,16 @@ public class AttachedAct {
     /**
      * 审核不通过
      *
-     * @param id 挂靠id
+     * @param id  挂靠id
+     * @param dto dto
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PatchMapping("v1/notPass/{id}")
-    public Result notPass(@PathVariable String id) throws ActException {
+    public Result notPass(@Validated(AddEmployeeDTO.CONFIRM.class) AddEmployeeDTO dto, BindingResult result, @PathVariable String id) throws ActException {
         try {
-            attachedAPI.notPass(id);
+            attachedAPI.notPass(dto, id);
             return new ActResult("审核不通过");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -193,6 +224,39 @@ public class AttachedAct {
     public Result count(AttachedDTO dto) throws ActException {
         try {
             return ActResult.initialize(attachedAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据姓名获取挂靠信息
+     *
+     * @param to to
+     * @return class AttachedVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/byName")
+    public Result byName(@Validated(NameTO.TestName.class) NameTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<AttachedBO> bos = attachedAPI.byName(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, AttachedVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            Set<String> set = attachedAPI.allName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

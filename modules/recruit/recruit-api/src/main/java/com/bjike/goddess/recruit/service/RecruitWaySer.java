@@ -5,9 +5,11 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
 import com.bjike.goddess.recruit.entity.RecruitWay;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招聘渠道
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RecruitWaySer extends Ser<RecruitWay, RecruitWayDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询招聘渠道
@@ -47,6 +62,22 @@ public interface RecruitWaySer extends Ser<RecruitWay, RecruitWayDTO> {
     void remove(String id) throws SerException;
 
     /**
+     * 解冻招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void thaw(String id) throws SerException;
+
+    /**
+     * 冻结招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void congeal(String id) throws SerException;
+
+    /**
      * 更新招聘渠道
      *
      * @param recruitWayTO
@@ -54,4 +85,12 @@ public interface RecruitWaySer extends Ser<RecruitWay, RecruitWayDTO> {
      */
     void update(RecruitWayTO recruitWayTO) throws SerException;
 
+
+    /**
+     * 查看所有招聘网站
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allRecruitName() throws SerException;
 }

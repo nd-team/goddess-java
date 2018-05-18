@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
@@ -12,6 +14,7 @@ import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.entity.OtherContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.OtherContactsTemplateExport;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -31,7 +34,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,24 +74,25 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         String email = null;
         //是否发送邮件
         if (to.isSend()) {
-            String sendObject = to.getSendObject();
+            String sendObject = "综合资源部";
             if (StringUtils.isNotBlank(sendObject)) {
                 List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
                 for (OpinionBO opinionBO : opinionBOList) {
                     if (sendObject.equals(opinionBO.getValue())) {
                         //根据组织结构中的部门名称查询部门id
                         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
-                        departmentDetailDTO.getConditions().add(Restrict.eq("department",sendObject));
-                        List<DepartmentDetailBO> departmentDetailBOList =departmentDetailAPI.view(departmentDetailDTO);
+                        departmentDetailDTO.getConditions().add(Restrict.eq("department", sendObject));
+                        List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
                         String departmentId = departmentDetailBOList.get(0).getId();
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
-                        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(dto);
+                        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
                         for (CommonalityBO commonalityBO : commonalityBOList) {
                             if (departmentId.equals(commonalityBO.getDepartmentId())) {
                                 email = commonalityBO.getEmail();
                                 String content = html(to);
-
+                                String[] email1 = new String[1];
+                                email1[0] = email;
                                 //调用发送邮箱接口
                                 MessageTO messageTO = new MessageTO();
                                 messageTO.setTitle("其他通讯录");
@@ -94,7 +100,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
                                 messageTO.setContent(content);
                                 messageTO.setSendType(SendType.EMAIL);
                                 messageTO.setRangeType(RangeType.SPECIFIED);
-                                messageTO.setReceivers(email.split(";"));
+                                messageTO.setReceivers(email1);
                                 messageAPI.send(messageTO);
                             }
                         }
@@ -105,7 +111,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
             }
         }
 
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(entity, OtherContactsBO.class);
     }
 
 
@@ -152,7 +158,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(entity, OtherContactsBO.class, false);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -162,13 +168,24 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         if (null == entity)
             throw new SerException("该数据不存在");
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return null;
     }
 
     @Override
     public List<OtherContactsBO> maps(OtherContactsDTO dto) throws SerException {
+        search(dto);
         List<OtherContacts> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(list, OtherContactsBO.class);
+    }
+
+    private List<OtherContactsBO> search(OtherContactsDTO dto) throws SerException {
+        //公司名称
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.like("name", dto.getName()));
+        }
+        List<OtherContacts> otherContacts = super.findByCis(dto);
+        List<OtherContactsBO> otherContactsBOS = BeanTransform.copyProperties(otherContacts, OtherContactsBO.class);
+        return otherContactsBOS;
     }
 
     @Override
@@ -176,12 +193,14 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         OtherContacts entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class);
+        OtherContactsBO bo = BeanTransform.copyProperties(entity, OtherContactsBO.class);
+        return bo;
     }
 
     @Override
     public Long getTotal() throws SerException {
         OtherContactsDTO dto = new OtherContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -268,6 +287,25 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
 
         OtherContactsBO otherContactsBO = BeanTransform.copyProperties(new OtherContacts(), OtherContactsBO.class);
         return otherContactsBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OtherContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        OtherContactsTemplateExport excel = new OtherContactsTemplateExport();
+        excel.setType("移动通信类");
+        excel.setName("test");
+        excel.setPhone("jkj");
+        excel.setAddress("jkj");
+        excel.setUser("jkj");
+        excel.setUseDate(LocalDate.now());
+        excel.setEvaluate("jkj");
+        excel.setRemark("jkj");
+        commerceContactsExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**

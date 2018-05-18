@@ -57,17 +57,17 @@ public class FinanceCollectBO extends BaseBO {
     /**
      * 油费
      */
-    private Double oilCost;
+//    private Double oilCost;
 
     /**
      * 加班时长
      */
-    private Integer overWorkTime;
+    private Double overWorkTime;
 
     /**
      * 加班费
      */
-    private Double overWorkCost;
+//    private Double overWorkCost;
 
     /**
      * 餐费补贴
@@ -147,30 +147,30 @@ public class FinanceCollectBO extends BaseBO {
     public void setAcctype(Acctype acctype) {
         this.acctype = acctype;
     }
+//
+//    public Double getOilCost() {
+//        return oilCost;
+//    }
+//
+//    public void setOilCost(Double oilCost) {
+//        this.oilCost = oilCost;
+//    }
 
-    public Double getOilCost() {
-        return oilCost;
-    }
-
-    public void setOilCost(Double oilCost) {
-        this.oilCost = oilCost;
-    }
-
-    public Integer getOverWorkTime() {
+    public Double getOverWorkTime() {
         return overWorkTime;
     }
 
-    public void setOverWorkTime(Integer overWorkTime) {
+    public void setOverWorkTime(Double overWorkTime) {
         this.overWorkTime = overWorkTime;
     }
 
-    public Double getOverWorkCost() {
-        return overWorkCost;
-    }
-
-    public void setOverWorkCost(Double overWorkCost) {
-        this.overWorkCost = overWorkCost;
-    }
+//    public Double getOverWorkCost() {
+//        return overWorkCost;
+//    }
+//
+//    public void setOverWorkCost(Double overWorkCost) {
+//        this.overWorkCost = overWorkCost;
+//    }
 
     public Double getMealCost() {
         return mealCost;
@@ -201,7 +201,7 @@ public class FinanceCollectBO extends BaseBO {
 
     public FinanceCollectBO(String date, String number, String driver, String area,
                             String carUser, String project, String projectGroup, Acctype acctype,
-                            Double oilCost, Integer overWorkTime, Double overWorkCost,
+                            Double overWorkTime,
                             Double mealCost, Double parkCost, Double roadCost ,String id) {
         this.date = date;
         this.number = number;
@@ -211,9 +211,9 @@ public class FinanceCollectBO extends BaseBO {
         this.project = project;
         this.projectGroup = projectGroup;
         this.acctype = acctype;
-        this.oilCost = oilCost;
+//        this.oilCost = oilCost;
         this.overWorkTime = overWorkTime;
-        this.overWorkCost = overWorkCost;
+//        this.overWorkCost = overWorkCost;
         this.mealCost = mealCost;
         this.parkCost = parkCost;
         this.roadCost = roadCost;

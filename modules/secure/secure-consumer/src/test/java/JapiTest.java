@@ -10,7 +10,7 @@ public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
 //		JapiClient.delete(true);
-		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/secure/secure-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/secure/action");//主项目action位置
@@ -18,8 +18,8 @@ public class JapiTest {
 				"modules/secure/secure-api",
 				"common/common-api",
 				"modules/dimission/dimission-api",
-				"modules/message/message-api",
-				"modules/quartz/quartz-api",
+				"modules/organize/organize-api",
+				"modules/archive/archive-api",
 				"modules/regularization/regularization-api",
 				"modules/user/user-api"
 		});

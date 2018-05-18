@@ -5,15 +5,20 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
-import com.bjike.goddess.contacts.dto.CommonalityDTO;
+import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.ExternalContactsTemplateExport;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -22,16 +27,25 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
+import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.enums.SexType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 外部通讯录业务实现
@@ -56,12 +70,20 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     private MessageAPI messageAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
-
+    @Autowired
+    private UserDetailAPI userDetailAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO save(ExternalContactsTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("输入的邮箱格式不正确");
+            }
+        }
         UserBO user = userAPI.currentUser();
         ExternalContacts entity = BeanTransform.copyProperties(to, ExternalContacts.class, true);
         entity.setWriter(user.getUsername());
@@ -116,8 +138,27 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         dto.getSorts().add("writeTime=desc");
-        List<ExternalContacts> list = super.findByCis(dto);
+        search(dto);
+        List<ExternalContacts> list = super.findByCis(dto,true);
         return BeanTransform.copyProperties(list, ExternalContactsBO.class);
+    }
+
+    private List<ExternalContactsBO> search(ExternalContactsDTO dto) throws SerException {
+        //姓名
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            dto.getConditions().add(Restrict.like("username", dto.getUserName()));
+        }
+        //地区
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
+        }
+        //部门/项目组
+        if (StringUtils.isNotBlank(dto.getProject())) {
+            dto.getConditions().add(Restrict.like("project", dto.getProject()));
+        }
+        List<ExternalContacts> externalContacts = super.findByCis(dto);
+        List<ExternalContactsBO> externalContactsBOS = BeanTransform.copyProperties(externalContacts, ExternalContactsBO.class);
+        return externalContactsBOS;
     }
 
     @Override
@@ -131,6 +172,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public Long getTotal() throws SerException {
         ExternalContactsDTO dto = new ExternalContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -207,6 +249,16 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO importExcel(List<ExternalContactsTO> externalContactsTO) throws SerException {
+        if (null != externalContactsTO && externalContactsTO.size() > 0) {
+            for (ExternalContactsTO to : externalContactsTO) {
+                if (!Validator.isEmail(to.getEmail())) {
+                    throw new SerException("导入的邮箱格式不正确");
+                }
+                if (!Validator.isPhone(to.getPhone())) {
+                    throw new SerException("导入的电话号码格式不正确");
+                }
+            }
+        }
         List<ExternalContacts> externalContacts = BeanTransform.copyProperties(externalContactsTO, ExternalContacts.class, true);
         externalContacts.stream().forEach(str -> {
             str.setCreateTime(LocalDateTime.now());
@@ -217,6 +269,123 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         ExternalContactsBO externalContactsBO = BeanTransform.copyProperties(new ExternalContacts(), ExternalContactsBO.class);
         return externalContactsBO;
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ExternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        ExternalContactsTemplateExport excel = new ExternalContactsTemplateExport();
+        excel.setArea("移动通信类");
+        excel.setProject("test");
+        excel.setUsername("jkj");
+        excel.setUnit("jkj");
+        excel.setPosition("jkj");
+        excel.setPhone("jkj");
+        excel.setEmail("jkj");
+        excel.setResponsible("jkj");
+        excel.setOther("jkj");
+        excel.setExternal("jkj");
+        excel.setFrequency("jkj");
+        excel.setWriter("jkj");
+        excel.setWriteNumber("jkj");
+        excel.setWriteTime(LocalDateTime.now());
+        excel.setRemark("jkj");
+        commerceContactsExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
+    }
+    private static List<MobileExternalContactsBO> sort(List<MobileExternalContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileExternalContactsBO> treeSet = new TreeSet<>(new Comparator<MobileExternalContactsBO>() {
+            @Override
+            public int compare(MobileExternalContactsBO o1, MobileExternalContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getUsername()).compareTo(ChineseCharToEn.getFirstLetter(o2.getUsername()));
+            }
+        });
+        for (MobileExternalContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
+    @Override
+    public List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
+//        dto.getSorts().add("writeTime=desc");
+        searchMobileCondition(dto);
+        List<ExternalContacts> list = super.findByCis(dto);
+        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class, false);
+        if (!CollectionUtils.isEmpty(externalContactsBOs)) {
+            List<MobileExternalContactsBO> bos = BeanTransform.copyProperties(externalContactsBOs, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
+            for (MobileExternalContactsBO bo : bos) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("username", bo.getUsername()));
+                UserBO userBO = userAPI.findOne(userDTO);
+                if (null != userBO) {
+                    bo.setHeadSculpture(userBO.getHeadSculpture());
+                    UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
+                    if (null != userDetailBO) {
+                        bo.setSex(userDetailBO.getSex());
+                        if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                            bo.setSex(SexType.MAN);
+                        } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                            bo.setSex(SexType.WOMAN);
+                        } else {
+                            bo.setSex(SexType.NONE);
+                        }
+                    }
+
+                }
+            }
+            return sort(bos);
+        }
+        return null;
+    }
+
+    @Override
+    public Long getMobileTotal(ExternalContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        return super.count(dto);
+    }
+
+    @Override
+    public MobileExternalContactsBO findByMobileID(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        ExternalContactsDTO dto = new ExternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("id", id));
+        ExternalContacts entity = super.findOne(dto);
+        ExternalContactsBO bo = BeanTransform.copyProperties(entity, ExternalContactsBO.class, false);
+        if (null != bo) {
+            MobileExternalContactsBO mobileExternalContactsBO = BeanTransform.copyProperties(bo, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("username", mobileExternalContactsBO.getUsername()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            if (null != userBO) {
+                mobileExternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
+//                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
+//                if (null != userDetailBO) {
+//                    mobileExternalContactsBO.setSex(userDetailBO.getSex());
+//                }
+                if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    mobileExternalContactsBO.setSex(SexType.MAN);
+                } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    mobileExternalContactsBO.setSex(SexType.WOMAN);
+                } else {
+                    mobileExternalContactsBO.setSex(SexType.NONE);
+                }
+            }
+            return mobileExternalContactsBO;
+        }
+        return null;
+    }
+
 
     /**
      * 核对查看权限（部门级别）
@@ -291,14 +460,13 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     /**
      * 增加或更新时发送邮件
      */
-    private void send(ExternalContactsTO to) throws SerException{
+    private void send(ExternalContactsTO to) throws SerException {
         //获得综合资源部,商务发展部,总经办的邮箱
         String[] allEmails = null;
         //从公共邮箱中得到部门的邮箱
-        CommonalityDTO commonalityDTO = new CommonalityDTO();
-        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(commonalityDTO);
+        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
         List<String> stringList = new ArrayList<>();
-        for(CommonalityBO commonalityBO : commonalityBOList){
+        for (CommonalityBO commonalityBO : commonalityBOList) {
             if (commonalityBO.getDepartmentId().equals(this.getDepartment("综合资源部"))) {
                 stringList.add(commonalityBO.getEmail());
             }
@@ -370,13 +538,24 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     }
 
     //得到对应部门的id号
-    private String getDepartment(String department) throws SerException{
+    private String getDepartment(String department) throws SerException {
         //根据组织结构中的部门名称查询部门id
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));
         List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
-        String departmentId = departmentDetailBOList.get(0).getId();
-        return departmentId;
+        if (null != departmentDetailBOList && departmentDetailBOList.size() > 0) {
+            String departmentId = departmentDetailBOList.get(0).getId();
+            return departmentId;
+        }
+        return null;
     }
 
+    private void searchMobileCondition(ExternalContactsDTO dto) throws SerException {
+        /**
+         * 用户名
+         */
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            dto.getConditions().add(Restrict.like("username", dto.getUserName()));
+        }
+    }
 }

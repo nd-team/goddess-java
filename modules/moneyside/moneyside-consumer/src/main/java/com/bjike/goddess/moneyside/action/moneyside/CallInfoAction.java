@@ -1,7 +1,5 @@
 package com.bjike.goddess.moneyside.action.moneyside;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,13 +7,10 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.moneyside.api.CallInfoAPI;
-import com.bjike.goddess.moneyside.bo.AccrualAllotBO;
 import com.bjike.goddess.moneyside.bo.CallInfoBO;
-import com.bjike.goddess.moneyside.dto.AccrualAllotDTO;
 import com.bjike.goddess.moneyside.dto.CallInfoDTO;
-import com.bjike.goddess.moneyside.to.AccrualAllotTO;
 import com.bjike.goddess.moneyside.to.CallInfoTO;
-import com.bjike.goddess.moneyside.vo.AccrualAllotVO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.vo.CallInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -40,6 +35,28 @@ import java.util.Set;
 public class CallInfoAction {
     @Autowired
     private CallInfoAPI callInfoAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = callInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 招投信息列表总条数
@@ -150,6 +167,7 @@ public class CallInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 申请投资
      *
@@ -163,7 +181,7 @@ public class CallInfoAction {
     public Result apply(@Validated(CallInfoTO.TestApply.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
         try {
             CallInfoBO callInfoBO = callInfoAPI.applyInvest(callInfoTO);
-            return ActResult.initialize(callInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(callInfoBO,CallInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

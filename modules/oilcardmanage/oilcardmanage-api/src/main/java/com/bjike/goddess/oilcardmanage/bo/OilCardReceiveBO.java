@@ -45,11 +45,6 @@ public class OilCardReceiveBO extends BaseBO {
     private String returnDate;
 
     /**
-     * 地区
-     */
-    private String area;
-
-    /**
      * 领卡人
      */
     private String receiveUser;
@@ -79,6 +74,16 @@ public class OilCardReceiveBO extends BaseBO {
      */
     private String remark;
 
+    /**
+     * 油卡基本信息
+     *
+     */
+    private OilCardBasicBO oilCardBasicBO;
+
+    /**
+     * 油卡id
+     */
+    private String oilCardBasicId;
 
     public String getOilCardCode() {
         return oilCardCode;
@@ -128,13 +133,6 @@ public class OilCardReceiveBO extends BaseBO {
         this.returnDate = returnDate;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 
     public String getReceiveUser() {
         return receiveUser;
@@ -184,4 +182,19 @@ public class OilCardReceiveBO extends BaseBO {
         this.remark = remark;
     }
 
+    public OilCardBasicBO getOilCardBasicBO() {
+        return oilCardBasicBO;
+    }
+
+    public void setOilCardBasicBO(OilCardBasicBO oilCardBasicBO) {
+        this.oilCardBasicBO = oilCardBasicBO;
+    }
+
+    public String getOilCardBasicId() {
+        return oilCardBasicId;
+    }
+
+    public void setOilCardBasicId(String oilCardBasicId) {
+        this.oilCardBasicId = oilCardBasicId;
+    }
 }
