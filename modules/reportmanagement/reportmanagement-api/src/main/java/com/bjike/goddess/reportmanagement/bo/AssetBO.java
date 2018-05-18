@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.AssetType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 /**
  * 资产表业务传输对象
@@ -29,6 +31,20 @@ public class AssetBO extends BaseBO {
     private String asset;
 
     /**
+     * 资产类型
+     */
+    private AssetType assetType;
+
+    /**
+     * 运算类型
+     */
+    private Type type;
+    /**
+     * 资产行次
+     */
+    private Integer assetNum;
+
+    /**
      * 资产年初数
      */
     private Double beginAsset;
@@ -42,6 +58,46 @@ public class AssetBO extends BaseBO {
      * 资产期末数
      */
     private Double endAsset;
+
+    public AssetBO() {
+    }
+
+    public AssetBO(String id, String startTime, String endTime, String asset, AssetType assetType, Type type, Integer assetNum, Double beginAsset, Double current, Double endAsset) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.asset = asset;
+        this.assetType = assetType;
+        this.type = type;
+        this.assetNum = assetNum;
+        this.beginAsset = beginAsset;
+        this.current = current;
+        this.endAsset = endAsset;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public AssetType getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(AssetType assetType) {
+        this.assetType = assetType;
+    }
+
+    public Integer getAssetNum() {
+        return assetNum;
+    }
+
+    public void setAssetNum(Integer assetNum) {
+        this.assetNum = assetNum;
+    }
 
     public Double getCurrent() {
         return current;
@@ -89,5 +145,20 @@ public class AssetBO extends BaseBO {
 
     public void setEndAsset(Double endAsset) {
         this.endAsset = endAsset;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetBO{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", asset='" + asset + '\'' +
+                ", assetType=" + assetType +
+                ", type=" + type +
+                ", assetNum=" + assetNum +
+                ", beginAsset=" + beginAsset +
+                ", current=" + current +
+                ", endAsset=" + endAsset +
+                '}';
     }
 }

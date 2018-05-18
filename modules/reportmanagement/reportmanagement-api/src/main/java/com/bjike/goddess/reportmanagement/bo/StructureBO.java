@@ -59,4 +59,14 @@ public class StructureBO extends BaseBO{
     public void setBestScale(String bestScale) {
         this.bestScale = bestScale;
     }
+
+    @Override
+    public String toString() {
+        return "StructureBO{" +
+                "project='" + project + '\'' +
+                ", fee=" + fee +
+                ", scale='" + scale + '\'' +
+                ", bestScale='" + bestScale + '\'' +
+                '}';
+    }
 }

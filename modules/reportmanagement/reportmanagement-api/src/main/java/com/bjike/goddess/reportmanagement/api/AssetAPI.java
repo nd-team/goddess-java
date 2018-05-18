@@ -1,12 +1,16 @@
 package com.bjike.goddess.reportmanagement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.reportmanagement.bo.AssetBO;
 import com.bjike.goddess.reportmanagement.bo.DetailBO;
 import com.bjike.goddess.reportmanagement.bo.RepayAnalyzeBO;
 import com.bjike.goddess.reportmanagement.bo.StructureBO;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -30,6 +34,20 @@ public interface AssetAPI {
 //     * @throws SerException
 //     */
 //    AssetBO find(String id, String startTime, String endTime) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表
@@ -110,4 +128,60 @@ public interface AssetAPI {
      * @throws SerException
      */
     void delete(String id) throws SerException;
+
+    /**
+     * 列表1
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<AssetBO> list1(AssetDTO dto) throws SerException;
+
+    /**
+     * 导出资产负债表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(AssetDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> allFirstSubjects() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有项目名称
+     * @return
+     * @throws SerException
+     */
+    default List<String> allProjectNames() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有项目组
+     * @return
+     * @throws SerException
+     */
+    default List<String> findStatus()throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有地区
+     * @return
+     * @throws SerException
+     */
+    default List<String> findArea()throws SerException {
+        return null;
+    }
 }

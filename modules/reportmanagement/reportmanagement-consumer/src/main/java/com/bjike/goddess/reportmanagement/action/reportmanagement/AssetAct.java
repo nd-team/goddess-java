@@ -1,20 +1,31 @@
 package com.bjike.goddess.reportmanagement.action.reportmanagement;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.vo.*;
-import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import org.hibernate.boot.jaxb.SourceType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -22,6 +33,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,13 +49,89 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("asset")
-public class AssetAct {
+public class AssetAct extends BaseFileAction {
     @Autowired
     private AssetAPI assetAPI;
     @Autowired
     private FormulaAPI formulaAPI;
     @Autowired
-    private SubjectCollectAPI subjectCollectAPI;
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = assetAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = assetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msgservice
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 列表
@@ -55,7 +145,39 @@ public class AssetAct {
     public Result list(@Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<AssetBO> list = assetAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, AssetVO.class, request));
+            List<AssetVO> vos = new ArrayList<>();
+            for (AssetBO bo : list) {
+                AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+                vo.setAssetId(bo.getId());
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑列表
+     *
+     * @param dto 资产数据传输
+     * @return class AssetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/list1")
+    public Result list1(AssetDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<AssetBO> list = assetAPI.list1(dto);
+            List<AssetVO> vos = new ArrayList<>();
+            if (null != list) {
+                for (AssetBO bo : list) {
+                    AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+                    vo.setAssetId(bo.getId());
+                    vos.add(vo);
+                }
+            }
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,14 +195,16 @@ public class AssetAct {
     public Result save(@Validated(ADD.class) AssetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.save(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, AssetVO.class, request));
+            AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+            vo.setAssetId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 查看资产结构表
+     * 查看资产结构表分析
      *
      * @param dto 资产数据传输
      * @return class StructureVO
@@ -145,11 +269,11 @@ public class AssetAct {
      */
     @GetMapping("v1/lookFormula/{id}")
     public Result lookFormula(@PathVariable String id, @Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
-        FormulaDTO formulaDTO=new FormulaDTO();
-        BeanUtils.copyProperties(dto,formulaDTO);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id,formulaDTO);
+            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -168,7 +292,9 @@ public class AssetAct {
     public Result asset(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.findByID(id);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, AssetVO.class, request));
+            AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+            vo.setAssetId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -224,8 +350,9 @@ public class AssetAct {
         }
     }
 
+
     /**
-     * 获取所有科目
+     * 获取所有一级科目
      *
      * @throws ActException
      * @version v1
@@ -233,7 +360,7 @@ public class AssetAct {
     @GetMapping("v1/allFirstSubjects")
     public Result allFirstSubjects() throws ActException {
         try {
-            return ActResult.initialize(subjectCollectAPI.allFirstSubjects());
+            return ActResult.initialize(assetAPI.allFirstSubjects());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -248,9 +375,105 @@ public class AssetAct {
     @GetMapping("v1/allProjectNames")
     public Result allProjectNames() throws ActException {
         try {
-            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+//            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+            return ActResult.initialize(assetAPI.allProjectNames());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取所有项目组，部门
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+  /*  @GetMapping("v1/allDepart")
+    public Result allDepart(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }*/
+    /**
+     * 获取所有项目组，部门
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allDepart")
+    public Result allDepart(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = assetAPI.findStatus();
+            /*for(String area:list){
+                System.out.println(area);
+            }*/
+            return ActResult.initialize(assetAPI.findStatus());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+/*    @GetMapping("v1/allArea")
+    public Result allArea(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }*/
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea(HttpServletRequest request) throws ActException {
+        try {
+          /*  List<String> list = assetAPI.findArea();
+            for(String area:list){
+                System.out.println(area);
+            }*/
+            return ActResult.initialize(assetAPI.findArea());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto 资产负债表
+     * @des 导出资产负债表
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(AssetDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "资产负债表.xlsx";
+            super.writeOutFile(response, assetAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 }

@@ -29,7 +29,6 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:reportmanagement:reportmanagement-api")
-    compile project(":modules:subjectcollect:subjectcollect-api")
     compile project(":common:common-utils")
 }
 

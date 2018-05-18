@@ -7,7 +7,6 @@ import com.bjike.goddess.reportmanagement.enums.Type;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
 
 
 /**
@@ -120,4 +119,14 @@ public class Asset extends BaseEntity {
 //    public void setEndAsset(Double endAsset) {
 //        this.endAsset = endAsset;
 //    }
+
+
+    @Override
+    public String toString() {
+        return "Asset{" +
+                "asset='" + asset + '\'' +
+                ", assetType=" + assetType +
+                ", type=" + type +
+                '}';
+    }
 }

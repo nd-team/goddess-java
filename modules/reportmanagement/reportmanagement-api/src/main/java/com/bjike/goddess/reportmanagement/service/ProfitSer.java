@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitFormulaDTO;
 import com.bjike.goddess.reportmanagement.entity.Profit;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 
 import java.util.List;
@@ -19,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProfitSer extends Ser<Profit, ProfitDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -107,4 +124,152 @@ public interface ProfitSer extends Ser<Profit, ProfitDTO> {
      * @throws SerException
      */
     Long count(ProfitDTO dto) throws SerException;
+
+    /**
+     * 利润增减率分析添加
+     * @param to
+     * @throws SerException
+     * zhuangkaiqin
+     */
+    default void addFormula(ProfitFormulaTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 利润增减率分析编辑公式
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void editFormula(ProfitFormulaTO to) throws SerException {
+        return;
+    }
+    /**
+     * 变动情况列表编辑公式
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void editChangeAnalysis(ProfitFormulaTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 利润增减率分析删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void deleteFormula(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 变动情况列表删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void deleteChangeAnalysis(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 查看利润增减率分析
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default String findFormula(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查看利润增减率分析
+     *
+     * @return
+     * @throws SerException
+     */
+    default ProfitFormulaBO findFormulaByID(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 利润增减率分析列表
+     *
+     * @param profitFormulaDTO
+     * @return
+     * @throws SerException
+     */
+    default List<ProfitFormulaBO> decreaseRatioList(ProfitFormulaDTO profitFormulaDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 变动情况分析
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<String> analysisChanges(ProfitDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询利润增减率分析总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getFormulaTotal(ProfitFormulaDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 变动情况分析列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ProfitFormulaBO> analysisChangesList(ProfitFormulaDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 变动情况分析列表添加
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void analysisChangesAdd(ProfitFormulaTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 变动情况分析列表总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long analysisChangesTotal(ProfitFormulaDTO dto) throws SerException {
+        return null;
+    }
+    /**
+     * 导出利润表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(ProfitDTO dto) throws SerException {
+        return null;
+    }
+
+
+    default void profitTask() throws SerException{}
 }

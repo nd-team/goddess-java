@@ -4,8 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
+import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +23,20 @@ import java.util.List;
  */
 public interface FormulaSer extends Ser<Formula, FormulaDTO> {
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据对应科目id查找公式详细
      *
      * @param foreignId
@@ -30,15 +47,34 @@ public interface FormulaSer extends Ser<Formula, FormulaDTO> {
     List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException;
 
     /**
+     * 利润表根据对应科目id查找公式详细
+     *
+     * @param foreignId
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FormulaBO> profitFindByFid(String foreignId, FormulaDTO dto) throws SerException;
+    /**
+     * 利润表根据对应科目id获取一个公式对应的方向
+     *
+     * @param foreignId
+     * @return
+     * @throws SerException
+     */
+    Form FindWayByFid(String foreignId) throws SerException;
+
+
+    /**
      * 利润分析
      *
      * @param foreignId
      * @param time
-     * @param projectNames
+     * @param dto
      * @return
      * @throws SerException
      */
-    List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException;
+    List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException;
 
     /**
      * 加公式科目

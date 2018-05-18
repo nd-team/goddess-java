@@ -3,6 +3,8 @@ package com.bjike.goddess.reportmanagement.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Arrays;
+
 /**
  * 负债表数据传输对象
  *
@@ -33,6 +35,37 @@ public class DebtDTO extends BaseDTO {
      */
     private String[] projectNames;
 
+    /**
+     * 项目组/部门数组
+     */
+    private String[] departs;
+
+    /**
+     * 地区数组
+     */
+    private String[] areas;
+
+    /**
+     * 是否获取最新
+     */
+    private boolean lastest;
+
+    public String[] getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(String[] departs) {
+        this.departs = departs;
+    }
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
+
     public String[] getProjectNames() {
         return projectNames;
     }
@@ -55,5 +88,25 @@ public class DebtDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isLastest() {
+        return lastest;
+    }
+
+    public void setLastest(boolean lastest) {
+        this.lastest = lastest;
+    }
+
+    @Override
+    public String toString() {
+        return "DebtDTO{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", projectNames=" + Arrays.toString(projectNames) +
+                ", departs=" + Arrays.toString(departs) +
+                ", areas=" + Arrays.toString(areas) +
+                ", lastest=" + lastest +
+                '}';
     }
 }

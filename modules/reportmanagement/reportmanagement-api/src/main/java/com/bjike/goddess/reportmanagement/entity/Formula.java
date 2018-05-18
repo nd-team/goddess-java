@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.reportmanagement.enums.AccessRules;
 import com.bjike.goddess.reportmanagement.enums.Form;
 
 import javax.persistence.Column;
@@ -33,6 +34,11 @@ public class Formula extends BaseEntity {
     @Column(name = "type1", columnDefinition = "VARCHAR(255)   COMMENT '类型'")
     private String type1;
 
+    /**
+     * 取数规则
+     */
+    @Column(name = "accessRules", columnDefinition = "TINYINT(2)   COMMENT '取数规则'")
+    private AccessRules accessRules;
     /**
      * 公式方向
      */
@@ -75,5 +81,13 @@ public class Formula extends BaseEntity {
 
     public void setType1(String type1) {
         this.type1 = type1;
+    }
+
+    public AccessRules getAccessRules() {
+        return accessRules;
+    }
+
+    public void setAccessRules(AccessRules accessRules) {
+        this.accessRules = accessRules;
     }
 }

@@ -106,19 +106,12 @@ public class Debt extends BaseEntity {
         this.debt = debt;
     }
 
-//    public Double getBeginDebt() {
-//        return beginDebt;
-//    }
-//
-//    public void setBeginDebt(Double beginDebt) {
-//        this.beginDebt = beginDebt;
-//    }
-//
-//    public Double getEndAsset() {
-//        return endAsset;
-//    }
-//
-//    public void setEndAsset(Double endAsset) {
-//        this.endAsset = endAsset;
-//    }
+    @Override
+    public String toString() {
+        return "Debt{" +
+                "debt='" + debt + '\'' +
+                ", debtType=" + debtType +
+                ", type=" + type +
+                '}';
+    }
 }

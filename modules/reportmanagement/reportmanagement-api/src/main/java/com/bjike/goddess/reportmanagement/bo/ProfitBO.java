@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.ProfitType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 /**
  * 利润表业务传输对象
@@ -14,9 +16,18 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class ProfitBO extends BaseBO {
 
     /**
-     * 项目
+     * 列表展示的项目(+项目类型)
      */
     private String project;
+//    /**
+//     * 原本的项目
+//     */
+//    private String project1;
+
+    /**
+     * 行次
+     */
+    private Integer num;
 
     /**
      * 本月数
@@ -27,8 +38,67 @@ public class ProfitBO extends BaseBO {
      * 本年累计数
      */
     private Double currentYearAmount;
+    /**
+     * 项目类型
+     */
+    private String projectType;
+    /**
+     * 利润类型
+     */
+    private ProfitType profitType;
 
-//    /**
+    /**
+     * 运算类型
+     */
+    private Type type;
+
+    public ProfitBO() {
+    }
+
+    public ProfitBO(String id, String project, Integer num, Double currentMonthAmount, Double currentYearAmount, String projectType, ProfitType profitType, Type type) {
+        this.id = id;
+        this.project = project;
+        this.num = num;
+        this.currentMonthAmount = currentMonthAmount;
+        this.currentYearAmount = currentYearAmount;
+        this.projectType = projectType;
+        this.profitType = profitType;
+        this.type = type;
+    }
+
+    public ProfitType getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(ProfitType profitType) {
+        this.profitType = profitType;
+    }
+
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
+    //    /**
 //     * 1季度
 //     */
 //    private Double firstSeason;

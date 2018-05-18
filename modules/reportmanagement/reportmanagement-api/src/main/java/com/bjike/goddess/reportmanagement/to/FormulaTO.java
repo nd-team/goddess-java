@@ -3,6 +3,7 @@ package com.bjike.goddess.reportmanagement.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.reportmanagement.enums.AccessRules;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -28,15 +29,20 @@ public class FormulaTO extends BaseTO {
     private String project;
 
     /**
+     * 取数规则
+     */
+//    @NotBlank(groups = {ADD.class, EDIT.class}, message = "取数规则不能为空")
+    private AccessRules accessRules;
+
+    /**
      * 公式方向
      */
-    @NotNull(groups = {ADD.class, EDIT.class, FormulaTO.A.class}, message = "公式方向不能为空")
     private Form form;
 
     /**
      * 对应科目的id
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "对应科目的id不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class, FormulaTO.A.class}, message = "对应科目的id不能为空")
     private String foreignId;
 
     /**
@@ -75,5 +81,13 @@ public class FormulaTO extends BaseTO {
 
     public void setForm(Form form) {
         this.form = form;
+    }
+
+    public AccessRules getAccessRules() {
+        return accessRules;
+    }
+
+    public void setAccessRules(AccessRules accessRules) {
+        this.accessRules = accessRules;
     }
 }

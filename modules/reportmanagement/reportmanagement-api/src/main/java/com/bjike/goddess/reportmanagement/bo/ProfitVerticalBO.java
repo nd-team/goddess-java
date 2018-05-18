@@ -19,11 +19,11 @@ public class ProfitVerticalBO extends BaseBO {
     /**
      * 起始时间
      */
-    private String startTime;
+    private Double startTime;
     /**
      * 结束时间
      */
-    private String endTime;
+    private Double endTime;
     /**
      * 变动情况
      */
@@ -37,19 +37,19 @@ public class ProfitVerticalBO extends BaseBO {
         this.project = project;
     }
 
-    public String getStartTime() {
+    public Double getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Double startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Double getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Double endTime) {
         this.endTime = endTime;
     }
 

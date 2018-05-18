@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.vo;
 
+import com.bjike.goddess.reportmanagement.enums.AssetType;
+import com.bjike.goddess.reportmanagement.enums.Type;
+
 /**
  * 资产表表现层对象
  *
@@ -14,7 +17,7 @@ public class AssetVO {
     /**
      * id
      */
-    private String id;
+    private String assetId;
     /**
      * 起始时间
      */
@@ -29,6 +32,19 @@ public class AssetVO {
      * 资产
      */
     private String asset;
+    /**
+     * 运算类型
+     */
+    private Type type;
+    /**
+     * 资产类型
+     */
+    private AssetType assetType;
+
+    /**
+     * 资产行次
+     */
+    private Integer assetNum;
 
     /**
      * 资产年初数
@@ -45,12 +61,28 @@ public class AssetVO {
      */
     private Double endAsset;
 
-    public String getId() {
-        return id;
+    public Type getType() {
+        return type;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public AssetType getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(AssetType assetType) {
+        this.assetType = assetType;
+    }
+
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public Double getCurrent() {
@@ -61,20 +93,12 @@ public class AssetVO {
         this.current = current;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Integer getAssetNum() {
+        return assetNum;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setAssetNum(Integer assetNum) {
+        this.assetNum = assetNum;
     }
 
     public String getAsset() {
@@ -99,5 +123,21 @@ public class AssetVO {
 
     public void setEndAsset(Double endAsset) {
         this.endAsset = endAsset;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

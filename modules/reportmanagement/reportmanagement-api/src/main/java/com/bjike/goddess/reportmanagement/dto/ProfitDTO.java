@@ -29,16 +29,62 @@ public class ProfitDTO extends BaseDTO {
     private String endTime;
 
     /**
-     * 项目名称数组
+     * 项目名称
      */
-    private String[] projectNames;
+    private String projectName;
 
-    public String[] getProjectNames() {
-        return projectNames;
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
+
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 是否获取最新
+     */
+    private boolean lastest;
+
+    /**
+     * 分类
+     */
+//    @NotBlank(groups = {ProfitDTO.A.class}, message = "分类不能为空")
+    private String classification;
+
+
+    public String getArea() {
+        return area;
     }
 
-    public void setProjectNames(String[] projectNames) {
-        this.projectNames = projectNames;
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectNames) {
+        this.projectName = projectNames;
     }
 
     public String getStartTime() {
@@ -55,5 +101,13 @@ public class ProfitDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public boolean isLastest() {
+        return lastest;
+    }
+
+    public void setLastest(boolean lastest) {
+        this.lastest = lastest;
     }
 }

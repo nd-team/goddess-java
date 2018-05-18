@@ -6,6 +6,7 @@ import com.bjike.goddess.reportmanagement.bo.AssetStructureAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.AssetStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.entity.AssetStructureAdvice;
 import com.bjike.goddess.reportmanagement.to.AssetStructureAdviceTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AssetStructureAdviceSer extends Ser<AssetStructureAdvice, AssetStructureAdviceDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 列表
      *

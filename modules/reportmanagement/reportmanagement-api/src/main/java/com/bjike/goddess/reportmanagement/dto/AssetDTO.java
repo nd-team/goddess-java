@@ -3,6 +3,8 @@ package com.bjike.goddess.reportmanagement.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Arrays;
+
 /**
  * 资产表数据传输对象
  *
@@ -29,16 +31,47 @@ public class AssetDTO extends BaseDTO {
     private String endTime;
 
     /**
-     * 项目名称数组
+     * 项目名称
      */
-    private String[] projectNames;
+    private String projectNames;
 
-    public String[] getProjectNames() {
+    /**
+     * 项目组/部门数组
+     */
+    private String departs;
+
+    /**
+     * 地区
+     */
+    private String areas;
+
+    /**
+     * 是否获取最新
+     */
+    private boolean lastest;
+
+    public String getProjectNames() {
         return projectNames;
     }
 
-    public void setProjectNames(String[] projectNames) {
+    public void setProjectNames(String projectNames) {
         this.projectNames = projectNames;
+    }
+
+    public String getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(String departs) {
+        this.departs = departs;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
     }
 
     public String getStartTime() {
@@ -56,4 +89,25 @@ public class AssetDTO extends BaseDTO {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
+    public boolean isLastest() {
+        return lastest;
+    }
+
+    public void setLastest(boolean lastest) {
+        this.lastest = lastest;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetDTO{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", projectNames='" + projectNames + '\'' +
+                ", departs='" + departs + '\'' +
+                ", areas='" + areas + '\'' +
+                ", lastest=" + lastest +
+                '}';
+    }
+
 }

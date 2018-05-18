@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.reportmanagement.bo.AssetBO;
 import com.bjike.goddess.reportmanagement.bo.DetailBO;
 import com.bjike.goddess.reportmanagement.bo.RepayAnalyzeBO;
@@ -8,6 +10,8 @@ import com.bjike.goddess.reportmanagement.bo.StructureBO;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.service.AssetSer;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +74,44 @@ public class AssetApiImpl implements AssetAPI {
     @Override
     public void delete(String id) throws SerException {
         assetSer.delete(id);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return assetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assetSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<AssetBO> list1(AssetDTO dto) throws SerException {
+        return assetSer.list1(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(AssetDTO dto) throws SerException {
+        return assetSer.exportExcel(dto);
+    }
+
+    @Override
+    public List<String> allFirstSubjects() throws SerException {
+        return assetSer.allFirstSubjects();
+    }
+
+    @Override
+    public List<String> allProjectNames() throws SerException {
+        return assetSer.allProjectNames();
+    }
+
+    @Override
+    public List<String> findStatus() throws SerException {
+        return assetSer.allProjectGroup();
+    }
+
+    public List<String> findArea() throws SerException {
+        return assetSer.allarea();
     }
 }

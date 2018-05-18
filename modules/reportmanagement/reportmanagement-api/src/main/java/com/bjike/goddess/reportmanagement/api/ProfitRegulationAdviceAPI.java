@@ -3,6 +3,7 @@ package com.bjike.goddess.reportmanagement.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.ProfitRegulationAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.ProfitRegulationAdviceDTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitRegulationAdviceTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProfitRegulationAdviceAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 列表
      *

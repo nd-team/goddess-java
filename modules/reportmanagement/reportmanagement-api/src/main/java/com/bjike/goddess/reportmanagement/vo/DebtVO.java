@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.vo;
 
+import com.bjike.goddess.reportmanagement.enums.DebtType;
+import com.bjike.goddess.reportmanagement.enums.Type;
+
 /**
  * 负债表表现层对象
  *
@@ -14,11 +17,12 @@ public class DebtVO {
     /**
      * id
      */
-    private String id;
+    private String debtId;
+
     /**
-     * 起始时间
+     * 开始时间
      */
-    private String startTime;
+    private String startTiem;
 
     /**
      * 结束时间
@@ -29,6 +33,19 @@ public class DebtVO {
      * 负债和所有者权益(或股东权益)
      */
     private String debt;
+    /**
+     * 负债类型
+     */
+    private DebtType debtType;
+    /**
+     * 运算类型
+     */
+    private Type type;
+
+    /**
+     * 负债和所有者权益(或股东权益)行次
+     */
+    private Integer debtNum;
 
     /**
      * 负债年初数
@@ -45,12 +62,28 @@ public class DebtVO {
      */
     private Double endDebt;
 
-    public String getId() {
-        return id;
+    public DebtType getDebtType() {
+        return debtType;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setDebtType(DebtType debtType) {
+        this.debtType = debtType;
+    }
+
+    public String getDebtId() {
+        return debtId;
+    }
+
+    public void setDebtId(String debtId) {
+        this.debtId = debtId;
     }
 
     public Double getCurrent() {
@@ -61,20 +94,12 @@ public class DebtVO {
         this.current = current;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Integer getDebtNum() {
+        return debtNum;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setDebtNum(Integer debtNum) {
+        this.debtNum = debtNum;
     }
 
     public String getDebt() {
@@ -99,5 +124,21 @@ public class DebtVO {
 
     public void setEndDebt(Double endDebt) {
         this.endDebt = endDebt;
+    }
+
+    public String getStartTiem() {
+        return startTiem;
+    }
+
+    public void setStartTiem(String startTiem) {
+        this.startTiem = startTiem;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }
